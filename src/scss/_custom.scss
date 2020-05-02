@@ -1,0 +1,57 @@
+// Here you can add other styles
+.content_employer {
+  background-color: $white;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  overflow: overlay;
+
+  &_mainBody {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar-fixed .sidebar {
+    position: fixed;
+    z-index: 1019;
+    width: 220px;
+    height: 100vh;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    position: fixed;
+    z-index: 1019;
+    width: 200px;
+    height: calc(100vh);
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  html:not([dir='rtl']) .sidebar-md-show .sidebar,
+  html:not([dir='rtl']) .sidebar-show .sidebar {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  html:not([dir='rtl']) .sidebar-md-show.sidebar-fixed .main,
+  html:not([dir='rtl']) .sidebar-md-show.sidebar-fixed .app-footer,
+  html:not([dir='rtl']) .sidebar-show.sidebar-fixed .main,
+  html:not([dir='rtl']) .sidebar-show.sidebar-fixed .app-footer {
+    margin-left: 220px;
+  }
+}
+
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -50px;
+  height: 100px;
+  width: 100px;
+}

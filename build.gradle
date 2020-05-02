@@ -1,0 +1,16 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+group = 'ie.daithi.cards-110'
+version = '0.0.1-SNAPSHOT'
+
+task webjar(type: Jar, dependsOn: "jar") { 
+    from(fileTree("dist")) {
+        into "META-INF/resources" 
+    } 
+}

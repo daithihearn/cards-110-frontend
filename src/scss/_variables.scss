@@ -1,0 +1,163 @@
+// COLORS
+$blue: #355ea3;
+$blueshade2: #e3f3fb;
+$green: #319377;
+$greenshade2: #57cead;
+$orange: #fbd4bc;
+$red: #f77d82;
+$grey: #c4c4c4;
+$greyshade2: #fdfdfd;
+$greyshade3: #f8f8f8;
+$greyshade4: #f2f2f2;
+$greyshade5: #9fa3a9;
+$yellow: #f7b560;
+$black: #262f3a;
+$blackShade2: black;
+$white: white;
+
+// BOX SHADOWS
+$boxShadow1: none;
+$boxShadow2: 1px 4px 11px 2px rgba(0, 0, 0, 0.06);
+
+// FONT
+$fontFamily: 'Open Sans';
+$fontSizeBase: 14px;
+$fontSizeBody: 18px;
+$fontSizeH3: 22px;
+$fontSizeH2: 36px;
+$fontSizeH1: 56px;
+
+// FONT WEIGHT
+$fontWeightLight: 300;
+$fontWeightRegular: 400;
+$fontWeightMedium: 500;
+$fontWeightBold: 700;
+$fontWeightBlack: 900;
+
+//SIZE
+$borderRadiusCircle: 50%;
+$borderRadius1: 1px;
+$borderRadius2: 2px;
+$borderRadius2_5: 3px;
+$borderRadius3: 4px;
+$borderRadius3_5: 6px;
+$borderRadius4: 8px;
+$borderRadius5: 10px;
+$borderRadius6: 12px;
+$borderRadius7: 20px;
+$borderRadius8: 30px;
+
+// Z INDEX
+$zIndexD999: -999;
+$zIndexD4: -40;
+$zIndexD3: -30;
+$zIndexD2: -20;
+$zIndexD1: -10;
+$zIndexBase: 0;
+$zIndexU1: 10;
+$zIndexU2: 20;
+$zIndexU3: 30;
+$zIndexU4: 40;
+$zIndexU5: 100;
+$zIndexU6: 200;
+$zIndexU7: 210;
+$zIndexU8: 220;
+$zIndexU999: 999;
+
+// Variable overrides
+
+input[type='email'] {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  font-family: $fontFamily;
+  padding-left: 16px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input[type='password'] {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  font-family: $fontFamily;
+  padding-left: 16px;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input[type='input'] {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  font-family: $fontFamily;
+  padding-left: 16px;
+  width: 100%;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input[type='dropdown'] {
+  text-align: center;
+  &:focus {
+    outline: none;
+  }
+}
+
+button[type='submit'] {
+  &:focus {
+    outline: none;
+  }
+}
+
+button[type='button'] {
+  &:focus {
+    outline: none;
+  }
+}
+
+::-webkit-inner-spin-button {
+  display: none;
+}
+::-webkit-calendar-picker-indicator {
+  background-color: $white;
+}
+input[type='date'] {
+  font-size: 20px;
+
+  &:focus {
+    outline: none;
+  }
+}
+::-webkit-datetime-edit-text {
+  color: #555555;
+}
+::-webkit-datetime-edit-month-field {
+  color: #555555;
+}
+::-webkit-datetime-edit-day-field {
+  color: #555555;
+}
+::-webkit-datetime-edit-year-field {
+  color: #555555;
+}
+::-webkit-calendar-picker-indicator {
+  background-image: url(http://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Calendar-icon.png);
+  cursor: pointer;
+  background-position: center;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  color: rgba(204, 204, 204, 0);
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="13px" viewBox="0 0 24 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Color / Blue</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M23.5146691,5.60690157 C23.8054616,5.78179673 24,6.10041298 24,6.46446609 C24,6.80469766 23.8300876,7.10524406 23.5704886,7.28587965 C23.5220344,7.39465702 23.4531919,7.49655558 23.363961,7.58578644 L19.1213203,11.8284271 C18.7307961,12.2189514 18.0976311,12.2189514 17.7071068,11.8284271 C17.3165825,11.4379028 17.3165825,10.8047379 17.7071068,10.4142136 L20.6568542,7.46446609 L1,7.46446609 C0.44771525,7.46446609 6.76353751e-17,7.01675084 0,6.46446609 C-6.76353751e-17,5.91218134 0.44771525,5.46446609 1,5.46446609 L20.5857864,5.46446609 L17.7071068,2.58578644 C17.3165825,2.19526215 17.3165825,1.56209717 17.7071068,1.17157288 C18.0976311,0.781048584 18.7307961,0.781048584 19.1213203,1.17157288 L23.363961,5.41421356 C23.4231757,5.47342821 23.4734117,5.53822146 23.5146691,5.60690157 Z" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon-/-Arrow" transform="translate(-11.000000, -17.000000)">
+            <g id="Color-/-Blue" transform="translate(11.000000, 17.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#D8D8D8" xlink:href="#path-1"></use>
+                <g mask="url(#mask-2)" fill="#2979e1" id="Rectangle">
+                    <g transform="translate(-11.000000, -17.000000)">
+                        <rect x="0" y="0" width="48" height="48"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
