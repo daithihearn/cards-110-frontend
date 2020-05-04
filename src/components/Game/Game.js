@@ -21,6 +21,10 @@ class Game extends Component {
     this.setState(prevState => (stateDelta));
   }
 
+  handleClose() {
+    this.updateState({ snackOpen: false });
+  }
+
   handleWebsocketMessage(payload) {
 
     let publishContent = JSON.parse(payload.payload);
