@@ -2,19 +2,41 @@ import React, { Component } from 'react';
 import sessionUtils from '../../utils/SessionUtils';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
-import DataTable, { createTheme } from 'react-data-table-component';
-import PlayImage from '../../assets/icons/play.png';
-import { Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
-import ReactPlayer from 'react-player'
 import Snackbar from "@material-ui/core/Snackbar";
+import { Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 
 class Game extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+
+    if (!props.location.state) {
+      this.state = { myId: sessionStorage.getItem("myId") };
+    } else {
+      this.state = { myId: props.location.state.myId };
+      sessionStorage.setItem("myId", props.location.state.myId );
+    }
+
+    
     sessionUtils.checkLoggedIn();
+
+    this.getGame();
+
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
+  }
+
+  getGame() {
+    let thisObj = this;
+
+    gameService.getGame().then(response => {
+
+      let game = response.data;
+      let me = game.players.filter(player => player.id === this.state.myId)[0];
+
+      thisObj.setState({ game: game, me: me });
+    }).catch(error => {
+      thisObj.parseError(error);
+    });
   }
 
   updateState(stateDelta) {
@@ -80,47 +102,29 @@ class Game extends Component {
          <div className="game_wrap">
           <div className="game_container">
 
-              <CardGroup>
-                <Card className="p-6">
-                    <CardHeader tag="h1">Game</CardHeader>
-                    <CardBody>
-                      The game will be played here
-                    </CardBody>
-                </Card>
-              </CardGroup>
-
-
-          {!!this.state.scores ? 
-
             <CardGroup>
               <Card className="p-6">
-                <CardHeader tag="h1">Scores</CardHeader>
-                <CardBody>
-                  <DataTable
-                    defaultSortField="score"
-                    defaultSortAsc={false}
-                    columns={[
-                      {
-                        name: 'Player',
-                        selector: 'playerId',
-                        sortable: true,
-                      },
-                      {
-                        name: 'Score',
-                        selector: 'score',
-                        sortable: true,
-                        right: true,
-                      },
-                    ]}
-                      data={this.state.leaderboard.scores}
-                      theme="solarized"
-                  />
-                </CardBody>
+                  <CardHeader tag="h1">My Cards</CardHeader>
+                  { !!this.state.me ?
+                    <CardBody>
+
+                      { this.state.me.cards.map(card => 
+                        <img src={"/cards/thumbnails/" + card + ".png"}/>
+                      )}
+
+                    </CardBody>
+                  : <div>No cards found....</div> }
               </Card>
             </CardGroup>
 
-          : null
-        }
+            <CardGroup>
+              <Card className="p-6">
+                  <CardHeader tag="h1">Players</CardHeader>
+                  <CardBody>
+                    The game will be played here
+                  </CardBody>
+              </Card>
+            </CardGroup>
 
       <SockJsClient url={ process.env.REACT_APP_API_URL + '/websocket?tokenId=' + sessionStorage.getItem("JWT-TOKEN")} topics={['/game', '/user/game']}
                 onMessage={ this.handleWebsocketMessage.bind(this) }

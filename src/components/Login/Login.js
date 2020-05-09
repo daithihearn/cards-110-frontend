@@ -47,12 +47,23 @@ class Login extends Component {
 
   redirectToHomePage() {
 
-    // const { history } = this.props;
+    let thisObj = this;
 
     sessionUtils.checkUserType().then(function(response) {
+  
       let authority = response.data[0].authority;
       if (authority === "PLAYER") {
-        window.location.href = '/#/game';
+
+        sessionUtils.id().then(response => {
+
+          thisObj.props.history.push({
+            pathname: '/game',
+            state: { myId: response.data }
+          });
+        }).catch(error => {
+          thisObj.parseError(error);
+        });
+      
       } else if (authority === "ADMIN") {
         window.location.href = '/#/home';
       } else {

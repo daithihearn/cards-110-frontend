@@ -30,9 +30,20 @@ class AutoLogin extends Component {
     let thisObj = this;
 
     sessionUtils.checkUserType().then(function(response) {
+  
       let authority = response.data[0].authority;
       if (authority === "PLAYER") {
-        window.location.href = '/#/game';
+
+        sessionUtils.id().then(response => {
+
+          thisObj.props.history.push({
+            pathname: '/game',
+            state: { myId: response.data }
+          });
+        }).catch(error => {
+          thisObj.parseError(error);
+        });
+      
       } else if (authority === "ADMIN") {
         window.location.href = '/#/home';
       } else {
@@ -40,7 +51,8 @@ class AutoLogin extends Component {
       }
     })
     .catch(function(error) {
-      thisObj.parseError(error);
+      console.log(error);
+      window.location.href = '/#/login';
     });
   }
 

@@ -26,6 +26,33 @@ exports.checkLoggedIn = () => {
     });
 };
 
+exports.name = () => {
+  let authHeader = sessionStorage.getItem('JWT-TOKEN');
+
+  if (authHeader) {
+    let config = {
+      headers: {
+        Authorization: authHeader
+      }
+    };
+    return axios.get(`${process.env.REACT_APP_API_URL}/api/v1/session/name`, config);
+  }
+};
+
+exports.id = () => {
+  let authHeader = sessionStorage.getItem('JWT-TOKEN');
+
+  if (authHeader) {
+    let config = {
+      headers: {
+        Authorization: authHeader
+      }
+    };
+    return axios.get(`${process.env.REACT_APP_API_URL}/api/v1/session/id`, config);
+  }
+};
+
+
 exports.logout = () => {
   sessionStorage.clear();
   window.location.href = '/#/login';
