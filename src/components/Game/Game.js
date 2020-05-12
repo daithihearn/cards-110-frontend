@@ -31,7 +31,7 @@ class Game extends Component {
     let thisObj = this;
 
     gameService.getGameAndRound().then(response => {
-      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second);
+      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, []);
     }).catch(error => {
       thisObj.parseError(error);
     });
@@ -40,7 +40,7 @@ class Game extends Component {
   call(callAmount, event)  {
     let thisObj = this;
     gameService.call(callAmount).then(response => {
-      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, `Successfully called ${callAmount}`);
+      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, [], `Successfully called ${callAmount}`);
     }).catch(error => thisObj.parseError(error));
   };
 
@@ -48,8 +48,15 @@ class Game extends Component {
     event.preventDefault();
     let thisObj = this;
 
-    gameService.chooseFromDummy(this.state.selectedCards, this.state.selectedSuit).then(response => {
-      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, `Cards selected`);
+    if (this.state.selectedSuit !== "HEARTS" && this.state.selectedSuit !== "DIAMONDS" && this.state.selectedSuit !== "CLUBS" && this.state.selectedSuit !== "SPADES") {
+      this.updateState({snackOpen: true, snackMessage: "Please select a suit!", snackType: "warning"})
+      return;
+    }
+
+    let selectedCard = this.state.selectedCards;
+
+    gameService.chooseFromDummy(selectedCard, this.state.selectedSuit).then(response => {
+      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, selectedCard, `Cards selected`);
     }).catch(error => thisObj.parseError(error));
   }
 
@@ -58,7 +65,7 @@ class Game extends Component {
     let thisObj = this;
 
     gameService.buyCards(this.state.selectedCards).then(response => {
-      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, `Bought cards`);
+      thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, [], `Bought cards`);
     }).catch(error => thisObj.parseError(error));
   }
 
@@ -71,12 +78,15 @@ class Game extends Component {
     } else {
       let selectedCard = selectedCards[0];
       gameService.playCard(selectedCard).then(response => {
-        thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, `Played ${selectedCard}`);
+        thisObj.updateGameAndRound(thisObj, response.data.first, response.data.second, [], `Played ${selectedCard}`);
       }).catch(error => thisObj.parseError(error));
     }
   }
 
   handleSelectCard(card) {
+    if (!this.state.cardsSelectable) {
+      return
+    }
     let selectedCards = this.state.selectedCards;
     let indexOfCard = selectedCards.indexOf(card);
     if (indexOfCard != -1) {
@@ -103,9 +113,9 @@ class Game extends Component {
     
   }
 
-  handleSuitChange(changeEvent) {
+  handleSuitChange(suit) {
     this.updateState({
-      selectedSuit: changeEvent.target.name
+      selectedSuit: suit
     });
   }
 
@@ -115,7 +125,7 @@ class Game extends Component {
     }
 
     if(content.type === "GAME_AND_ROUND") {
-      this.updateGameAndRound(this, content.content.first, content.content.second);
+      this.updateGameAndRound(this, content.content.first, content.content.second, this.state.selectedCards);
     } else if(content.type === "LEADERBOARD") {
       this.updateState({leaderboard: content.content});
     } else {
@@ -123,11 +133,19 @@ class Game extends Component {
     }
   }
 
-  updateGameAndRound(thisObj, game, round, message) {
+  updateGameAndRound(thisObj, game, round, selectedCard, message) {
     let me = game.players.filter(player => player.id === thisObj.state.myId)[0];
     let dummy = game.players.filter(player => player.id === "dummy")[0];
+
+    const index = game.players.indexOf(dummy);
+    if (index > -1) {
+      game.players.splice(index, 1);
+    }
+
+    let cardsSelectable = (round.status === "CALLED" || round.status === "BUYING" || round.status === "PLAYING"); 
+
     let maxCall = thisObj.getMaxCall(game.players);
-    let newState = {game: game, me: me, dummy: dummy, round: round, maxCall: maxCall, selectedCards: [] }
+    let newState = {game: game, me: me, dummy: dummy, round: round, maxCall: maxCall, selectedCards: selectedCard, cardsSelectable: cardsSelectable }
     if (!!message) {
       newState.snackOpen = true;
       newState.snackMessage = message;
@@ -195,12 +213,13 @@ class Game extends Component {
                       </CardBody>
 
                       <CardBody>
-
-                        { this.state.me.cards.map(card => 
-                          <Button type="button" color="link" onClick={this.handleSelectCard.bind(this, card)}><img src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardSelected"}/></Button>
-                        )}
-
+                          <ButtonGroup>
+                          { this.state.me.cards.map(card => 
+                            <Button type="button" color="link" onClick={this.handleSelectCard.bind(this, card)}><img src={"/cards/thumbnails/" + card + ".png"} class={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/></Button>
+                          )}
+                          </ButtonGroup>
                       </CardBody>
+                      
 
                       {/* FINISHED  */}
 
@@ -218,7 +237,8 @@ class Game extends Component {
                       <CardBody>
 
                           {(!!this.state.round && !!this.state.round.currentPlayer && this.state.round.currentPlayer.id === this.state.myId) ?
-                          <ButtonGroup>
+
+                          <ButtonGroup size="lg">
                             <Button type="button" color="secondary" onClick={this.call.bind(this, 0)}>Pass</Button>
                             { (this.state.me.id == this.state.round.dealer.id && this.state.maxCall <= 10) || this.state.maxCall < 10 ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
                             { (this.state.me.id == this.state.round.dealer.id && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" color="primary" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
@@ -226,6 +246,7 @@ class Game extends Component {
                             { (this.state.me.id == this.state.round.dealer.id && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" color="primary" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
                             <Button type="button" color="danger" onClick={this.call.bind(this, 30)}>Jink</Button>
                           </ButtonGroup>
+
                           : null}
                           
                       </CardBody>
@@ -238,42 +259,30 @@ class Game extends Component {
 
                         {this.state.round.goer.id === this.state.myId ? 
                           <div>
-                            { this.state.round.status === "CALLED" && this.state.game.players.filter(player => player.id === "dummy").length > 0 ?
+                            { this.state.round.status === "CALLED" && !!this.state.dummy ?
                             <CardBody>
+                              <ButtonGroup>
                               { this.state.dummy.cards.map(card => 
-                                <Button type="button" color="link" onClick={this.handleSelectCard.bind(this, card)}><img src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardSelected"}/></Button>
+                                <Button type="button" color="link" onClick={this.handleSelectCard.bind(this, card)}><img src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/></Button>
                               )}
+                              </ButtonGroup>
 
                             </CardBody>
                             : null }
                             <CardBody>
                               <Form onSubmit={this.selectFromDummy.bind(this)}>
                                 <legend>Suit</legend>
-                                <FormGroup check>
-                                  <Label check>
-                                    <Input type="radio" name="HEARTS" checked={this.state.selectedSuit === 'HEARTS'} onChange={this.handleSuitChange} />{' '}
-                                    Hearts
-                                  </Label>
-                                </FormGroup>
-                                <FormGroup check>
-                                  <Label check>
-                                    <Input type="radio" name="DIAMONDS" checked={this.state.selectedSuit === 'DIAMONDS'} onChange={this.handleSuitChange} />{' '}
-                                    DIAMONDS
-                                  </Label>
-                                </FormGroup>
-                                <FormGroup check>
-                                  <Label check>
-                                    <Input type="radio" name="SPADES" checked={this.state.selectedSuit === 'SPADES'} onChange={this.handleSuitChange} />{' '}
-                                    SPADES
-                                  </Label>
-                                </FormGroup>
-                                <FormGroup check>
-                                  <Label check>
-                                    <Input type="radio" name="CLUBS" checked={this.state.selectedSuit === 'CLUBS'} onChange={this.handleSuitChange} />{' '}
-                                    CLUBS
-                                  </Label>
-                                </FormGroup>
-                                <ButtonGroup>
+
+                                <ButtonGroup size="lg">
+
+                                  <Button type="button" color={(this.state.selectedSuit === 'HEARTS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "HEARTS")}>HEARTS</Button>
+                                  <Button type="button" color={(this.state.selectedSuit === 'DIAMONDS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "DIAMONDS")}>DIAMONDS</Button>
+                                  <Button type="button" color={(this.state.selectedSuit === 'SPADES') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "SPADES")}>SPADES</Button>
+                                  <Button type="button" color={(this.state.selectedSuit === 'CLUBS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "CLUBS")}>CLUBS</Button>
+
+                                </ButtonGroup>
+                                <br/><br/>
+                                <ButtonGroup size="lg">
                                   <Button type="submit" color="primary">Select Cards</Button>
                                 </ButtonGroup>
                                 
@@ -292,8 +301,8 @@ class Game extends Component {
                       <CardBody>
 
                         <Form onSubmit={this.buyCards.bind(this)}>
-                          <ButtonGroup>
-                            {(!!this.state.round && !!this.state.round.currentPlayer && this.state.round.currentPlayer.id === this.state.myId) ? <Button type="submit" color="primary">Select Cards</Button> : null }
+                          <ButtonGroup size="lg">
+                            {(!!this.state.round && !!this.state.round.currentPlayer && this.state.round.currentPlayer.id === this.state.myId) ? <Button type="submit" color="primary">Buy Cards</Button> : null }
                           </ButtonGroup>
                         </Form>
                           
@@ -306,7 +315,7 @@ class Game extends Component {
                       <CardBody>
 
                         <Form onSubmit={this.playCard.bind(this)}>
-                          <ButtonGroup>
+                          <ButtonGroup size="lg">
                             {(!!this.state.round && !!this.state.round.currentPlayer && this.state.round.currentPlayer.id === this.state.myId) ? <Button type="submit" color="primary">Play Card</Button> : null }
                           </ButtonGroup>
                         </Form>
