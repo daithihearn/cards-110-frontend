@@ -1,8 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import logo from '../../assets/img/brand/logo.png';
 import sessionUtils from '../../utils/SessionUtils';
-import sidebarImage from '../../assets/img/brand/sidebar_image.jpg';
+import sidebarImage from '../../assets/img/brand/sidebar_image.png';
 
 class Nav extends Component {
   constructor(props) {
