@@ -3,6 +3,19 @@
 }
 
 .cardNotSelected {
-  opacity: .7;
+  opacity: .9;
   filter: brightness(70%);
+}
+
+.tableCloth {
+  background-image: url("/cards/originals/cloth.jpg");
+  min-height: 350px;
+}
+
+.carpet {
+  background-image: url("/cards/originals/carpet2.jpg");
+}
+
+.wood {
+  background-image: url("/cards/originals/wood.jpg");
 }

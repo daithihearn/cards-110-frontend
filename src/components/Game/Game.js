@@ -37,6 +37,14 @@ class Game extends Component {
     });
   }
 
+  replay(event)  {
+    let thisObj = this;
+    gameService.replay().then(response => {
+      thisObj.updateGame(thisObj, response.data, [], `Successfully started a new game`);
+    }).catch(error => thisObj.parseError(error));
+  };
+
+
   deal(event)  {
     let thisObj = this;
     gameService.deal().then(response => {
@@ -211,44 +219,50 @@ class Game extends Component {
   render() {
    
     return (
-      <div className="app">
+      <div className="app carpet">
          <div className="game_wrap">
           <div className="game_container">
 
             <CardGroup>
-              <Card className="p-6">
+              <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
 
-
-                  <CardHeader tag="h1">Cards {(!!this.state.hand && this.state.hand.currentPlayerId === this.state.myId)?<img src={"/cards/thumbnails/MY_TURN.png"} />:null}
-                              {(!!this.state.round && this.state.round.dealerId === this.state.myId)?<img src={"/cards/thumbnails/DEALER.png"} />:null}
-                              {(!!this.state.round && this.state.round.goerId === this.state.myId)?<img src={"/cards/thumbnails/GOER.png"} />:null}</CardHeader>
-                  { !!this.state.me ?
+                  { !!this.state.me && !!this.state.round && !!this.state.hand ?
                     <div>
 
+                      <CardBody>{(this.state.hand.currentPlayerId === this.state.myId)?<img src={"/cards/thumbnails/MY_TURN.png"} />:null}
+                              {(this.state.round.dealerId === this.state.myId)?<img src={"/cards/thumbnails/DEALER.png"} />:null}
+                              {(this.state.round.goerId === this.state.myId)?<img src={"/cards/thumbnails/GOER.png"} />:null}</CardBody>
+
+                      { !!this.state.round.suit ? 
+                        <CardBody><h2>Trumps: {this.state.round.suit}</h2></CardBody>
+                      : null}
+
+                      { !!this.state.me.cards && this.state.me.cards.length > 0 ?
+                        <CardBody>
+                          { this.state.me.cards.map(card => 
+                            <img onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                          )}
+                        </CardBody>
+                      : null}
+                      
+                      { this.state.me.id == this.state.round.dealerId && this.state.me.cards.length == 0 ?
                       <CardBody>
-
-                        { !!this.state.round && !!this.state.round.suit ? 
-                          <h2>Trumps: {this.state.round.suit}</h2>
-                        : null}
-
+                        <h2 >Waiting for dealer.</h2>
                       </CardBody>
-
-                      <CardBody>
-                          
-                        { this.state.me.cards.map(card => 
-                          <img onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
-                        )}
-                          
-                      </CardBody>
+                      : null}
                       
 
                       {/* FINISHED  */}
 
                       { !!this.state.game && this.state.game.status === "COMPLETED" ?
                       <CardBody>
-
-                        Game Over
-                          
+                        
+                        { this.state.myId == this.state.round.dealerId ?
+                        <ButtonGroup size="lg">
+                          <Button type="button" color="primary" onClick={this.call.replay(this)}>Start a new game</Button>
+                        </ButtonGroup>
+                        : <h2>Game Over - The dealer can start a new game</h2>}
+                        
                       </CardBody>
                       : null}
 
@@ -355,31 +369,12 @@ class Game extends Component {
 
 
                   : <div>No cards found....</div> }
-              </Card>
-            </CardGroup>
-
-            {/* {(!!this.state.round && !!this.state.round.currentHand) ?
-            <CardGroup>
-              <Card className="p-6">
-                  <CardHeader tag="h1">Current Hand</CardHeader>
-                  <CardBody>
-                        { [...this.state.round.currentHand.keys()].map(card => 
-                          <img src={"/cards/thumbnails/" + card + ".png"} class="thumbnail_size" />
-                        )}
-                  </CardBody>
-              </Card>
-            </CardGroup>
-            : null } */}
-
-
-            <CardGroup>
-              <Card className="p-6">
-                  <CardHeader tag="h1">Players</CardHeader>
+                
                   <CardBody>
                     { !!this.state.game && !!this.state.hand ?
                     <CardBody>
 
-                      <Table size="sm" hover responsive>
+                      <Table dark responsive>
                         <thead>
                           <tr>
                             <th left>Player</th>

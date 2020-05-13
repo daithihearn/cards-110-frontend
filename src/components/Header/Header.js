@@ -61,7 +61,7 @@ class Header extends Component {
   render() {
     return (
       <>
-        <div className="header_background">
+        <div className="header_background carpet">
           {this.content()}
         </div>
       </>

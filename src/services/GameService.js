@@ -122,6 +122,22 @@ exports.delete = (id) => {
   }
 };
 
+exports.replay = () => {
+  let authHeader = sessionStorage.getItem('JWT-TOKEN');
+
+  if (authHeader) {
+    let config = {
+      headers: {
+        Authorization: authHeader,
+        "Content-Type": "application/json"
+      }
+    };
+    return axios
+      .put(`${process.env.REACT_APP_API_URL}/api/v1/replay`, null, config)
+    
+  }
+};
+
 exports.deal = () => {
   let authHeader = sessionStorage.getItem('JWT-TOKEN');
 

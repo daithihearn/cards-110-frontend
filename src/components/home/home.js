@@ -171,7 +171,7 @@ class Home extends Component {
   render() {
 
     return (
-      <div className="app">
+      <div className="app carpet">
          <div className="game_wrap">
           <div className="game_container">
 
