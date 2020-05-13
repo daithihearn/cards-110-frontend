@@ -30,36 +30,6 @@ exports.getGame = () => {
   }
 };
 
-exports.getRound = () => {
-  let authHeader = sessionStorage.getItem('JWT-TOKEN');
-
-  if (authHeader) {
-    let config = {
-      headers: {
-        Authorization: authHeader
-      }
-    };
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}/api/v1/round`, config)
-    
-  }
-};
-
-exports.getGameAndRound = () => {
-  let authHeader = sessionStorage.getItem('JWT-TOKEN');
-
-  if (authHeader) {
-    let config = {
-      headers: {
-        Authorization: authHeader
-      }
-    };
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}/api/v1/gameAndRound`, config)
-    
-  }
-};
-
 exports.getAll = () => {
   let authHeader = sessionStorage.getItem('JWT-TOKEN');
 
@@ -152,7 +122,7 @@ exports.delete = (id) => {
   }
 };
 
-exports.deal = (gameId) => {
+exports.deal = () => {
   let authHeader = sessionStorage.getItem('JWT-TOKEN');
 
   if (authHeader) {
@@ -163,7 +133,7 @@ exports.deal = (gameId) => {
       }
     };
     return axios
-      .put(`${process.env.REACT_APP_API_URL}/api/v1/admin/deal?gameId=${gameId}`, null, config)
+      .put(`${process.env.REACT_APP_API_URL}/api/v1/deal`, null, config)
     
   }
 };

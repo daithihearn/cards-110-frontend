@@ -17,7 +17,7 @@ class Home extends Component {
       snackOpen: false,
       snackMessage: "",
       snackType: "",
-      emails:[],
+      players:[],
       currentEmail: '',
       modalStartGame:false,
       modalDeleteGame:false,
@@ -31,7 +31,6 @@ class Home extends Component {
     this.getActiveGames();
 
     this.updateState = this.updateState.bind(this);
-    this.deal = this.deal.bind(this);
     this.addPlayer = this.addPlayer.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.showDeleteGameModal = this.showDeleteGameModal.bind(this);
@@ -50,19 +49,18 @@ class Home extends Component {
       .catch(error => thisObj.parseError(error));
   };
 
-
   addPlayer(event) {
     event.preventDefault();
-    let updatedEmails = this.state.emails;
-    updatedEmails.push(this.state.currentEmail);
+    let updatedPlayers = this.state.players;
+    updatedPlayers.push({ email: this.state.currentEmail, displayName: this.state.currentUsername });
 
-    this.updateState( {email: updatedEmails, currentEmail: '', snackOpen: true, snackMessage: "Player Added", snackType: "success" });
+    this.updateState( {players: updatedPlayers, currentEmail: '', currentUsername: '', snackOpen: true, snackMessage: "Player Added", snackType: "success" });
   }
 
   removePlayer(idx) {
-    let emails = [...this.state.emails];
-    emails.splice(idx, 1);
-    this.setState({ emails, snackOpen: true, snackMessage: "Player Removed", snackType: "warning"  });
+    let updatedPlayers = [...this.state.players];
+    updatedPlayers.splice(idx, 1);
+    this.setState({ players: updatedPlayers, snackOpen: true, snackMessage: "Player Removed", snackType: "warning"  });
   }
 
   handleCloseStartGameModal() {
@@ -86,32 +84,22 @@ class Home extends Component {
     this.updateState({startGameDisabled: true});
 
     let thisObj = this;
-    let gameEmails = {
+    let createGamePayload = {
       name: this.state.name,
-      playerEmails: this.state.emails,
+      createPlayers: this.state.players,
       emailMessage: this.state.emailMessage
     }
     
-    gameService.put(gameEmails).then(response => {
+    gameService.put(createGamePayload).then(response => {
       
       let activeGames = thisObj.state.activeGames;
       activeGames.push(response.data);
-      thisObj.updateState({startGameDisabled: false, activeGames: activeGames, name: '', emails: [], emailMessage: ''});
-      thisObj.deal(response.data.id)
+      thisObj.updateState({startGameDisabled: false, activeGames: activeGames, name: '', players: [], emailMessage: ''});
     }).catch(error => {
       thisObj.parseError(error);
       thisObj.updateState({startGameDisabled: false}); 
     });
   };
-
-  deal(gameId) {
-    let thisObj = this;
-    gameService.deal(gameId).then(response => {
-      thisObj.updateState({ round: response.data });
-    }).catch(error => {
-      thisObj.parseError(error);
-    });
-  }
 
   finishGame(game, idx) {
     if (this.state.finishGameDisabled) {
@@ -249,35 +237,43 @@ class Home extends Component {
                   <CardBody>
                     <Form onSubmit={this.addPlayer}>
                       <FormGroup>
-                        <h4 colSpan="2">Enter an email address for each of the players</h4>
+                        <h4 colSpan="2">Add players below</h4>
+                          <Label for="currentUsername">Username</Label>
+                          <Input
+                            className="currentUsername"
+                            id="currentUsername"
+                            type="input"
+                            name="currentUsername"
+                            placeholder="Username"
+                            autoComplete="off"
+                            onChange={this.handleChange}
+                            value={this.state.currentUsername}
+                            required
+                          />
+                      </FormGroup>
+                      <FormGroup>
+                          <Label for="currentEmail">Email</Label>
+                          <Input
+                            className="currentEmail"
+                            id="currentEmail"
+                            type="input"
+                            name="currentEmail"
+                            placeholder="Email"
+                            autoComplete="off"
+                            onChange={this.handleChange}
+                            value={this.state.currentEmail}
+                            required
+                          />
+                      </FormGroup>
+                      <ButtonGroup>
+                        <Button type="submit" color="link"><img src={AddIcon} width="20px" height="20px"/></Button>
+                      </ButtonGroup>
                         
-                          <Table size="sm" >
-                            <tbody>
-                              <tr><td>
-                                <Input
-                                  className="currentEmail"
-                                  id="currentEmail"
-                                  type="input"
-                                  name="currentEmail"
-                                  placeholder="Email"
-                                  autoComplete="off"
-                                  onChange={this.handleChange}
-                                  value={this.state.currentEmail}
-                                  required
-                                /></td>
-                            <td>
-                              <Button type="submit" color="link"><img src={AddIcon} width="20px" height="20px"/></Button>
-                            </td>
-                            </tr>
-                            </tbody>
-                          </Table>
-                        </FormGroup>
-                        
-                      </Form>
-                    </CardBody>
+                    </Form>
+                  </CardBody>
 
 
-                    {this.state.emails.length > 0 ?
+                    {this.state.players.length > 0 ?
                       <div>
                       <CardBody>
                         <Table size="sm"  bordered hover responsive>
@@ -288,16 +284,16 @@ class Home extends Component {
                             </tr>
                           </thead>
                           <tbody>
-                          {this.state.emails.map((email, idx) =>
+                          {this.state.players.map((player, idx) =>
                             <tr>
-                              <td align="left">{email}</td>
+                              <td align="left">{player.displayName}</td>
                               <td><a class="remove_link" color="link" onClick={this.removePlayer.bind(this, idx)} > 
                               <img src={RemoveImage} width="20px" height="20px"/></a></td>
                             </tr>
                           )}
                           </tbody>
                         </Table>
-                        {!!this.state.emails && this.state.emails.length >0?
+                        {!!this.state.players && this.state.players.length >0?
                               <div>
                                 <FormGroup>
                                   <Label for="exampleText">Name</Label>
@@ -312,7 +308,7 @@ class Home extends Component {
                                     required />
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label for="exampleText">Message</Label>
+                                  <Label for="emailMessage">Message</Label>
                                   <Input type="textarea" 
                                     className="emailMessage"
                                     id="emailMessage"
