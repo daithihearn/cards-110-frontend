@@ -54,6 +54,7 @@ class Game extends Component {
   deal(event)  {
     let thisObj = this;
     gameService.deal().then(response => {
+      shuffleSound.play();
       thisObj.updateGame(thisObj, response.data, [], `Successfully dealt cards`);
     }).catch(error => thisObj.parseError(error));
   };
@@ -106,6 +107,7 @@ class Game extends Component {
     } else {
       let selectedCard = selectedCards[0];
       gameService.playCard(selectedCard).then(response => {
+        playCardSound.play();
         thisObj.updateState({playCardDisabled: false});
         thisObj.updateGame(thisObj, response.data, [], `Played ${selectedCard}`);
       }).catch(error => {
