@@ -19,3 +19,21 @@
 .wood {
   background-image: url("/cards/originals/wood.jpg");
 }
+
+.cardArea {
+  padding: 0.5rem;
+  min-height: 220px;
+  font-weight: bold;
+}
+
+.headerArea {
+  min-height: 90px;
+}
+
+.buttonArea {
+  min-height: 84px;
+}
+
+#playCardButton:disabled {
+  display: none;
+}

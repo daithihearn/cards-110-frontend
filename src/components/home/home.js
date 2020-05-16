@@ -232,8 +232,8 @@ class Home extends Component {
 
 
             <CardGroup>
-              <Card className="p-6">
-                <CardHeader tag="h1">Start a new game</CardHeader>
+              <Card  body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
+                <CardBody><h1>Start a new game</h1></CardBody>
                   <CardBody>
                     <Form onSubmit={this.addPlayer}>
                       <FormGroup>
@@ -266,7 +266,7 @@ class Home extends Component {
                           />
                       </FormGroup>
                       <ButtonGroup>
-                        <Button type="submit" color="link"><img src={AddIcon} width="20px" height="20px"/></Button>
+                        <Button type="submit" size="lg" color="primary">Add Player</Button>
                       </ButtonGroup>
                         
                     </Form>
@@ -276,7 +276,7 @@ class Home extends Component {
                     {this.state.players.length > 0 ?
                       <div>
                       <CardBody>
-                        <Table size="sm"  bordered hover responsive>
+                        <Table dark responsive>
                           <thead>
                             <tr>
                               <th>Players Added</th>
@@ -287,8 +287,8 @@ class Home extends Component {
                           {this.state.players.map((player, idx) =>
                             <tr>
                               <td align="left">{player.displayName}</td>
-                              <td><a class="remove_link" color="link" onClick={this.removePlayer.bind(this, idx)} > 
-                              <img src={RemoveImage} width="20px" height="20px"/></a></td>
+                              <td>
+                              <Button color="link" type="button" onClick={this.removePlayer.bind(this, idx)}><img src={RemoveImage} width="20px" height="20px"/></Button></td>
                             </tr>
                           )}
                           </tbody>
@@ -320,7 +320,7 @@ class Home extends Component {
                                     required />
                                 </FormGroup>
                                 <ButtonGroup>
-                                  <Button color="primary" type="button" onClick={this.showStartGameModal.bind(this)}>
+                                  <Button size="lg" color="primary" type="button" onClick={this.showStartGameModal.bind(this)}>
                                     Start Game 
                                   </Button> 
                                   <Modal isOpen={this.state.modalStartGame}>
@@ -329,10 +329,10 @@ class Home extends Component {
                                     </ModalHeader>
                                     <ModalBody>Are you sure you want to start the game?</ModalBody>
                                     <ModalFooter>
-                                    <Button color="secondary" onClick={this.handleCloseStartGameModal.bind(this)}>
+                                    <Button type="button" color="secondary" onClick={this.handleCloseStartGameModal.bind(this)}>
                                         No
                                       </Button>
-                                      <Button color="primary" onClick={this.startGameWithEmails.bind(this)}>
+                                      <Button type="button" color="primary" onClick={this.startGameWithEmails.bind(this)}>
                                         Yes
                                       </Button>
                                     </ModalFooter>

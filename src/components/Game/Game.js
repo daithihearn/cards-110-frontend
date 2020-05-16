@@ -3,15 +3,21 @@ import sessionUtils from '../../utils/SessionUtils';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
 import Snackbar from "@material-ui/core/Snackbar";
-import { Label, Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
+import { Label, Container, Row, Col, Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
+import shuffleAudio from '../../assets/sounds/shuffle.mp3';
+import playCardAudio from '../../assets/sounds/play_card.mp3';
+import UIfx from 'uifx';
+
+const shuffleSound = new UIfx(shuffleAudio);
+const playCardSound = new UIfx(playCardAudio);
 
 class Game extends Component {
   constructor(props) {
     super(props);
 
     if (!props.location.state) {
-      this.state = { myId: sessionStorage.getItem("myId"), selectedCards: [] };
+      this.state = { myId: sessionStorage.getItem("myId"), selectedCards: [],playCardDisabled: false };
     } else {
       this.state = { myId: props.location.state.myId, selectedCards: [] };
       sessionStorage.setItem("myId", props.location.state.myId );
@@ -71,6 +77,7 @@ class Game extends Component {
     let selectedCards = this.state.selectedCards;
 
     gameService.chooseFromDummy(selectedCards, this.state.selectedSuit).then(response => {
+      shuffleSound.play();
       thisObj.updateState({ selectedSuit: null });
       thisObj.updateGame(thisObj, response.data, selectedCards, `Cards selected`);
     }).catch(error => thisObj.parseError(error));
@@ -81,21 +88,30 @@ class Game extends Component {
     let thisObj = this;
 
     gameService.buyCards(this.state.selectedCards).then(response => {
+      shuffleSound.play();
       thisObj.updateGame(thisObj, response.data, [], `Bought cards`);
     }).catch(error => thisObj.parseError(error));
   }
 
   playCard(event) {
-    event.preventDefault();
+    if (this.state.playCardDisabled) {
+      return;
+  }
+    this.updateState({playCardDisabled: true});
     let thisObj = this;
     let selectedCards = this.state.selectedCards;
     if (selectedCards.length !== 1) {
+      thisObj.updateState({playCardDisabled: false});
       this.parseError({message: "Please select exactly one card to play"})
     } else {
       let selectedCard = selectedCards[0];
       gameService.playCard(selectedCard).then(response => {
+        thisObj.updateState({playCardDisabled: false});
         thisObj.updateGame(thisObj, response.data, [], `Played ${selectedCard}`);
-      }).catch(error => thisObj.parseError(error));
+      }).catch(error => {
+        thisObj.updateState({playCardDisabled: false});
+        thisObj.parseError(error);
+      });
     }
   }
 
@@ -140,12 +156,32 @@ class Game extends Component {
       return
     }
 
-    if(content.type === "GAME") {
-      this.updateGame(this, content.content, this.state.selectedCards);
-    } else if(content.type === "LEADERBOARD") {
-      this.updateState({leaderboard: content.content});
-    } else {
-      this.parseError({message: "Unsupported content type"})
+    switch (content.type) {
+      case("REPLAY"):
+        this.updateGame(this, content.content.first, this.state.selectedCards, "Game restarting");
+        break;
+      case("DEAL"):
+        shuffleSound.play();
+        this.updateGame(this, content.content.first, this.state.selectedCards, "Cards dealt");
+        break;
+      case("GAME_OVER"):
+        this.updateGame(this, content.content.first, this.state.selectedCards, "Game Over");
+        break;
+      case("CARD_PLAYED"):
+        playCardSound.play();
+        this.updateGame(this, content.content.first, this.state.selectedCards);
+        break;
+      case("BUY_CARDS"):
+        this.updateGame(this, content.content.first, this.state.selectedCards, content.content.second);
+        break;
+      case("CALL"):
+      case("CHOOSE_FROM_DUMMY"):
+      case("ROUND_COMPLETED"):
+      case("HAND_COMPLETED"):
+        this.updateGame(this, content.content.first, this.state.selectedCards);
+        break;
+      default:
+        this.parseError({message: "Unsupported content type"})
     }
   }
 
@@ -228,17 +264,40 @@ class Game extends Component {
 
                   { !!this.state.me && !!this.state.round && !!this.state.hand && this.state.game.status !== "FINISHED" ?
                     <div>
+                        <CardBody className="headerArea">
+                        <Container>
+                          <Row>
+                            { !!this.state.round.suit ? <Col><h2>Trumps: {this.state.round.suit}</h2></Col>: null}
+                                          {(this.state.round.dealerId === this.state.myId)?<Col><img src={"/cards/thumbnails/DEALER.png"} /></Col>:null}
+                                          {(this.state.round.goerId === this.state.myId)?<Col><img src={"/cards/thumbnails/GOER.png"} /></Col>:null}
+                                          {(this.state.hand.currentPlayerId === this.state.myId)?<Col><img src={"/cards/thumbnails/MY_TURN.png"} /></Col>:null}
+                                          
+                            </Row>
+                          </Container>
+                          
+                        </CardBody>
 
-                      <CardBody>{(this.state.hand.currentPlayerId === this.state.myId)?<img src={"/cards/thumbnails/MY_TURN.png"} />:null}
-                              {(this.state.round.dealerId === this.state.myId)?<img src={"/cards/thumbnails/DEALER.png"} />:null}
-                              {(this.state.round.goerId === this.state.myId)?<img src={"/cards/thumbnails/GOER.png"} />:null}</CardBody>
+                        <CardBody className="cardArea">
+                          <Container>
+                            <Row>
+                          {this.state.game.players.map( player =>
+                              <Col>
+                                <div>
+                                  {player.displayName}
+                                </div>
+                                <div>
+                                  <img src={(!!this.state.hand.playedCards[player.id] )? "/cards/thumbnails/" + this.state.hand.playedCards[player.id] + ".png" : "/cards/thumbnails/blank_grey_back.png"} 
+                                      class={(!!this.state.hand.playedCards[player.id] )? "thumbnail_size" : "thumbnail_size transparent"} />
+                                </div>
+                              </Col>
+                          )}
+                            </Row>
+                          </Container>
+                        </CardBody>
 
-                      { !!this.state.round.suit ? 
-                        <CardBody><h2>Trumps: {this.state.round.suit}</h2></CardBody>
-                      : null}
 
                       { !!this.state.me.cards && this.state.me.cards.length > 0 ?
-                        <CardBody>
+                        <CardBody className="cardArea">
                           { this.state.me.cards.map(card => 
                             <img onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                           )}
@@ -246,7 +305,7 @@ class Game extends Component {
                       : null}
                       
                       { this.state.me.id !== this.state.round.dealerId && this.state.me.cards.length === 0 ?
-                      <CardBody>
+                      <CardBody className="cardArea">
                         <h2 >Waiting for dealer.</h2>
                       </CardBody>
                       : null}
@@ -256,13 +315,13 @@ class Game extends Component {
 
                       { !!this.state.round && this.state.round.status === "CALLING" ?
                       <div>
-                        <CardBody>
-
+                        <CardBody className="buttonArea">
+                        
                             {(!!this.state.hand && this.state.me.cards.length > 0 && this.state.hand.currentPlayerId === this.state.myId) ?
 
                             <ButtonGroup size="lg">
                               <Button type="button" color="secondary" onClick={this.call.bind(this, 0)}>Pass</Button>
-                              { (this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 10) || this.state.maxCall < 10 ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
+                              { (this.state.game.players.length === 7 && ((this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 10) || this.state.maxCall < 10)) ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
                               { (this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" color="primary" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
                               { (this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 20) || this.state.maxCall < 20 ? <Button type="button" color="primary" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
                               { (this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" color="primary" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
@@ -273,8 +332,8 @@ class Game extends Component {
                             
                         </CardBody>
                         { this.state.me.id == this.state.round.dealerId && this.state.me.cards.length == 0 ?
-                        <CardBody>
-                          <img onClick={this.deal.bind(this)} src={"/cards/thumbnails/green_back.png"} />
+                        <CardBody className="cardArea">
+                          <img onClick={this.deal.bind(this)} src={"/cards/thumbnails/blue_back_deal.png"} class="thumbnail_size" />
                         </CardBody>
                         : null }
                       </div>
@@ -287,8 +346,8 @@ class Game extends Component {
 
                         {this.state.round.goerId === this.state.myId ? 
                           <div>
-                            { this.state.round.status === "CALLED" && !!this.state.dummy ?
-                            <CardBody>
+                            {!!this.state.dummy ?
+                            <CardBody className="cardArea">
 
                               { this.state.dummy.cards.map(card => 
                                 <img onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
@@ -296,7 +355,9 @@ class Game extends Component {
 
                             </CardBody>
                             : null }
-                            <CardBody>
+                            
+
+                            <CardBody className="buttonArea">
                               <Form onSubmit={this.selectFromDummy.bind(this)}>
                                 <legend>Suit</legend>
 
@@ -325,7 +386,7 @@ class Game extends Component {
                       {/* BUYING  */}
 
                       { !!this.state.round && this.state.round.status === "BUYING" ?
-                      <CardBody>
+                      <CardBody className="buttonArea">
 
                         <Form onSubmit={this.buyCards.bind(this)}>
                           <ButtonGroup size="lg">
@@ -339,27 +400,24 @@ class Game extends Component {
                       {/* PLAYING  */}
 
                       { !!this.state.round && this.state.round.status === "PLAYING" ?
-                      <CardBody>
+                      <CardBody className="buttonArea">
 
-                        <Form onSubmit={this.playCard.bind(this)}>
                           <ButtonGroup size="lg">
-                            {(!!this.state.hand && this.state.hand.currentPlayerId === this.state.myId) ? <Button type="submit" color="primary">Play Card</Button> : null }
+                            {(!!this.state.hand && this.state.hand.currentPlayerId === this.state.myId) ? <Button id="playCardButton" type="button" disabled={this.state.playCardDisabled} onClick={this.playCard.bind(this)} color="primary">Play Card</Button> : null }
                           </ButtonGroup>
-                        </Form>
                           
                       </CardBody>
                       : null}
 
-
                     </div>
 
 
-                  : <div>No cards found....</div> }
+                  : null }
 
                   {/* FINISHED  */}
 
                   { !!this.state.me && !!this.state.game && this.state.round && this.state.game.status === "FINISHED" ?
-                      <CardBody>
+                      <CardBody className="buttonArea">
                         
                         { this.state.me.id === this.state.round.dealerId ?
                         <ButtonGroup size="lg">
@@ -381,7 +439,6 @@ class Game extends Component {
                             <th></th>
                             <th>Call</th>
                             <th>Previous</th>
-                            <th>Current</th>
                             <th>Score</th>
                           </tr>
                         </thead>
@@ -401,10 +458,6 @@ class Game extends Component {
                               <img src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size cardNotSelected" /> : null }
                             </td>
                             <td>
-                              {!!this.state.hand.playedCards[player.id] ?
-                              <img src={"/cards/thumbnails/" + this.state.hand.playedCards[player.id] + ".png"} class="thumbnail_size" /> : null }
-                            </td>
-                            <td>
                               {player.score}
                             </td>
                           </tr>
@@ -413,7 +466,7 @@ class Game extends Component {
                       </Table>
 
                     </CardBody>
-                  : <div>No cards found....</div> }
+                  : null }
                   </CardBody>
               </Card>
             </CardGroup>
