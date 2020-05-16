@@ -76,6 +76,24 @@
   max-height: 153px;
 }
 
+.thumbnail_size_small {
+  max-width: 70px;
+  max-height: 100px;
+ 
+}
+
+
+.thumbnail_size_extra_small {
+  max-width: 45px;
+  max-height: 65px;
+ 
+}
+
+.background_white{
+  border-radius: 5px;
+  background-color: white;
+}
+
 .transparent {
   opacity: 0.6;
 }

@@ -266,18 +266,24 @@ class Game extends Component {
 
                   { !!this.state.me && !!this.state.round && !!this.state.hand && this.state.game.status !== "FINISHED" ?
                     <div>
-                        <CardBody className="headerArea">
-                        <Container>
-                          <Row>
-                            { !!this.state.round.suit ? <Col><h2>Trumps: {this.state.round.suit}</h2></Col>: null}
-                                          {(this.state.round.dealerId === this.state.myId)?<Col><img src={"/cards/thumbnails/DEALER.png"} /></Col>:null}
-                                          {(this.state.round.goerId === this.state.myId)?<Col><img src={"/cards/thumbnails/GOER.png"} /></Col>:null}
-                                          {(this.state.hand.currentPlayerId === this.state.myId)?<Col><img src={"/cards/thumbnails/MY_TURN.png"} /></Col>:null}
-                                          
-                            </Row>
-                          </Container>
+{/*                         
+                            { !!this.state.round.suit ? 
+                            // <CardBody className="headerArea">
+                            <Container>
+                              <Row><Col>
+                              {/* <h2>Trumps: {this.state.round.suit}</h2> */}
+                              {/* {(this.state.round.suit === "CLUBS")?<img src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "DIAMONDS")?<img src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "SPADES")?<img src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "HEARTS")?<img src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              */}
+                              {/* </Col>
+                              </Row>
+                          </Container> */}
                           
-                        </CardBody>
+                        {/* // </CardBody>
+                         : null} */}
+                                    
 
                         <CardBody className="cardArea">
                           <Container>
@@ -287,9 +293,33 @@ class Game extends Component {
                                 <div>
                                   {player.displayName}
                                 </div>
+                             
+
                                 <div>
-                                  <img src={(!!this.state.hand.playedCards[player.id] )? "/cards/thumbnails/" + this.state.hand.playedCards[player.id] + ".png" : "/cards/thumbnails/blank_grey_back.png"} 
-                                      class={(!!this.state.hand.playedCards[player.id] )? "thumbnail_size" : "thumbnail_size transparent"} />
+                               
+                              
+                                  <img src={(!!this.state.hand.playedCards[player.id] )? "/cards/thumbnails/" + this.state.hand.playedCards[player.id] + ".png" : 
+                                   [(this.state.hand.currentPlayerId != player.id)
+                                    ?
+                                  "/cards/thumbnails/blank_grey_back.png"
+                                :   "/cards/thumbnails/yellow_back_blank.png"] } 
+                                  
+                                  class={(!!this.state.hand.playedCards[player.id] )? "thumbnail_size" : 
+                                  [(this.state.hand.currentPlayerId != player.id)
+                                    ? "thumbnail_size  transparent " : "thumbnail_size"]
+                                        } />
+                                      </div>
+                                <div>
+                               
+                                {/* {(this.state.hand.currentPlayerId === player.id)?<img src={"/cards/thumbnails/MY_TURN.png"} />:null} */}
+                              {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img src={"/cards/thumbnails/PARTNER.png"} />:null}
+                              {((this.state.round.dealerId === player.id) && (!this.state.round.goerId)) ? <img src={"/cards/thumbnails/DEALER.png"} />:null}
+                              {(player.call===15) ? <img src={"/cards/originals/call_15.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===20) ? <img src={"/cards/originals/call_20.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===25) ? <img src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===30) ? <img src={"/cards/originals/call_jink.png"} class= "thumbnail_size_extra_small"/> : null}
+
+                              {/* {(this.state.round.goerId === player.id)?<img src={"/cards/thumbnails/GOER.png"} />:null} */}
                                 </div>
                               </Col>
                           )}
@@ -335,7 +365,7 @@ class Game extends Component {
                         </CardBody>
                         { this.state.me.id == this.state.round.dealerId && this.state.me.cards.length == 0 ?
                         <CardBody className="cardArea">
-                          <img onClick={this.deal.bind(this)} src={"/cards/thumbnails/blue_back_deal.png"} class="thumbnail_size" />
+                          <img onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} class="thumbnail_size" />
                         </CardBody>
                         : null }
                       </div>
@@ -411,10 +441,20 @@ class Game extends Component {
                       </CardBody>
                       : null}
 
+                    { !!this.state.round.suit ?  <div>
+                        {(this.state.round.suit === "CLUBS")?<img src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "DIAMONDS")?<img src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "SPADES")?<img src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "HEARTS")?<img src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                             </div>
+                             :null}
+
                     </div>
 
 
                   : null }
+
+                  
 
                   {/* FINISHED  */}
 
@@ -438,7 +478,7 @@ class Game extends Component {
                         <thead>
                           <tr>
                             <th left>Player</th>
-                            <th></th>
+                            {/* <th></th> */}
                             <th>Call</th>
                             <th>Previous</th>
                             <th>Score</th>
@@ -448,16 +488,16 @@ class Game extends Component {
                         { this.state.game.players.map(player => 
                           <tr>
                             <td align="left">{player.displayName}</td>
-                            <td>
+                            {/* <td>
                               {(this.state.hand.currentPlayerId === player.id)?<img src={"/cards/thumbnails/MY_TURN.png"} />:null}
                               {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img src={"/cards/thumbnails/PARTNER.png"} />:null}
                               {(this.state.round.dealerId === player.id)?<img src={"/cards/thumbnails/DEALER.png"} />:null}
                               {(this.state.round.goerId === player.id)?<img src={"/cards/thumbnails/GOER.png"} />:null}
-                            </td>
+                            </td> */}
                             <td>{player.call}</td>
                             <td>
                               {!!this.state.previousHand && !!this.state.previousHand.playedCards[player.id] ?
-                              <img src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size cardNotSelected" /> : null }
+                              <img src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size_small cardNotSelected"  /> : null }
                             </td>
                             <td>
                               {player.score}
