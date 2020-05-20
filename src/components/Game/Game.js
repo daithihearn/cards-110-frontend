@@ -17,7 +17,7 @@ class Game extends Component {
     super(props);
 
     if (!props.location.state) {
-      this.state = { myId: sessionStorage.getItem("myId"), selectedCards: [],playCardDisabled: false };
+      this.state = { myId: sessionStorage.getItem("myId"), selectedCards: [], actionsDisabled: false };
     } else {
       this.state = { myId: props.location.state.myId, selectedCards: [] };
       sessionStorage.setItem("myId", props.location.state.myId );
@@ -44,6 +44,11 @@ class Game extends Component {
   }
 
   replay(event)  {
+    if (this.state.actionsDisabled) {
+      return;
+    }
+    this.updateState({actionsDisabled: true});
+
     let thisObj = this;
     gameService.replay().then(response => {
       thisObj.updateGame(thisObj, response.data, [], `Successfully started a new game`);
@@ -52,6 +57,11 @@ class Game extends Component {
 
 
   deal(event)  {
+    if (this.state.actionsDisabled) {
+      return;
+    }
+    this.updateState({actionsDisabled: true});
+
     let thisObj = this;
     gameService.deal().then(response => {
       shuffleSound.play();
@@ -60,6 +70,11 @@ class Game extends Component {
   };
 
   call(callAmount, event)  {
+    if (this.state.actionsDisabled) {
+      return;
+    }
+    this.updateState({actionsDisabled: true});
+
     let thisObj = this;
     gameService.call(callAmount).then(response => {
       thisObj.updateGame(thisObj, response.data, [], `Successfully called ${callAmount}`);
@@ -68,6 +83,11 @@ class Game extends Component {
 
   selectFromDummy(event) {
     event.preventDefault();
+    if (this.state.actionsDisabled) {
+      return;
+    }
+    this.updateState({actionsDisabled: true});
+    
     let thisObj = this;
 
     if (this.state.selectedSuit !== "HEARTS" && this.state.selectedSuit !== "DIAMONDS" && this.state.selectedSuit !== "CLUBS" && this.state.selectedSuit !== "SPADES") {
@@ -86,6 +106,11 @@ class Game extends Component {
 
   buyCards(event) {
     event.preventDefault();
+    if (this.state.actionsDisabled) {
+      return;
+    }
+    this.updateState({actionsDisabled: true});
+    
     let thisObj = this;
 
     gameService.buyCards(this.state.selectedCards).then(response => {
@@ -95,23 +120,21 @@ class Game extends Component {
   }
 
   playCard(event) {
-    if (this.state.playCardDisabled) {
+    if (this.state.actionsDisabled) {
       return;
-  }
-    this.updateState({playCardDisabled: true});
+    }
+    this.updateState({actionsDisabled: true});
+    
     let thisObj = this;
     let selectedCards = this.state.selectedCards;
     if (selectedCards.length !== 1) {
-      thisObj.updateState({playCardDisabled: false});
       this.parseError({message: "Please select exactly one card to play"})
     } else {
       let selectedCard = selectedCards[0];
       gameService.playCard(selectedCard).then(response => {
         playCardSound.play();
-        thisObj.updateState({playCardDisabled: false});
         thisObj.updateGame(thisObj, response.data, [], `Played ${selectedCard}`);
       }).catch(error => {
-        thisObj.updateState({playCardDisabled: false});
         thisObj.parseError(error);
       });
     }
@@ -193,7 +216,6 @@ class Game extends Component {
     let round = game.currentRound;
     let hand = round.currentHand;
     
-    
     let previousHand = null;
     
     if (round.completedHands.length > 0) {
@@ -208,7 +230,7 @@ class Game extends Component {
     let cardsSelectable = (["CALLED", "BUYING", "PLAYING"].includes(round.status)); 
 
     let maxCall = thisObj.getMaxCall(game.players);
-    let newState = {game: game, round: round, hand: hand, previousHand: previousHand, me: me, dummy: dummy, maxCall: maxCall, selectedCards: selectedCard, cardsSelectable: cardsSelectable }
+    let newState = {game: game, actionsDisabled: false, round: round, hand: hand, previousHand: previousHand, me: me, dummy: dummy, maxCall: maxCall, selectedCards: selectedCard, cardsSelectable: cardsSelectable }
     if (!!message) {
       newState.snackOpen = true;
       newState.snackMessage = message;
@@ -251,7 +273,7 @@ class Game extends Component {
     } else if (error.message !== undefined) {
       errorMessage = error.message;
     }
-    this.updateState({ snackOpen: true, snackMessage: errorMessage, snackType: "error" });
+    this.updateState({ actionsDisabled: false, snackOpen: true, snackMessage: errorMessage, snackType: "error" });
   }
 
   render() {
