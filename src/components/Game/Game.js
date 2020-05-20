@@ -353,10 +353,10 @@ class Game extends Component {
 
                             <ButtonGroup size="lg">
                               <Button type="button" color="secondary" onClick={this.call.bind(this, 0)}>Pass</Button>
-                              { (this.state.game.players.length === 7 && ((this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 10) || this.state.maxCall < 10)) ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
-                              { (this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" color="primary" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
-                              { (this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 20) || this.state.maxCall < 20 ? <Button type="button" color="primary" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
-                              { (this.state.me.id == this.state.round.dealerId && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" color="primary" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
+                              { (this.state.game.players.length === 6 && ((this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 10) || this.state.maxCall < 10)) ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" color="primary" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 20) || this.state.maxCall < 20 ? <Button type="button" color="primary" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" color="primary" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
                               <Button type="button" color="danger" onClick={this.call.bind(this, 30)}>Jink</Button>
                             </ButtonGroup>
 
