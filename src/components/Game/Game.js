@@ -266,23 +266,6 @@ class Game extends Component {
 
                   { !!this.state.me && !!this.state.round && !!this.state.hand && this.state.game.status !== "FINISHED" ?
                     <div>
-{/*                         
-                            { !!this.state.round.suit ? 
-                            // <CardBody className="headerArea">
-                            <Container>
-                              <Row><Col>
-                              {/* <h2>Trumps: {this.state.round.suit}</h2> */}
-                              {/* {(this.state.round.suit === "CLUBS")?<img src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "DIAMONDS")?<img src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "SPADES")?<img src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "HEARTS")?<img src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              */}
-                              {/* </Col>
-                              </Row>
-                          </Container> */}
-                          
-                        {/* // </CardBody>
-                         : null} */}
                                     
 
                         <CardBody className="cardArea">
@@ -317,7 +300,7 @@ class Game extends Component {
                               {(player.call===20) ? <img src={"/cards/originals/call_20.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===25) ? <img src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===30) ? <img src={"/cards/originals/call_jink.png"} class= "thumbnail_size_extra_small"/> : null}
-                              
+
                                 </div>
                               </Col>
                           )}
