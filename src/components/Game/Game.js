@@ -311,15 +311,13 @@ class Game extends Component {
                                       </div>
                                 <div>
                                
-                                {/* {(this.state.hand.currentPlayerId === player.id)?<img src={"/cards/thumbnails/MY_TURN.png"} />:null} */}
                               {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img src={"/cards/thumbnails/PARTNER.png"} />:null}
                               {((this.state.round.dealerId === player.id) && (!this.state.round.goerId)) ? <img src={"/cards/thumbnails/DEALER.png"} />:null}
                               {(player.call===15) ? <img src={"/cards/originals/call_15.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===20) ? <img src={"/cards/originals/call_20.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===25) ? <img src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===30) ? <img src={"/cards/originals/call_jink.png"} class= "thumbnail_size_extra_small"/> : null}
-
-                              {/* {(this.state.round.goerId === player.id)?<img src={"/cards/thumbnails/GOER.png"} />:null} */}
+                              
                                 </div>
                               </Col>
                           )}
