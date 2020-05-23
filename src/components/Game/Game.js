@@ -37,61 +37,77 @@ class Game extends Component {
     let thisObj = this;
 
     gameService.getGame().then(response => {
-      thisObj.updateGame(thisObj, response.data, []);
+      thisObj.updateGame(response.data, []);
     }).catch(error => {
       thisObj.parseError(error);
     });
   }
 
+  disableButtons() {
+    this.updateState({actionsDisabled: true});
+  }
+
+  enableButtons() {
+    this.updateState({actionsDisabled: false});
+  }
+
+  buttonsDisabled() {
+    return this.state.actionsDisabled;
+  }
+
   replay(event)  {
-    if (this.state.actionsDisabled) {
+    if (this.buttonsDisabled()) {
       return;
     }
-    this.updateState({actionsDisabled: true});
+    this.disableButtons();
 
     let thisObj = this;
     gameService.replay().then(response => {
-      thisObj.updateGame(thisObj, response.data, [], `Successfully started a new game`);
-    }).catch(error => thisObj.parseError(error));
+      thisObj.updateGame(response.data, [], `Successfully started a new game`);
+    }).catch(error => thisObj.parseError(error))
+    .finally(() => thisObj.enableButtons());
   };
 
 
-  deal(event)  {
-    if (this.state.actionsDisabled) {
+  deal()  {
+    if (this.buttonsDisabled()) {
       return;
     }
-    this.updateState({actionsDisabled: true});
+    this.disableButtons();
 
     let thisObj = this;
     gameService.deal().then(response => {
       shuffleSound.play();
-      thisObj.updateGame(thisObj, response.data, [], `Successfully dealt cards`);
-    }).catch(error => thisObj.parseError(error));
+      thisObj.updateGame(response.data, [], `Successfully dealt cards`);
+    }).catch(error => thisObj.parseError(error))
+    .finally(() => thisObj.enableButtons());
   };
 
-  call(callAmount, event)  {
-    if (this.state.actionsDisabled) {
+  call(callAmount)  {
+    if (this.buttonsDisabled()) {
       return;
     }
-    this.updateState({actionsDisabled: true});
+    this.disableButtons();
 
     let thisObj = this;
     gameService.call(callAmount).then(response => {
-      thisObj.updateGame(thisObj, response.data, [], `Successfully called ${callAmount}`);
-    }).catch(error => thisObj.parseError(error));
+      thisObj.updateGame(response.data, [], `Successfully called ${callAmount}`);
+    }).catch(error => thisObj.parseError(error))
+    .finally(() => thisObj.enableButtons());
   };
 
   selectFromDummy(event) {
     event.preventDefault();
-    if (this.state.actionsDisabled) {
+    if (this.buttonsDisabled()) {
       return;
     }
-    this.updateState({actionsDisabled: true});
+    this.disableButtons();
     
     let thisObj = this;
 
     if (this.state.selectedSuit !== "HEARTS" && this.state.selectedSuit !== "DIAMONDS" && this.state.selectedSuit !== "CLUBS" && this.state.selectedSuit !== "SPADES") {
-      this.updateState({snackOpen: true, snackMessage: "Please select a suit!", snackType: "warning"})
+      this.updateState({snackOpen: true, snackMessage: "Please select a suit!", snackType: "warning"});
+      this.enableButtons();
       return;
     }
 
@@ -100,43 +116,50 @@ class Game extends Component {
     gameService.chooseFromDummy(selectedCards, this.state.selectedSuit).then(response => {
       shuffleSound.play();
       thisObj.updateState({ selectedSuit: null });
-      thisObj.updateGame(thisObj, response.data, selectedCards, `Cards selected`);
-    }).catch(error => thisObj.parseError(error));
+      thisObj.updateGame(response.data, selectedCards, `Cards selected`);
+      thisObj.enableButtons();
+      thisObj.buyCardsIfGoer();
+    }).catch(error => thisObj.parseError(error))
+    .finally(() => thisObj.enableButtons());
   }
 
   buyCards(event) {
-    event.preventDefault();
-    if (this.state.actionsDisabled) {
+    if (!!event) {
+      event.preventDefault();
+    }
+    if (this.buttonsDisabled()) {
       return;
     }
-    this.updateState({actionsDisabled: true});
+    this.disableButtons();
     
     let thisObj = this;
 
     gameService.buyCards(this.state.selectedCards).then(response => {
       shuffleSound.play();
-      thisObj.updateGame(thisObj, response.data, [], `Bought cards`);
-    }).catch(error => thisObj.parseError(error));
+      thisObj.updateGame(response.data, [], `Bought cards`);
+    }).catch(error => thisObj.parseError(error))
+    .finally(() => thisObj.enableButtons());
   }
 
-  playCard(event) {
-    if (this.state.actionsDisabled) {
+  playCard() {
+    if (this.buttonsDisabled()) {
       return;
     }
-    this.updateState({actionsDisabled: true});
+    this.disableButtons();
     
     let thisObj = this;
     let selectedCards = this.state.selectedCards;
     if (selectedCards.length !== 1) {
-      this.parseError({message: "Please select exactly one card to play"})
+      this.parseError({message: "Please select exactly one card to play"});
+      this.enableButtons();
     } else {
       let selectedCard = selectedCards[0];
       gameService.playCard(selectedCard).then(response => {
         playCardSound.play();
-        thisObj.updateGame(thisObj, response.data, [], `Played ${selectedCard}`);
-      }).catch(error => {
-        thisObj.parseError(error);
-      });
+        thisObj.updateGame(response.data, [], `Played ${selectedCard}`);
+        thisObj.dealIfDealer();
+      }).catch(error => thisObj.parseError(error))
+      .finally(() => thisObj.enableButtons());
     }
   }
 
@@ -183,35 +206,85 @@ class Game extends Component {
 
     switch (content.type) {
       case("REPLAY"):
-        this.updateGame(this, content.content.first, this.state.selectedCards, "Game restarting");
+        this.updateGame(content.content.first, this.state.selectedCards, "Game restarting");
         break;
       case("DEAL"):
         shuffleSound.play();
-        this.updateGame(this, content.content.first, this.state.selectedCards, "Cards dealt");
+        this.updateGame(content.content.first, this.state.selectedCards, "Cards dealt");
         break;
       case("GAME_OVER"):
-        this.updateGame(this, content.content.first, this.state.selectedCards, "Game Over");
+        this.updateGame(content.content.first, this.state.selectedCards, "Game Over");
+        break;
+      case("LAST_CARD_PLAYED"):
+        playCardSound.play();
+        this.updateGame(content.content.first, this.state.selectedCards);
         break;
       case("CARD_PLAYED"):
         playCardSound.play();
-        this.updateGame(this, content.content.first, this.state.selectedCards);
+        this.updateGame(content.content.first, this.state.selectedCards);
+        this.playIfLastCard();
         break;
       case("BUY_CARDS"):
-        this.updateGame(this, content.content.first, this.state.selectedCards, content.content.second);
+        this.updateGame(content.content.first, this.state.selectedCards, content.content.second);
+        this.buyCardsIfGoer();
+        break;
+      case("HAND_COMPLETED"):
+        this.updateGame(content.content.first, this.state.selectedCards);
+        this.playIfLastCard();
+        break;
+      case("ROUND_COMPLETED"):
+        this.updateGame(content.content.first, this.state.selectedCards);
+        this.dealIfDealer();
         break;
       case("CALL"):
       case("CHOOSE_FROM_DUMMY"):
-      case("ROUND_COMPLETED"):
-      case("HAND_COMPLETED"):
-        this.updateGame(this, content.content.first, this.state.selectedCards);
+        this.updateGame(content.content.first, this.state.selectedCards);
         break;
       default:
         this.parseError({message: "Unsupported content type"})
     }
   }
 
-  updateGame(thisObj, game, selectedCard, message) {
-    let me = game.players.filter(player => player.id === thisObj.state.myId)[0];
+  playIfLastCard() {
+    let thisObj = this;
+    if (this.isMyGo() && this.state.me.cards.length === 1) {
+      this.enableButtons();
+      this.sleep(500).then(() => {
+        thisObj.updateState({selectedCards: this.state.me.cards});
+        thisObj.playCard();
+      });
+      
+    }
+  }
+
+  dealIfDealer() {
+    let thisObj = this;
+    if (!!this.state.round && this.state.round.status === "CALLING" && this.state.round.dealerId === this.state.myId && this.state.me.cards.length == 0) {
+      this.sleep(500).then(() => thisObj.deal());
+    }
+  }
+
+  buyCardsIfGoer() {
+    if (this.state.round.status === "BUYING" && this.iAmGoer() && this.isMyGo()) {
+      this.updateState({selectedCards: this.state.me.cards});
+      this.buyCards();
+    }
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  isMyGo() {
+    return (!!this.state.hand && this.state.hand.currentPlayerId === this.state.myId);
+  }
+
+  iAmGoer() {
+    return (!!this.state.round && this.state.round.goerId === this.state.myId);
+  }
+
+  updateGame(game, selectedCard, message) {
+    let me = game.players.filter(player => player.id === this.state.myId)[0];
     let dummy = game.players.filter(player => player.id === "dummy")[0];
     let round = game.currentRound;
     let hand = round.currentHand;
@@ -227,16 +300,16 @@ class Game extends Component {
       game.players.splice(index, 1);
     }
 
-    let cardsSelectable = (["CALLED", "BUYING", "PLAYING"].includes(round.status)); 
+    let cardsSelectable = (["CALLED", "BUYING", "PLAYING"].includes(round.status));
 
-    let maxCall = thisObj.getMaxCall(game.players);
-    let newState = {game: game, actionsDisabled: false, round: round, hand: hand, previousHand: previousHand, me: me, dummy: dummy, maxCall: maxCall, selectedCards: selectedCard, cardsSelectable: cardsSelectable }
+    let maxCall = this.getMaxCall(game.players);
+    let newState = {game: game, round: round, hand: hand, previousHand: previousHand, me: me, dummy: dummy, maxCall: maxCall, selectedCards: selectedCard, cardsSelectable: cardsSelectable }
     if (!!message) {
       newState.snackOpen = true;
       newState.snackMessage = message;
       newState.snackType = "success";
     }
-    thisObj.updateState(newState);
+    this.updateState(newState);
   }
 
   getMaxCall(players) {
@@ -273,7 +346,7 @@ class Game extends Component {
     } else if (error.message !== undefined) {
       errorMessage = error.message;
     }
-    this.updateState({ actionsDisabled: false, snackOpen: true, snackMessage: errorMessage, snackType: "error" });
+    this.updateState({ snackOpen: true, snackMessage: errorMessage, snackType: "error" });
   }
 
   render() {
@@ -318,6 +391,7 @@ class Game extends Component {
                                
                               {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img src={"/cards/thumbnails/PARTNER.png"} />:null}
                               {((this.state.round.dealerId === player.id) && (!this.state.round.goerId)) ? <img src={"/cards/thumbnails/DEALER.png"} />:null}
+                              {(player.call===10) ? <img src={"/cards/originals/call_10.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===15) ? <img src={"/cards/originals/call_15.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===20) ? <img src={"/cards/originals/call_20.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===25) ? <img src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
@@ -355,12 +429,12 @@ class Game extends Component {
                             {(!!this.state.hand && this.state.me.cards.length > 0 && this.state.hand.currentPlayerId === this.state.myId) ?
 
                             <ButtonGroup size="lg">
-                              <Button type="button" color="secondary" onClick={this.call.bind(this, 0)}>Pass</Button>
+                              <Button type="button" color="secondary" disabled={this.state.actionsDisabled} onClick={this.call.bind(this, 0)}>Pass</Button>
                               { (this.state.game.players.length === 6 && ((this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 10) || this.state.maxCall < 10)) ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
-                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" color="primary" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
-                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 20) || this.state.maxCall < 20 ? <Button type="button" color="primary" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
-                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" color="primary" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
-                              <Button type="button" color="danger" onClick={this.call.bind(this, 30)}>Jink</Button>
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" disabled={this.state.actionsDisabled} color="primary" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 20) || this.state.maxCall < 20 ? <Button type="button" disabled={this.state.actionsDisabled} color="primary" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" disabled={this.state.actionsDisabled} color="primary" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
+                              <Button type="button" disabled={this.state.actionsDisabled} color="danger" onClick={this.call.bind(this, 30)}>Jink</Button>
                             </ButtonGroup>
 
                             : null}
@@ -379,7 +453,7 @@ class Game extends Component {
                       { !!this.state.round && this.state.round.status === "CALLED" ?
                       <div>
 
-                        {this.state.round.goerId === this.state.myId ? 
+                        {this.iAmGoer() ? 
                           <div>
                             {!!this.state.dummy ?
                             <CardBody className="cardArea">
@@ -398,15 +472,15 @@ class Game extends Component {
 
                                 <ButtonGroup size="lg">
 
-                                  <Button type="button" color={(this.state.selectedSuit === 'HEARTS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "HEARTS")}>HEARTS</Button>
-                                  <Button type="button" color={(this.state.selectedSuit === 'DIAMONDS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "DIAMONDS")}>DIAMONDS</Button>
-                                  <Button type="button" color={(this.state.selectedSuit === 'SPADES') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "SPADES")}>SPADES</Button>
-                                  <Button type="button" color={(this.state.selectedSuit === 'CLUBS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "CLUBS")}>CLUBS</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'HEARTS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "HEARTS")}>HEARTS</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'DIAMONDS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "DIAMONDS")}>DIAMONDS</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'SPADES') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "SPADES")}>SPADES</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'CLUBS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "CLUBS")}>CLUBS</Button>
 
                                 </ButtonGroup>
                                 <br/><br/>
                                 <ButtonGroup size="lg">
-                                  <Button type="submit" color="primary">Select Cards</Button>
+                                  <Button type="submit" disabled={this.state.actionsDisabled} color="primary">Select Cards</Button>
                                 </ButtonGroup>
                                 
                               </Form>
@@ -425,7 +499,7 @@ class Game extends Component {
 
                         <Form onSubmit={this.buyCards.bind(this)}>
                           <ButtonGroup size="lg">
-                            {(!!this.state.hand && this.state.hand.currentPlayerId === this.state.myId) ? <Button type="submit" color="primary">Buy Cards</Button> : null }
+                            {this.isMyGo() ? <Button type="submit" disabled={this.state.actionsDisabled} color="primary">Buy Cards</Button> : null }
                           </ButtonGroup>
                         </Form>
                           
@@ -438,7 +512,7 @@ class Game extends Component {
                       <CardBody className="buttonArea">
 
                           <ButtonGroup size="lg">
-                            {(!!this.state.hand && this.state.hand.currentPlayerId === this.state.myId) ? <Button id="playCardButton" type="button" disabled={this.state.playCardDisabled} onClick={this.playCard.bind(this)} color="primary">Play Card</Button> : null }
+                            {this.isMyGo() ? <Button id="playCardButton" type="button" disabled={this.state.actionsDisabled} onClick={this.playCard.bind(this)} color="primary">Play Card</Button> : null }
                           </ButtonGroup>
                           
                       </CardBody>
@@ -466,7 +540,7 @@ class Game extends Component {
                         
                         { this.state.me.id === this.state.round.dealerId ?
                         <ButtonGroup size="lg">
-                          <Button type="button" color="primary" onClick={this.replay.bind(this)}>Start a new game</Button>
+                          <Button type="button" color="primary" disabled={this.state.actionsDisabled} onClick={this.replay.bind(this)}>Start a new game</Button>
                         </ButtonGroup>
                         : <h2>Game Over - The dealer can start a new game</h2>}
                         
@@ -480,9 +554,7 @@ class Game extends Component {
                       <Table dark responsive>
                         <thead>
                           <tr>
-                            <th left>Player</th>
-                            {/* <th></th> */}
-                            <th>Call</th>
+                            <th align="left">Player</th>
                             <th>Previous</th>
                             <th>Score</th>
                           </tr>
@@ -491,13 +563,6 @@ class Game extends Component {
                         { this.state.game.players.map(player => 
                           <tr>
                             <td align="left">{player.displayName}</td>
-                            {/* <td>
-                              {(this.state.hand.currentPlayerId === player.id)?<img src={"/cards/thumbnails/MY_TURN.png"} />:null}
-                              {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img src={"/cards/thumbnails/PARTNER.png"} />:null}
-                              {(this.state.round.dealerId === player.id)?<img src={"/cards/thumbnails/DEALER.png"} />:null}
-                              {(this.state.round.goerId === player.id)?<img src={"/cards/thumbnails/GOER.png"} />:null}
-                            </td> */}
-                            <td>{player.call}</td>
                             <td>
                               {!!this.state.previousHand && !!this.state.previousHand.playedCards[player.id] ?
                               <img src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size_small cardNotSelected"  /> : null }
