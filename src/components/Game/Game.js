@@ -60,7 +60,7 @@ class Game extends Component {
     }
     let thisObj = this;
     this.updateState({alertActive:true});
-    this.sleep(5000).then(() => {
+    this.sleep(7000).then(() => {
       if (thisObj.state.alertActive) {
         alertSound.play();
         thisObj.cancelAlert()
@@ -194,6 +194,8 @@ class Game extends Component {
     if (!this.state.cardsSelectable) {
       return
     }
+    this.cancelAlert();
+
     let selectedCards = this.state.selectedCards;
     let indexOfCard = selectedCards.indexOf(card);
     if (indexOfCard != -1) {
@@ -244,6 +246,7 @@ class Game extends Component {
         break;
       case("LAST_CARD_PLAYED"):
         playCardSound.play();
+        this.cancelAlert();
         this.updateGame(content.content.first, this.state.selectedCards);
         break;
       case("CARD_PLAYED"):
