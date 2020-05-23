@@ -31,6 +31,7 @@ class Home extends Component {
     this.getActiveGames();
 
     this.updateState = this.updateState.bind(this);
+    this.showStartGameModal = this.showStartGameModal.bind(this);
     this.addPlayer = this.addPlayer.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.showDeleteGameModal = this.showDeleteGameModal.bind(this);
@@ -66,7 +67,8 @@ class Home extends Component {
   handleCloseStartGameModal() {
     this.setState({ modalStartGame: false });
   }
-  showStartGameModal() {
+  showStartGameModal(event) {
+    event.preventDefault();
     this.setState({ modalStartGame: true });
   }
 
@@ -274,7 +276,7 @@ class Home extends Component {
 
 
                     {this.state.players.length > 0 ?
-                      <div>
+
                       <CardBody>
                         <Table dark responsive>
                           <thead>
@@ -293,8 +295,8 @@ class Home extends Component {
                           )}
                           </tbody>
                         </Table>
-                        {!!this.state.players && this.state.players.length >0?
-                              <div>
+                        {(!!this.state.players && this.state.players.length > 0) ?
+                              <Form onSubmit={this.showStartGameModal}>
                                 <FormGroup>
                                   <Label for="exampleText">Name</Label>
                                   <Input type="input" 
@@ -320,7 +322,7 @@ class Home extends Component {
                                     required />
                                 </FormGroup>
                                 <ButtonGroup>
-                                  <Button size="lg" color="primary" type="button" onClick={this.showStartGameModal.bind(this)}>
+                                  <Button size="lg" color="primary" type="submit" onClick={this.showStartGameModal.bind(this)}>
                                     Start Game 
                                   </Button> 
                                   <Modal isOpen={this.state.modalStartGame}>
@@ -329,7 +331,7 @@ class Home extends Component {
                                     </ModalHeader>
                                     <ModalBody>Are you sure you want to start the game?</ModalBody>
                                     <ModalFooter>
-                                    <Button type="button" color="secondary" onClick={this.handleCloseStartGameModal.bind(this)}>
+                                      <Button type="button" color="secondary" onClick={this.handleCloseStartGameModal.bind(this)}>
                                         No
                                       </Button>
                                       <Button type="button" color="primary" onClick={this.startGameWithEmails.bind(this)}>
@@ -338,11 +340,9 @@ class Home extends Component {
                                     </ModalFooter>
                                   </Modal>
                                 </ButtonGroup>
-                              </div>
-                                : null
-                              }
+                              </Form>
+                                : null}
                       </CardBody>
-                      </div>
                     : null}
 
 

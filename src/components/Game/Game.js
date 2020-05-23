@@ -3,14 +3,16 @@ import sessionUtils from '../../utils/SessionUtils';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
 import Snackbar from "@material-ui/core/Snackbar";
-import { Label, Container, Row, Col, Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
+import { Container, Row, Col, Button, ButtonGroup, Form, Card, CardBody, CardGroup, Table } from 'reactstrap';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 import shuffleAudio from '../../assets/sounds/shuffle.mp3';
 import playCardAudio from '../../assets/sounds/play_card.mp3';
+import alertAudio from '../../assets/sounds/alert.mp3';
 import UIfx from 'uifx';
 
 const shuffleSound = new UIfx(shuffleAudio);
 const playCardSound = new UIfx(playCardAudio);
+const alertSound = new UIfx(alertAudio);
 
 class Game extends Component {
   constructor(props) {
@@ -38,6 +40,7 @@ class Game extends Component {
 
     gameService.getGame().then(response => {
       thisObj.updateGame(response.data, []);
+      thisObj.setAlert();
     }).catch(error => {
       thisObj.parseError(error);
     });
@@ -51,6 +54,24 @@ class Game extends Component {
     this.updateState({actionsDisabled: false});
   }
 
+  setAlert() {
+    if (!this.isMyGo()) {
+      return;
+    }
+    let thisObj = this;
+    this.updateState({alertActive:true});
+    this.sleep(5000).then(() => {
+      if (thisObj.state.alertActive) {
+        alertSound.play();
+        thisObj.cancelAlert()
+      }
+    });
+  }
+
+  cancelAlert() {
+    this.updateState({alertActive:false});
+  }
+
   buttonsDisabled() {
     return this.state.actionsDisabled;
   }
@@ -59,6 +80,7 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
+    this.cancelAlert();
     this.disableButtons();
 
     let thisObj = this;
@@ -73,6 +95,7 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
+    this.cancelAlert();
     this.disableButtons();
 
     let thisObj = this;
@@ -87,6 +110,7 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
+    this.cancelAlert();
     this.disableButtons();
 
     let thisObj = this;
@@ -101,6 +125,7 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
+    this.cancelAlert();
     this.disableButtons();
     
     let thisObj = this;
@@ -130,6 +155,7 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
+    this.cancelAlert();
     this.disableButtons();
     
     let thisObj = this;
@@ -145,6 +171,7 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
+    this.cancelAlert();
     this.disableButtons();
     
     let thisObj = this;
@@ -243,6 +270,7 @@ class Game extends Component {
       default:
         this.parseError({message: "Unsupported content type"})
     }
+    this.setAlert();
   }
 
   playIfLastCard() {
