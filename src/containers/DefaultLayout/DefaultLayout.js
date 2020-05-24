@@ -1,7 +1,6 @@
 import { AppSidebar } from '@coreui/react';
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Menu from '../../assets/icons/Menu.svg';
 import DefaultFooter from '../../components/Footer/Footer';
 import Nav from '../../components/Nav/Nav.js';
 import DefaultHeader from '../../containers/Header';

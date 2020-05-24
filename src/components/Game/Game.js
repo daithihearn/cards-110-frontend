@@ -198,7 +198,7 @@ class Game extends Component {
 
     let selectedCards = this.state.selectedCards;
     let indexOfCard = selectedCards.indexOf(card);
-    if (indexOfCard != -1) {
+    if (indexOfCard !== -1) {
       selectedCards.splice(indexOfCard, 1);
     } else {
       selectedCards.push(card);
@@ -290,7 +290,7 @@ class Game extends Component {
 
   dealIfDealer() {
     let thisObj = this;
-    if (!!this.state.round && this.state.round.status === "CALLING" && this.state.round.dealerId === this.state.myId && this.state.me.cards.length == 0) {
+    if (!!this.state.round && this.state.round.status === "CALLING" && this.state.round.dealerId === this.state.myId && this.state.me.cards.length === 0) {
       this.sleep(500).then(() => thisObj.deal());
     }
   }
@@ -407,26 +407,26 @@ class Game extends Component {
                                 <div>
                                
                               
-                                  <img src={(!!this.state.hand.playedCards[player.id] )? "/cards/thumbnails/" + this.state.hand.playedCards[player.id] + ".png" : 
-                                   [(this.state.hand.currentPlayerId != player.id)
+                                  <img alt={player.displayName} src={(!!this.state.hand.playedCards[player.id] )? "/cards/thumbnails/" + this.state.hand.playedCards[player.id] + ".png" : 
+                                   [(this.state.hand.currentPlayerId !== player.id)
                                     ?
                                   "/cards/thumbnails/blank_grey_back.png"
                                 :   "/cards/thumbnails/yellow_back_blank.png"] } 
                                   
                                   class={(!!this.state.hand.playedCards[player.id] )? "thumbnail_size" : 
-                                  [(this.state.hand.currentPlayerId != player.id)
+                                  [(this.state.hand.currentPlayerId !== player.id)
                                     ? "thumbnail_size  transparent " : "thumbnail_size"]
                                         } />
                                       </div>
                                 <div>
                                
-                              {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img src={"/cards/thumbnails/PARTNER.png"} />:null}
-                              {((this.state.round.dealerId === player.id) && (!this.state.round.goerId)) ? <img src={"/cards/thumbnails/DEALER.png"} />:null}
-                              {(player.call===10) ? <img src={"/cards/originals/call_10.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===15) ? <img src={"/cards/originals/call_15.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===20) ? <img src={"/cards/originals/call_20.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===25) ? <img src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===30) ? <img src={"/cards/originals/call_jink.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img alt="Partner Chip" src={"/cards/thumbnails/PARTNER.png"} />:null}
+                              {((this.state.round.dealerId === player.id) && (!this.state.round.goerId)) ? <img alt="Dealer Chip" src={"/cards/thumbnails/DEALER.png"} />:null}
+                              {(player.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} class= "thumbnail_size_extra_small"/> : null}
 
                                 </div>
                               </Col>
@@ -439,7 +439,7 @@ class Game extends Component {
                       { !!this.state.me.cards && this.state.me.cards.length > 0 ?
                         <CardBody className="cardArea">
                           { this.state.me.cards.map(card => 
-                            <img onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                            <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                           )}
                         </CardBody>
                       : null}
@@ -471,9 +471,9 @@ class Game extends Component {
                             : null}
                             
                         </CardBody>
-                        { this.state.me.id == this.state.round.dealerId && this.state.me.cards.length == 0 ?
+                        { this.state.me.id === this.state.round.dealerId && this.state.me.cards.length === 0 ?
                         <CardBody className="cardArea">
-                          <img onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} class="thumbnail_size" />
+                          <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} class="thumbnail_size" />
                         </CardBody>
                         : null }
                       </div>
@@ -490,7 +490,7 @@ class Game extends Component {
                             <CardBody className="cardArea">
 
                               { this.state.dummy.cards.map(card => 
-                                <img onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                                <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                               )}
 
                             </CardBody>
@@ -550,10 +550,10 @@ class Game extends Component {
                       : null}
 
                     { !!this.state.round.suit ?  <div>
-                        {(this.state.round.suit === "CLUBS")?<img src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "DIAMONDS")?<img src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "SPADES")?<img src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "HEARTS")?<img src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                        {(this.state.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small background_white" />:null}
+                              {(this.state.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small background_white" />:null}
                              </div>
                              :null}
 
@@ -596,7 +596,7 @@ class Game extends Component {
                             <td align="left">{player.displayName}</td>
                             <td>
                               {!!this.state.previousHand && !!this.state.previousHand.playedCards[player.id] ?
-                              <img src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size_small cardNotSelected"  /> : null }
+                              <img alt={this.state.previousHand.playedCards[player.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size_small cardNotSelected"  /> : null }
                             </td>
                             <td>
                               {player.score}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import Logo from '../../assets/img/brand/logo.png';
 import sessionUtils from '../../utils/SessionUtils';
 
 class Header extends Component {

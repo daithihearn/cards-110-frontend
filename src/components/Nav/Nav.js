@@ -27,7 +27,7 @@ class Nav extends Component {
         Authorization: authHeader
       }
     };
-    const result = axios
+    return axios
       .get(`${process.env.REACT_APP_API_URL}/api/v1/session/name`, config)
       .then(function(response) {
         let username = response.data;

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import sessionUtils from '../../utils/SessionUtils';
 import gameService from '../../services/GameService';
 import RemoveImage from '../../assets/icons/remove.png';
-import AddIcon from '../../assets/icons/add.svg';
 
 import { Label, Modal, ModalBody, ModalHeader, ModalFooter, Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
@@ -217,8 +216,8 @@ class Home extends Component {
                         <tr>
                           <td align="left">{game.name}</td>
                           <td><Button type="button" color="link" onClick={this.finishGame.bind(this, game, idx)}>Finish</Button></td>
-                          <td><a type="button" color="danger" onClick={this.showDeleteGameModal.bind(this, game, idx)}>
-                            <img src={RemoveImage} width="20px" height="20px"/></a>                  
+                          <td><Button type="button" color="danger" onClick={this.showDeleteGameModal.bind(this, game, idx)}>
+                            <img alt="Remove" src={RemoveImage} width="20px" height="20px"/></Button>                  
                             </td>
                         </tr>
                         
@@ -290,7 +289,7 @@ class Home extends Component {
                             <tr>
                               <td align="left">{player.displayName}</td>
                               <td>
-                              <Button color="link" type="button" onClick={this.removePlayer.bind(this, idx)}><img src={RemoveImage} width="20px" height="20px"/></Button></td>
+                              <Button color="link" type="button" onClick={this.removePlayer.bind(this, idx)}><img alt="Remove" src={RemoveImage} width="20px" height="20px"/></Button></td>
                             </tr>
                           )}
                           </tbody>
