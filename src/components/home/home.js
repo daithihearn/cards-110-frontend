@@ -17,6 +17,7 @@ class Home extends Component {
       snackMessage: "",
       snackType: "",
       players:[],
+      currentUsername: '',
       currentEmail: '',
       modalStartGame:false,
       modalDeleteGame:false,
@@ -286,9 +287,9 @@ class Home extends Component {
                           </thead>
                           <tbody>
                           {this.state.players.map((player, idx) =>
-                            <tr>
-                              <td align="left">{player.displayName}</td>
-                              <td>
+                            <tr key={player.id}>
+                              <td align="left" key={player.id + "name"}>{player.displayName}</td>
+                              <td key={player.id + "emailMessage"}>
                               <Button color="link" type="button" onClick={this.removePlayer.bind(this, idx)}><img alt="Remove" src={RemoveImage} width="20px" height="20px"/></Button></td>
                             </tr>
                           )}

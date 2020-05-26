@@ -1,6 +1,6 @@
 // Styles
 // CoreUI Icons Set
-import '@coreui/icons/css/coreui-icons.min.css';
+import '@coreui/icons/css/all.min.css';
 // Import Flag Icons Set
 import 'flag-icon-css/css/flag-icon.min.css';
 // Import Font Awesome Icons Set

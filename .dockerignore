@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+build
+dist
+gradle
+.classpath
+.project
+*.bat
+*.sh

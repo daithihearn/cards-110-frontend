@@ -1,24 +1,17 @@
-FROM node:8.9.1
+FROM node:14
 
-RUN mkdir -p /opt/app
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
 
-# set our node environment, either development or production
-# defaults to production, compose overrides this to development on build and run
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+COPY ./public ./public
+COPY ./src ./src
 
-# default to port 80 for node, and 5858 or 9229 for debug
-ARG PORT=80
-ENV PORT $PORT
-EXPOSE $PORT 5858 9229
+RUN export REACT_APP_API_URL=http://localhost:8080
 
-# install dependencies first, in a different location for easier app bind mounting for local development
-WORKDIR /opt/app
-COPY package.json /opt/app
-RUN npm install && npm cache clean --force
-ENV PATH /opt/app/node_modules/.bin:$PATH
+RUN npm install -g serve
+RUN npm run build
 
-# copy in our source code last, as it changes the most
-COPY . /opt/app
+EXPOSE 80
 
-CMD [ "npm", "start" ]
+CMD [ "serve",  "-s",  "build" ]

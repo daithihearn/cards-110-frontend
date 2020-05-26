@@ -1,11 +1,6 @@
 #!/bin/sh
 
 echo "
-Building cards-110-frontend"
+1. Building image cards-110-frontend"
 
-npm install
-REACT_APP_API_URL="" npm run build
-rm -R ./dist
-mv ./build ./dist
-./gradlew webjar install
-cp ./build/libs/*.jar ../cards-110-api/libs/
+docker build -t localhost:5000/cards-110-frontend:latest .
