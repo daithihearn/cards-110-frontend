@@ -7,10 +7,8 @@ RUN npm install
 COPY ./public ./public
 COPY ./src ./src
 
-RUN export REACT_APP_API_URL=http://localhost:8080
-
 RUN npm install -g serve
-RUN npm run build
+RUN REACT_APP_API_URL="http://localhost:8080" npm run build
 
 EXPOSE 80
 
