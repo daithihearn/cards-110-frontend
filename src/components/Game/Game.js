@@ -74,7 +74,6 @@ class Game extends Component {
     let stateDelta = { activeAlert: uuid() };
     this.sleep(10000).then(() => {
       if (!!thisObj.state.activeAlert && thisObj.state.activeAlert === stateDelta.activeAlert) {
-        console.log("Hurry up!");
         alertSound.play();
         let stateUpdate = thisObj.state;
         Object.assign(stateUpdate, thisObj.cancelAlert());
@@ -271,7 +270,7 @@ class Game extends Component {
         Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Played ${selectedCard}`));
 
         if (!!stateUpdate.round && stateUpdate.round.status === "CALLING" && stateUpdate.round.dealerId === stateUpdate.myId && stateUpdate.me.cards.length === 0) {
-          Object.assign(state, enableButtons());
+          Object.assign(stateUpdate, enableButtons());
           thisObj.setState(stateUpdate);
           thisObj.sleep(500).then(() => thisObj.deal());
           return;
@@ -586,9 +585,9 @@ class Game extends Component {
                             
                         </CardBody>
                         { this.state.me.id === this.state.round.dealerId && this.state.me.cards.length === 0 ?
-                        <CardBody className="cardArea">
-                          <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} class="thumbnail_size" />
-                        </CardBody>
+                          <CardBody className="cardArea">
+                            <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} class="thumbnail_size" />
+                          </CardBody>
                         : null }
                       </div>
                       : null}
