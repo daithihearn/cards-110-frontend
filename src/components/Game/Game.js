@@ -5,14 +5,34 @@ import SockJsClient from 'react-stomp';
 import Snackbar from "@material-ui/core/Snackbar";
 import { Container, Row, Col, Button, ButtonGroup, Form, Card, CardBody, CardGroup, Table } from 'reactstrap';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
+import uuid from 'uuid-random';
 import shuffleAudio from '../../assets/sounds/shuffle.mp3';
 import playCardAudio from '../../assets/sounds/play_card.mp3';
 import alertAudio from '../../assets/sounds/alert.mp3';
-import UIfx from 'uifx';
 
-const shuffleSound = new UIfx(shuffleAudio);
-const playCardSound = new UIfx(playCardAudio);
-const alertSound = new UIfx(alertAudio);
+const shuffleSound = new Audio(shuffleAudio);
+const playCardSound = new Audio(playCardAudio);
+const alertSound = new Audio(alertAudio);
+
+function isCurrentPlayer(state) {
+  return !!state.hand && state.hand.currentPlayerId === state.myId;
+}
+
+function isMyGo(state) {
+  return (!!state.hand && state.hand.currentPlayerId === state.myId);
+}
+
+function iAmGoer(state) {
+  return (!!state.round && state.round.goerId === state.myId);
+}
+
+function disableButtons() {
+  return {actionsDisabled: true};
+}
+
+function enableButtons() {
+  return {actionsDisabled: false};
+}
 
 class Game extends Component {
   constructor(props) {
@@ -30,7 +50,6 @@ class Game extends Component {
     this.getGame();
 
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
-    this.handleSuitChange = this.handleSuitChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
   }
@@ -39,37 +58,37 @@ class Game extends Component {
     let thisObj = this;
 
     gameService.getGame().then(response => {
-      thisObj.updateGame(response.data, []);
-      thisObj.setAlert();
+      let state = thisObj.state;
+      Object.assign(state, thisObj.updateGame(response.data, []));
+      if (isCurrentPlayer(state)) {
+        Object.assign(state, thisObj.setAlert());
+      }
+      thisObj.setState(state);
     }).catch(error => {
       thisObj.parseError(error);
     });
   }
 
-  disableButtons() {
-    this.updateState({actionsDisabled: true});
-  }
-
-  enableButtons() {
-    this.updateState({actionsDisabled: false});
-  }
-
   setAlert() {
-    if (!this.isMyGo()) {
-      return;
-    }
     let thisObj = this;
-    this.updateState({alertActive:true});
-    this.sleep(7000).then(() => {
-      if (thisObj.state.alertActive) {
+    let stateDelta = { activeAlert: uuid() };
+    this.sleep(10000).then(() => {
+      if (!!thisObj.state.activeAlert && thisObj.state.activeAlert === stateDelta.activeAlert) {
+        console.log("Hurry up!");
         alertSound.play();
-        thisObj.cancelAlert()
+        let stateUpdate = thisObj.state;
+        Object.assign(stateUpdate, thisObj.cancelAlert());
+        thisObj.setState(stateUpdate);
       }
     });
+
+    return stateDelta;
   }
 
   cancelAlert() {
-    this.updateState({alertActive:false});
+    if (!!this.state.activeAlert) {
+      return {activeAlert: null};
+    }
   }
 
   buttonsDisabled() {
@@ -80,14 +99,24 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
-    this.cancelAlert();
-    this.disableButtons();
-
     let thisObj = this;
+    let state = this.state;
+    Object.assign(state, thisObj.cancelAlert());
+    Object.assign(state, disableButtons());
+    thisObj.setState(state);
+    
     gameService.replay().then(response => {
-      thisObj.updateGame(response.data, [], `Successfully started a new game`);
-    }).catch(error => thisObj.parseError(error))
-    .finally(() => thisObj.enableButtons());
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully started a new game`));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate);
+
+    }).catch(error => {
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate); 
+    });
   };
 
 
@@ -95,57 +124,95 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
-    this.cancelAlert();
-    this.disableButtons();
-
     let thisObj = this;
+    let state = this.state;
+    Object.assign(state, thisObj.cancelAlert());
+    Object.assign(state, disableButtons());
+    thisObj.setState(state);
+
     gameService.deal().then(response => {
       shuffleSound.play();
-      thisObj.updateGame(response.data, [], `Successfully dealt cards`);
-    }).catch(error => thisObj.parseError(error))
-    .finally(() => thisObj.enableButtons());
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully dealt cards`));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate);
+
+    }).catch(error => {
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate); 
+    });
   };
 
   call(callAmount)  {
     if (this.buttonsDisabled()) {
       return;
     }
-    this.cancelAlert();
-    this.disableButtons();
-
     let thisObj = this;
+    let state = this.state;
+    Object.assign(state, thisObj.cancelAlert());
+    Object.assign(state, disableButtons());
+    thisObj.setState(state);
+
     gameService.call(callAmount).then(response => {
-      thisObj.updateGame(response.data, [], `Successfully called ${callAmount}`);
-    }).catch(error => thisObj.parseError(error))
-    .finally(() => thisObj.enableButtons());
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully called ${callAmount}`));
+      if (isCurrentPlayer(stateUpdate)) {
+        Object.assign(stateUpdate, thisObj.setAlert());
+      }
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate);
+
+    }).catch(error => {
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate); 
+    });
   };
 
-  selectFromDummy(event) {
-    event.preventDefault();
+  selectFromDummy(suit) {
     if (this.buttonsDisabled()) {
       return;
     }
-    this.cancelAlert();
-    this.disableButtons();
-    
     let thisObj = this;
+    let state = this.state;
+    Object.assign(state, { selectedSuit: suit });
+    Object.assign(state, thisObj.cancelAlert());
+    Object.assign(state, disableButtons());
 
     if (this.state.selectedSuit !== "HEARTS" && this.state.selectedSuit !== "DIAMONDS" && this.state.selectedSuit !== "CLUBS" && this.state.selectedSuit !== "SPADES") {
-      this.updateState({snackOpen: true, snackMessage: "Please select a suit!", snackType: "warning"});
-      this.enableButtons();
+      Object.assign(state, thisObj.updateState({snackOpen: true, snackMessage: "Please select a suit!", snackType: "warning"}));
+      Object.assign(state, enableButtons());
+      thisObj.setState(state);  
       return;
     }
+
+    thisObj.setState(state);
 
     let selectedCards = this.state.selectedCards;
 
     gameService.chooseFromDummy(selectedCards, this.state.selectedSuit).then(response => {
       shuffleSound.play();
-      thisObj.updateState({ selectedSuit: null });
-      thisObj.updateGame(response.data, selectedCards, `Cards selected`);
-      thisObj.enableButtons();
-      thisObj.buyCardsIfGoer();
-    }).catch(error => thisObj.parseError(error))
-    .finally(() => thisObj.enableButtons());
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, { selectedSuit: null });
+      Object.assign(stateUpdate, thisObj.updateGame(response.data, selectedCards, `Cards selected`));
+      Object.assign(stateUpdate, enableButtons());
+
+      if (stateUpdate.round.status === "BUYING" && iAmGoer(stateUpdate) && isMyGo(stateUpdate)) {
+        thisObj.setState(stateUpdate);
+        thisObj.sleep(500).then(() => thisObj.buyCards());
+        return;
+      }
+      thisObj.setState(stateUpdate);
+
+    }).catch(error => {
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate); 
+    });
   }
 
   buyCards(event) {
@@ -155,38 +222,74 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
-    this.cancelAlert();
-    this.disableButtons();
-    
     let thisObj = this;
+    let state = this.state;
+    Object.assign(state, thisObj.cancelAlert());
+    Object.assign(state, disableButtons());
+    thisObj.setState(state);
 
-    gameService.buyCards(this.state.selectedCards).then(response => {
+    gameService.buyCards(state.selectedCards).then(response => {
       shuffleSound.play();
-      thisObj.updateGame(response.data, [], `Bought cards`);
-    }).catch(error => thisObj.parseError(error))
-    .finally(() => thisObj.enableButtons());
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Bought cards`));
+      if (isCurrentPlayer(stateUpdate)) {
+        Object.assign(stateUpdate, thisObj.setAlert());
+      }
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate);
+
+    }).catch(error => {
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate); 
+    });
   }
 
   playCard() {
     if (this.buttonsDisabled()) {
       return;
     }
-    this.cancelAlert();
-    this.disableButtons();
-    
     let thisObj = this;
+    let state = this.state;
+    Object.assign(state, thisObj.cancelAlert());
+    Object.assign(state, disableButtons());
+
     let selectedCards = this.state.selectedCards;
     if (selectedCards.length !== 1) {
-      this.parseError({message: "Please select exactly one card to play"});
-      this.enableButtons();
+      Object.assign(state, thisObj.parseError({message: "Please select exactly one card to play"}));
+      Object.assign(state, enableButtons());
+      thisObj.setState(state);
+
     } else {
+      
       let selectedCard = selectedCards[0];
+      thisObj.setState(state);
       gameService.playCard(selectedCard).then(response => {
         playCardSound.play();
-        thisObj.updateGame(response.data, [], `Played ${selectedCard}`);
-        thisObj.dealIfDealer();
-      }).catch(error => thisObj.parseError(error))
-      .finally(() => thisObj.enableButtons());
+        let stateUpdate = thisObj.state;
+        Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Played ${selectedCard}`));
+
+        if (!!stateUpdate.round && stateUpdate.round.status === "CALLING" && stateUpdate.round.dealerId === stateUpdate.myId && stateUpdate.me.cards.length === 0) {
+          Object.assign(state, enableButtons());
+          thisObj.setState(stateUpdate);
+          thisObj.sleep(500).then(() => thisObj.deal());
+          return;
+        }
+        
+        if (isCurrentPlayer(stateUpdate)) {
+          Object.assign(stateUpdate, thisObj.setAlert());
+        }
+
+        Object.assign(stateUpdate, enableButtons());
+        thisObj.setState(stateUpdate);
+        
+      }).catch(error => {
+        let stateUpdate = thisObj.state;
+        Object.assign(stateUpdate, thisObj.parseError(error));
+        Object.assign(stateUpdate, enableButtons());
+        thisObj.setState(stateUpdate); 
+      });
     }
   }
 
@@ -194,9 +297,10 @@ class Game extends Component {
     if (!this.state.cardsSelectable) {
       return
     }
-    this.cancelAlert();
+    let state = this.state;
+    Object.assign(state, this.cancelAlert());
 
-    let selectedCards = this.state.selectedCards;
+    let selectedCards = state.selectedCards;
     let indexOfCard = selectedCards.indexOf(card);
     if (indexOfCard !== -1) {
       selectedCards.splice(indexOfCard, 1);
@@ -204,7 +308,8 @@ class Game extends Component {
       selectedCards.push(card);
     }
 
-    this.updateState({selectedCards: selectedCards});
+    Object.assign(state, {selectedCards: selectedCards});
+    this.setState(state);
   }
 
   updateState(stateDelta) {
@@ -222,96 +327,105 @@ class Game extends Component {
     
   }
 
-  handleSuitChange(suit) {
-    this.updateState({
-      selectedSuit: suit
-    });
-  }
-
   parseScreenContent(content) {
     if (!content) {
-      return
+      return;
     }
+    let thisObj = this;
+    let state = this.state;
 
     switch (content.type) {
       case("REPLAY"):
-        this.updateGame(content.content.first, this.state.selectedCards, "Game restarting");
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards, "Game restarting"));
         break;
       case("DEAL"):
         shuffleSound.play();
-        this.updateGame(content.content.first, this.state.selectedCards, "Cards dealt");
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards, "Cards dealt"));
+        if (isCurrentPlayer(state)) {
+          Object.assign(state, thisObj.setAlert());
+        }
         break;
       case("GAME_OVER"):
-        this.updateGame(content.content.first, this.state.selectedCards, "Game Over");
+        Object.assign(state, thisObj.cancelAlert());
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards, "Game Over"));
         break;
       case("LAST_CARD_PLAYED"):
         playCardSound.play();
-        this.cancelAlert();
-        this.updateGame(content.content.first, this.state.selectedCards);
+        Object.assign(state, thisObj.cancelAlert());
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards));
         break;
       case("CARD_PLAYED"):
         playCardSound.play();
-        this.updateGame(content.content.first, this.state.selectedCards);
-        this.playIfLastCard();
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards));
+        
+        if (isMyGo(state) && state.me.cards.length === 1) {
+          Object.assign(state, {selectedCards: state.me.cards});
+          Object.assign(state, enableButtons());
+          thisObj.setState(state);
+          thisObj.sleep(500).then(() => thisObj.playCard());
+          return;
+        }
+        
+        if (isCurrentPlayer(state)) {
+          Object.assign(state, thisObj.setAlert());
+        }
         break;
       case("BUY_CARDS"):
-        this.updateGame(content.content.first, this.state.selectedCards, content.content.second);
-        this.buyCardsIfGoer();
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards, content.content.second));
+
+        if (state.round.status === "BUYING" && iAmGoer(state) && isMyGo(state)) {
+          thisObj.setState(state);
+          thisObj.sleep(500).then(() => thisObj.buyCards());
+          return;
+        }
+        
+        if (isCurrentPlayer(state)) {
+          Object.assign(state, thisObj.setAlert());
+        }
         break;
       case("HAND_COMPLETED"):
-        this.updateGame(content.content.first, this.state.selectedCards);
-        this.playIfLastCard();
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards));
+        
+        if (isMyGo(state) && state.me.cards.length === 1) {
+          Object.assign(state, {selectedCards: state.me.cards});
+          Object.assign(state, enableButtons());
+          thisObj.setState(state);
+          thisObj.sleep(500).then(() => thisObj.playCard());
+          return;
+        }
+        
+        if (isCurrentPlayer(state)) {
+          Object.assign(state, thisObj.setAlert());
+        }
         break;
       case("ROUND_COMPLETED"):
-        this.updateGame(content.content.first, this.state.selectedCards);
-        this.dealIfDealer();
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards));
+        
+        if (!!state.round && state.round.status === "CALLING" && state.round.dealerId === state.myId && state.me.cards.length === 0) {
+          Object.assign(state, enableButtons());
+          thisObj.setState(state);
+          thisObj.sleep(500).then(() => thisObj.deal());
+          return;
+        }
+
         break;
       case("CALL"):
       case("CHOOSE_FROM_DUMMY"):
-        this.updateGame(content.content.first, this.state.selectedCards);
+
+        Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards));
+        if (isCurrentPlayer(state)) {
+          Object.assign(state, thisObj.setAlert());
+        }
         break;
       default:
-        this.parseError({message: "Unsupported content type"})
+        Object.assign(state, thisObj.parseError({message: "Unsupported content type"}));
     }
-    this.setAlert();
-  }
 
-  playIfLastCard() {
-    let thisObj = this;
-    if (this.isMyGo() && this.state.me.cards.length === 1) {
-      this.enableButtons();
-      this.sleep(500).then(() => {
-        thisObj.updateState({selectedCards: this.state.me.cards});
-        thisObj.playCard();
-      });
-      
-    }
-  }
-
-  dealIfDealer() {
-    let thisObj = this;
-    if (!!this.state.round && this.state.round.status === "CALLING" && this.state.round.dealerId === this.state.myId && this.state.me.cards.length === 0) {
-      this.sleep(500).then(() => thisObj.deal());
-    }
-  }
-
-  buyCardsIfGoer() {
-    if (this.state.round.status === "BUYING" && this.iAmGoer() && this.isMyGo()) {
-      this.updateState({selectedCards: this.state.me.cards});
-      this.buyCards();
-    }
+    thisObj.setState(state);
   }
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  isMyGo() {
-    return (!!this.state.hand && this.state.hand.currentPlayerId === this.state.myId);
-  }
-
-  iAmGoer() {
-    return (!!this.state.round && this.state.round.goerId === this.state.myId);
   }
 
   updateGame(game, selectedCard, message) {
@@ -334,13 +448,13 @@ class Game extends Component {
     let cardsSelectable = (["CALLED", "BUYING", "PLAYING"].includes(round.status));
 
     let maxCall = this.getMaxCall(game.players);
-    let newState = {game: game, round: round, hand: hand, previousHand: previousHand, me: me, dummy: dummy, maxCall: maxCall, selectedCards: selectedCard, cardsSelectable: cardsSelectable }
+    let stateDelta = {game: game, round: round, hand: hand, previousHand: previousHand, me: me, dummy: dummy, maxCall: maxCall, selectedCards: selectedCard, cardsSelectable: cardsSelectable }
     if (!!message) {
-      newState.snackOpen = true;
-      newState.snackMessage = message;
-      newState.snackType = "success";
+      stateDelta.snackOpen = true;
+      stateDelta.snackMessage = message;
+      stateDelta.snackType = "success";
     }
-    this.updateState(newState);
+    return stateDelta;
   }
 
   getMaxCall(players) {
@@ -377,7 +491,7 @@ class Game extends Component {
     } else if (error.message !== undefined) {
       errorMessage = error.message;
     }
-    this.updateState({ snackOpen: true, snackMessage: errorMessage, snackType: "error" });
+    return { snackOpen: true, snackMessage: errorMessage, snackType: "error" };
   }
 
   render() {
@@ -484,7 +598,7 @@ class Game extends Component {
                       { !!this.state.round && this.state.round.status === "CALLED" ?
                       <div>
 
-                        {this.iAmGoer() ? 
+                        {iAmGoer(this.state) ? 
                           <div>
                             {!!this.state.dummy ?
                             <CardBody className="cardArea">
@@ -498,23 +612,17 @@ class Game extends Component {
                             
 
                             <CardBody className="buttonArea">
-                              <Form onSubmit={this.selectFromDummy.bind(this)}>
                                 <legend>Suit</legend>
 
                                 <ButtonGroup size="lg">
 
-                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'HEARTS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "HEARTS")}>HEARTS</Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'DIAMONDS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "DIAMONDS")}>DIAMONDS</Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'SPADES') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "SPADES")}>SPADES</Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'CLUBS') ? "success":"secondary"} onClick={this.handleSuitChange.bind(this, "CLUBS")}>CLUBS</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'HEARTS') ? "success":"secondary"} onClick={this.selectFromDummy.bind(this, "HEARTS")}>HEARTS</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'DIAMONDS') ? "success":"secondary"} onClick={this.selectFromDummy.bind(this, "DIAMONDS")}>DIAMONDS</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'SPADES') ? "success":"secondary"} onClick={this.selectFromDummy.bind(this, "SPADES")}>SPADES</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color={(this.state.selectedSuit === 'CLUBS') ? "success":"secondary"} onClick={this.selectFromDummy.bind(this, "CLUBS")}>CLUBS</Button>
 
                                 </ButtonGroup>
-                                <br/><br/>
-                                <ButtonGroup size="lg">
-                                  <Button type="submit" disabled={this.state.actionsDisabled} color="primary">Select Cards</Button>
-                                </ButtonGroup>
                                 
-                              </Form>
                             </CardBody>
                           </div>
 
@@ -530,7 +638,7 @@ class Game extends Component {
 
                         <Form onSubmit={this.buyCards.bind(this)}>
                           <ButtonGroup size="lg">
-                            {this.isMyGo() ? <Button type="submit" disabled={this.state.actionsDisabled} color="primary">Buy Cards</Button> : null }
+                            {isMyGo(this.state) ? <Button type="submit" disabled={this.state.actionsDisabled} color="primary">Buy Cards</Button> : null }
                           </ButtonGroup>
                         </Form>
                           
@@ -543,7 +651,7 @@ class Game extends Component {
                       <CardBody className="buttonArea">
 
                           <ButtonGroup size="lg">
-                            {this.isMyGo() ? <Button id="playCardButton" type="button" disabled={this.state.actionsDisabled} onClick={this.playCard.bind(this)} color="primary">Play Card</Button> : null }
+                            {isMyGo(this.state) ? <Button id="playCardButton" type="button" disabled={this.state.actionsDisabled} onClick={this.playCard.bind(this)} color="primary">Play Card</Button> : null }
                           </ButtonGroup>
                           
                       </CardBody>
