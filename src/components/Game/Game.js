@@ -34,6 +34,31 @@ function enableButtons() {
   return {actionsDisabled: false};
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function parseError(error) {
+  let errorMessage = 'Undefined error';
+  if (
+    error.response !== undefined &&
+    error.response.data !== undefined &&
+    error.response.data.message !== undefined &&
+    error.response.data.message !== ''
+  ) {
+    errorMessage = error.response.data.message;
+  } else if (
+    error.response !== undefined &&
+    error.response.statusText !== undefined &&
+    error.response.statusText !== ''
+  ) {
+    errorMessage = error.response.statusText;
+  } else if (error.message !== undefined) {
+    errorMessage = error.message;
+  }
+  return { snackOpen: true, snackMessage: errorMessage, snackType: "error" };
+}
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -65,14 +90,16 @@ class Game extends Component {
       }
       thisObj.setState(state);
     }).catch(error => {
-      thisObj.parseError(error);
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, parseError(error));
+      thisObj.setState(stateUpdate); 
     });
   }
 
   setAlert() {
     let thisObj = this;
     let stateDelta = { activeAlert: uuid() };
-    this.sleep(10000).then(() => {
+    sleep(10000).then(() => {
       if (!!thisObj.state.activeAlert && thisObj.state.activeAlert === stateDelta.activeAlert) {
         alertSound.play();
         let stateUpdate = thisObj.state;
@@ -94,7 +121,7 @@ class Game extends Component {
     return this.state.actionsDisabled;
   }
 
-  replay(event)  {
+  replay()  {
     if (this.buttonsDisabled()) {
       return;
     }
@@ -112,7 +139,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -138,7 +165,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -165,7 +192,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -201,16 +228,16 @@ class Game extends Component {
 
       if (stateUpdate.round.status === "BUYING" && iAmGoer(stateUpdate) && isMyGo(stateUpdate)) {
         thisObj.setState(stateUpdate);
-        thisObj.sleep(500).then(() => thisObj.buyCards());
+        sleep(500).then(() => thisObj.buyCards());
         return;
       }
       thisObj.setState(stateUpdate);
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, parseError(error));
       Object.assign(stateUpdate, enableButtons());
-      thisObj.setState(stateUpdate); 
+      thisObj.setState(stateUpdate);
     });
   }
 
@@ -239,7 +266,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, thisObj.parseError(error));
+      Object.assign(stateUpdate, parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -256,7 +283,7 @@ class Game extends Component {
 
     let selectedCards = this.state.selectedCards;
     if (selectedCards.length !== 1) {
-      Object.assign(state, thisObj.parseError({message: "Please select exactly one card to play"}));
+      Object.assign(state, parseError({message: "Please select exactly one card to play"}));
       Object.assign(state, enableButtons());
       thisObj.setState(state);
 
@@ -272,7 +299,7 @@ class Game extends Component {
         if (!!stateUpdate.round && stateUpdate.round.status === "CALLING" && stateUpdate.round.dealerId === stateUpdate.myId && stateUpdate.me.cards.length === 0) {
           Object.assign(stateUpdate, enableButtons());
           thisObj.setState(stateUpdate);
-          thisObj.sleep(500).then(() => thisObj.deal());
+          sleep(500).then(() => thisObj.deal());
           return;
         }
         
@@ -285,7 +312,7 @@ class Game extends Component {
         
       }).catch(error => {
         let stateUpdate = thisObj.state;
-        Object.assign(stateUpdate, thisObj.parseError(error));
+        Object.assign(stateUpdate, parseError(error));
         Object.assign(stateUpdate, enableButtons());
         thisObj.setState(stateUpdate); 
       });
@@ -361,7 +388,7 @@ class Game extends Component {
           Object.assign(state, {selectedCards: state.me.cards});
           Object.assign(state, enableButtons());
           thisObj.setState(state);
-          thisObj.sleep(500).then(() => thisObj.playCard());
+          sleep(500).then(() => thisObj.playCard());
           return;
         }
         
@@ -374,7 +401,7 @@ class Game extends Component {
 
         if (state.round.status === "BUYING" && iAmGoer(state) && isMyGo(state)) {
           thisObj.setState(state);
-          thisObj.sleep(500).then(() => thisObj.buyCards());
+          sleep(500).then(() => thisObj.buyCards());
           return;
         }
         
@@ -389,7 +416,7 @@ class Game extends Component {
           Object.assign(state, {selectedCards: state.me.cards});
           Object.assign(state, enableButtons());
           thisObj.setState(state);
-          thisObj.sleep(500).then(() => thisObj.playCard());
+          sleep(500).then(() => thisObj.playCard());
           return;
         }
         
@@ -403,7 +430,7 @@ class Game extends Component {
         if (!!state.round && state.round.status === "CALLING" && state.round.dealerId === state.myId && state.me.cards.length === 0) {
           Object.assign(state, enableButtons());
           thisObj.setState(state);
-          thisObj.sleep(500).then(() => thisObj.deal());
+          sleep(500).then(() => thisObj.deal());
           return;
         }
 
@@ -417,14 +444,10 @@ class Game extends Component {
         }
         break;
       default:
-        Object.assign(state, thisObj.parseError({message: "Unsupported content type"}));
+        Object.assign(state, parseError({message: "Unsupported content type"}));
     }
 
     thisObj.setState(state);
-  }
-
-  sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   updateGame(game, selectedCard, message) {
@@ -472,26 +495,7 @@ class Game extends Component {
     this.updateState(updateObj);
   }
 
-  parseError(error) {
-    let errorMessage = 'Undefined error';
-    if (
-      error.response !== undefined &&
-      error.response.data !== undefined &&
-      error.response.data.message !== undefined &&
-      error.response.data.message !== ''
-    ) {
-      errorMessage = error.response.data.message;
-    } else if (
-      error.response !== undefined &&
-      error.response.statusText !== undefined &&
-      error.response.statusText !== ''
-    ) {
-      errorMessage = error.response.statusText;
-    } else if (error.message !== undefined) {
-      errorMessage = error.message;
-    }
-    return { snackOpen: true, snackMessage: errorMessage, snackType: "error" };
-  }
+
 
   render() {
    
