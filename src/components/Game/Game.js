@@ -6,9 +6,9 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { Container, Row, Col, Button, ButtonGroup, Form, Card, CardBody, CardGroup, Table } from 'reactstrap';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 import uuid from 'uuid-random';
-import shuffleAudio from '../../assets/sounds/shuffle.mp3';
-import playCardAudio from '../../assets/sounds/play_card.mp3';
-import alertAudio from '../../assets/sounds/alert.mp3';
+import shuffleAudio from '../../assets/sounds/shuffle.ogg';
+import playCardAudio from '../../assets/sounds/play_card.ogg';
+import alertAudio from '../../assets/sounds/alert.ogg';
 
 const shuffleSound = new Audio(shuffleAudio);
 const playCardSound = new Audio(playCardAudio);
@@ -694,6 +694,7 @@ class Game extends Component {
                           <tr>
                             <th align="left">Player</th>
                             <th>Previous</th>
+                            <th>Bought</th>
                             <th>Score</th>
                           </tr>
                         </thead>
@@ -704,6 +705,9 @@ class Game extends Component {
                             <td>
                               {!!this.state.previousHand && !!this.state.previousHand.playedCards[player.id] ?
                               <img alt={this.state.previousHand.playedCards[player.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size_small cardNotSelected"  /> : null }
+                            </td>
+                            <td>
+                              { !!player.cardsBought ? player.cardsBought: ""}
                             </td>
                             <td>
                               {player.score}
