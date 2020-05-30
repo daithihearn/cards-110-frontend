@@ -541,6 +541,14 @@ class Game extends Component {
                               {(player.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
                               {(player.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} class= "thumbnail_size_extra_small"/> : null}
 
+                              { !!this.state.round.suit && (this.state.round.goerId=== player.id) ?  <a>
+                        {(this.state.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small " />:null} {/* background_white */}
+                              {(this.state.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small " />:null}
+                              {(this.state.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small " />:null}
+                              {(this.state.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small " />:null}
+                             </a>
+                             :null}
+
                                 </div>
                               </Col>
                           )}
@@ -575,9 +583,9 @@ class Game extends Component {
                             <ButtonGroup size="lg">
                               <Button type="button" color="secondary" disabled={this.state.actionsDisabled} onClick={this.call.bind(this, 0)}>Pass</Button>
                               { (this.state.game.players.length === 6 && ((this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 10) || this.state.maxCall < 10)) ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
-                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" disabled={this.state.actionsDisabled} color="primary" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
-                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 20) || this.state.maxCall < 20 ? <Button type="button" disabled={this.state.actionsDisabled} color="primary" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
-                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" disabled={this.state.actionsDisabled} color="primary" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 15) || this.state.maxCall < 15 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 20) || this.state.maxCall < 20 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
+                              { (this.state.me.id === this.state.round.dealerId && this.state.maxCall <= 25) || this.state.maxCall < 25 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
                               <Button type="button" disabled={this.state.actionsDisabled} color="danger" onClick={this.call.bind(this, 30)}>Jink</Button>
                             </ButtonGroup>
 
@@ -606,12 +614,13 @@ class Game extends Component {
                                 <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                               )}
 
+                      
                             </CardBody>
                             : null }
                             
 
                             <CardBody className="buttonArea">
-                                <legend>Suit</legend>
+                                {/* <legend>Suit</legend> */}
 
                                 <ButtonGroup size="lg">
 
@@ -637,7 +646,7 @@ class Game extends Component {
 
                         <Form onSubmit={this.buyCards.bind(this)}>
                           <ButtonGroup size="lg">
-                            {isMyGo(this.state) ? <Button type="submit" disabled={this.state.actionsDisabled} color="primary">Buy Cards</Button> : null }
+                            {isMyGo(this.state) ? <Button type="submit" disabled={this.state.actionsDisabled} color="warning"><b>Buy Cards</b></Button> : null }
                           </ButtonGroup>
                         </Form>
                           
@@ -650,19 +659,13 @@ class Game extends Component {
                       <CardBody className="buttonArea">
 
                           <ButtonGroup size="lg">
-                            {isMyGo(this.state) ? <Button id="playCardButton" type="button" disabled={this.state.actionsDisabled} onClick={this.playCard.bind(this)} color="primary">Play Card</Button> : null }
-                          </ButtonGroup>
-                          
+                            {isMyGo(this.state) ? <Button id="playCardButton" type="button" disabled={this.state.actionsDisabled} onClick={this.playCard.bind(this)} color="warning"><b>Play Card</b></Button> : null }
+                          </ButtonGroup> 
+                         
                       </CardBody>
                       : null}
 
-                    { !!this.state.round.suit ?  <div>
-                        {(this.state.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                              {(this.state.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small background_white" />:null}
-                             </div>
-                             :null}
+                  
 
                     </div>
 
@@ -687,7 +690,7 @@ class Game extends Component {
                 
                   <CardBody>
                     { !!this.state.game && !!this.state.hand ?
-                    <CardBody>
+                   
 
                       <Table dark responsive>
                         <thead>
@@ -713,7 +716,7 @@ class Game extends Component {
                         </tbody>
                       </Table>
 
-                    </CardBody>
+                   
                   : null }
                   </CardBody>
               </Card>
