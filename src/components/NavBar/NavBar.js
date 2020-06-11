@@ -11,7 +11,7 @@ function NavBar(props) {
   return (
     <nav className="navbar navbar-dark bg-primary fixed-top">
       <Link className="navbar-brand" to="/">
-        Quizmaster
+        Cards
       </Link>
       {
         !auth0Client.isAuthenticated() &&
