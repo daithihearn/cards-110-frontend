@@ -15,6 +15,9 @@ class Auth {
     this.getProfile = this.getProfile.bind(this);
     this.getIdToken = this.getIdToken.bind(this);
     this.getAccessToken = this.getAccessToken.bind(this);
+    this.getScope = this.getScope.bind(this);
+    this.isPlayer = this.isPlayer.bind(this);
+    this.isAdmin = this.isAdmin.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.signIn = this.signIn.bind(this);
@@ -37,6 +40,15 @@ class Auth {
     return this.scope;
   }
 
+  isPlayer() {
+    // TODO: For now just making everyone a player
+    // return this.scope.indexOf("read:game") !== -1;
+    return true;
+  }
+
+  isAdmin() {
+    return this.scope.indexOf("read:admin") !== -1;
+  }
 
   isAuthenticated() {
     return new Date().getTime() < this.expiresAt;

@@ -25,9 +25,8 @@ class Home extends Component {
       modalDeleteGame:false,
       modalDeleteGameIdx: 0,
       modalDeleteGameObject: {},
-      isAdmin: false,
-      isPlayer: false,
-      profileUpdated: false
+      isAdmin: auth0Client.isAdmin(),
+      isPlayer: auth0Client.isPlayer()
     };
 
     this.updateState = this.updateState.bind(this);
@@ -38,48 +37,22 @@ class Home extends Component {
   
   async componentDidMount() {
     let profile = auth0Client.getProfile();
-    let scope = auth0Client.getScope();
-    let isAdmin = scope.indexOf("read:admin") !== -1;
-    let isPlayer = scope.indexOf("read:game") !== -1;
 
-    let stateUpdate = {profile: profile, isAdmin: isAdmin, isPlayer: isPlayer};
-    
+    let stateUpdate = {profile: profile};
+
+    // Player Stuff
+    if (this.state.isPlayer) {
+      await profileService.updateProfile({ name: profile.name, picture: profile.picture });
+      this.getMyActiveGames();
+    }
+
     // ADMIN Stuff
-    if (isAdmin) {
+    if (this.state.isAdmin) {
       this.getActiveGames();
       this.getAllPlayers();
     }
 
-    // Player Stuff
-    if (isPlayer) {
-      let response = await profileService.hasProfile();
-      stateUpdate.profileUpdated = response.data;
-      if (!stateUpdate.profileUpdated) {
-        stateUpdate.newName = profile.name;
-      }
-      this.getMyActiveGames();
-    }
-
     this.updateState(stateUpdate);
-  }
-  
-  updateProfile(event) {
-    event.preventDefault();
-    let thisObj = this;
-
-    let payload = {
-      name: this.state.newName
-    };
-
-    if (!!this.state.profile.picture) {
-      payload.picture = this.state.profile.picture;
-    }
-
-    profileService.updateProfile(payload).then(response => {
-      thisObj.updateState( { profileUpdated: true, newName: "", snackOpen: true, snackMessage: "Profile updated" , snackType: "success" });
-      thisObj.getMyActiveGames();
-    })
-      .catch(error => thisObj.parseError(error));
   }
 
   updateState(stateDelta) {
@@ -294,8 +267,7 @@ class Home extends Component {
                   <div>
                     {/* PLAYER - Section - START */}
                     { this.state.isPlayer ?
-                      <div>
-                        { this.state.profileUpdated ?
+
                           <div>
                       
                               { !!this.state.myActiveGames && this.state.myActiveGames.length > 0 ?
@@ -338,47 +310,7 @@ class Home extends Component {
                                 </div>
                               }
                             </div>
-                        
-                        
-                        : 
 
-                        <CardGroup>
-                          <Card className="p-6">
-                            <CardHeader tag="h2">My Profile</CardHeader>
-                            <CardBody>
-                              <Form onSubmit={this.updateProfile.bind(this)}>
-                                <FormGroup>
-                                  <InputGroup>
-
-                                    <InputGroupAddon addonType="prepend">
-                                      <InputGroupText>Name</InputGroupText>
-                                    </InputGroupAddon>
-                                    <InputGroupAddon addonType="append">
-                                      <Input
-                                        type="input"
-                                        name="newName"
-                                        placeholder="Name"
-                                        autoComplete="off"
-                                        value={this.state.newName}
-                                        onChange={this.handleChange}
-                                        required
-                                        />
-                                    </InputGroupAddon>
-                                  </InputGroup>
-                                  <ButtonGroup>
-                                    <Button type="submit" color="primary">
-                                      Update Profile
-                                    </Button>
-                                  </ButtonGroup> 
-                                </FormGroup>
-                              </Form>
-                            </CardBody>
-                          </Card>
-                        </CardGroup>
-                        }
-                      
-                      
-                      </div>
                     : null }
                     {/* PLAYER - Section - END */}
 
