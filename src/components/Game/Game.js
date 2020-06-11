@@ -705,7 +705,7 @@ class Game extends Component {
 
                         <Form onSubmit={this.buyCards.bind(this)}>
                           <ButtonGroup size="lg">
-                            {isMyGo(this.state) ? <Button type="submit" disabled={this.state.actionsDisabled} color="warning"><b>Buy Cards</b></Button> : null }
+                            {isMyGo(this.state) ? <Button type="submit" disabled={this.state.actionsDisabled} color="warning"><b>Keep Cards</b></Button> : null }
                           </ButtonGroup>
                         </Form>
                           
