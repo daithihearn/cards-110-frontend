@@ -6,11 +6,11 @@ import 'flag-icon-css/css/flag-icon.min.css';
 // Import Font Awesome Icons Set
 import 'font-awesome/css/font-awesome.min.css';
 import React, { Component } from 'react';
-// Containers
-// import { DefaultLayout } from './containers';
-//Import loadable
+import {Route, withRouter} from 'react-router-dom';
+import auth0Client from './Auth';
+import Callback from './views/Callback';
+import SecuredRoute from './utils/SecuredRoute';
 import Loadable from 'react-loadable';
-import { HashRouter, Route, Switch } from 'react-router-dom';
 // Import Simple Line Icons Set
 import 'simple-line-icons/css/simple-line-icons.css';
 import LoadingIcon from '../src/assets/img/brand/loading.gif';
@@ -21,37 +21,51 @@ function Loading() {
   return <img src={LoadingIcon} className="loading" alt="description" />;
 }
 
-const Login = Loadable({
-  loader: () => import('./containers/Login'),
+const HomePage = Loadable({
+  loader: () => import('./components/Home/Home'),
   loading: Loading
 });
 
-const AutoLogin = Loadable({
-  loader: () => import('./containers/AutoLogin'),
+const GamePage = Loadable({
+  loader: () => import('./components/Game'),
   loading: Loading
 });
 
 
-const DefaultLayout = Loadable({
-  loader: () => import('./containers/DefaultLayout/DefaultLayout'),
-  loading: Loading
-});
-
-// import { renderRoutes } from 'react-router-config';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      checkingSession: true,
+    }
+  }
+
+  async componentDidMount() {
+    if (!!this.props.location && this.props.location.pathname === '/callback') {
+      this.setState({checkingSession:false});
+      return;
+    }
+    try {
+      await auth0Client.silentAuth();
+      this.forceUpdate();
+    } catch (err) {
+      if (err.error !== 'login_required') console.log(err.error);
+    }
+    this.setState({checkingSession:false});
+  }
+
   render() {
+    const { match, location, history } = this.props;
     return (
-      <HashRouter>
-        <Switch>
-          <Route exact path="/login" name="Login Page" component={Login} />
-          <Route exact path="/autologin" name="Auto Login Page" component={AutoLogin} />
-          <Route path="/" name="Home" component={DefaultLayout} />
-          <Route path="/" name="Game" component={DefaultLayout} />
-        </Switch>
-      </HashRouter>
+      <div>
+          <Route exact path='/callback' component={Callback}/>
+          
+          <SecuredRoute path="/" name="Home" component={HomePage} checkingSession={this.state.checkingSession} match={match} location={location} history={history}/>
+          <SecuredRoute path="/game" name="Game" component={GamePage} checkingSession={this.state.checkingSession} match={match} location={location} history={history}/>
+      </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

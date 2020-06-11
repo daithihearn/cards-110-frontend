@@ -1,29 +1,53 @@
 import React, { Component } from 'react';
-import sessionUtils from '../../utils/SessionUtils';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
+import { Button, ButtonGroup, Form, Row, Col, Card, CardBody, CardGroup, Container, Table } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
-import { Container, Row, Col, Button, ButtonGroup, Form, Card, CardBody, CardGroup, Table } from 'reactstrap';
+import DefaultHeader from '../Header';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 import uuid from 'uuid-random';
 import shuffleAudio from '../../assets/sounds/shuffle.ogg';
 import playCardAudio from '../../assets/sounds/play_card.ogg';
 import alertAudio from '../../assets/sounds/alert.ogg';
+import NoSleep from 'nosleep.js';
 
+import auth0Client from '../../Auth';
+
+const noSleep = new NoSleep();
+
+const compareScore = (a, b) => {
+  let comparison = 0;
+  if (b.score > a.score) {
+    comparison = 1;
+  } else if (b.score < a.score) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+const compareSeat = (a, b) => {
+  let comparison = 0;
+  if (a.seatNumber > b.seatNumber) {
+    comparison = 1;
+  } else if (a.seatNumber < b.seatNumber) {
+    comparison = -1;
+  }
+  return comparison;
+}
 const shuffleSound = new Audio(shuffleAudio);
 const playCardSound = new Audio(playCardAudio);
 const alertSound = new Audio(alertAudio);
 
 function isCurrentPlayer(state) {
-  return !!state.hand && state.hand.currentPlayerId === state.myId;
+  return !!state.hand && state.hand.currentPlayerId === state.profile.sub;
 }
 
 function isMyGo(state) {
-  return (!!state.hand && state.hand.currentPlayerId === state.myId);
+  return (!!state.hand && state.hand.currentPlayerId === state.profile.sub);
 }
 
 function iAmGoer(state) {
-  return (!!state.round && state.round.goerId === state.myId);
+  return (!!state.round && state.round.goerId === state.profile.sub);
 }
 
 function disableButtons() {
@@ -62,39 +86,49 @@ function parseError(error) {
 class Game extends Component {
   constructor(props) {
     super(props);
-
-    if (!props.location.state) {
-      this.state = { myId: sessionStorage.getItem("myId"), selectedCards: [], actionsDisabled: false };
-    } else {
-      this.state = { myId: props.location.state.myId, selectedCards: [] };
-      sessionStorage.setItem("myId", props.location.state.myId );
-    }
     
-    sessionUtils.checkLoggedIn();
+    if (!props.location.state || !props.location.state.game) {
+      parseError({message: "No Game provided"})
+      return;
+    }
 
-    this.getGame();
+    let profile = auth0Client.getProfile();
 
+    this.state = { game: props.location.state.game, profile: profile, selectedCards: [], actionsDisabled: false };
+
+    this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
   }
+  
+  async componentDidMount() {
+    
+    try {
+      let response = await gameService.getGameForPlayer(this.state.game.id);
+      let state = this.state;
 
-  getGame() {
-    let thisObj = this;
-
-    gameService.getGame().then(response => {
-      let state = thisObj.state;
-      Object.assign(state, thisObj.updateGame(response.data, []));
+      Object.assign(state, this.updateGame(response.data, []));
       if (isCurrentPlayer(state)) {
-        Object.assign(state, thisObj.setAlert());
+        Object.assign(state, this.setAlert());
       }
-      thisObj.setState(state);
-    }).catch(error => {
-      let stateUpdate = thisObj.state;
+      this.setState(state);
+      this.getPlayersForGame(response.data.id);
+    }
+    catch(error) {
+      let stateUpdate = this.state;
       Object.assign(stateUpdate, parseError(error));
-      thisObj.setState(stateUpdate); 
-    });
+      this.setState(stateUpdate); 
+    }
   }
+  
+  getPlayersForGame(gameId) {
+    let thisObj = this;
+    gameService.getPlayersForGame(gameId).then(response => {
+      thisObj.updateState({players: response.data})
+    }).catch(error => parseError(error));
+  }
+
 
   setAlert() {
     let thisObj = this;
@@ -131,7 +165,7 @@ class Game extends Component {
     Object.assign(state, disableButtons());
     thisObj.setState(state);
     
-    gameService.replay().then(response => {
+    gameService.replay(this.state.game.id).then(response => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully started a new game`));
       Object.assign(stateUpdate, enableButtons());
@@ -145,6 +179,11 @@ class Game extends Component {
     });
   };
 
+  goHome() {
+    this.props.history.push({
+      pathname: '/'
+    });
+  }
 
   deal()  {
     if (this.buttonsDisabled()) {
@@ -156,7 +195,7 @@ class Game extends Component {
     Object.assign(state, disableButtons());
     thisObj.setState(state);
 
-    gameService.deal().then(response => {
+    gameService.deal(this.state.game.id).then(response => {
       shuffleSound.play();
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully dealt cards`));
@@ -181,7 +220,7 @@ class Game extends Component {
     Object.assign(state, disableButtons());
     thisObj.setState(state);
 
-    gameService.call(callAmount).then(response => {
+    gameService.call(this.state.game.id, callAmount).then(response => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully called ${callAmount}`));
       if (isCurrentPlayer(stateUpdate)) {
@@ -219,7 +258,7 @@ class Game extends Component {
 
     let selectedCards = this.state.selectedCards;
 
-    gameService.chooseFromDummy(selectedCards, this.state.selectedSuit).then(response => {
+    gameService.chooseFromDummy(this.state.game.id, selectedCards, this.state.selectedSuit).then(response => {
       shuffleSound.play();
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, { selectedSuit: null });
@@ -254,7 +293,7 @@ class Game extends Component {
     Object.assign(state, disableButtons());
     thisObj.setState(state);
 
-    gameService.buyCards(state.selectedCards).then(response => {
+    gameService.buyCards(this.state.game.id, state.selectedCards).then(response => {
       shuffleSound.play();
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Bought cards`));
@@ -291,12 +330,12 @@ class Game extends Component {
       
       let selectedCard = selectedCards[0];
       thisObj.setState(state);
-      gameService.playCard(selectedCard).then(response => {
+      gameService.playCard(this.state.game.id, selectedCard).then(response => {
         playCardSound.play();
         let stateUpdate = thisObj.state;
         Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Played ${selectedCard}`));
 
-        if (!!stateUpdate.round && stateUpdate.round.status === "CALLING" && stateUpdate.round.dealerId === stateUpdate.myId && stateUpdate.me.cards.length === 0) {
+        if (!!stateUpdate.round && stateUpdate.round.status === "CALLING" && stateUpdate.round.dealerId === stateUpdate.profile.sub && stateUpdate.me.cards.length === 0) {
           Object.assign(stateUpdate, enableButtons());
           thisObj.setState(stateUpdate);
           sleep(500).then(() => thisObj.deal());
@@ -427,7 +466,7 @@ class Game extends Component {
       case("ROUND_COMPLETED"):
         Object.assign(state, thisObj.updateGame(content.content.first, state.selectedCards));
         
-        if (!!state.round && state.round.status === "CALLING" && state.round.dealerId === state.myId && state.me.cards.length === 0) {
+        if (!!state.round && state.round.status === "CALLING" && state.round.dealerId === state.profile.sub && state.me.cards.length === 0) {
           Object.assign(state, enableButtons());
           thisObj.setState(state);
           sleep(500).then(() => thisObj.deal());
@@ -451,7 +490,7 @@ class Game extends Component {
   }
 
   updateGame(game, selectedCard, message) {
-    let me = game.players.filter(player => player.id === this.state.myId)[0];
+    let me = game.players.filter(player => player.id === this.state.profile.sub)[0];
     let dummy = game.players.filter(player => player.id === "dummy")[0];
     let round = game.currentRound;
     let hand = round.currentHand;
@@ -500,24 +539,40 @@ class Game extends Component {
   render() {
    
     return (
+      <div>
+        <div className="content_employee">
+          <span className="app" style={{ overflowX: 'hidden' }}>
+            <div className="app_body">
+              <main className="main">
+                <DefaultHeader />
+
+
       <div className="app carpet">
          <div className="game_wrap">
           <div className="game_container">
 
+              <CardGroup>
+                <Card>
+                <CardBody>
+                Back to  <Button type="button" color="link" onClick={this.goHome}><span className="form_container_text_link">Home</span></Button>
+                </CardBody>
+                </Card>
+              </CardGroup>
+
             <CardGroup>
               <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
 
-                  { !!this.state.me && !!this.state.round && !!this.state.hand && this.state.game.status !== "FINISHED" ?
+                  { !!this.state.me && !!this.state.round && !!this.state.hand && !!this.state.players && this.state.game.status !== "FINISHED" ?
                     <div>
                                     
 
                         <CardBody className="cardArea">
                           <Container>
                             <Row>
-                          {this.state.game.players.map( player =>
-                              <Col>
+                          {this.state.game.players.sort(compareSeat).map( (player, idx) =>
+                              <Col key={`cards_${idx}`}>
                                 <div>
-                                  {player.displayName}
+                                  <img alt={this.state.players.find(p => p.id === player.id).name} src={this.state.players.find(p => p.id === player.id).picture} className="avatar" />
                                 </div>
                              
 
@@ -530,7 +585,7 @@ class Game extends Component {
                                   "/cards/thumbnails/blank_grey_back.png"
                                 :   "/cards/thumbnails/yellow_back_blank.png"] } 
                                   
-                                  class={(!!this.state.hand.playedCards[player.id] )? "thumbnail_size" : 
+                                  className={(!!this.state.hand.playedCards[player.id] )? "thumbnail_size" : 
                                   [(this.state.hand.currentPlayerId !== player.id)
                                     ? "thumbnail_size  transparent " : "thumbnail_size"]
                                         } />
@@ -539,17 +594,17 @@ class Game extends Component {
                                
                               {(this.state.me.id !== player.id && this.state.me.teamId === player.teamId)?<img alt="Partner Chip" src={"/cards/thumbnails/PARTNER.png"} />:null}
                               {((this.state.round.dealerId === player.id) && (!this.state.round.goerId)) ? <img alt="Dealer Chip" src={"/cards/thumbnails/DEALER.png"} />:null}
-                              {(player.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} class= "thumbnail_size_extra_small"/> : null}
-                              {(player.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} class= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_size_extra_small"/> : null}
+                              {(player.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_size_extra_small"/> : null}
 
                               { !!this.state.round.suit && (this.state.round.goerId=== player.id) ?  <a>
-                        {(this.state.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  class="thumbnail_size_extra_small " />:null} {/* background_white */}
-                              {(this.state.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  class="thumbnail_size_extra_small " />:null}
-                              {(this.state.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  class="thumbnail_size_extra_small " />:null}
-                              {(this.state.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  class="thumbnail_size_extra_small " />:null}
+                              {(this.state.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  className="thumbnail_size_extra_small " />:null} {/* background_white */}
+                              {(this.state.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  className="thumbnail_size_extra_small " />:null}
+                              {(this.state.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  className="thumbnail_size_extra_small " />:null}
+                              {(this.state.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  className="thumbnail_size_extra_small " />:null}
                              </a>
                              :null}
 
@@ -564,7 +619,7 @@ class Game extends Component {
                       { !!this.state.me.cards && this.state.me.cards.length > 0 ?
                         <CardBody className="cardArea">
                           { this.state.me.cards.map(card => 
-                            <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                            <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                           )}
                         </CardBody>
                       : null}
@@ -582,7 +637,7 @@ class Game extends Component {
                       <div>
                         <CardBody className="buttonArea">
                         
-                            {(!!this.state.hand && this.state.me.cards.length > 0 && this.state.hand.currentPlayerId === this.state.myId) ?
+                            {(!!this.state.hand && this.state.me.cards.length > 0 && this.state.hand.currentPlayerId === this.state.profile.sub) ?
 
                             <ButtonGroup size="lg">
                               <Button type="button" color="secondary" disabled={this.state.actionsDisabled} onClick={this.call.bind(this, 0)}>Pass</Button>
@@ -598,7 +653,7 @@ class Game extends Component {
                         </CardBody>
                         { this.state.me.id === this.state.round.dealerId && this.state.me.cards.length === 0 ?
                           <CardBody className="cardArea">
-                            <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} class="thumbnail_size" />
+                            <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} className="thumbnail_size" />
                           </CardBody>
                         : null }
                       </div>
@@ -615,7 +670,7 @@ class Game extends Component {
                             <CardBody className="cardArea">
 
                               { this.state.dummy.cards.map(card => 
-                                <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} class={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                                <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                               )}
 
                       
@@ -693,12 +748,13 @@ class Game extends Component {
                   : null}
                 
                   <CardBody>
-                    { !!this.state.game && !!this.state.hand ?
+                    { !!this.state.game && !!this.state.hand && !!this.state.players ?
                    
 
                       <Table dark responsive>
                         <thead>
                           <tr>
+                            <th align="left">Avatar</th>
                             <th align="left">Player</th>
                             <th>Previous</th>
                             <th>Bought</th>
@@ -706,12 +762,15 @@ class Game extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                        { this.state.game.players.map(player => 
-                          <tr>
-                            <td align="left">{player.displayName}</td>
+                        { this.state.game.players.sort(compareScore).map((player, idx) => 
+                          <tr key={`players_${idx}`}>
+                            <td>
+                              <img alt="Image Preview" src={this.state.players.find(p => p.id === player.id).picture} className="avatar" />
+                            </td>
+                            <td>{this.state.players.find(p => p.id === player.id).name}</td>
                             <td>
                               {!!this.state.previousHand && !!this.state.previousHand.playedCards[player.id] ?
-                              <img alt={this.state.previousHand.playedCards[player.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} class="thumbnail_size_small cardNotSelected"  /> : null }
+                              <img alt={this.state.previousHand.playedCards[player.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[player.id] + ".png"} className="thumbnail_size_small cardNotSelected"  /> : null }
                             </td>
                             <td>
                               { !!player.cardsBought ? player.cardsBought: ""}
@@ -730,7 +789,7 @@ class Game extends Component {
               </Card>
             </CardGroup>
 
-      <SockJsClient url={ process.env.REACT_APP_API_URL + '/websocket?tokenId=' + sessionStorage.getItem("JWT-TOKEN")} topics={['/game', '/user/game']}
+      <SockJsClient url={ process.env.REACT_APP_API_URL + '/websocket?tokenId=' + auth0Client.getAccessToken()} topics={['/game', '/user/game']}
                 onMessage={ this.handleWebsocketMessage.bind(this) }
                 ref={ (client) => { this.clientRef = client }}/>
 
@@ -754,6 +813,13 @@ class Game extends Component {
       </div>
     </div>
   </div>
+
+
+</main>
+</div>
+</span>
+</div>
+</div>
     );
   }
 }

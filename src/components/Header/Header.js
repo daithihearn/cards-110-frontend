@@ -1,71 +1,29 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import sessionUtils from '../../utils/SessionUtils';
+import NavBar from '../NavBar';
 
-class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSearchActive: false,
-      queryString: '',
-      _searchResults: null,
-      placeholder: 'Search'
-    };
-  }
+const propTypes = {
+  children: PropTypes.node,
+};
 
-  openSearchpage = () => {
-    this.props.showSearch();
-  };
+const defaultProps = {};
 
-  closeSearchpage = () => {
-    this.props.hideSearch();
-    this.onFocus();
-  };
-
-  clearText = () => {
-    this.setState({
-      placeholder: ''
-    });
-  };
-
-  blur = () => {
-    this.setState({
-      placeholder: 'Search'
-    });
-  };
-
-  onFocus = () => {
-    this.setState({
-      queryString: '',
-      _searchResults: null
-    });
-  };
-
-  content() {
-    return (
-      <div className="navHeader">
-        <div>
-          <div>
-            <span className="headerPageProfile">
-            {/* <a href="/#/home"><span className="form_container_text_link">Home</span></a> */}
-             <span className="headerPageButtons" href="/" onClick={sessionUtils.logout}>
-                Logout
-              </span>
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+class DefaultHeader extends Component {
   render() {
+
+    // eslint-disable-next-line
+    const { children, ...attributes } = this.props;
+
     return (
-      <>
-        <div className="header_background carpet">
-          {this.content()}
-        </div>
-      </>
+      <React.Fragment>
+        <NavBar/>
+      </React.Fragment>
     );
   }
 }
 
-export default Header;
+DefaultHeader.propTypes = propTypes;
+DefaultHeader.defaultProps = defaultProps;
+
+export default DefaultHeader;
