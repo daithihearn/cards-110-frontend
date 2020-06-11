@@ -373,7 +373,6 @@ class Home extends Component {
                           : null}
 
 
-
                         <CardGroup>
                           <Card>
                             <CardBody><h1>Start a new game</h1></CardBody>
