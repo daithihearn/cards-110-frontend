@@ -42,7 +42,7 @@ class Home extends Component {
 
     // Player Stuff
     if (this.state.isPlayer) {
-      await profileService.updateProfile({ name: profile.name, picture: profile.picture });
+      await profileService.updateProfile({ name: profile.name, email: profile.email, picture: profile.picture });
       this.getMyActiveGames();
     }
 
