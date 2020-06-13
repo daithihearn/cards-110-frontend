@@ -10,6 +10,7 @@ import shuffleAudio from '../../assets/sounds/shuffle.ogg';
 import playCardAudio from '../../assets/sounds/play_card.ogg';
 import alertAudio from '../../assets/sounds/alert.ogg';
 import NoSleep from 'nosleep.js';
+import errorUtils from '../../utils/ErrorUtils';
 
 import auth0Client from '../../Auth';
 
@@ -62,33 +63,12 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function parseError(error) {
-  let errorMessage = 'Undefined error';
-  if (
-    error.response !== undefined &&
-    error.response.data !== undefined &&
-    error.response.data.message !== undefined &&
-    error.response.data.message !== ''
-  ) {
-    errorMessage = error.response.data.message;
-  } else if (
-    error.response !== undefined &&
-    error.response.statusText !== undefined &&
-    error.response.statusText !== ''
-  ) {
-    errorMessage = error.response.statusText;
-  } else if (error.message !== undefined) {
-    errorMessage = error.message;
-  }
-  return { snackOpen: true, snackMessage: errorMessage, snackType: "error" };
-}
-
 class Game extends Component {
   constructor(props) {
     super(props);
     
     if (!props.location.state || !props.location.state.game) {
-      parseError({message: "No Game provided"})
+      this.updateState(errorUtils.parseError({message: "No Game provided"}));
       return;
     }
 
@@ -117,7 +97,7 @@ class Game extends Component {
     }
     catch(error) {
       let stateUpdate = this.state;
-      Object.assign(stateUpdate, parseError(error));
+      Object.assign(stateUpdate, errorUtils.parseError(error));
       this.setState(stateUpdate); 
     }
   }
@@ -126,7 +106,11 @@ class Game extends Component {
     let thisObj = this;
     gameService.getPlayersForGame(gameId).then(response => {
       thisObj.updateState({players: response.data})
-    }).catch(error => parseError(error));
+    }).catch(error => {
+      let stateUpdate = this.state;
+      Object.assign(stateUpdate, errorUtils.parseError(error));
+      this.setState(stateUpdate); 
+    });
   }
 
 
@@ -173,7 +157,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, parseError(error));
+      Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -204,7 +188,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, parseError(error));
+      Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -231,7 +215,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, parseError(error));
+      Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -274,7 +258,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, parseError(error));
+      Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate);
     });
@@ -305,7 +289,7 @@ class Game extends Component {
 
     }).catch(error => {
       let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, parseError(error));
+      Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
     });
@@ -322,7 +306,7 @@ class Game extends Component {
 
     let selectedCards = this.state.selectedCards;
     if (selectedCards.length !== 1) {
-      Object.assign(state, parseError({message: "Please select exactly one card to play"}));
+      Object.assign(state, errorUtils.parseError({message: "Please select exactly one card to play"}));
       Object.assign(state, enableButtons());
       thisObj.setState(state);
 
@@ -351,7 +335,7 @@ class Game extends Component {
         
       }).catch(error => {
         let stateUpdate = thisObj.state;
-        Object.assign(stateUpdate, parseError(error));
+        Object.assign(stateUpdate, errorUtils.parseError(error));
         Object.assign(stateUpdate, enableButtons());
         thisObj.setState(stateUpdate); 
       });
@@ -483,7 +467,7 @@ class Game extends Component {
         }
         break;
       default:
-        Object.assign(state, parseError({message: "Unsupported content type"}));
+        Object.assign(state, errorUtils.parseError({message: "Unsupported content type"}));
     }
 
     thisObj.setState(state);

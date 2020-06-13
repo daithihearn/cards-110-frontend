@@ -8,6 +8,9 @@ import AddIcon from '../../assets/icons/add.svg';
 import { Modal, ModalBody, ModalHeader, ModalFooter, Label, Button, ButtonGroup, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
+import BlockUi from 'react-block-ui';
+import 'react-block-ui/style.css';
+import errorUtils from '../../utils/ErrorUtils';
 
 import auth0Client from '../../Auth';
 class Home extends Component {
@@ -20,6 +23,7 @@ class Home extends Component {
       snackMessage: "",
       snackType: "",
       players:[],
+      loadingPlayers: false,
       selectedPlayers: [],
       modalStartGame:false,
       modalDeleteGame:false,
@@ -65,7 +69,11 @@ class Home extends Component {
     gameService.getActive().then(response => {
       thisObj.updateState({ activeGames: response.data });
     })
-      .catch(error => thisObj.parseError(error));
+      .catch(error => {
+        let stateUpdate = this.state;
+        Object.assign(stateUpdate, errorUtils.parseError(error));
+        this.setState(stateUpdate); 
+      });
   };
 
   handleCloseStartGameModal() {
@@ -89,16 +97,27 @@ class Home extends Component {
     gameService.getActive().then(response => {
       thisObj.updateState({ activeGames: response.data });
     })
-      .catch(error => thisObj.parseError(error));
+      .catch(error => {
+        let stateUpdate = this.state;
+        Object.assign(stateUpdate, errorUtils.parseError(error));
+        this.setState(stateUpdate); 
+      });
   };
 
   getAllPlayers()  {
     let thisObj = this;
 
+    this.updateState({loadingPlayers: true});
+
     gameService.getAllPlayers().then(response => {
-      thisObj.updateState({ players: response.data });
+      thisObj.updateState({ players: response.data, loadingPlayers: false });
     })
-      .catch(error => thisObj.parseError(error));
+      .catch(error => {
+        let stateUpdate = this.state;
+        Object.assign(stateUpdate, errorUtils.parseError(error));
+        Object.assign(stateUpdate, {loadingPlayers: false });
+        this.setState(stateUpdate); 
+      });
   };
 
   getMyActiveGames()  {
@@ -107,7 +126,11 @@ class Home extends Component {
     gameService.getMyActiveGames().then(response => {
       thisObj.updateState({ myActiveGames: response.data });
     })
-      .catch(error => thisObj.parseError(error));
+      .catch(error => {
+        let stateUpdate = this.state;
+        Object.assign(stateUpdate, errorUtils.parseError(error));
+        this.setState(stateUpdate); 
+      });
   };
 
   startGame() {
@@ -135,8 +158,10 @@ class Home extends Component {
       thisObj.getMyActiveGames();
       thisObj.getActiveGames();
     }).catch(error => {
-      thisObj.parseError(error);
-      thisObj.updateState({startGameDisabled: false, modalStartGame: false}); 
+      let stateUpdate = this.state;
+      Object.assign(stateUpdate, errorUtils.parseError(error));
+      Object.assign(stateUpdate, {startGameDisabled: false, modalStartGame: false});
+      this.setState(stateUpdate); 
     });
   };
   
@@ -182,9 +207,11 @@ class Home extends Component {
         thisObj.getMyActiveGames();
         thisObj.getActiveGames();
       })
-      .catch(error => { 
-        thisObj.parseError(error); 
-        thisObj.updateState({ finishGameDisabled: false });
+      .catch(error => {
+        let stateUpdate = this.state;
+        Object.assign(stateUpdate, errorUtils.parseError(error));
+        Object.assign(stateUpdate, { finishGameDisabled: false });
+        this.setState(stateUpdate); 
       });
     this.handleCloseDeleteGameModal();
   }
@@ -221,27 +248,6 @@ class Home extends Component {
     this.updateState(updateObj);
   }
 
-  parseError(error) {
-    let errorMessage = 'Undefined error';
-    if (
-      error.response !== undefined &&
-      error.response.data !== undefined &&
-      error.response.data.message !== undefined &&
-      error.response.data.message !== ''
-    ) {
-      errorMessage = error.response.data.message;
-    } else if (
-      error.response !== undefined &&
-      error.response.statusText !== undefined &&
-      error.response.statusText !== ''
-    ) {
-      errorMessage = error.response.statusText;
-    } else if (error.message !== undefined) {
-      errorMessage = error.message;
-    }
-    this.updateState({ snackOpen: true, snackMessage: errorMessage, snackType: "error" });
-  }
-  
   render() {
 
     return (
@@ -372,7 +378,8 @@ class Home extends Component {
                             </CardGroup>
                           : null}
 
-
+                        
+                      <BlockUi tag="div" blocking={this.state.loadingPlayers}>
                         <CardGroup>
                           <Card>
                             <CardBody><h1>Start a new game</h1></CardBody>
@@ -486,6 +493,7 @@ class Home extends Component {
 
                     </Card>
                   </CardGroup>
+                  </BlockUi>
 
                   </div>
                 : null }
