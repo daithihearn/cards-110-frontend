@@ -40,15 +40,15 @@ const playCardSound = new Audio(playCardAudio);
 const alertSound = new Audio(alertAudio);
 
 function isCurrentPlayer(state) {
-  return !!state.hand && state.hand.currentPlayerId === state.profile.sub;
+  return !!state.hand && state.hand.currentPlayerId === state.profile.id;
 }
 
 function isMyGo(state) {
-  return (!!state.hand && state.hand.currentPlayerId === state.profile.sub);
+  return (!!state.hand && state.hand.currentPlayerId === state.profile.id);
 }
 
 function iAmGoer(state) {
-  return (!!state.round && state.round.goerId === state.profile.sub);
+  return (!!state.round && state.round.goerId === state.profile.id);
 }
 
 function disableButtons() {
@@ -72,9 +72,7 @@ class Game extends Component {
       return;
     }
 
-    let profile = auth0Client.getProfile();
-
-    this.state = { game: props.location.state.game, profile: profile, selectedCards: [], actionsDisabled: false };
+    this.state = { game: props.location.state.game, selectedCards: [], actionsDisabled: false };
 
     this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
@@ -85,15 +83,24 @@ class Game extends Component {
   async componentDidMount() {
     
     try {
-      let response = await gameService.getGameForPlayer(this.state.game.id);
       let state = this.state;
+      // Get Game
+      let game = await gameService.getGameForPlayer(this.state.game.id);
+      state.game = game.data;
 
-      Object.assign(state, this.updateGame(response.data, []));
+      // Get Players
+      let players = await gameService.getPlayersForGame(state.game.id);
+      state.players = players.data;
+
+      let oidcProfile = auth0Client.getProfile();
+      let profile = state.players.filter(player => player.subject === oidcProfile.sub)[0];
+      state.profile = profile;
+
+      Object.assign(state, this.updateGame(state.game, []));
       if (isCurrentPlayer(state)) {
         Object.assign(state, this.setAlert());
       }
       this.setState(state);
-      this.getPlayersForGame(response.data.id);
     }
     catch(error) {
       let stateUpdate = this.state;
@@ -474,8 +481,8 @@ class Game extends Component {
   }
 
   updateGame(game, selectedCard, message) {
-    let me = game.players.filter(player => player.id === this.state.profile.sub)[0];
-    let dummy = game.players.filter(player => player.id === "dummy")[0];
+    let me = game.players.find(player => player.id === this.state.profile.id);
+    let dummy = game.players.find(player => player.id === "dummy");
     let round = game.currentRound;
     let hand = round.currentHand;
     
@@ -621,7 +628,7 @@ class Game extends Component {
                       <div>
                         <CardBody className="buttonArea">
                         
-                            {(!!this.state.hand && this.state.me.cards.length > 0 && this.state.hand.currentPlayerId === this.state.profile.sub) ?
+                            {(!!this.state.hand && this.state.me.cards.length > 0 && this.state.hand.currentPlayerId === this.state.profile.id) ?
 
                             <ButtonGroup size="lg">
                               <Button type="button" color="secondary" disabled={this.state.actionsDisabled} onClick={this.call.bind(this, 0)}>Pass</Button>

@@ -63,19 +63,6 @@ class Home extends Component {
     this.setState(prevState => (stateDelta));
   }
 
-  getActiveGames()  {
-    let thisObj = this;
-
-    gameService.getActive().then(response => {
-      thisObj.updateState({ activeGames: response.data });
-    })
-      .catch(error => {
-        let stateUpdate = this.state;
-        Object.assign(stateUpdate, errorUtils.parseError(error));
-        this.setState(stateUpdate); 
-      });
-  };
-
   handleCloseStartGameModal() {
     this.setState({ modalStartGame: false });
   }
