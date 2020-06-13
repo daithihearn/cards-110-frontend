@@ -18,7 +18,7 @@ import LoadingIcon from '../src/assets/img/brand/loading.gif';
 import './scss/style.css';
 
 function Loading() {
-  return <img src={LoadingIcon} className="loading" alt="description" />;
+  return <img src={LoadingIcon} className="loading" alt="Loading Icon" />;
 }
 
 const HomePage = Loadable({
