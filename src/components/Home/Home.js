@@ -125,6 +125,10 @@ class Home extends Component {
       this.updateState( {snackOpen: true, snackMessage: `You must select at least one player` , snackType: "error"} );
       return;
     }
+    if(this.state.newGameName === "") {
+      this.updateState( {snackOpen: true, snackMessage: `You must provide a name for the game` , snackType: "error"} );
+      return;
+    }
     if (this.state.startGameDisabled) {
       return;
     }
@@ -175,7 +179,7 @@ class Home extends Component {
   playGame(game) {
     this.props.history.push({
       pathname: '/game',
-      state: { game: game }
+      state: { gameId: game.id }
     });
   }
 
@@ -452,7 +456,7 @@ class Home extends Component {
                                           value={this.state.newGameName}
                                           required />
                                       </FormGroup>
-
+                                      {(!!this.state.newGameName && this.state.newGameName !== "") ?
                                       <ButtonGroup>
                                         <Button size="lg" color="primary" type="submit" onClick={this.showStartGameModal.bind(this)}>
                                           Start Game 
@@ -472,6 +476,7 @@ class Home extends Component {
                                           </ModalFooter>
                                         </Modal>
                                       </ButtonGroup>
+                                      : null}
                                     </Form>
                                       : null}
                             </CardBody>
