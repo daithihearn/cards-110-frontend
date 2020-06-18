@@ -72,7 +72,8 @@ class Game extends Component {
       return;
     }
 
-    this.state = { isMyGo: false, iAmGoer: false, iAmDealer: false, gameId: props.location.state.gameId, selectedCards: [], actionsDisabled: false };
+    this.state = { isMyGo: false, iAmGoer: false, iAmDealer: false, 
+      gameId: props.location.state.gameId, selectedCards: [], actionsDisabled: false };
 
     this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
@@ -165,7 +166,6 @@ class Game extends Component {
     gameService.deal(this.state.gameId).then(response => {
       shuffleSound.play();
       let stateUpdate = thisObj.state;
-      // Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully dealt cards`));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate);
 
@@ -187,16 +187,7 @@ class Game extends Component {
     Object.assign(state, disableButtons());
     thisObj.setState(state);
 
-    gameService.call(this.state.gameId, callAmount).then(response => {
-      // let stateUpdate = thisObj.state;
-      // // Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Successfully called ${callAmount}`));
-      // if (stateUpdate.isMyGo) {
-      //   Object.assign(stateUpdate, thisObj.setAlert());
-      // }
-      // Object.assign(stateUpdate, enableButtons());
-      // thisObj.setState(stateUpdate);
-
-    }).catch(error => {
+    gameService.call(this.state.gameId, callAmount).catch(error => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
@@ -222,21 +213,7 @@ class Game extends Component {
 
     thisObj.setState(state);
 
-    gameService.chooseFromDummy(this.state.gameId, this.state.selectedCards, suit).then(response => {
-      // shuffleSound.play();
-      // let stateUpdate = thisObj.state;
-      // Object.assign(stateUpdate, { selectedSuit: null });
-      // // Object.assign(stateUpdate, thisObj.updateGame(response.data, selectedCards, `Cards selected`));
-      // Object.assign(stateUpdate, enableButtons());
-
-      // if (stateUpdate.game.round.status === "BUYING" && stateUpdate.iAmGoer && stateUpdate.isMyGo) {
-      //   thisObj.setState(stateUpdate);
-      //   sleep(500).then(() => thisObj.buyCards());
-      //   return;
-      // }
-      // thisObj.setState(stateUpdate);
-
-    }).catch(error => {
+    gameService.chooseFromDummy(this.state.gameId, this.state.selectedCards, suit).catch(error => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
@@ -257,17 +234,7 @@ class Game extends Component {
     Object.assign(state, disableButtons());
     thisObj.setState(state);
 
-    gameService.buyCards(this.state.gameId, state.selectedCards).then(response => {
-      // shuffleSound.play();
-      // let stateUpdate = thisObj.state;
-      // // Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Bought cards`));
-      // if (stateUpdate.isMyGo) {
-      //   Object.assign(stateUpdate, thisObj.setAlert());
-      // }
-      // Object.assign(stateUpdate, enableButtons());
-      // thisObj.setState(stateUpdate);
-
-    }).catch(error => {
+    gameService.buyCards(this.state.gameId, state.selectedCards).catch(error => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
@@ -294,26 +261,7 @@ class Game extends Component {
       
       let selectedCard = selectedCards[0];
       thisObj.setState(state);
-      gameService.playCard(this.state.gameId, selectedCard).then(response => {
-        // playCardSound.play();
-        // let stateUpdate = thisObj.state;
-        // // Object.assign(stateUpdate, thisObj.updateGame(response.data, [], `Played ${selectedCard}`));
-
-        // if (!!stateUpdate.game.round && stateUpdate.game.round.status === "CALLING" && stateUpdate.game.round.dealerId === stateUpdate.profile.sub && stateUpdate.game.cards.length === 0) {
-        //   Object.assign(stateUpdate, enableButtons());
-        //   thisObj.setState(stateUpdate);
-        //   sleep(500).then(() => thisObj.deal());
-        //   return;
-        // }
-        
-        // if (stateUpdate.isMyGo) {
-        //   Object.assign(stateUpdate, thisObj.setAlert());
-        // }
-
-        // Object.assign(stateUpdate, enableButtons());
-        // thisObj.setState(stateUpdate);
-        
-      }).catch(error => {
+      gameService.playCard(this.state.gameId, selectedCard).catch(error => {
         let stateUpdate = thisObj.state;
         Object.assign(stateUpdate, errorUtils.parseError(error));
         Object.assign(stateUpdate, enableButtons());
@@ -331,10 +279,21 @@ class Game extends Component {
 
     let selectedCards = state.selectedCards;
     let indexOfCard = selectedCards.indexOf(card);
-    if (indexOfCard !== -1) {
-      selectedCards.splice(indexOfCard, 1);
-    } else {
-      selectedCards.push(card);
+
+    // If the round status is PLAYING then only allow one card to be selected
+    if (this.state.game.round.status === "PLAYING") {
+      if (indexOfCard === -1) {
+        selectedCards = [card];
+      } else {
+        selectedCards = [];
+      }
+    } 
+    else {
+      if (indexOfCard === -1) {
+        selectedCards.push(card);
+      } else {
+        selectedCards.splice(indexOfCard, 1);
+      }
     }
 
     Object.assign(state, {selectedCards: selectedCards});
