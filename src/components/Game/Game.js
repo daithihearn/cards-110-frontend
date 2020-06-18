@@ -503,19 +503,17 @@ class Game extends Component {
 
                                 <div>
                                
-                              
-                                  <img alt={playerProfile.displayName} src={(!!this.state.game.round.currentHand.playedCards[playerProfile.id] )? "/cards/thumbnails/" + this.state.game.round.currentHand.playedCards[playerProfile.id] + ".png" : 
-                                   [(this.state.game.round.currentHand.currentPlayerId !== playerProfile.id)
+                                  {(!!this.state.game.round.currentHand.playedCards[playerProfile.id] ) ?
+
+                                    <img alt={playerProfile.displayName} src={`/cards/thumbnails/${this.state.game.round.currentHand.playedCards[playerProfile.id]}.png`} className="thumbnail_size" />
+
+                                  : [(this.state.game.round.currentHand.currentPlayerId !== playerProfile.id)
                                     ?
-                                  "/cards/thumbnails/blank_grey_back.png"
-                                :   "/cards/thumbnails/yellow_back_blank.png"] } 
-                                  
-                                  className={(!!this.state.game.round.currentHand.playedCards[playerProfile.id] )? "thumbnail_size" : 
-                                  [(!this.state.isMyGo)
-                                    ? "thumbnail_size  transparent " : "thumbnail_size"]
-                                        } />
-                                      </div>
-                               
+                                      <img alt={playerProfile.displayName} src="/cards/thumbnails/blank_grey_back.png" className="thumbnail_size transparent" />
+                                    :
+                                      <img alt={playerProfile.displayName} src="/cards/thumbnails/yellow_back_blank.png" className="thumbnail_size" />
+                                  ] }
+                                  </div>                               
                                
                                 <div>
                                
