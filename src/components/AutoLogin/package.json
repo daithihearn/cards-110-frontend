@@ -1,7 +1,0 @@
-{
-    "name": "AutoLogin",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./AutoLogin.js"
-  }
-  

@@ -8,3 +8,7 @@ node_modules/
 .classpath
 .project
 .settings/
+.env
+.env.prod
+.env.dev
+deploy.sh

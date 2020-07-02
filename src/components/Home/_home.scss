@@ -71,6 +71,13 @@
   }
 }
 
+.avatar {
+  vertical-align: middle;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+}
+
 .thumbnail_size {
   max-width: 100px;
   max-height: 153px;
@@ -85,7 +92,7 @@
 
 .thumbnail_size_extra_small {
   max-width: 45px;
-  max-height: 65px;
+  max-height: 45px;
  
 }
 
@@ -240,6 +247,11 @@
     }
   }
   @media screen and (min-width: 800px) {
+
+    .game_wrap {
+      min-width: 0;
+      max-width: 790px;
+    }
     .rwd-table tr:hover:not(:first-child) {
       background-color: #d8e7f3;
     }
@@ -290,49 +302,82 @@
     pointer-events: none;
   }
 
-  &_complianceButton {
-    font-weight: $fontWeightBold;
-    font-family: $fontFamily;
-    background-color: black;
-    color: $white;
-    height: 40px;
-    width: 120px;
-    border-radius: 20px;
-    font-size: $fontSizeBase;
-    border-style: none;
-    margin-right: 20px;
+}
 
-    &:hover {
-      text-decoration: underline;
-    }
+.game_wrap {
+  min-width: 1000px;
+  max-width: 1300px;
+}
+
+.diplay_image_size {
+  max-width: 1100px;
+  max-height: 1024px;
+}
+
+@media only screen and (max-width: 1324px) {
+
+  .game_wrap {
+    min-width: 1100px;
+    max-width: 1300px;
   }
 
-  &_CPDButton {
-    font-weight: $fontWeightBold;
-    font-family: $fontFamily;
-    background-color: $blueshade2;
-    color: $blue;
-    height: 40px;
-    width: 120px;
-    border-radius: 20px;
-    font-size: $fontSizeBase;
-    border: none;
-    margin-top: 20px;
+  .diplay_image_size {
+    max-width: 1100px;
+    max-height: 1068px;
+  }
+}
+
+@media only screen and (max-width: 1224px) {
+
+  .game_wrap {
+    min-width: 900px;
+    max-width: 1100px;
   }
 
-  &_TokensImage {
-    margin: 0px 80px 0 2px;
-    margin-left: auto;
-    height: 200px;
-    width: 200px;
-    min-height: 150px;
-    min-width: 150px;
-    pointer-events: none;
+  .diplay_image_size {
+    max-width: 1020px;
+    max-height: 868px;
+  }
+}
+
+@media only screen and (max-width: 1124px) {
+
+  .game_wrap {
+    min-width: 800px;
+    max-width: 1000px;
+  }
+
+  .diplay_image_size {
+    max-width: 920px;
+    max-height: 768px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+
+  .game_wrap {
+    min-width: 700px;
+    max-width: 900px;
+  }
+
+  .diplay_image_size {
+    max-width: 800px;
+    max-height: 668px;
   }
 }
 
 // Resposiveness for Mobile view.
 @media only screen and (max-width: 925px) {
+
+  .game_wrap {
+    min-width: 700px;
+    max-width: 900px;
+  }
+
+  .diplay_image_size {
+    max-width: 850px;
+  }
+
   .tile_wrap {
     padding: 0 20px 0 20px;
   }
@@ -355,23 +400,105 @@
       font-size: 30px;
     }
 
-    &_CPDButton {
-      margin: 14px 0px 14px 0px;
-      display: inherit;
-    }
-
-    &_TokensImage {
-      margin: 20px 0 0 20px;
-      margin-left: 0;
-    }
   }
 }
 
-@media only screen and (max-width: 385px) {
+@media only screen and (max-width: 900px) {
+
+  .game_wrap {
+    min-width: 750px;
+    max-width: 823px;
+  }
 
   .diplay_image_size {
-    max-width: 380px;
-    max-height: 380px;
+    max-width: 790px;
+    max-height: 411px;
+  }
+}
+
+@media only screen and (max-width: 823px) {
+
+  .game_wrap {
+    min-width: 700px;
+    max-width: 800px;
+  }
+
+  .diplay_image_size {
+    max-width: 760px;
+    max-height: 411px;
+  }
+}
+
+@media only screen and (max-width: 812px) {
+
+  .game_wrap {
+    min-width: 0;
+    max-width: 800px;
+  }
+
+  .diplay_image_size {
+    max-width: 720px;
+    max-height: 375px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+.game_wrap {
+    max-width: 750px;
+  }
+
+  .diplay_image_size {
+    max-width: 660px;
+    max-height: 1024px;
+  }
+}
+
+@media only screen and (max-width: 736px) {
+
+  .game_wrap {
+    max-width: 710px;
+  }
+
+  .diplay_image_size {
+    max-width: 520px;
+    max-height: 414px;
+  }
+}
+
+@media only screen and (max-width: 734px) {
+
+  .game_wrap {
+    max-width: 700px;
+  }
+
+  .diplay_image_size {
+    max-width: 520px;
+    max-height: 360px;
+  }
+}
+
+@media only screen and (max-width: 667px) {
+
+  .game_wrap {
+    min-width: 600px;
+    max-width: 650px;
+  }
+
+  .diplay_image_size {
+    max-width: 530px;
+    max-height: 375px;
+  }
+}
+
+@media only screen and (max-width: 570px) {
+
+  .game_wrap {
+    min-width: 550px;
+    max-width: 560px;
+  }
+
+  .diplay_image_size {
+    max-width: 460px;
   }
   
   .card-product_StatsHome {
@@ -381,9 +508,67 @@
   }
 }
 
+@media only screen and (max-width: 420px) {
+
+  .game_wrap {
+    min-width: 400px;
+    max-width: 410px;
+  }
+
+  .diplay_image_size {
+    max-width: 320px;
+  }
+  
+  .card-product_StatsHome {
+    &_Content {
+      font-size: 38px !important ;
+    }
+  }
+}
+
+@media only screen and (max-width: 385px) {
+
+  .game_wrap {
+    min-width: 370px;
+    max-width: 375px;
+  }
+
+  .diplay_image_size {
+    max-width: 280px;
+  }
+  
+}
+
+@media only screen and (max-width: 360px) {
+
+  .game_wrap {
+    min-width: 300px;
+    max-width: 350px;
+  }
+
+  .diplay_image_size {
+    max-width: 260px;
+  }
+  
+}
+
+@media only screen and (max-width: 320px) {
+
+  .game_wrap {
+    max-width: 310px;
+  }
+
+  .diplay_image_size {
+    max-width: 220px;
+  }
+  
+}
+
+
 @media (max-width: 277px) {
   .app {
     position: absolute;
     background: $white;
   }
 }
+
