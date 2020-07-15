@@ -608,10 +608,10 @@ class Game extends Component {
 
                                 <ButtonGroup size="lg">
 
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}>HEARTS</Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}>DIAMONDS</Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}>SPADES</Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}>CLUBS</Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}><img alt="Hearts" src={"/cards/originals/hearts.svg"}  className="thumbnail_size_extra_small " /></Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}><img alt="Hearts" src={"/cards/originals/diamonds.svg"}  className="thumbnail_size_extra_small " /></Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}><img alt="Hearts" src={"/cards/originals/spades.svg"}  className="thumbnail_size_extra_small " /></Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}><img alt="Hearts" src={"/cards/originals/clubs.svg"}  className="thumbnail_size_extra_small " /></Button>
 
                                 </ButtonGroup>
                                 
