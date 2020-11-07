@@ -243,7 +243,7 @@ class Home extends Component {
 
     return (
       <div>
-        <div className="content_employee">
+        <div className="main_content">
           <span className="app" style={{ overflowX: 'hidden' }}>
             <div className="app_body">
               <main className="main">
@@ -256,7 +256,7 @@ class Home extends Component {
 
                 { !this.state.isPlayer && !this.state.isAdmin ? 
                   <CardGroup>
-                    <Card className="p-6">
+                    <Card color="secondary" className="p-6">
                       <CardHeader tag="h2">You are successfully logged in but don't yet have any access permissions. Please contact Daithi to get access.</CardHeader>
                     </Card>
                   </CardGroup>
@@ -269,10 +269,10 @@ class Home extends Component {
                       
                               { !!this.state.myActiveGames && this.state.myActiveGames.length > 0 ?
                                 <CardGroup>
-                                  <Card className="p-6">
+                                  <Card color="secondary" className="p-6">
                                     <CardHeader tag="h2">My Games</CardHeader>
                                   <CardBody>
-                                    <Table bordered hover responsive>
+                                    <Table dark hover responsive>
                                       <thead>
                                         <tr>
                                           <th>Name</th>
@@ -283,7 +283,7 @@ class Home extends Component {
                                         {this.state.myActiveGames.map((game, idx) => 
                                           <tr key={`myactivegames_${idx}`}>
                                             <td align="left">{game.name}</td>
-                                            <td><Button type="button" color="link" onClick={this.playGame.bind(this, game)}>Open</Button></td>
+                                            <td><Button type="button" color="success" onClick={this.playGame.bind(this, game)}>Open</Button></td>
                                           </tr>
                                           
                                         )}
@@ -299,7 +299,7 @@ class Home extends Component {
                                 <div>
                                   { !this.state.isAdmin ?
                                 <CardGroup>
-                                  <Card className="p-6">
+                                  <Card color="secondary" className="p-6">
                                     <CardHeader tag="h2">There are no games available currently. Please wait for the game to start.</CardHeader>
                                   </Card>
                                 </CardGroup>
@@ -318,10 +318,10 @@ class Home extends Component {
 
                         {this.state.activeGames.length > 0 ?  
                             <CardGroup>
-                              <Card className="p-6">
+                              <Card color="secondary" className="p-6">
                                 <CardHeader tag="h2">Active Games</CardHeader>
                               <CardBody>
-                                <Table bordered hover responsive>
+                                <Table dark hover responsive>
                                   <thead>
                                     <tr>
                                       <th>Name</th>
@@ -354,7 +354,7 @@ class Home extends Component {
                                     {this.state.activeGames.map((game, idx) => 
                                       <tr key={`activegames_${idx}`}>
                                         <td align="left">{game.name}</td>
-                                        <td><Button type="button" color="link" onClick={this.finishGame.bind(this, game, idx)}>Finish</Button></td>
+                                        <td><Button type="button" color="info" onClick={this.finishGame.bind(this, game, idx)}>Finish</Button></td>
                                         <td><Button type="button" color="link" onClick={this.showDeleteGameModal.bind(this, game, idx)}>
                                           <img alt="Remove" src={RemoveImage} width="20px" height="20px"/></Button>                  
                                           </td>
@@ -372,7 +372,7 @@ class Home extends Component {
                         
                       <BlockUi tag="div" blocking={this.state.loadingPlayers}>
                         <CardGroup>
-                          <Card>
+                          <Card color="secondary">
                             <CardBody><h1>Start a new game</h1></CardBody>
                               <CardBody>
                               
@@ -382,7 +382,7 @@ class Home extends Component {
                                   <h3 colSpan="2">Players</h3>
 
 
-                                  <Table bordered hover responsive>
+                                  <Table dark hover responsive>
                                     <thead>
                                       <tr>
                                         <th>Avatar</th>
@@ -417,7 +417,7 @@ class Home extends Component {
                             <CardBody>
                               <h3 colSpan="2">Selected players</h3>
 
-                              <Table bordered hover responsive>
+                              <Table dark hover responsive>
                                   <thead>
                                     <tr>
                                       <th>Avatar</th>

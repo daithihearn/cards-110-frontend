@@ -465,7 +465,7 @@ class Game extends Component {
    
     return (
       <div>
-        <div className="content_employee">
+        <div className="main_content">
           <span className="app" style={{ overflowX: 'hidden' }}>
             <div className="app_body">
               <main className="main">
@@ -481,19 +481,10 @@ class Game extends Component {
 
               { !!this.state.game && !!this.state.game.me && !!this.state.game.round && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players && this.state.game.status !== "FINISHED" ?
                     <div>
-{/* 
-function getCurrentMessage(game, players) {
-  if(!!game.round.suit) {
-    let caller = players.filter(player => player.id === game.round.goerId)[0];
-    let callerProfile = game.playerProfiles.filter(profile => profile.id === game.round.goerId)[0];
-    return `${caller.name.split(" ")[0]} called ${callerProfile.call}`;
-  }
-  return null;
-} */}
 
-
+                        { !!this.state.game.round.suit ?
                         <CardHeader className="cardAreaHeaderContainer">
-                          { !!this.state.game.round.suit ?
+                          
                           <h2 className="cardAreaHeader">
                             {this.state.players.filter(player => player.id === this.state.game.round.goerId)[0].name.split(" ")[0].substring(0, 6)}
                             
@@ -501,9 +492,10 @@ function getCurrentMessage(game, players) {
                             
                             <img alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
                           </h2>
-                          : " "}
+                          
                           
                         </CardHeader>
+                        : " "}
                         <CardBody className="cardArea">
                           <Container>
                             <Row>
@@ -731,7 +723,7 @@ function getCurrentMessage(game, players) {
 
 
             <CardGroup>
-              <Card>
+              <Card color="secondary">
               <CardBody>
               Back to  <Button type="button" color="link" onClick={this.goHome}><span className="form_container_text_link">Home</span></Button>
               </CardBody>
