@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
-import { Button, ButtonGroup, Form, Row, Col, Card, CardBody, CardGroup, Container, Table, CardHeader } from 'reactstrap';
+import { Button, ButtonGroup, Form, Row, Col, Card, CardImgOverlay, CardText, CardImg, CardBody, CardGroup, Container, Table, CardHeader } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
 import DefaultHeader from '../Header';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
@@ -510,37 +510,40 @@ class Game extends Component {
                                
                                   {(!!this.state.game.round.currentHand.playedCards[playerProfile.id] ) ?
 
-                                    <img alt={playerProfile.displayName} src={`/cards/thumbnails/${this.state.game.round.currentHand.playedCards[playerProfile.id]}.png`} className="thumbnail_size" />
+                                      <CardImg alt={playerProfile.displayName} src={`/cards/thumbnails/${this.state.game.round.currentHand.playedCards[playerProfile.id]}.png`} className="thumbnail_size" />
 
                                   : [(this.state.game.round.currentHand.currentPlayerId !== playerProfile.id)
                                     ?
-                                      <img alt={playerProfile.displayName} src={`/cards/thumbnails/blank_grey_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":""}.png`} className="thumbnail_size transparent" />
+                                      <a>
+                                        <CardImg alt={playerProfile.displayName} src={`/cards/thumbnails/blank_grey_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":""}.png`} className="thumbnail_size transparent" />
+                                        
+                                        { !this.state.game.round.suit ?  <CardImgOverlay>
+                                          {(playerProfile.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                          {(playerProfile.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                          {(playerProfile.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                          {(playerProfile.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                          {(playerProfile.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                          </CardImgOverlay>
+                                          :null}
+                                      
+                                      </a>
                                     :
-                                      <img alt={playerProfile.displayName} src={`/cards/thumbnails/yellow_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":"_blank"}.png`} className="thumbnail_size" />
+                                      <a>
+                                      <CardImg alt={playerProfile.displayName} src={`/cards/thumbnails/yellow_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":"_blank"}.png`} className="thumbnail_size" />
+                                      { !this.state.game.round.suit ?  <CardImgOverlay>
+                                        {(playerProfile.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                        {(playerProfile.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                        {(playerProfile.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                        {(playerProfile.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                        {(playerProfile.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                        </CardImgOverlay>
+                                        :null}
+                                      </a>
                                   ] }
                                   </div>                               
                                
                                 <div>
-                               
-                              {/* {(this.state.game.me.id !== playerProfile.id && this.state.game.me.teamId === playerProfile.teamId)?<img alt="Partner Chip" src={"/cards/thumbnails/PARTNER.png"} />:null} */}
-                              {/* {(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? <img alt="Dealer Chip" src={"/cards/thumbnails/DEALER.png"} className="thumbnail_chips" />:null} */}
                               
-                              { !this.state.game.round.suit ?  <a>
-                              {(playerProfile.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_chips"/> : null}
-                              {(playerProfile.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_chips"/> : null}
-                              {(playerProfile.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_chips"/> : null}
-                              {(playerProfile.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_chips"/> : null}
-                              {(playerProfile.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_chips"/> : null}
-                              </a>
-                              :null}
-
-                              {/* { !!this.state.game.round.suit && (isGoer(this.state.game, playerProfile.id)) ?  <a>
-                              {(this.state.game.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  className="thumbnail_chips " />:null}
-                              {(this.state.game.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  className="thumbnail_chips " />:null}
-                              {(this.state.game.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  className="thumbnail_chips " />:null}
-                              {(this.state.game.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  className="thumbnail_chips " />:null}
-                             </a>
-                             :null} */}
 
                                 </div>
                               </Col>
