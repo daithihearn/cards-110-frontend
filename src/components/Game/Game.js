@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
-import { Button, ButtonGroup, Form, Row, Col, Card, CardBody, CardGroup, Container, Table } from 'reactstrap';
+import { Button, ButtonGroup, Form, Row, Col, Card, CardBody, CardGroup, Container, Table, CardHeader } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
 import DefaultHeader from '../Header';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
@@ -452,7 +452,7 @@ class Game extends Component {
     return { game: game, selectedCards: [], previousHand: previousHand, cardsSelectable: cardsSelectable, 
       isMyGo: isThereGo(game, this.state.profile.id),
       iAmGoer: isGoer(game, this.state.profile.id),
-      iAmDealer: isDealer(game, this.state.profile.id) };
+      iAmDealer: isDealer(game, this.state.profile.id)};
   }
 
   handleChange(event) {
@@ -476,21 +476,34 @@ class Game extends Component {
          <div className="game_wrap">
           <div className="game_container">
 
-              <CardGroup>
-                <Card>
-                <CardBody>
-                Back to  <Button type="button" color="link" onClick={this.goHome}><span className="form_container_text_link">Home</span></Button>
-                </CardBody>
-                </Card>
-              </CardGroup>
-
             <CardGroup>
               <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
 
               { !!this.state.game && !!this.state.game.me && !!this.state.game.round && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players && this.state.game.status !== "FINISHED" ?
                     <div>
-                                    
+{/* 
+function getCurrentMessage(game, players) {
+  if(!!game.round.suit) {
+    let caller = players.filter(player => player.id === game.round.goerId)[0];
+    let callerProfile = game.playerProfiles.filter(profile => profile.id === game.round.goerId)[0];
+    return `${caller.name.split(" ")[0]} called ${callerProfile.call}`;
+  }
+  return null;
+} */}
 
+
+                        <CardHeader className="cardAreaHeaderContainer">
+                          { !!this.state.game.round.suit ?
+                          <h2 className="cardAreaHeader">
+                            {this.state.players.filter(player => player.id === this.state.game.round.goerId)[0].name.split(" ")[0].substring(0, 6)}
+                            
+                            <img alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
+                            
+                            <img alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
+                          </h2>
+                          : " "}
+                          
+                        </CardHeader>
                         <CardBody className="cardArea">
                           <Container>
                             <Row>
@@ -509,29 +522,33 @@ class Game extends Component {
 
                                   : [(this.state.game.round.currentHand.currentPlayerId !== playerProfile.id)
                                     ?
-                                      <img alt={playerProfile.displayName} src="/cards/thumbnails/blank_grey_back.png" className="thumbnail_size transparent" />
+                                      <img alt={playerProfile.displayName} src={`/cards/thumbnails/blank_grey_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":""}.png`} className="thumbnail_size transparent" />
                                     :
-                                      <img alt={playerProfile.displayName} src="/cards/thumbnails/yellow_back_blank.png" className="thumbnail_size" />
+                                      <img alt={playerProfile.displayName} src={`/cards/thumbnails/yellow_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":"_blank"}.png`} className="thumbnail_size" />
                                   ] }
                                   </div>                               
                                
                                 <div>
                                
-                              {(this.state.game.me.id !== playerProfile.id && this.state.game.me.teamId === playerProfile.teamId)?<img alt="Partner Chip" src={"/cards/thumbnails/PARTNER.png"} />:null}
-                              {(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? <img alt="Dealer Chip" src={"/cards/thumbnails/DEALER.png"} />:null}
-                              {(playerProfile.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_size_extra_small"/> : null}
-                              {(playerProfile.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_size_extra_small"/> : null}
-                              {(playerProfile.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_size_extra_small"/> : null}
-                              {(playerProfile.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_size_extra_small"/> : null}
-                              {(playerProfile.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_size_extra_small"/> : null}
+                              {/* {(this.state.game.me.id !== playerProfile.id && this.state.game.me.teamId === playerProfile.teamId)?<img alt="Partner Chip" src={"/cards/thumbnails/PARTNER.png"} />:null} */}
+                              {/* {(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? <img alt="Dealer Chip" src={"/cards/thumbnails/DEALER.png"} className="thumbnail_chips" />:null} */}
+                              
+                              { !this.state.game.round.suit ?  <a>
+                              {(playerProfile.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_chips"/> : null}
+                              {(playerProfile.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_chips"/> : null}
+                              {(playerProfile.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_chips"/> : null}
+                              {(playerProfile.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_chips"/> : null}
+                              {(playerProfile.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_chips"/> : null}
+                              </a>
+                              :null}
 
-                              { !!this.state.game.round.suit && (isGoer(this.state.game, playerProfile.id)) ?  <a>
-                              {(this.state.game.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  className="thumbnail_size_extra_small " />:null} {/* background_white */}
-                              {(this.state.game.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  className="thumbnail_size_extra_small " />:null}
-                              {(this.state.game.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  className="thumbnail_size_extra_small " />:null}
-                              {(this.state.game.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  className="thumbnail_size_extra_small " />:null}
+                              {/* { !!this.state.game.round.suit && (isGoer(this.state.game, playerProfile.id)) ?  <a>
+                              {(this.state.game.round.suit === "CLUBS")?<img alt="Clubs" src={"/cards/originals/clubs.svg"}  className="thumbnail_chips " />:null}
+                              {(this.state.game.round.suit === "DIAMONDS")?<img alt="Diamonds" src={"/cards/originals/diamonds.svg"}  className="thumbnail_chips " />:null}
+                              {(this.state.game.round.suit === "SPADES")?<img alt="Spades" src={"/cards/originals/spades.svg"}  className="thumbnail_chips " />:null}
+                              {(this.state.game.round.suit === "HEARTS")?<img alt="Hearts" src={"/cards/originals/hearts.svg"}  className="thumbnail_chips " />:null}
                              </a>
-                             :null}
+                             :null} */}
 
                                 </div>
                               </Col>
@@ -566,10 +583,10 @@ class Game extends Component {
 
                             <ButtonGroup size="lg">
                               <Button type="button" color="secondary" disabled={this.state.actionsDisabled} onClick={this.call.bind(this, 0)}>Pass</Button>
-                              { (this.state.game.playerProfiles.length === 6 && ((this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 10) || this.state.game.maxCall < 10)) ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>Call 10</Button> : null }
-                              { (this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 15) || this.state.game.maxCall < 15 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 15)}>Call 15</Button> : null }
-                              { (this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 20) || this.state.game.maxCall < 20 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 20)}>Call 20</Button> : null }
-                              { (this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 25) || this.state.game.maxCall < 25 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 25)}>Call 25</Button> : null }
+                              { (this.state.game.playerProfiles.length === 6 && ((this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 10) || this.state.game.maxCall < 10)) ? <Button type="button" color="primary" onClick={this.call.bind(this, 10)}>10</Button> : null }
+                              { (this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 15) || this.state.game.maxCall < 15 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 15)}>15</Button> : null }
+                              { (this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 20) || this.state.game.maxCall < 20 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 20)}>20</Button> : null }
+                              { (this.state.game.me.id === this.state.game.round.dealerId && this.state.game.maxCall <= 25) || this.state.game.maxCall < 25 ? <Button type="button" disabled={this.state.actionsDisabled} color="warning" onClick={this.call.bind(this, 25)}>25</Button> : null }
                               <Button type="button" disabled={this.state.actionsDisabled} color="danger" onClick={this.call.bind(this, 30)}>Jink</Button>
                             </ButtonGroup>
 
@@ -608,10 +625,10 @@ class Game extends Component {
 
                                 <ButtonGroup size="lg">
 
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}><img alt="Hearts" src={"/cards/originals/hearts.svg"}  className="thumbnail_size_extra_small " /></Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}><img alt="Hearts" src={"/cards/originals/diamonds.svg"}  className="thumbnail_size_extra_small " /></Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}><img alt="Hearts" src={"/cards/originals/spades.svg"}  className="thumbnail_size_extra_small " /></Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}><img alt="Hearts" src={"/cards/originals/clubs.svg"}  className="thumbnail_size_extra_small " /></Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}><img alt="Hearts" src={"/cards/originals/HEARTS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}><img alt="Hearts" src={"/cards/originals/DIAMONDS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}><img alt="Hearts" src={"/cards/originals/SPADES_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}><img alt="Hearts" src={"/cards/originals/CLUBS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
 
                                 </ButtonGroup>
                                 
@@ -711,6 +728,16 @@ class Game extends Component {
                   </CardBody>
               </Card>
             </CardGroup>
+
+
+            <CardGroup>
+              <Card>
+              <CardBody>
+              Back to  <Button type="button" color="link" onClick={this.goHome}><span className="form_container_text_link">Home</span></Button>
+              </CardBody>
+              </Card>
+            </CardGroup>
+
 
       <SockJsClient url={ `${process.env.REACT_APP_API_URL}/websocket?gameId=${this.state.gameId}&tokenId=${auth0Client.getAccessToken()}`} topics={["/game", "/user/game"]}
                 onMessage={ this.handleWebsocketMessage.bind(this) }

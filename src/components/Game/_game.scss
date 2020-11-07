@@ -13,11 +13,12 @@
 }
 
 .carpet {
-  background-image: url("/cards/originals/carpet2.jpg");
+  background-image: url("/cards/originals/carpet4.jpg");
 }
 
 .wood {
-  background-image: url("/cards/originals/wood.jpg");
+  // background-image: url("/cards/originals/wood.jpg");
+  background-color: brown;
 }
 
 .cardArea {
@@ -26,12 +27,28 @@
   font-weight: bold;
 }
 
+.cardAreaHeader {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+
+.cardAreaHeaderContainer {
+  color: rgb(0, 0, 0);
+  background-color: aliceblue;
+}
+
 .headerArea {
   min-height: 90px;
 }
 
 .buttonArea {
   min-height: 84px;
+}
+
+.left-padding {
+  padding-left: 5px;
 }
 
 #playCardButton:disabled {
