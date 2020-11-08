@@ -379,6 +379,10 @@ class Game extends Component {
         }
         
         break;
+      case("BUY_CARDS_NOTIFICATION"):
+        let player = this.state.players.find(player => player.id === content.content.playerId);
+        Object.assign(state, {snackOpen: true, snackMessage: `${player.name} bought ${content.content.bought}`, snackType: "info"});
+        break;
       case("HAND_COMPLETED"):
         Object.assign(state, thisObj.updateGame(content.content));
 
@@ -521,7 +525,7 @@ class Game extends Component {
                                           src={`/cards/thumbnails/${(this.state.game.round.currentHand.currentPlayerId === playerProfile.id) ? "yellow":"blank_grey"}_back.png`} 
                                           className={`thumbnail_size ${(this.state.game.round.currentHand.currentPlayerId === playerProfile.id) ? "":"transparent"}`} />
                                         
-                                        { isDealer(this.state.game, playerProfile.id) ?
+                                        { !this.state.game.round.suit && isDealer(this.state.game, playerProfile.id) ?
                                         <CardImgOverlay>
                                           <CardImg alt="Dealer Chip" src={"/cards/originals/DEALER.png"} className= "thumbnail_chips overlay_dealer_chip"/>
                                         </CardImgOverlay>
