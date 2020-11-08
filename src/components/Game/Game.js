@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
-import { Button, ButtonGroup, Form, Row, Col, Card, CardImgOverlay, CardText, CardImg, CardBody, CardGroup, Container, Table, CardHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Form, Row, Col, Card, CardImgOverlay, CardText, CardImg, CardBody, CardGroup, Container, Table, CardHeader } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
 import DefaultHeader from '../Header';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
@@ -72,13 +72,29 @@ class Game extends Component {
       return;
     }
 
-    this.state = { isMyGo: false, iAmGoer: false, iAmDealer: false, 
-      gameId: props.location.state.gameId, selectedCards: [], actionsDisabled: false };
+    this.state = { 
+      isMyGo: false, 
+      iAmGoer: false, 
+      iAmDealer: false, 
+      gameId: props.location.state.gameId, 
+      selectedCards: [], 
+      actionsDisabled: false,
+      modalLeaderboard: false };
 
     this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
+  }
+
+  showLeaderboardModal(event) {
+    event.preventDefault();
+    this.setState({ modalLeaderboard: true });
+  }
+
+  hideLeaderboardModal(event) {
+    event.preventDefault();
+    this.setState({ modalLeaderboard: false });
   }
   
   async componentDidMount() {
@@ -486,20 +502,30 @@ class Game extends Component {
               { !!this.state.game && !!this.state.game.me && !!this.state.game.round && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players && this.state.game.status !== "FINISHED" ?
                     <div>
 
-                        { !!this.state.game.round.suit ?
+                        
                         <CardHeader className="cardAreaHeaderContainer">
+                          <Row>
+                            <Col xs="4">
+                              <ButtonGroup size="lg">
+                                  <Button type="button" color="info" onClick={this.showLeaderboardModal.bind(this)}>Scores</Button>
+                              </ButtonGroup>
+                            </Col>
+                            <Col xs="auto">
                           
-                          <h2 className="cardAreaHeader">
-                            {this.state.players.filter(player => player.id === this.state.game.round.goerId)[0].name.split(" ")[0].substring(0, 6)}
-                            
-                            <CardImg alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
-                            
-                            <CardImg alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
-                          </h2>
-                          
+                            { !!this.state.game.round.suit ?
+                              <h2 className="cardAreaHeader">
+                                {this.state.players.filter(player => player.id === this.state.game.round.goerId)[0].name.split(" ")[0].substring(0, 6)}
+                                
+                                <CardImg alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
+                                
+                                <CardImg alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
+                              </h2>
+                              : " "}
+                            </Col>
+                          </Row>
                           
                         </CardHeader>
-                        : " "}
+                        
                         <CardBody className="cardArea">
                           <Container>
                             <Row>
@@ -683,57 +709,6 @@ class Game extends Component {
                         
                       </CardBody>
                   : null}
-                
-                  <CardBody>
-                    { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
-                   
-
-                      <Table dark responsive>
-                        <thead>
-                          <tr>
-                            <th align="left">Avatar</th>
-                            <th align="left">Player</th>
-                            <th>Previous</th>
-                            <th>Bought</th>
-                            <th>Score</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        { this.state.game.playerProfiles.sort(compareScore).map((playerProfile, idx) => 
-                          <tr key={`players_${idx}`}>
-                            <td>
-                              <img alt="Image Preview" src={this.state.players.find(p => p.id === playerProfile.id).picture} className="avatar" />
-                            </td>
-                            <td>
-                              { this.state.players.find(p => p.id === playerProfile.id).name }
-                            </td>
-                            <td>
-                              {!!this.state.previousHand && !!this.state.previousHand.playedCards[playerProfile.id] ?
-                              <img alt={this.state.previousHand.playedCards[playerProfile.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[playerProfile.id] + ".png"} className="thumbnail_size_small cardNotSelected"  /> : null }
-                            </td>
-                            <td>
-                              { !!playerProfile.cardsBought ? playerProfile.cardsBought: ""}
-                            </td>
-                            <td>
-                              {playerProfile.score}
-                            </td>
-                          </tr>
-                        )}
-                        </tbody>
-                      </Table>
-
-                   
-                  : null }
-                  </CardBody>
-              </Card>
-            </CardGroup>
-
-
-            <CardGroup>
-              <Card color="secondary">
-              <CardBody>
-              Back to  <Button type="button" color="link" onClick={this.goHome}><span className="form_container_text_link">Home</span></Button>
-              </CardBody>
               </Card>
             </CardGroup>
 
@@ -741,6 +716,52 @@ class Game extends Component {
       <SockJsClient url={ `${process.env.REACT_APP_API_URL}/websocket?gameId=${this.state.gameId}&tokenId=${auth0Client.getAccessToken()}`} topics={["/game", "/user/game"]}
                 onMessage={ this.handleWebsocketMessage.bind(this) }
                 ref={ (client) => { this.clientRef = client }}/>
+
+
+
+            { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
+            
+            <Modal color="dark" isOpen={this.state.modalLeaderboard}>
+              <ButtonGroup size="sm"><Button type="button" color="info" onClick={this.hideLeaderboardModal.bind(this)}>Close</Button></ButtonGroup>
+              <ModalBody>
+                <Table dark responsive>
+                  <thead>
+                    <tr>
+                      <th align="left">Avatar</th>
+                      <th align="left">Player</th>
+                      <th>Previous</th>
+                      <th>Bought</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  { this.state.game.playerProfiles.sort(compareScore).map((playerProfile, idx) => 
+                    <tr key={`players_${idx}`}>
+                      <td>
+                        <img alt="Image Preview" src={this.state.players.find(p => p.id === playerProfile.id).picture} className="avatar" />
+                      </td>
+                      <td>
+                        { this.state.players.find(p => p.id === playerProfile.id).name }
+                      </td>
+                      <td>
+                        {!!this.state.previousHand && !!this.state.previousHand.playedCards[playerProfile.id] ?
+                        <img alt={this.state.previousHand.playedCards[playerProfile.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[playerProfile.id] + ".png"} className="thumbnail_size_small cardNotSelected"  /> : null }
+                      </td>
+                      <td>
+                        { !!playerProfile.cardsBought ? playerProfile.cardsBought: ""}
+                      </td>
+                      <td>
+                        {playerProfile.score}
+                      </td>
+                    </tr>
+                  )}
+                  </tbody>
+                </Table>
+              </ModalBody> 
+            </Modal>
+
+            
+          : null }
 
 
         <Snackbar
