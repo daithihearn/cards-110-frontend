@@ -488,9 +488,9 @@ class Game extends Component {
                           <h2 className="cardAreaHeader">
                             {this.state.players.filter(player => player.id === this.state.game.round.goerId)[0].name.split(" ")[0].substring(0, 6)}
                             
-                            <img alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
+                            <CardImg alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
                             
-                            <img alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
+                            <CardImg alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
                           </h2>
                           
                           
@@ -500,9 +500,12 @@ class Game extends Component {
                           <Container>
                             <Row>
                           {this.state.game.playerProfiles.sort(compareSeat).map((playerProfile, idx) =>
-                              <Col key={`cards_${idx}`}>
+                              <Col key={`cards_${idx}`} className="player-column">
                                 <div>
-                                  <img alt={this.state.players.find(p => p.id === playerProfile.id).name} src={this.state.players.find(q => q.id === playerProfile.id).picture} className="avatar" />
+                                  <CardImg alt={this.state.players.find(p => p.id === playerProfile.id).name} src={this.state.players.find(q => q.id === playerProfile.id).picture} className="avatar" />
+                                  <CardImgOverlay>
+                                    <CardText className="overlay-score">{playerProfile.score}</CardText>
+                                  </CardImgOverlay>
                                 </div>
                              
 
@@ -512,34 +515,30 @@ class Game extends Component {
 
                                       <CardImg alt={playerProfile.displayName} src={`/cards/thumbnails/${this.state.game.round.currentHand.playedCards[playerProfile.id]}.png`} className="thumbnail_size" />
 
-                                  : [(this.state.game.round.currentHand.currentPlayerId !== playerProfile.id)
-                                    ?
+                                  : 
                                       <a>
-                                        <CardImg alt={playerProfile.displayName} src={`/cards/thumbnails/blank_grey_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":""}.png`} className="thumbnail_size transparent" />
+                                        <CardImg alt={playerProfile.displayName} 
+                                          src={`/cards/thumbnails/${(this.state.game.round.currentHand.currentPlayerId === playerProfile.id) ? "yellow":"blank_grey"}_back.png`} 
+                                          className={`thumbnail_size ${(this.state.game.round.currentHand.currentPlayerId === playerProfile.id) ? "":"transparent"}`} />
                                         
-                                        { !this.state.game.round.suit ?  <CardImgOverlay>
-                                          {(playerProfile.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                          {(playerProfile.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                          {(playerProfile.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                          {(playerProfile.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                          {(playerProfile.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                        { isDealer(this.state.game, playerProfile.id) ?
+                                        <CardImgOverlay>
+                                          <CardImg alt="Dealer Chip" src={"/cards/originals/DEALER.png"} className= "thumbnail_chips overlay_dealer_chip"/>
+                                        </CardImgOverlay>
+                                        : null}
+
+                                        { !this.state.game.round.suit ?  
+                                          <CardImgOverlay>
+                                            {(playerProfile.call===10) ? <CardImg alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                            {(playerProfile.call===15) ? <CardImg alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                            {(playerProfile.call===20) ? <CardImg alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                            {(playerProfile.call===25) ? <CardImg alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_chips overlay-chip"/> : null}
+                                            {(playerProfile.call===30) ? <CardImg alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_chips overlay-chip"/> : null}
                                           </CardImgOverlay>
                                           :null}
                                       
                                       </a>
-                                    :
-                                      <a>
-                                      <CardImg alt={playerProfile.displayName} src={`/cards/thumbnails/yellow_back${(isDealer(this.state.game, playerProfile.id) && (!this.state.game.round.goerId)) ? "_dealer":"_blank"}.png`} className="thumbnail_size" />
-                                      { !this.state.game.round.suit ?  <CardImgOverlay>
-                                        {(playerProfile.call===10) ? <img alt="Ten Chip" src={"/cards/originals/call_10.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                        {(playerProfile.call===15) ? <img alt="15 Chip" src={"/cards/originals/call_15.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                        {(playerProfile.call===20) ? <img alt="20 Chip" src={"/cards/originals/call_20.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                        {(playerProfile.call===25) ? <img alt="25 Chip" src={"/cards/originals/call_25.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                        {(playerProfile.call===30) ? <img alt="Jink Chip" src={"/cards/originals/call_jink.png"} className= "thumbnail_chips overlay-chip"/> : null}
-                                        </CardImgOverlay>
-                                        :null}
-                                      </a>
-                                  ] }
+                                  }
                                   </div>                               
                                
                                 <div>
@@ -556,7 +555,8 @@ class Game extends Component {
                       { !!this.state.game.me && !!this.state.game.cards && this.state.game.cards.length > 0 ?
                         <CardBody className="cardArea">
                           { this.state.game.cards.map(card => 
-                            <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                            <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
+                              src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                           )}
                         </CardBody>
                       : null}
@@ -572,6 +572,11 @@ class Game extends Component {
 
                       { !!this.state.game.round && this.state.game.round.status === "CALLING" ?
                       <div>
+                        { this.state.iAmDealer && this.state.game.cards.length === 0 ?
+                          <CardBody className="cardArea">
+                            <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} className="thumbnail_size" />
+                          </CardBody>
+                        : null }
                         <CardBody className="buttonArea">
                         
                             {(!!this.state.game.round.currentHand && this.state.game.cards.length > 0 && this.state.game.round.currentHand.currentPlayerId === this.state.profile.id) ?
@@ -588,11 +593,6 @@ class Game extends Component {
                             : null}
                             
                         </CardBody>
-                        { this.state.iAmDealer && this.state.game.cards.length === 0 ?
-                          <CardBody className="cardArea">
-                            <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} className="thumbnail_size" />
-                          </CardBody>
-                        : null }
                       </div>
                       : null}
 

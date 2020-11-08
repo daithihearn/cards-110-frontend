@@ -22,13 +22,34 @@
 }
 
 .overlay-chip {
-  margin-top:142px;
+  margin-top:9.5rem;
+}
+
+.overlay-score {
+  font-weight: bolder;
+  margin-top:3rem;
+}
+
+.overlay_dealer_chip {
+  margin-top:6rem;
+}
+
+.player-column {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .cardArea {
   padding: 0.5rem;
-  //min-height: 220px;
   font-weight: bold;
+}
+
+.card-img-overlay {
+
+  padding-left: 0.2rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  padding-right: 0.2rem;
 }
 
 .cardAreaHeader {
