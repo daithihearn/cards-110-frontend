@@ -63,6 +63,22 @@
 .cardAreaHeaderContainer {
   color: rgb(0, 0, 0);
   background-color: #ced2d8;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+.leaderboard-button {
+  padding:0.1em;
+}
+
+.called-modal, .called-card-group {
+  padding: 0;
+  margin: 0;
+}
+
+.game-heading {
+  padding-top: 0.5em;
+  padding-bottom: 0.25em;
 }
 
 .headerArea {

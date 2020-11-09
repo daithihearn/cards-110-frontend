@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gameService from '../../services/GameService';
 import SockJsClient from 'react-stomp';
-import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Form, Row, Col, Card, CardImgOverlay, CardText, CardImg, CardBody, CardGroup, Container, Table, CardHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Form, Row, Col, Card, CardImgOverlay, CardText, CardImg, CardBody, CardTitle, CardGroup, Container, Table, CardHeader } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
 import DefaultHeader from '../Header';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
@@ -83,18 +83,14 @@ class Game extends Component {
 
     this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
+    this.toggleLeaderboardModal = this.toggleLeaderboardModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
   }
 
-  showLeaderboardModal(event) {
-    event.preventDefault();
-    this.setState({ modalLeaderboard: true });
-  }
-
-  hideLeaderboardModal(event) {
-    event.preventDefault();
-    this.setState({ modalLeaderboard: false });
+  toggleLeaderboardModal() {
+    let state = this.state.modalLeaderboard;
+    this.setState({ modalLeaderboard: !state });
   }
   
   async componentDidMount() {
@@ -502,28 +498,37 @@ class Game extends Component {
               { !!this.state.game && !!this.state.game.me && !!this.state.game.round && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players && this.state.game.status !== "FINISHED" ?
                     <div>
 
-                        
                         <CardHeader className="cardAreaHeaderContainer">
                           <Row>
-                            <Col xs="4">
-                              <ButtonGroup size="lg">
-                                  <Button type="button" color="info" onClick={this.showLeaderboardModal.bind(this)}>Scores</Button>
-                              </ButtonGroup>
-                            </Col>
-                            <Col xs="auto">
-                          
+                            
+                            
                             { !!this.state.game.round.suit ?
+                              <Col>
                               <h2 className="cardAreaHeader">
-                                {this.state.players.filter(player => player.id === this.state.game.round.goerId)[0].name.split(" ")[0].substring(0, 6)}
+                                <CardImg alt={this.state.players.find(p => p.id === this.state.game.round.goerId).name} src={this.state.players.find(q => q.id === this.state.game.round.goerId).picture} className="thumbnail_size_extra_small" />
                                 
                                 <CardImg alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
                                 
                                 <CardImg alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
                               </h2>
-                              : " "}
+                              </Col>
+                              : null}
+
+                            { this.state.game.me.id !== this.state.game.round.dealerId && this.state.game.cards.length === 0 ?
+                                <Col>
+                                  <div className="game-heading"><h4>Waiting...</h4></div>
+                                </Col>
+                              : null}
+
+                              { !!this.state.game.round && this.state.game.round.status === "CALLED" && !this.state.iAmGoer ?
+                                <Col>
+                                  <div className="game-heading"><h4>Waiting...</h4></div>
+                                </Col>
+                              : null}
+                            <Col>
+                              <Button type="button" className="float-right leaderboard-button" color="info" onClick={this.toggleLeaderboardModal}><img className="thumbnail_size_extra_small" alt="Leaderboard" src="/assets/img/leaderboard.png"/></Button>
                             </Col>
                           </Row>
-                          
                         </CardHeader>
                         
                         <CardBody className="cardArea">
@@ -590,13 +595,6 @@ class Game extends Component {
                           )}
                         </CardBody>
                       : null}
-                      
-                      { this.state.game.me.id !== this.state.game.round.dealerId && this.state.game.cards.length === 0 ?
-                      <CardBody className="cardArea">
-                        <h2 >Waiting for dealer.</h2>
-                      </CardBody>
-                      : null}
-                
 
                       {/* Calling  */}
 
@@ -623,45 +621,6 @@ class Game extends Component {
                             : null}
                             
                         </CardBody>
-                      </div>
-                      : null}
-
-                      {/* Called  */}
-
-                      { !!this.state.game.round && this.state.game.round.status === "CALLED" ?
-                      <div>
-
-                        {this.state.iAmGoer ? 
-                          <div>
-                            {!!this.state.game.dummy ?
-                            <CardBody className="cardArea">
-
-                              { this.state.game.dummy.map(card => 
-                                <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
-                              )}
-
-                      
-                            </CardBody>
-                            : null }
-                            
-
-                            <CardBody className="buttonArea">
-                                {/* <legend>Suit</legend> */}
-
-                                <ButtonGroup size="lg">
-
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}><img alt="Hearts" src={"/cards/originals/HEARTS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}><img alt="Hearts" src={"/cards/originals/DIAMONDS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}><img alt="Hearts" src={"/cards/originals/SPADES_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-                                  <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}><img alt="Hearts" src={"/cards/originals/CLUBS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-
-                                </ButtonGroup>
-                                
-                            </CardBody>
-                          </div>
-
-                        : <CardBody><h2>Waiting for the goer to select from the dummy</h2></CardBody>}
-                          
                       </div>
                       : null}
 
@@ -712,26 +671,66 @@ class Game extends Component {
               </Card>
             </CardGroup>
 
+            {/* Called  */}
 
-      <SockJsClient url={ `${process.env.REACT_APP_API_URL}/websocket?gameId=${this.state.gameId}&tokenId=${auth0Client.getAccessToken()}`} topics={["/game", "/user/game"]}
-                onMessage={ this.handleWebsocketMessage.bind(this) }
-                ref={ (client) => { this.clientRef = client }}/>
+            {!!this.state.game && !!this.state.game.round && this.state.iAmGoer && this.state.game.round.status === "CALLED" ?
+            <Modal size="lg" isOpen="true"> 
+
+              <ModalBody className="called-modal">
+                <CardGroup className="called-card-group">
+                  <Card className="text-center">
+                    <CardTitle tag="h1">Select cards and suit</CardTitle>
+                    <CardBody className="cardArea">
+                      { this.state.game.cards.map(card => 
+                        <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
+                          src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                      )}
+                    </CardBody>
+                    {!!this.state.game.dummy ?
+                    <CardBody className="cardArea">
+
+                      { this.state.game.dummy.map(card => 
+                        <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                      )}
+
+
+                    </CardBody>
+                    : null }
+                    
+
+                    <CardBody className="buttonArea">
+
+                        <ButtonGroup size="lg">
+
+                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}><img alt="Hearts" src={"/cards/originals/HEARTS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}><img alt="Hearts" src={"/cards/originals/DIAMONDS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}><img alt="Hearts" src={"/cards/originals/SPADES_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}><img alt="Hearts" src={"/cards/originals/CLUBS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+
+                        </ButtonGroup>
+                        
+                    </CardBody>
+                  </Card>
+                </CardGroup>
+              </ModalBody>
+                
+            </Modal>
+            : null}
 
 
 
             { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
             
-            <Modal color="dark" isOpen={this.state.modalLeaderboard}>
-              <ButtonGroup size="sm"><Button type="button" color="info" onClick={this.hideLeaderboardModal.bind(this)}>Close</Button></ButtonGroup>
+            <Modal color="dark" size="lg" toggle={this.toggleLeaderboardModal} isOpen={this.state.modalLeaderboard}>
               <ModalBody>
-                <Table dark responsive>
+                <Table borderless striped responsive>
                   <thead>
                     <tr>
                       <th align="left">Avatar</th>
                       <th align="left">Player</th>
-                      <th>Previous</th>
-                      <th>Bought</th>
                       <th>Score</th>
+                      <th>Bought</th>
+                      <th>Previous</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -744,14 +743,14 @@ class Game extends Component {
                         { this.state.players.find(p => p.id === playerProfile.id).name }
                       </td>
                       <td>
-                        {!!this.state.previousHand && !!this.state.previousHand.playedCards[playerProfile.id] ?
-                        <img alt={this.state.previousHand.playedCards[playerProfile.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[playerProfile.id] + ".png"} className="thumbnail_size_small cardNotSelected"  /> : null }
+                        {playerProfile.score}
                       </td>
                       <td>
                         { !!playerProfile.cardsBought ? playerProfile.cardsBought: ""}
                       </td>
                       <td>
-                        {playerProfile.score}
+                        {!!this.state.previousHand && !!this.state.previousHand.playedCards[playerProfile.id] ?
+                        <img alt={this.state.previousHand.playedCards[playerProfile.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[playerProfile.id] + ".png"} className="thumbnail_size_small cardNotSelected"  /> : null }
                       </td>
                     </tr>
                   )}
@@ -762,6 +761,10 @@ class Game extends Component {
 
             
           : null }
+
+        <SockJsClient url={ `${process.env.REACT_APP_API_URL}/websocket?gameId=${this.state.gameId}&tokenId=${auth0Client.getAccessToken()}`} topics={["/game", "/user/game"]}
+                onMessage={ this.handleWebsocketMessage.bind(this) }
+                ref={ (client) => { this.clientRef = client }}/>
 
 
         <Snackbar
