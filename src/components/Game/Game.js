@@ -4,6 +4,7 @@ import SockJsClient from 'react-stomp';
 import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Form, Row, Col, Card, CardImgOverlay, CardText, CardImg, CardBody, CardTitle, CardGroup, Container, Table, CardHeader } from 'reactstrap';
 import Snackbar from "@material-ui/core/Snackbar";
 import DefaultHeader from '../Header';
+import Leaderboard from '../Leaderboard';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 import uuid from 'uuid-random';
 import shuffleAudio from '../../assets/sounds/shuffle.ogg';
@@ -15,16 +16,6 @@ import errorUtils from '../../utils/ErrorUtils';
 import auth0Client from '../../Auth';
 
 // const noSleep = new NoSleep();
-
-const compareScore = (a, b) => {
-  let comparison = 0;
-  if (b.score > a.score) {
-    comparison = 1;
-  } else if (b.score < a.score) {
-    comparison = -1;
-  }
-  return comparison;
-}
 
 const compareSeat = (a, b) => {
   let comparison = 0;
@@ -492,6 +483,8 @@ class Game extends Component {
          <div className="game_wrap">
           <div className="game_container">
 
+          { !!this.state.game && this.state.game.status !== "FINISHED" ?
+
             <CardGroup>
               <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
 
@@ -650,26 +643,34 @@ class Game extends Component {
                       </CardBody>
                       : null}
 
-                  
-
                     </div>
-
 
                   : null }
 
-                  
-
-                  {/* FINISHED  */}
-
-                  { !!this.state.game && !!this.state.game.me && !!this.state.game && this.state.game.round && this.state.game.status === "FINISHED" ?
-                      <CardBody className="buttonArea">
-                        
-                        <h2>Game Over</h2>
-                        
-                      </CardBody>
-                  : null}
               </Card>
             </CardGroup>
+            : null}
+
+
+            {/* FINISHED  */}
+            { !!this.state.game && !!this.state.game.me && !!this.state.game && this.state.game.round && this.state.game.status === "FINISHED" ?
+                <CardGroup>
+                  <Card color="secondary" className="p-6">
+                  <CardHeader tag="h2">
+                    Game Over
+                  </CardHeader>
+                  <CardBody>
+                    { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
+                    <Container>
+                      <Leaderboard playerProfiles={this.state.game.playerProfiles} players={this.state.players} currentHand={this.state.currentHand} gameOver={true}/>
+                    </Container>
+                    : null}
+                    
+                  </CardBody>
+                </Card>
+                </CardGroup>
+            : null}
+
 
             {/* Called  */}
 
@@ -723,39 +724,7 @@ class Game extends Component {
             
             <Modal color="dark" size="lg" toggle={this.toggleLeaderboardModal} isOpen={this.state.modalLeaderboard}>
               <ModalBody>
-                <Table borderless striped responsive>
-                  <thead>
-                    <tr>
-                      <th align="left">Avatar</th>
-                      <th align="left">Player</th>
-                      <th>Score</th>
-                      <th>Bought</th>
-                      <th>Previous</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  { this.state.game.playerProfiles.sort(compareScore).map((playerProfile, idx) => 
-                    <tr key={`players_${idx}`}>
-                      <td>
-                        <img alt="Image Preview" src={this.state.players.find(p => p.id === playerProfile.id).picture} className="avatar" />
-                      </td>
-                      <td>
-                        { this.state.players.find(p => p.id === playerProfile.id).name }
-                      </td>
-                      <td>
-                        {playerProfile.score}
-                      </td>
-                      <td>
-                        { !!playerProfile.cardsBought ? playerProfile.cardsBought: ""}
-                      </td>
-                      <td>
-                        {!!this.state.previousHand && !!this.state.previousHand.playedCards[playerProfile.id] ?
-                        <img alt={this.state.previousHand.playedCards[playerProfile.id]} src={"/cards/thumbnails/" + this.state.previousHand.playedCards[playerProfile.id] + ".png"} className="thumbnail_size_small cardNotSelected"  /> : null }
-                      </td>
-                    </tr>
-                  )}
-                  </tbody>
-                </Table>
+                <Leaderboard playerProfiles={this.state.game.playerProfiles} players={this.state.players} currentHand={this.state.currentHand} />
               </ModalBody> 
             </Modal>
 
