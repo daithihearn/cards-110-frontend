@@ -492,36 +492,38 @@ class Game extends Component {
                     <div>
 
                         <CardHeader className="cardAreaHeaderContainer">
-                          <Row>
-                            
-                            
-                            { !!this.state.game.round.suit ?
-                              <Col>
-                              <h2 className="cardAreaHeader">
-                                <CardImg alt={this.state.players.find(p => p.id === this.state.game.round.goerId).name} src={this.state.players.find(q => q.id === this.state.game.round.goerId).picture} className="thumbnail_size_extra_small" />
-                                
-                                <CardImg alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
-                                
-                                <CardImg alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
-                              </h2>
+                          <Container>
+                            <Row>
+                              
+                              
+                              { !!this.state.game.round.suit ?
+                                <Col xs="9">
+                                <h2 className="cardAreaHeader">
+                                  <CardImg alt={this.state.players.find(p => p.id === this.state.game.round.goerId).name} src={this.state.players.find(q => q.id === this.state.game.round.goerId).picture} className="thumbnail_size_extra_small" />
+                                  
+                                  <CardImg alt="Chip" src={`/cards/originals/call_${this.state.game.playerProfiles.filter(profile => profile.id === this.state.game.round.goerId)[0].call}.png`} className= "thumbnail_size_extra_small left-padding"/>
+                                  
+                                  <CardImg alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" />
+                                </h2>
+                                </Col>
+                                : null}
+
+                              { this.state.game.me.id !== this.state.game.round.dealerId && this.state.game.cards.length === 0 ?
+                                  <Col>
+                                    <div className="game-heading"><h4>Waiting...</h4></div>
+                                  </Col>
+                                : null}
+
+                                { !!this.state.game.round && this.state.game.round.status === "CALLED" && !this.state.iAmGoer ?
+                                  <Col>
+                                    <div className="game-heading"><h4>Waiting...</h4></div>
+                                  </Col>
+                                : null}
+                              <Col xs="0">
+                                <Button type="button" className="float-right leaderboard-button" color="info" onClick={this.toggleLeaderboardModal}><img className="thumbnail_size_extra_small" alt="Leaderboard" src="/assets/img/leaderboard.png"/></Button>
                               </Col>
-                              : null}
-
-                            { this.state.game.me.id !== this.state.game.round.dealerId && this.state.game.cards.length === 0 ?
-                                <Col>
-                                  <div className="game-heading"><h4>Waiting...</h4></div>
-                                </Col>
-                              : null}
-
-                              { !!this.state.game.round && this.state.game.round.status === "CALLED" && !this.state.iAmGoer ?
-                                <Col>
-                                  <div className="game-heading"><h4>Waiting...</h4></div>
-                                </Col>
-                              : null}
-                            <Col>
-                              <Button type="button" className="float-right leaderboard-button" color="info" onClick={this.toggleLeaderboardModal}><img className="thumbnail_size_extra_small" alt="Leaderboard" src="/assets/img/leaderboard.png"/></Button>
-                            </Col>
-                          </Row>
+                            </Row>
+                          </Container>
                         </CardHeader>
                         
                         <CardBody className="cardArea">
@@ -743,8 +745,7 @@ class Game extends Component {
           }}
           open={ this.state.snackOpen }
           autoHideDuration={6000}
-          onClose={this.handleClose.bind(this)}
-        >
+          onClose={this.handleClose.bind(this)} >
           <MySnackbarContentWrapper
             onClose={this.handleClose.bind(this)}
             variant={ this.state.snackType }
