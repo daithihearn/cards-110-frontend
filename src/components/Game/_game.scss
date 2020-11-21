@@ -31,7 +31,7 @@
   margin-top:3rem;
 }
 
-.overlay_dealer_chip {
+.overlay-dealer-chip {
   margin-top:6rem;
 }
 
@@ -100,5 +100,38 @@
 @media (min-width: 576px) {
   .modal-dialog {
       max-width: 540px;
+  }
+}
+
+@media (max-width: 768px) {
+  .overlay-chip {
+    margin-top: 8rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .card-img-overlay {
+
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+  }
+
+  .overlay-score {
+    margin-top: 1.8em;
+  }
+
+  .overlay-chip {
+    margin-top: 5.5rem;
+  }
+
+  .overlay-dealer-chip {
+    margin-top: 4em;
+  }
+
+  .thumbnail_chips {
+    max-width: 40px;
+    max-height: 40px;
   }
 }

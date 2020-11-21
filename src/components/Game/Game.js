@@ -552,7 +552,7 @@ class Game extends Component {
                                         
                                         { !this.state.game.round.suit && isDealer(this.state.game, playerProfile.id) ?
                                         <CardImgOverlay>
-                                          <CardImg alt="Dealer Chip" src={"/cards/originals/DEALER.png"} className= "thumbnail_chips overlay_dealer_chip"/>
+                                          <CardImg alt="Dealer Chip" src={"/cards/originals/DEALER.png"} className= "thumbnail_chips overlay-dealer-chip"/>
                                         </CardImgOverlay>
                                         : null}
 
