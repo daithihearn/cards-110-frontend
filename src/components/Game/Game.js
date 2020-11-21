@@ -726,7 +726,7 @@ class Game extends Component {
             
             <Modal color="dark" size="lg" toggle={this.toggleLeaderboardModal} isOpen={this.state.modalLeaderboard}>
               <ModalBody>
-                <Leaderboard playerProfiles={this.state.game.playerProfiles} players={this.state.players} currentHand={this.state.currentHand} />
+                <Leaderboard playerProfiles={this.state.game.playerProfiles} players={this.state.players} currentHand={this.state.currentHand} previousHand={this.state.previousHand}/>
               </ModalBody> 
             </Modal>
 
