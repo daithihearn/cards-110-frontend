@@ -494,7 +494,9 @@ class Game extends Component {
                         <CardHeader className="cardAreaHeaderContainer">
                           <Container>
                             <Row>
-                              
+                              <Col xs="0">
+                                <Button type="button" className="float-left leaderboard-button" color="info" onClick={this.toggleLeaderboardModal}><img className="thumbnail_size_extra_small" alt="Leaderboard" src="/assets/img/leaderboard.png"/></Button>
+                              </Col>
                               
                               { !!this.state.game.round.suit ?
                                 <Col xs="9">
@@ -519,9 +521,6 @@ class Game extends Component {
                                     <div className="game-heading"><h4>Waiting...</h4></div>
                                   </Col>
                                 : null}
-                              <Col xs="0">
-                                <Button type="button" className="float-right leaderboard-button" color="info" onClick={this.toggleLeaderboardModal}><img className="thumbnail_size_extra_small" alt="Leaderboard" src="/assets/img/leaderboard.png"/></Button>
-                              </Col>
                             </Row>
                           </Container>
                         </CardHeader>
