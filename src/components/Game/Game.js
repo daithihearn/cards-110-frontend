@@ -588,7 +588,15 @@ class Game extends Component {
                               src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                           )}
                         </CardBody>
-                      : null}
+                      : 
+                        <CardBody className="cardArea">
+                          <CardImg alt="Card Space1" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
+                          <CardImg alt="Card Space2" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
+                          <CardImg alt="Card Space3" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
+                          <CardImg alt="Card Space4" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
+                          <CardImg alt="Card Space5" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
+                        </CardBody>
+                      }
 
                       {/* Calling  */}
 
