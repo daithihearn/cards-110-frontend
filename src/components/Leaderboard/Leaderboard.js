@@ -26,7 +26,7 @@ class Leaderboard extends Component {
     
         return (
           <React.Fragment>
-            <Table dark borderless striped responsive>
+            <Table className="leaderboardTable" dark borderless striped responsive>
                 <thead>
                 <tr>
                     <th align="left">Avatar</th>

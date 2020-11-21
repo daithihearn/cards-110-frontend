@@ -43,6 +43,7 @@
 .cardArea {
   padding: 0.5rem;
   font-weight: bold;
+  text-align: center;
 }
 
 .card-img-overlay {
@@ -87,6 +88,21 @@
 
 .buttonArea {
   min-height: 84px;
+  text-align: center;
+}
+
+.gameModalBody {
+  padding: 0;
+}
+
+.leaderboardTable {
+  padding: 0;
+  margin:0;
+}
+
+.gameModalCardGroup {
+  padding: 0;
+  margin:0;
 }
 
 .left-padding {

@@ -602,11 +602,6 @@ class Game extends Component {
 
                       { !!this.state.game.round && this.state.game.round.status === "CALLING" ?
                       <div>
-                        { this.state.iAmDealer && this.state.game.cards.length === 0 ?
-                          <CardBody className="cardArea">
-                            <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} className="thumbnail_size" />
-                          </CardBody>
-                        : null }
                         <CardBody className="buttonArea">
                         
                             {(!!this.state.game.round.currentHand && this.state.game.cards.length > 0 && this.state.game.round.currentHand.currentPlayerId === this.state.profile.id) ?
@@ -620,7 +615,10 @@ class Game extends Component {
                               <Button type="button" disabled={this.state.actionsDisabled} color="danger" onClick={this.call.bind(this, 30)}>Jink</Button>
                             </ButtonGroup>
 
-                            : null}
+                            : 
+                            <ButtonGroup size="lg">
+                              <Button type="button" color="warning" disabled={true}>Please wait your turn...</Button>
+                            </ButtonGroup>}
                             
                         </CardBody>
                       </div>
@@ -665,7 +663,7 @@ class Game extends Component {
             { !!this.state.game && !!this.state.game.me && !!this.state.game && this.state.game.round && this.state.game.status === "FINISHED" ?
                 <CardGroup>
                   <Card color="secondary" className="p-6">
-                  <CardHeader tag="h2">
+                  <CardHeader className="cardAreaHeaderContainer" tag="h2">
                     Game Over
                   </CardHeader>
                   <CardBody>
@@ -684,12 +682,11 @@ class Game extends Component {
             {/* Called  */}
 
             {!!this.state.game && !!this.state.game.round && this.state.iAmGoer && this.state.game.round.status === "CALLED" ?
-            <Modal size="lg" isOpen="true"> 
-
-              <ModalBody className="called-modal">
-                <CardGroup className="called-card-group">
-                  <Card className="text-center">
-                    <CardTitle tag="h1">Select cards and suit</CardTitle>
+              <Modal size="lg" fade={true} isOpen="true"> 
+                <ModalHeader>Please select your cards and suit...</ModalHeader>
+                <ModalBody className="called-modal">
+                <CardGroup className="gameModalCardGroup">
+                  <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <CardBody className="cardArea">
                       { this.state.game.cards.map(card => 
                         <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
@@ -728,11 +725,27 @@ class Game extends Component {
             : null}
 
 
+            { !!this.state.game && this.state.game.status !== "FINISHED" && this.state.iAmDealer && this.state.game.cards.length === 0 ?
+              <Modal size="lg" fade={true} isOpen={this.state.iAmDealer && this.state.game.cards.length === 0}>
+                <ModalHeader>You are the dealer...</ModalHeader>
+                <ModalBody className="called-modal">
+                  <CardGroup className="gameModalCardGroup">
+                    <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
+                      <CardBody className="cardArea">
+                        <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} className="thumbnail_size" />
+                      </CardBody>
+                    </Card>
+                  </CardGroup>
+                </ModalBody> 
+              </Modal>
+            : null }
+
+
 
             { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
             
-            <Modal color="dark" size="lg" toggle={this.toggleLeaderboardModal} isOpen={this.state.modalLeaderboard}>
-              <ModalBody>
+            <Modal fade={true} size="lg" toggle={this.toggleLeaderboardModal} isOpen={this.state.modalLeaderboard}>
+              <ModalBody className="gameModalBody">
                 <Leaderboard playerProfiles={this.state.game.playerProfiles} players={this.state.players} currentHand={this.state.currentHand} previousHand={this.state.previousHand}/>
               </ModalBody> 
             </Modal>
