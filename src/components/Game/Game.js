@@ -104,7 +104,12 @@ class Game extends Component {
       if (state.isMyGo) {
         Object.assign(state, this.setAlert());
       }
+
       this.setState(state);
+
+      if (!!state.game.round && state.game.round.status === "CALLING" && state.iAmDealer) {
+        sleep(500).then(() => this.deal());
+      }
     }
     catch(error) {
       let stateUpdate = this.state;
@@ -723,23 +728,6 @@ class Game extends Component {
                 
             </Modal>
             : null}
-
-
-            { !!this.state.game && this.state.game.status !== "FINISHED" && this.state.iAmDealer && this.state.game.cards.length === 0 ?
-              <Modal size="lg" fade={true} isOpen={this.state.iAmDealer && this.state.game.cards.length === 0}>
-                <ModalHeader>You are the dealer...</ModalHeader>
-                <ModalBody className="called-modal">
-                  <CardGroup className="gameModalCardGroup">
-                    <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
-                      <CardBody className="cardArea">
-                        <img alt="Deck" onClick={this.deal.bind(this)} src={"/cards/thumbnails/yellow_back_deal.png"} className="thumbnail_size" />
-                      </CardBody>
-                    </Card>
-                  </CardGroup>
-                </ModalBody> 
-              </Modal>
-            : null }
-
 
 
             { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
