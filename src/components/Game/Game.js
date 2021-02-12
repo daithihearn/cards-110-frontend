@@ -54,6 +54,26 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function removeFromArray(elementValue, originalArray) {
+
+    let array = [...originalArray]; // make a separate copy of the array
+    let index = array.indexOf(elementValue)
+    if (index !== -1) {
+      array.splice(index, 1);
+    }
+
+    return array;
+}
+
+function removeAllFromArray(toRemove, originalArray) {
+  
+  let array = [...originalArray];
+  toRemove.forEach(element => {
+    array = removeFromArray(element, array);
+  });
+  return array;
+}
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -70,11 +90,16 @@ class Game extends Component {
       gameId: props.location.state.gameId, 
       selectedCards: [], 
       actionsDisabled: false,
-      modalLeaderboard: false };
+      modalLeaderboard: false,
+      deleteCardsDialog: false };
 
     this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
     this.toggleLeaderboardModal = this.toggleLeaderboardModal.bind(this);
+    this.hideCancelDeleteCardsDialog = this.hideCancelDeleteCardsDialog.bind(this);
+    this.showCancelDeleteCardsDialog = this.showCancelDeleteCardsDialog.bind(this);
+    this.riskOfMistakeBuyingCards = this.riskOfMistakeBuyingCards.bind(this);
+    this.submitBuyCards = this.submitBuyCards.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
   }
@@ -82,6 +107,14 @@ class Game extends Component {
   toggleLeaderboardModal() {
     let state = this.state.modalLeaderboard;
     this.setState({ modalLeaderboard: !state });
+  }
+
+  hideCancelDeleteCardsDialog() {
+    this.setState({ deleteCardsDialog: false });
+  }
+
+  showCancelDeleteCardsDialog() {
+    this.setState({ deleteCardsDialog: true });
   }
   
   async componentDidMount() {
@@ -236,6 +269,29 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
+    if(this.riskOfMistakeBuyingCards()) {
+      this.showCancelDeleteCardsDialog()
+    } else {
+      this.submitBuyCards()
+    }
+  }
+
+  riskOfMistakeBuyingCards() {
+
+    let suit = this.state.game.round.suit;
+
+    let deletingCards = removeAllFromArray(this.state.selectedCards, this.state.game.cards);
+
+    for (var i = 0; i < deletingCards.length; i++) {
+      if (deletingCards[i] === "JOKER" || deletingCards[i] === "ACE_HEARTS" || deletingCards[i].split("_")[1] === suit) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  submitBuyCards() {
     let thisObj = this;
     let state = this.state;
     Object.assign(state, thisObj.cancelAlert());
@@ -373,6 +429,7 @@ class Game extends Component {
         break;
       case("BUY_CARDS"):
         Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, { deleteCardsDialog: false });
 
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
@@ -739,6 +796,37 @@ class Game extends Component {
             </Modal>
 
             
+          : null }
+
+          { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
+            <Modal fade={true} size="lg" toggle={this.hideCancelDeleteCardsDialog} isOpen={this.state.deleteCardsDialog}>
+
+                <ModalHeader>Are you sure you want to delete these cards?</ModalHeader>
+                <ModalBody className="called-modal">
+                <CardGroup className="gameModalCardGroup">
+                  <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
+                    <CardBody className="cardArea">
+
+                      { removeAllFromArray(this.state.selectedCards, this.state.game.cards).map(card => 
+                        <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
+                      )}
+
+                    </CardBody>
+
+                    
+
+                    <CardBody className="buttonArea">
+
+                        <ButtonGroup size="lg">
+                          <Button type="button" color="primary" onClick={this.hideCancelDeleteCardsDialog}>Cancel</Button>
+                          <Button type="button" color="warning" onClick={this.submitBuyCards}>Delete Cards</Button>
+                        </ButtonGroup>
+                        
+                    </CardBody>
+                  </Card>
+                </CardGroup>
+              </ModalBody>
+            </Modal>
           : null }
 
         <SockJsClient url={ `${process.env.REACT_APP_API_URL}/websocket?gameId=${this.state.gameId}&tokenId=${auth0Client.getAccessToken()}`} topics={["/game", "/user/game"]}
