@@ -10,12 +10,10 @@ import uuid from 'uuid-random';
 import shuffleAudio from '../../assets/sounds/shuffle.ogg';
 import playCardAudio from '../../assets/sounds/play_card.ogg';
 import alertAudio from '../../assets/sounds/alert.ogg';
-// import NoSleep from 'nosleep.js';
+
 import errorUtils from '../../utils/ErrorUtils';
 
 import auth0Client from '../../Auth';
-
-// const noSleep = new NoSleep();
 
 const compareSeat = (a, b) => {
   let comparison = 0;
@@ -29,6 +27,30 @@ const compareSeat = (a, b) => {
 const shuffleSound = new Audio(shuffleAudio);
 const playCardSound = new Audio(playCardAudio);
 const alertSound = new Audio(alertAudio);
+
+function playShuffleSound() {
+  shuffleSound.play().then(_ => {
+    console.log("Shuffle sound played!")
+  }).catch(error => {
+    console.log("Error playing shuffle sound!")
+  });
+}
+
+function playPlayCardSound() {
+  playCardSound.play().then(_ => {
+    console.log("Play card sound played!")
+  }).catch(error => {
+    console.log("Error playing play card sound!")
+  });
+}
+
+function playAlertSound() {
+  alertSound.play().then(_ => {
+    console.log("Alert sound played!")
+  }).catch(error => {
+    console.log("Error playing alert sound!")
+  });
+}
 
 function isThereGo(game, playerId) {
   return !!game.round.currentHand && game.round.currentHand.currentPlayerId === playerId;
@@ -91,15 +113,20 @@ class Game extends Component {
       selectedCards: [], 
       actionsDisabled: false,
       modalLeaderboard: false,
-      deleteCardsDialog: false };
+      deleteCardsDialog: false,
+      cancelSelectFromDummyDialog: false };
 
     this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
     this.toggleLeaderboardModal = this.toggleLeaderboardModal.bind(this);
     this.hideCancelDeleteCardsDialog = this.hideCancelDeleteCardsDialog.bind(this);
     this.showCancelDeleteCardsDialog = this.showCancelDeleteCardsDialog.bind(this);
+    this.hideCancelSelectFromDummyDialog = this.hideCancelSelectFromDummyDialog.bind(this);
+    this.showCancelSelectFromDummyDialog = this.showCancelSelectFromDummyDialog.bind(this);
     this.riskOfMistakeBuyingCards = this.riskOfMistakeBuyingCards.bind(this);
+    this.riskOfMistakeBuyingCardsFromDummy = this.riskOfMistakeBuyingCardsFromDummy.bind(this);
     this.submitBuyCards = this.submitBuyCards.bind(this);
+    this.submitSelectFromDummy = this.submitSelectFromDummy.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
   }
@@ -115,6 +142,14 @@ class Game extends Component {
 
   showCancelDeleteCardsDialog() {
     this.setState({ deleteCardsDialog: true });
+  }
+
+  hideCancelSelectFromDummyDialog() {
+    this.setState({ cancelSelectFromDummyDialog: false, selectedSuit: undefined });
+  }
+
+  showCancelSelectFromDummyDialog(suit) {
+    this.setState({ cancelSelectFromDummyDialog: true, selectedSuit: suit });
   }
   
   async componentDidMount() {
@@ -168,7 +203,7 @@ class Game extends Component {
     let stateDelta = { activeAlert: uuid() };
     sleep(10000).then(() => {
       if (!!thisObj.state.activeAlert && thisObj.state.activeAlert === stateDelta.activeAlert) {
-        alertSound.play();
+        playAlertSound();
         let stateUpdate = thisObj.state;
         Object.assign(stateUpdate, thisObj.cancelAlert());
         thisObj.setState(stateUpdate);
@@ -205,7 +240,7 @@ class Game extends Component {
     thisObj.setState(state);
 
     gameService.deal(this.state.gameId).then(response => {
-      shuffleSound.play();
+      playShuffleSound();
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate);
@@ -240,26 +275,24 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
-    let thisObj = this;
-    let state = this.state;
-    Object.assign(state, thisObj.cancelAlert());
-    Object.assign(state, disableButtons());
 
+    // Make sure a suit was selected
     if (suit !== "HEARTS" && suit !== "DIAMONDS" && suit !== "CLUBS" && suit !== "SPADES") {
+      let thisObj = this;
+      let state = this.state;
       Object.assign(state, thisObj.updateState({snackOpen: true, snackMessage: "Please select a suit!", snackType: "warning"}));
       Object.assign(state, enableButtons());
+      Object.assign(state, thisObj.cancelAlert());
       thisObj.setState(state);  
       return;
     }
 
-    thisObj.setState(state);
-
-    gameService.chooseFromDummy(this.state.gameId, this.state.selectedCards, suit).catch(error => {
-      let stateUpdate = thisObj.state;
-      Object.assign(stateUpdate, errorUtils.parseError(error));
-      Object.assign(stateUpdate, enableButtons());
-      thisObj.setState(stateUpdate);
-    });
+    // Check if there is a risk that they made a mistake when selecting the cards
+    if (this.riskOfMistakeBuyingCardsFromDummy(suit)) {
+      this.showCancelSelectFromDummyDialog(suit)
+    } else {
+      this.submitSelectFromDummy(suit)
+    }
   }
 
   buyCards(event) {
@@ -291,6 +324,19 @@ class Game extends Component {
     return false;
   }
 
+  riskOfMistakeBuyingCardsFromDummy(suit) {
+
+    let deletingCards = removeAllFromArray(this.state.selectedCards, this.state.game.cards).concat(removeAllFromArray(this.state.selectedCards, this.state.game.dummy));
+
+    for (var i = 0; i < deletingCards.length; i++) {
+      if (deletingCards[i] === "JOKER" || deletingCards[i] === "ACE_HEARTS" || deletingCards[i].split("_")[1] === suit) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   submitBuyCards() {
     let thisObj = this;
     let state = this.state;
@@ -303,6 +349,22 @@ class Game extends Component {
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate); 
+    });
+  }
+
+  submitSelectFromDummy(suit) {
+    let thisObj = this;
+    let state = this.state;
+    Object.assign(state, thisObj.cancelAlert());
+    Object.assign(state, disableButtons());
+
+    thisObj.setState(state);
+
+    gameService.chooseFromDummy(this.state.gameId, this.state.selectedCards, suit).catch(error => {
+      let stateUpdate = thisObj.state;
+      Object.assign(stateUpdate, errorUtils.parseError(error));
+      Object.assign(stateUpdate, enableButtons());
+      thisObj.setState(stateUpdate);
     });
   }
 
@@ -391,7 +453,7 @@ class Game extends Component {
         Object.assign(state, thisObj.updateGame(content.content));
         break;
       case("DEAL"):
-        shuffleSound.play();
+        playShuffleSound();
         Object.assign(state, thisObj.updateGame(content.content));
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
@@ -404,12 +466,12 @@ class Game extends Component {
         Object.assign(state, enableButtons());
         break;
       case("LAST_CARD_PLAYED"):
-        playCardSound.play();
+        playPlayCardSound()
         Object.assign(state, thisObj.cancelAlert());
         Object.assign(state, thisObj.updateGame(content.content));
         break;
       case("CARD_PLAYED"):
-        playCardSound.play();
+        playPlayCardSound()
         Object.assign(state, thisObj.updateGame(content.content));
 
         if (state.isMyGo) {
@@ -490,6 +552,8 @@ class Game extends Component {
       case("CHOOSE_FROM_DUMMY"):
 
         Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, { cancelSelectFromDummyDialog: false });
+
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
           Object.assign(state, thisObj.setAlert());
@@ -798,17 +862,17 @@ class Game extends Component {
             
           : null }
 
-          { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players ?
+          { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players && !!this.state.game.round.suit ?
             <Modal fade={true} size="lg" toggle={this.hideCancelDeleteCardsDialog} isOpen={this.state.deleteCardsDialog}>
 
-                <ModalHeader>Are you sure you want to delete these cards?</ModalHeader>
+                <ModalHeader><CardImg alt="Suit" src={`/cards/originals/${this.state.game.round.suit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" /> Are you sure you want to throw these cards away?</ModalHeader>
                 <ModalBody className="called-modal">
                 <CardGroup className="gameModalCardGroup">
                   <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <CardBody className="cardArea">
 
                       { removeAllFromArray(this.state.selectedCards, this.state.game.cards).map(card => 
-                        <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
+                        <img alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
                       )}
 
                     </CardBody>
@@ -819,7 +883,39 @@ class Game extends Component {
 
                         <ButtonGroup size="lg">
                           <Button type="button" color="primary" onClick={this.hideCancelDeleteCardsDialog}>Cancel</Button>
-                          <Button type="button" color="warning" onClick={this.submitBuyCards}>Delete Cards</Button>
+                          <Button type="button" color="warning" onClick={this.submitBuyCards}>Throw Cards</Button>
+                        </ButtonGroup>
+                        
+                    </CardBody>
+                  </Card>
+                </CardGroup>
+              </ModalBody>
+            </Modal>
+          : null }
+
+
+          { !!this.state.game && !!this.state.game.round.currentHand && !!this.state.game.playerProfiles && !!this.state.players && !!this.state.game.dummy && !! this.state.selectedSuit ?
+            <Modal fade={true} size="lg" toggle={this.hideCancelSelectFromDummyDialog} isOpen={this.state.cancelSelectFromDummyDialog}>
+
+                <ModalHeader><CardImg alt="Suit" src={`/cards/originals/${this.state.selectedSuit}_ICON.svg`}  className="thumbnail_size_extra_small left-padding" /> Are you sure you want to throw these cards away?</ModalHeader>
+                <ModalBody className="called-modal">
+                <CardGroup className="gameModalCardGroup">
+                  <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
+                    <CardBody className="cardArea">
+
+                      { removeAllFromArray(this.state.selectedCards, this.state.game.cards).concat(removeAllFromArray(this.state.selectedCards, this.state.game.dummy)).map(card => 
+                        <img alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
+                      )}
+
+                    </CardBody>
+
+                    
+
+                    <CardBody className="buttonArea">
+
+                        <ButtonGroup size="lg">
+                          <Button type="button" color="primary" onClick={this.hideCancelSelectFromDummyDialog}>Cancel</Button>
+                          <Button type="button" color="warning" onClick={this.submitSelectFromDummy(this.state.selectedSuit)}>Throw Cards</Button>
                         </ButtonGroup>
                         
                     </CardBody>
