@@ -96,6 +96,19 @@ function removeAllFromArray(toRemove, originalArray) {
   return array;
 }
 
+function riskOfMistakeBuyingCards(suit, selectedCards, allCards) {
+
+  let deletingCards = removeAllFromArray(selectedCards, allCards);
+
+  for (var i = 0; i < deletingCards.length; i++) {
+    if (deletingCards[i] === "JOKER" || deletingCards[i] === "ACE_HEARTS" || deletingCards[i].split("_")[1] === suit) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -122,11 +135,7 @@ class Game extends Component {
     this.hideCancelDeleteCardsDialog = this.hideCancelDeleteCardsDialog.bind(this);
     this.showCancelDeleteCardsDialog = this.showCancelDeleteCardsDialog.bind(this);
     this.hideCancelSelectFromDummyDialog = this.hideCancelSelectFromDummyDialog.bind(this);
-    this.showCancelSelectFromDummyDialog = this.showCancelSelectFromDummyDialog.bind(this);
-    this.riskOfMistakeBuyingCards = this.riskOfMistakeBuyingCards.bind(this);
-    this.riskOfMistakeBuyingCardsFromDummy = this.riskOfMistakeBuyingCardsFromDummy.bind(this);
     this.submitBuyCards = this.submitBuyCards.bind(this);
-    this.submitSelectFromDummy = this.submitSelectFromDummy.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
   }
@@ -148,10 +157,6 @@ class Game extends Component {
     this.setState({ cancelSelectFromDummyDialog: false, selectedSuit: undefined });
   }
 
-  showCancelSelectFromDummyDialog(suit) {
-    this.setState({ cancelSelectFromDummyDialog: true, selectedSuit: suit });
-  }
-  
   async componentDidMount() {
     
     try {
@@ -276,10 +281,11 @@ class Game extends Component {
       return;
     }
 
+    let thisObj = this;
+    let state = this.state;
+
     // Make sure a suit was selected
     if (suit !== "HEARTS" && suit !== "DIAMONDS" && suit !== "CLUBS" && suit !== "SPADES") {
-      let thisObj = this;
-      let state = this.state;
       Object.assign(state, thisObj.updateState({snackOpen: true, snackMessage: "Please select a suit!", snackType: "warning"}));
       Object.assign(state, enableButtons());
       Object.assign(state, thisObj.cancelAlert());
@@ -288,10 +294,12 @@ class Game extends Component {
     }
 
     // Check if there is a risk that they made a mistake when selecting the cards
-    if (this.riskOfMistakeBuyingCardsFromDummy(suit)) {
-      this.showCancelSelectFromDummyDialog(suit)
+    if (riskOfMistakeBuyingCards(suit, this.state.selectedCards, this.state.game.cards.concat(this.state.game.dummy))) {
+      Object.assign(state, { cancelSelectFromDummyDialog: true, selectedSuit: suit });
+      thisObj.setState(state);  
+      return;
     } else {
-      this.submitSelectFromDummy(suit)
+      this.submitSelectFromDummy(suit);
     }
   }
 
@@ -302,39 +310,11 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
-    if(this.riskOfMistakeBuyingCards()) {
-      this.showCancelDeleteCardsDialog()
+    if(riskOfMistakeBuyingCards(this.state.game.round.suit, this.state.selectedCards, this.state.game.cards)) {
+      this.showCancelDeleteCardsDialog();
     } else {
-      this.submitBuyCards()
+      this.submitBuyCards();
     }
-  }
-
-  riskOfMistakeBuyingCards() {
-
-    let suit = this.state.game.round.suit;
-
-    let deletingCards = removeAllFromArray(this.state.selectedCards, this.state.game.cards);
-
-    for (var i = 0; i < deletingCards.length; i++) {
-      if (deletingCards[i] === "JOKER" || deletingCards[i] === "ACE_HEARTS" || deletingCards[i].split("_")[1] === suit) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  riskOfMistakeBuyingCardsFromDummy(suit) {
-
-    let deletingCards = removeAllFromArray(this.state.selectedCards, this.state.game.cards).concat(removeAllFromArray(this.state.selectedCards, this.state.game.dummy));
-
-    for (var i = 0; i < deletingCards.length; i++) {
-      if (deletingCards[i] === "JOKER" || deletingCards[i] === "ACE_HEARTS" || deletingCards[i].split("_")[1] === suit) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   submitBuyCards() {
@@ -471,7 +451,7 @@ class Game extends Component {
         Object.assign(state, thisObj.updateGame(content.content));
         break;
       case("CARD_PLAYED"):
-        playPlayCardSound()
+        playPlayCardSound();
         Object.assign(state, thisObj.updateGame(content.content));
 
         if (state.isMyGo) {
@@ -915,7 +895,7 @@ class Game extends Component {
 
                         <ButtonGroup size="lg">
                           <Button type="button" color="primary" onClick={this.hideCancelSelectFromDummyDialog}>Cancel</Button>
-                          <Button type="button" color="warning" onClick={this.submitSelectFromDummy(this.state.selectedSuit)}>Throw Cards</Button>
+                          <Button type="button" color="warning" onClick={this.submitSelectFromDummy.bind(this, this.state.selectedSuit)}>Throw Cards</Button>
                         </ButtonGroup>
                         
                     </CardBody>
