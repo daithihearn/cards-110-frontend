@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "React frontend for the Cards 110",
   "author": "Daithi Hearn",
   "license": "MIT",
@@ -18,9 +18,8 @@
     "core-js": "^2.5.7",
     "flag-icon-css": "^3.5.0",
     "font-awesome": "^4.7.0",
-    "nosleep.js": "^0.11.0",
     "notistack": "0.4.3",
-    "react": "^16.14.0",
+    "react": "^17.0.1",
     "react-block-ui": "^1.3.3",
     "react-data-table-component": "^6.11.5",
     "react-dom": "^16.14.0",

@@ -10,12 +10,10 @@ import uuid from 'uuid-random';
 import shuffleAudio from '../../assets/sounds/shuffle.ogg';
 import playCardAudio from '../../assets/sounds/play_card.ogg';
 import alertAudio from '../../assets/sounds/alert.ogg';
-// import NoSleep from 'nosleep.js';
+
 import errorUtils from '../../utils/ErrorUtils';
 
 import auth0Client from '../../Auth';
-
-// const noSleep = new NoSleep();
 
 const compareSeat = (a, b) => {
   let comparison = 0;
@@ -29,6 +27,30 @@ const compareSeat = (a, b) => {
 const shuffleSound = new Audio(shuffleAudio);
 const playCardSound = new Audio(playCardAudio);
 const alertSound = new Audio(alertAudio);
+
+function playShuffleSound() {
+  shuffleSound.play().then(_ => {
+    console.log("Shuffle sound played!")
+  }).catch(error => {
+    console.log("Error playing shuffle sound!")
+  });
+}
+
+function playPlayCardSound() {
+  playCardSound.play().then(_ => {
+    console.log("Play card sound played!")
+  }).catch(error => {
+    console.log("Error playing play card sound!")
+  });
+}
+
+function playAlertSound() {
+  alertSound.play().then(_ => {
+    console.log("Alert sound played!")
+  }).catch(error => {
+    console.log("Error playing alert sound!")
+  });
+}
 
 function isThereGo(game, playerId) {
   return !!game.round.currentHand && game.round.currentHand.currentPlayerId === playerId;
@@ -181,7 +203,7 @@ class Game extends Component {
     let stateDelta = { activeAlert: uuid() };
     sleep(10000).then(() => {
       if (!!thisObj.state.activeAlert && thisObj.state.activeAlert === stateDelta.activeAlert) {
-        alertSound.play();
+        playAlertSound();
         let stateUpdate = thisObj.state;
         Object.assign(stateUpdate, thisObj.cancelAlert());
         thisObj.setState(stateUpdate);
@@ -218,7 +240,7 @@ class Game extends Component {
     thisObj.setState(state);
 
     gameService.deal(this.state.gameId).then(response => {
-      shuffleSound.play();
+      playShuffleSound();
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, enableButtons());
       thisObj.setState(stateUpdate);
@@ -269,7 +291,7 @@ class Game extends Component {
     if (this.riskOfMistakeBuyingCardsFromDummy(suit)) {
       this.showCancelSelectFromDummyDialog(suit)
     } else {
-      this.submitSelectFromDummy()
+      this.submitSelectFromDummy(suit)
     }
   }
 
@@ -330,7 +352,7 @@ class Game extends Component {
     });
   }
 
-  submitSelectFromDummy() {
+  submitSelectFromDummy(suit) {
     let thisObj = this;
     let state = this.state;
     Object.assign(state, thisObj.cancelAlert());
@@ -338,7 +360,7 @@ class Game extends Component {
 
     thisObj.setState(state);
 
-    gameService.chooseFromDummy(this.state.gameId, this.state.selectedCards, this.state.selectedSuit).catch(error => {
+    gameService.chooseFromDummy(this.state.gameId, this.state.selectedCards, suit).catch(error => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
@@ -431,7 +453,7 @@ class Game extends Component {
         Object.assign(state, thisObj.updateGame(content.content));
         break;
       case("DEAL"):
-        shuffleSound.play();
+        playShuffleSound();
         Object.assign(state, thisObj.updateGame(content.content));
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
@@ -444,12 +466,12 @@ class Game extends Component {
         Object.assign(state, enableButtons());
         break;
       case("LAST_CARD_PLAYED"):
-        playCardSound.play();
+        playPlayCardSound()
         Object.assign(state, thisObj.cancelAlert());
         Object.assign(state, thisObj.updateGame(content.content));
         break;
       case("CARD_PLAYED"):
-        playCardSound.play();
+        playPlayCardSound()
         Object.assign(state, thisObj.updateGame(content.content));
 
         if (state.isMyGo) {
@@ -893,7 +915,7 @@ class Game extends Component {
 
                         <ButtonGroup size="lg">
                           <Button type="button" color="primary" onClick={this.hideCancelSelectFromDummyDialog}>Cancel</Button>
-                          <Button type="button" color="warning" onClick={this.submitSelectFromDummy}>Throw Cards</Button>
+                          <Button type="button" color="warning" onClick={this.submitSelectFromDummy(this.state.selectedSuit)}>Throw Cards</Button>
                         </ButtonGroup>
                         
                     </CardBody>
