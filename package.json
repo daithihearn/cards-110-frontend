@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "React frontend for the Cards 110",
   "author": "Daithi Hearn",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "@material-ui/icons": "^4.9.1",
     "@popperjs/core": "^2.5.4",
     "auth0-js": "^9.14.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "core-js": "^2.5.7",
     "flag-icon-css": "^3.5.0",
@@ -35,11 +35,10 @@
     "uuid-random": "^1.3.2"
   },
   "devDependencies": {
-    "babel-jest": "^24.8.0",
     "node-sass-chokidar": "^1.5.0",
     "npm-run-all": "^4.1.3",
-    "prettier": "^1.18.2",
-    "react-scripts": "^3.4.4"
+    "prettier": "^2.1.1",
+    "react-scripts": "^4.0.2"
   },
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./node_modules ./src/scss -o ./src/scss",
