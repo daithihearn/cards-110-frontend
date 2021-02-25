@@ -32,6 +32,7 @@ class Leaderboard extends Component {
                     <th align="left">Avatar</th>
                     <th align="left">Player</th>
                     <th>Score</th>
+                    <th>Rings</th>
                     
                     { !this.props.gameOver ?<th>Bought</th>: null}
                     { !this.props.gameOver && !!this.props.previousHand ?<th>Previous</th>: null}
@@ -49,6 +50,9 @@ class Leaderboard extends Component {
                     </td>
                     <td>
                     {playerProfile.score}
+                    </td>
+                    <td>
+                    {playerProfile.rings}
                     </td>
                     { !this.props.gameOver ?
                         <td>
