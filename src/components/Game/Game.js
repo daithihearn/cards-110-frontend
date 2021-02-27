@@ -52,6 +52,10 @@ function playAlertSound() {
   });
 }
 
+function range(start, end) {
+  return Array(end - start + 1).fill().map((_, idx) => start + idx)
+}
+
 function isThereGo(game, playerId) {
   return !!game.round.currentHand && game.round.currentHand.currentPlayerId === playerId;
 }
@@ -702,23 +706,21 @@ class Game extends Component {
                           </Container>
                         </CardBody>
 
-
-                      { !!this.state.game.me && !!this.state.game.cards && this.state.game.cards.length > 0 ?
-                        <CardBody className="cardArea">
-                          { this.state.game.cards.map(card => 
-                            <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
-                              src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
-                          )}
-                        </CardBody>
-                      : 
-                        <CardBody className="cardArea">
-                          <CardImg alt="Card Space1" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
-                          <CardImg alt="Card Space2" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
-                          <CardImg alt="Card Space3" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
-                          <CardImg alt="Card Space4" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
-                          <CardImg alt="Card Space5" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
-                        </CardBody>
-                      }
+                        { !!this.state.game.me && !!this.state.game.cards && this.state.game.cards.length > 0 ?
+                          <CardBody className="cardArea">
+                            { this.state.game.cards.map(card => 
+                              <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
+                                src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                            )}
+                            { [...range(1, 5 - this.state.game.cards.length)].map(i =>
+                              <CardImg alt="Card Space {i}" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
+                            )}
+                          </CardBody>
+                        : <CardBody className="cardArea">
+                          { [...range(1, 5)].map(i =>
+                              <CardImg alt="Card Space {i}" src={"/cards/thumbnails/blank_card.png"} className="thumbnail_size"/>
+                            )}
+                          </CardBody> }
 
                       {/* Calling  */}
 
