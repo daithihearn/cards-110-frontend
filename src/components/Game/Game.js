@@ -118,16 +118,17 @@ class Game extends Component {
       return;
     }
 
-    this.state = { 
-      isMyGo: false, 
-      iAmGoer: false, 
-      iAmDealer: false, 
-      gameId: props.location.state.gameId, 
-      selectedCards: [], 
+    this.state = {
+      isMyGo: false,
+      iAmGoer: false,
+      iAmDealer: false,
+      gameId: props.location.state.gameId,
+      selectedCards: [],
       actionsDisabled: false,
       modalLeaderboard: false,
       deleteCardsDialog: false,
-      cancelSelectFromDummyDialog: false };
+      cancelSelectFromDummyDialog: false
+    };
 
     this.goHome = this.goHome.bind(this);
     this.handleWebsocketMessage = this.handleWebsocketMessage.bind(this);
@@ -242,6 +243,7 @@ class Game extends Component {
     let state = this.state;
     Object.assign(state, thisObj.cancelAlert());
     Object.assign(state, disableButtons());
+    Object.assign(state, {selectedCards: []});
     thisObj.setState(state);
 
     gameService.deal(this.state.gameId).then(response => {
@@ -272,6 +274,7 @@ class Game extends Component {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
+      Object.assign(state, {selectedCards: []});
       thisObj.setState(stateUpdate); 
     });
   };
@@ -320,14 +323,17 @@ class Game extends Component {
   submitBuyCards() {
     let thisObj = this;
     let state = this.state;
+    let selectedCards = this.state.selectedCards;
     Object.assign(state, thisObj.cancelAlert());
     Object.assign(state, disableButtons());
+    Object.assign(state, {selectedCards: []});
     thisObj.setState(state);
 
-    gameService.buyCards(this.state.gameId, state.selectedCards).catch(error => {
+    gameService.buyCards(this.state.gameId, selectedCards).catch(error => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
+      Object.assign(state, {selectedCards: []});
       thisObj.setState(stateUpdate); 
     });
   }
@@ -335,15 +341,18 @@ class Game extends Component {
   submitSelectFromDummy(suit) {
     let thisObj = this;
     let state = this.state;
+    let selectedCards = this.state.selectedCards;
     Object.assign(state, thisObj.cancelAlert());
     Object.assign(state, disableButtons());
+    Object.assign(state, {selectedCards: []});
 
     thisObj.setState(state);
 
-    gameService.chooseFromDummy(this.state.gameId, this.state.selectedCards, suit).catch(error => {
+    gameService.chooseFromDummy(this.state.gameId, selectedCards, suit).catch(error => {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
+      Object.assign(state, {selectedCards: []});
       thisObj.setState(stateUpdate);
     });
   }
@@ -371,6 +380,7 @@ class Game extends Component {
         let stateUpdate = thisObj.state;
         Object.assign(stateUpdate, errorUtils.parseError(error));
         Object.assign(stateUpdate, enableButtons());
+        Object.assign(state, {selectedCards: []});
         thisObj.setState(stateUpdate); 
       });
     }
@@ -431,10 +441,12 @@ class Game extends Component {
     switch (content.type) {
       case("REPLAY"):
         Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, {selectedCards: []});
         break;
       case("DEAL"):
         playShuffleSound();
         Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, {selectedCards: []});
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
           Object.assign(state, thisObj.setAlert());
@@ -443,6 +455,7 @@ class Game extends Component {
       case("GAME_OVER"):
         Object.assign(state, thisObj.cancelAlert());
         Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, {selectedCards: []});
         Object.assign(state, enableButtons());
         break;
       case("LAST_CARD_PLAYED"):
@@ -478,6 +491,7 @@ class Game extends Component {
           Object.assign(state, thisObj.setAlert());
         }
 
+        // If I'm the goer and it's my go then just auto buy
         if (state.game.round.status === "BUYING" && state.iAmGoer && state.isMyGo) {
           Object.assign(state, { selectedCards: state.game.cards });
           thisObj.setState(state);
@@ -510,6 +524,7 @@ class Game extends Component {
         break;
       case("ROUND_COMPLETED"):
         Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, {selectedCards: []});
 
         if (state.iAmDealer) {
           Object.assign(state, enableButtons());
@@ -524,6 +539,7 @@ class Game extends Component {
         break;
       case("CALL"):
         Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, {selectedCards: []});
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
           Object.assign(state, thisObj.setAlert());
@@ -562,7 +578,7 @@ class Game extends Component {
 
     let cardsSelectable = (["CALLED", "BUYING", "PLAYING"].includes(game.round.status));
 
-    return { game: game, selectedCards: [], previousHand: previousHand, cardsSelectable: cardsSelectable, 
+    return { game: game, previousHand: previousHand, cardsSelectable: cardsSelectable, 
       isMyGo: isThereGo(game, this.state.profile.id),
       iAmGoer: isGoer(game, this.state.profile.id),
       iAmDealer: isDealer(game, this.state.profile.id)};
