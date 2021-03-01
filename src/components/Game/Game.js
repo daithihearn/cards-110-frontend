@@ -54,6 +54,22 @@ function playAlertSound() {
   });
 }
 
+function getStyleForCard (cardsSelectable, selectedCards, card) {
+  let classes = "thumbnail_size ";
+
+  let selectedCard = selectedCards.filter(sc => sc.card === card);
+
+  if (cardsSelectable && card !== BLANK) {
+    if (selectedCard.length === 1 && selectedCard[0].autoplay) {
+      classes += "cardAutoPlayed";
+    } else if (selectedCard.length === 0){
+      classes += "cardNotSelected";
+    }
+  }
+
+  return classes;
+}
+
 function range(start, end) {
   return Array(end - start + 1).fill().map((_, idx) => start + idx)
 }
@@ -336,7 +352,7 @@ class Game extends Component {
     }
 
     // Check if there is a risk that they made a mistake when selecting the cards
-    if (riskOfMistakeBuyingCards(suit, this.state.selectedCards, this.state.game.cards.concat(this.state.game.dummy))) {
+    if (riskOfMistakeBuyingCards(suit, this.state.selectedCards.map(sc => sc.card), this.state.game.cards.concat(this.state.game.dummy))) {
       Object.assign(state, { cancelSelectFromDummyDialog: true, selectedSuit: suit });
       thisObj.setState(state);  
       return;
@@ -352,7 +368,7 @@ class Game extends Component {
     if (this.buttonsDisabled()) {
       return;
     }
-    if(riskOfMistakeBuyingCards(this.state.game.round.suit, this.state.selectedCards, this.state.game.cards)) {
+    if(riskOfMistakeBuyingCards(this.state.game.round.suit, this.state.selectedCards.map(sc => sc.card), this.state.game.cards)) {
       this.showCancelDeleteCardsDialog();
     } else {
       this.submitBuyCards();
@@ -362,7 +378,7 @@ class Game extends Component {
   submitBuyCards() {
     let thisObj = this;
     let state = this.state;
-    let selectedCards = this.state.selectedCards;
+    let selectedCards = this.state.selectedCards.map(sc => sc.card);
     Object.assign(state, thisObj.cancelAlert());
     Object.assign(state, disableButtons());
     Object.assign(state, {selectedCards: []});
@@ -380,7 +396,7 @@ class Game extends Component {
   submitSelectFromDummy(suit) {
     let thisObj = this;
     let state = this.state;
-    let selectedCards = this.state.selectedCards;
+    let selectedCards = this.state.selectedCards.map(sc => sc.card);
     Object.assign(state, thisObj.cancelAlert());
     Object.assign(state, disableButtons());
     Object.assign(state, {selectedCards: []});
@@ -413,9 +429,9 @@ class Game extends Component {
 
     } else {
       
-      let selectedCard = selectedCards[0];
+      let selectedCard = selectedCards[0].card;
       let myCardsBefore = [...state.myCards];
-      Object.assign(state, { myCards: removeCard(selectedCard, state.myCards)});
+      Object.assign(state, { myCards: removeCard(selectedCard, state.myCards), selectedCards: []});
       thisObj.setState(state);
       gameService.playCard(this.state.gameId, selectedCard).catch(error => {
         let stateUpdate = thisObj.state;
@@ -436,19 +452,25 @@ class Game extends Component {
     Object.assign(state, this.cancelAlert());
 
     let selectedCards = state.selectedCards;
-    let indexOfCard = selectedCards.indexOf(card);
+    let indexOfCard = selectedCards.map(sc => sc.card).indexOf(card);
 
     // If the round status is PLAYING then only allow one card to be selected
     if (this.state.game.round.status === "PLAYING") {
-      if (indexOfCard === -1) {
-        selectedCards = [card];
+      if (!!this.state.autoPlayInterval && (Date.now() - this.state.autoPlayInterval < 600 )) {
+        selectedCards = [{ card: card, autoplay: true}];
+      } else if (indexOfCard === -1) {
+        
+        selectedCards = [{ card: card, autoplay: false}];
+        Object.assign(state, {autoPlayInterval: Date.now()});
+
       } else {
         selectedCards = [];
+        Object.assign(state, {autoPlayInterval: Date.now()});
       }
     } 
     else {
       if (indexOfCard === -1) {
-        selectedCards.push(card);
+        selectedCards.push({card: card});
       } else {
         selectedCards.splice(indexOfCard, 1);
       }
@@ -456,6 +478,9 @@ class Game extends Component {
 
     Object.assign(state, {selectedCards: selectedCards});
     this.setState(state);
+    if (state.game.round.status === "PLAYING" && state.isMyGo && selectedCards.length === 1 && selectedCards[0].autoplay) {
+      this.playCard();
+    }
   }
 
   updateState(stateDelta) {
@@ -514,8 +539,10 @@ class Game extends Component {
           Object.assign(state, enableButtons());
         }
         
-        if (state.isMyGo && state.game.cards.length === 1) {
-          Object.assign(state, {selectedCards: state.game.cards});
+        if (state.isMyGo && (state.game.cards.length === 1 || state.selectedCards.filter(card => card.autoplay).length > 0)) {
+          if (state.game.cards.length === 1) {
+            Object.assign(state, {selectedCards: [{card: state.game.cards[0]}]});
+          }
           thisObj.setState(state);
           sleep(500).then(() => thisObj.playCard());
           return;
@@ -537,7 +564,7 @@ class Game extends Component {
 
         // If I'm the goer and it's my go then just auto buy
         if (state.game.round.status === "BUYING" && state.iAmGoer && state.isMyGo) {
-          Object.assign(state, { selectedCards: state.game.cards.filter(card => card !== BLANK) });
+          Object.assign(state, { selectedCards: state.game.cards.filter(card => card !== BLANK).map(sc => new Object({card: sc})) });
           thisObj.setState(state);
           sleep(500).then(() => thisObj.buyCards());
           return;
@@ -555,8 +582,10 @@ class Game extends Component {
           Object.assign(state, enableButtons());
         }
 
-        if (state.isMyGo && state.game.cards.length === 1) {
-          Object.assign(state, {selectedCards: state.game.cards});
+        if (state.isMyGo && state.game.cards.length === 1 || state.selectedCards.filter(card => card.autoplay).length > 0) {
+          if (state.game.cards.length === 1) {
+            Object.assign(state, {selectedCards: [{card: state.game.cards[0]}]});
+          }
           thisObj.setState(state);
           sleep(500).then(() => thisObj.playCard());
           return;
@@ -601,7 +630,7 @@ class Game extends Component {
         }
 
         if (state.game.round.status === "BUYING" && state.iAmGoer && state.isMyGo) {
-          Object.assign(state, { selectedCards: state.game.cards });
+          Object.assign(state, { selectedCards: state.game.cards.filter(card => card !== BLANK).map(sc => new Object({card: sc})) });
           thisObj.setState(state);
           sleep(500).then(() => thisObj.buyCards());
           return;
@@ -761,7 +790,8 @@ class Game extends Component {
                                           {(provided) => (
                                             <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                               <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
-                                                src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card) || card === BLANK) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                                                src={"/cards/thumbnails/" + card + ".png"} 
+                                                className={ getStyleForCard(this.state.cardsSelectable, this.state.selectedCards, card)}/>
                                             </div>
                                           )}
                                         </Draggable>
@@ -868,14 +898,14 @@ class Game extends Component {
                     <CardBody className="cardArea">
                       { this.state.game.cards.map(card => 
                         <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
-                          src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                          src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.map(sc => sc.card).includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                       )}
                     </CardBody>
                     {!!this.state.game.dummy ?
                     <CardBody className="cardArea">
 
                       { this.state.game.dummy.map(card => 
-                        <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                        <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(this.state.selectedCards.map(sc => sc.card).includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
                       )}
 
 
@@ -923,7 +953,7 @@ class Game extends Component {
                   <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <CardBody className="cardArea">
 
-                      { removeAllFromArray(this.state.selectedCards, this.state.game.cards).map(card => 
+                      { removeAllFromArray(this.state.selectedCards.map(sc => sc.card), this.state.game.cards).map(card => 
                         <img alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
                       )}
 
@@ -955,13 +985,11 @@ class Game extends Component {
                   <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <CardBody className="cardArea">
 
-                      { removeAllFromArray(this.state.selectedCards, this.state.game.cards).concat(removeAllFromArray(this.state.selectedCards, this.state.game.dummy)).map(card => 
+                      { removeAllFromArray(this.state.selectedCards, this.state.game.cards).concat(removeAllFromArray(this.state.selectedCards.map(sc => sc.card), this.state.game.dummy)).map(card => 
                         <img alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
                       )}
 
                     </CardBody>
-
-                    
 
                     <CardBody className="buttonArea">
 
