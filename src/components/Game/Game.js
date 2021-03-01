@@ -456,16 +456,16 @@ class Game extends Component {
 
     // If the round status is PLAYING then only allow one card to be selected
     if (this.state.game.round.status === "PLAYING") {
-      if (!!this.state.autoPlayInterval && (Date.now() - this.state.autoPlayInterval < 600 )) {
+      if (!!this.state.doubleClickTracker && this.state.doubleClickTracker.card === card && (Date.now() - this.state.doubleClickTracker.time < 600 )) {
         selectedCards = [{ card: card, autoplay: true}];
       } else if (indexOfCard === -1) {
         
         selectedCards = [{ card: card, autoplay: false}];
-        Object.assign(state, {autoPlayInterval: Date.now()});
+        Object.assign(state, {doubleClickTracker: { time: Date.now(), card: card}});
 
       } else {
         selectedCards = [];
-        Object.assign(state, {autoPlayInterval: Date.now()});
+        Object.assign(state, {doubleClickTracker: { time: Date.now(), card: card}});
       }
     } 
     else {
