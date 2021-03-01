@@ -7,6 +7,7 @@ import DefaultHeader from '../Header';
 import Leaderboard from '../Leaderboard';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 import uuid from 'uuid-random';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import shuffleAudio from '../../assets/sounds/shuffle.ogg';
 import playCardAudio from '../../assets/sounds/play_card.ogg';
 import alertAudio from '../../assets/sounds/alert.ogg';
@@ -165,6 +166,17 @@ class Game extends Component {
     this.submitBuyCards = this.submitBuyCards.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateState = this.updateState.bind(this);
+    this.handleOnDragEnd = this.handleOnDragEnd.bind(this);
+  }
+
+  handleOnDragEnd(result) {
+    if (!result.destination) return;
+
+    const cards = Array.from(this.state.myCards);
+    const [reorderedItem] = cards.splice(result.source.index, 1);
+    cards.splice(result.destination.index, 0, reorderedItem);
+
+    this.setState({ myCards: cards });
   }
 
   toggleLeaderboardModal() {
@@ -415,7 +427,7 @@ class Game extends Component {
   }
 
   handleSelectCard(card) {
-    if (!this.state.cardsSelectable) {
+    if (!this.state.cardsSelectable || card === BLANK) {
       return
     }
     let state = this.state;
@@ -735,10 +747,30 @@ class Game extends Component {
 
                         { !!this.state.game.me && !!this.state.myCards ?
                           <CardBody className="cardArea">
-                            { this.state.myCards.map(card => 
-                              <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
-                                src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
-                            )}
+
+                            <DragDropContext onDragEnd={this.handleOnDragEnd}>
+                              <Droppable droppableId="characters" direction="horizontal">
+                                {(provided) => (
+                                  <div className="characters" style={{ display: "inline-flex" }} {...provided.droppableProps} ref={provided.innerRef}>
+                                    {this.state.myCards.map((card, index) => {
+                                      return (
+                                        
+                                        <Draggable key={card + index} draggableId={card + index} index={index} isDragDisabled={card === BLANK}>
+                                          {(provided) => (
+                                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                              <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
+                                                src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.includes(card) || card === BLANK) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
+                                            </div>
+                                          )}
+                                        </Draggable>
+                                      );
+                                    })}
+                                    {provided.placeholder}
+                                  </div>
+                                )}
+                              </Droppable>
+                            </DragDropContext>
+
                           </CardBody>
                         : null }
 
