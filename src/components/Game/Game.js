@@ -414,13 +414,15 @@ class Game extends Component {
     } else {
       
       let selectedCard = selectedCards[0];
+      let myCardsBefore = [...state.myCards];
       Object.assign(state, { myCards: removeCard(selectedCard, state.myCards)});
       thisObj.setState(state);
       gameService.playCard(this.state.gameId, selectedCard).catch(error => {
         let stateUpdate = thisObj.state;
         Object.assign(stateUpdate, errorUtils.parseError(error));
         Object.assign(stateUpdate, enableButtons());
-        Object.assign(state, {selectedCards: []});
+        Object.assign(stateUpdate, {selectedCards: []});
+        Object.assign(stateUpdate, { myCards: myCardsBefore});
         thisObj.setState(stateUpdate); 
       });
     }
