@@ -129,6 +129,7 @@
   .card-img-overlay {
 
     padding-left: 0;
+    top: 1rem;
     padding-top: 0;
     padding-bottom: 0;
     padding-right: 0;
@@ -140,14 +141,5 @@
 
   .overlay-chip {
     margin-top: 5.5rem;
-  }
-
-  .overlay-dealer-chip {
-    margin-top: 4em;
-  }
-
-  .thumbnail_chips {
-    max-width: 40px;
-    max-height: 40px;
   }
 }
