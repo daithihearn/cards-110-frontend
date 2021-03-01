@@ -32,10 +32,10 @@ class Leaderboard extends Component {
                     <th align="left">Avatar</th>
                     <th align="left">Player</th>
                     <th>Score</th>
-                    <th>Rings</th>
                     
                     { !this.props.gameOver ?<th>Bought</th>: null}
                     { !this.props.gameOver && !!this.props.previousHand ?<th>Previous</th>: null}
+                    <th>Rings</th>
                     
                 </tr>
                 </thead>
@@ -51,9 +51,6 @@ class Leaderboard extends Component {
                     <td>
                     {playerProfile.score}
                     </td>
-                    <td>
-                    {playerProfile.rings}
-                    </td>
                     { !this.props.gameOver ?
                         <td>
                             { !!playerProfile.cardsBought ? playerProfile.cardsBought: ""}
@@ -65,6 +62,9 @@ class Leaderboard extends Component {
                             <img alt={this.props.previousHand.playedCards[playerProfile.id]} src={"/cards/thumbnails/" + this.props.previousHand.playedCards[playerProfile.id] + ".png"} className="thumbnail_size_small cardNotSelected"  /> : null }
                         </td>
                     : null}
+                    <td>
+                        {playerProfile.rings}
+                    </td>
                 </tr>
                 )}
                 </tbody>
