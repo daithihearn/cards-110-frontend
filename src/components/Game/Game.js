@@ -219,7 +219,6 @@ class Game extends Component {
       // Get Game
       let gameRes = await gameService.getGameForPlayer(state.gameId);
       Object.assign(state, { game: gameRes.data });
-      Object.assign(state, { myCards: setMyCards(gameRes.data.cards)});
 
       // Get Players
       let players = await gameService.getPlayersForGame(state.gameId);
@@ -234,9 +233,16 @@ class Game extends Component {
         Object.assign(state, this.setAlert());
       }
 
+      // If I am calling populate myCards with the dummy
+      if (!!state.game && !!state.game.round && state.iAmGoer && state.game.round.status === "CALLED") {
+        Object.assign(state, { myCards: setMyCards(gameRes.data.cards.concat(gameRes.data.dummy))});  
+      } else {
+        Object.assign(state, { myCards: setMyCards(gameRes.data.cards)});
+      }
+
       this.setState(state);
 
-      if (!!state.game.round && state.game.round.status === "CALLING" && state.iAmDealer) {
+      if (!!state.game.round && state.game.round.status === "CALLING" && state.iAmDealer && state.game.cards.length === 0) {
         sleep(500).then(() => this.deal());
       }
     }
@@ -617,6 +623,9 @@ class Game extends Component {
           Object.assign(state, enableButtons());
           Object.assign(state, thisObj.setAlert());
         }
+        if (!!state.game && !!state.game.round && state.iAmGoer && state.game.round.status === "CALLED") {
+          Object.assign(state, { myCards: setMyCards(content.content.cards.concat(content.content.dummy))});  
+        }
         break;
       case("CHOOSE_FROM_DUMMY"):
 
@@ -858,6 +867,23 @@ class Game extends Component {
                       </CardBody>
                       : null}
 
+                      {/* CALLED */}
+                      {!!this.state.game && !!this.state.game.round && this.state.iAmGoer && this.state.game.round.status === "CALLED" ?
+              
+                        <CardBody className="buttonArea">
+
+                            <ButtonGroup size="lg">
+
+                              <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}><img alt="Hearts" src={"/cards/originals/HEARTS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                              <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}><img alt="Hearts" src={"/cards/originals/DIAMONDS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                              <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}><img alt="Hearts" src={"/cards/originals/SPADES_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+                              <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}><img alt="Hearts" src={"/cards/originals/CLUBS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
+
+                            </ButtonGroup>
+                            
+                        </CardBody>
+                      : null}
+
                     </div>
 
                   : null }
@@ -884,52 +910,6 @@ class Game extends Component {
                   </CardBody>
                 </Card>
                 </CardGroup>
-            : null}
-
-
-            {/* Called  */}
-
-            {!!this.state.game && !!this.state.game.round && this.state.iAmGoer && this.state.game.round.status === "CALLED" ?
-              <Modal size="lg" fade={true} isOpen="true"> 
-                <ModalHeader>Please select your cards and suit...</ModalHeader>
-                <ModalBody className="called-modal">
-                <CardGroup className="gameModalCardGroup">
-                  <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
-                    <CardBody className="cardArea">
-                      { this.state.game.cards.map(card => 
-                        <CardImg alt={card} onClick={this.handleSelectCard.bind(this, card)} 
-                          src={"/cards/thumbnails/" + card + ".png"} className={(!this.state.cardsSelectable || this.state.selectedCards.map(sc => sc.card).includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
-                      )}
-                    </CardBody>
-                    {!!this.state.game.dummy ?
-                    <CardBody className="cardArea">
-
-                      { this.state.game.dummy.map(card => 
-                        <img alt={card} onClick={this.handleSelectCard.bind(this, card)} src={"/cards/thumbnails/" + card + ".png"} className={(this.state.selectedCards.map(sc => sc.card).includes(card)) ? "thumbnail_size":"thumbnail_size cardNotSelected"}/>
-                      )}
-
-
-                    </CardBody>
-                    : null }
-                    
-
-                    <CardBody className="buttonArea">
-
-                        <ButtonGroup size="lg">
-
-                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "HEARTS")}><img alt="Hearts" src={"/cards/originals/HEARTS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "DIAMONDS")}><img alt="Hearts" src={"/cards/originals/DIAMONDS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "SPADES")}><img alt="Hearts" src={"/cards/originals/SPADES_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-                          <Button type="button" disabled={this.state.actionsDisabled} color="secondary" onClick={this.selectFromDummy.bind(this, "CLUBS")}><img alt="Hearts" src={"/cards/originals/CLUBS_ICON.svg"}  className="thumbnail_size_extra_small " /></Button>
-
-                        </ButtonGroup>
-                        
-                    </CardBody>
-                  </Card>
-                </CardGroup>
-              </ModalBody>
-                
-            </Modal>
             : null}
 
 
