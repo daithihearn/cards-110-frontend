@@ -54,6 +54,28 @@ function playAlertSound() {
   });
 }
 
+function compareHands(hand1, hand2) {
+  if (
+    !Array.isArray(hand1)
+    || !Array.isArray(hand2)
+    || hand1.length !== hand2.length
+    ) {
+      return false;
+    }
+  
+  // .concat() to not mutate arguments
+  const arr1 = hand1.concat().filter(ca => ca !== BLANK).sort();
+  const arr2 = hand2.concat().filter(ca => ca !== BLANK).sort();
+  
+  for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+          return false;
+       }
+  }
+  
+  return true;
+}
+
 function getStyleForCard (cardsSelectable, selectedCards, card) {
   let classes = "thumbnail_size ";
 
@@ -933,7 +955,7 @@ class Game extends Component {
                   <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <CardBody className="cardArea">
 
-                      { removeAllFromArray(this.state.selectedCards.map(sc => sc.card), this.state.game.cards).map(card => 
+                      { removeAllFromArray(this.state.selectedCards.map(sc => sc.card), this.state.myCards).map(card => 
                         <img alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
                       )}
 
@@ -965,7 +987,7 @@ class Game extends Component {
                   <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <CardBody className="cardArea">
 
-                      { removeAllFromArray(this.state.selectedCards, this.state.game.cards).concat(removeAllFromArray(this.state.selectedCards.map(sc => sc.card), this.state.game.dummy)).map(card => 
+                      { removeAllFromArray(this.state.selectedCards.map(sc => sc.card), this.state.myCards).map(card => 
                         <img alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size"/>
                       )}
 
