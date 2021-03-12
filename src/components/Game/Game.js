@@ -58,19 +58,21 @@ function compareHands(hand1, hand2) {
   if (
     !Array.isArray(hand1)
     || !Array.isArray(hand2)
-    || hand1.length !== hand2.length
     ) {
       return false;
     }
   
-  // .concat() to not mutate arguments
-  const arr1 = hand1.concat().filter(ca => ca !== BLANK).sort();
-  const arr2 = hand2.concat().filter(ca => ca !== BLANK).sort();
+  const arr1 = [...hand1].filter(ca => ca !== BLANK).sort();
+  const arr2 = [...hand2].filter(ca => ca !== BLANK).sort();
+
+  if(arr1.length !== arr2.length) {
+    return false;
+  }
   
   for (let i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) {
-          return false;
-       }
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
   }
   
   return true;
@@ -255,13 +257,6 @@ class Game extends Component {
         Object.assign(state, this.setAlert());
       }
 
-      // If I am calling populate myCards with the dummy
-      if (!!state.game && !!state.game.round && state.iAmGoer && state.game.round.status === "CALLED") {
-        Object.assign(state, { myCards: setMyCards(gameRes.data.cards.concat(gameRes.data.dummy))});  
-      } else {
-        Object.assign(state, { myCards: setMyCards(gameRes.data.cards)});
-      }
-
       this.setState(state);
 
       if (!!state.game.round && state.game.round.status === "CALLING" && state.iAmDealer && state.game.cards.length === 0) {
@@ -428,6 +423,7 @@ class Game extends Component {
     Object.assign(state, thisObj.cancelAlert());
     Object.assign(state, disableButtons());
     Object.assign(state, {selectedCards: []});
+    Object.assign(state, {myCards: removeAllFromArray(selectedCards, state.myCards)});
 
     thisObj.setState(state);
 
@@ -435,7 +431,6 @@ class Game extends Component {
       let stateUpdate = thisObj.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));
       Object.assign(stateUpdate, enableButtons());
-      Object.assign(state, {selectedCards: []});
       thisObj.setState(stateUpdate);
     });
   }
@@ -484,7 +479,7 @@ class Game extends Component {
 
     // If the round status is PLAYING then only allow one card to be selected
     if (this.state.game.round.status === "PLAYING") {
-      if (!!this.state.doubleClickTracker && this.state.doubleClickTracker.card === card && (Date.now() - this.state.doubleClickTracker.time < 600 )) {
+      if (!!this.state.doubleClickTracker && this.state.doubleClickTracker.card === card && (Date.now() - this.state.doubleClickTracker.time < 500 )) {
         selectedCards = [{ card: card, autoplay: true}];
       } else if (indexOfCard === -1) {
         
@@ -535,14 +530,13 @@ class Game extends Component {
 
     switch (content.type) {
       case("REPLAY"):
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         Object.assign(state, {selectedCards: []});
         break;
       case("DEAL"):
         playShuffleSound();
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         Object.assign(state, {selectedCards: []});
-        Object.assign(state, { myCards: setMyCards(content.content.cards)});
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
           Object.assign(state, thisObj.setAlert());
@@ -550,18 +544,18 @@ class Game extends Component {
         break;
       case("GAME_OVER"):
         Object.assign(state, thisObj.cancelAlert());
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         Object.assign(state, {selectedCards: []});
         Object.assign(state, enableButtons());
         break;
       case("LAST_CARD_PLAYED"):
         playPlayCardSound()
         Object.assign(state, thisObj.cancelAlert());
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         break;
       case("CARD_PLAYED"):
         playPlayCardSound();
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
 
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
@@ -581,9 +575,8 @@ class Game extends Component {
         }
         break;
       case("BUY_CARDS"):
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         Object.assign(state, { deleteCardsDialog: false });
-        Object.assign(state, { myCards: setMyCards(content.content.cards)});
 
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
@@ -604,7 +597,7 @@ class Game extends Component {
         Object.assign(state, {snackOpen: true, snackMessage: `${player.name} bought ${content.content.bought}`, snackType: "info"});
         break;
       case("HAND_COMPLETED"):
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
 
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
@@ -624,7 +617,7 @@ class Game extends Component {
         }
         break;
       case("ROUND_COMPLETED"):
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         Object.assign(state, {selectedCards: []});
 
         if (state.iAmDealer) {
@@ -639,21 +632,17 @@ class Game extends Component {
 
         break;
       case("CALL"):
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         Object.assign(state, {selectedCards: []});
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
           Object.assign(state, thisObj.setAlert());
         }
-        if (!!state.game && !!state.game.round && state.iAmGoer && state.game.round.status === "CALLED") {
-          Object.assign(state, { myCards: setMyCards(content.content.cards.concat(content.content.dummy))});  
-        }
         break;
       case("CHOOSE_FROM_DUMMY"):
 
-        Object.assign(state, thisObj.updateGame(content.content));
+        Object.assign(state, thisObj.updateGame(content.content, state.myCards));
         Object.assign(state, { cancelSelectFromDummyDialog: false });
-        Object.assign(state, { myCards: setMyCards(content.content.cards)});
 
         if (state.isMyGo) {
           Object.assign(state, enableButtons());
@@ -674,19 +663,32 @@ class Game extends Component {
     thisObj.setState(state);
   }
 
-  updateGame(game) {
-    let previousHand = null;
-    
-    if (!!game.round && game.round.completedHands.length > 0) {
-      previousHand = game.round.completedHands[game.round.completedHands.length - 1];
+  updateGame(game, myCards) {
+    if (!myCards) {
+      myCards = [];
     }
 
-    let cardsSelectable = (["CALLED", "BUYING", "PLAYING"].includes(game.round.status));
+    let newState = {game: game};
+    
+    if (!!game.round && game.round.completedHands.length > 0) {
+      Object.assign(newState, {previousHand: game.round.completedHands[game.round.completedHands.length - 1]});
+    }
 
-    return { game: game, previousHand: previousHand, cardsSelectable: cardsSelectable, 
+    Object.assign(newState, { cardsSelectable: ["CALLED", "BUYING", "PLAYING"].includes(game.round.status),
       isMyGo: isThereGo(game, this.state.profile.id),
       iAmGoer: isGoer(game, this.state.profile.id),
-      iAmDealer: isDealer(game, this.state.profile.id)};
+      iAmDealer: isDealer(game, this.state.profile.id)});
+
+    // If I am calling populate myCards with the dummy
+    if (!!game && !!game.round && newState.iAmGoer && game.round.status === "CALLED") {
+      Object.assign(newState, { myCards: (compareHands(myCards, game.cards) ? myCards: game.cards).concat(game.dummy)});  
+    } else if(compareHands(myCards, game.cards)) {
+      Object.assign(newState, { myCards: myCards});
+    } else {
+      Object.assign(newState, { myCards: setMyCards(game.cards)});
+    }
+
+    return newState;
   }
 
   handleChange(event) {
