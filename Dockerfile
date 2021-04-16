@@ -1,18 +1,22 @@
-FROM node:14
+# build
+FROM node:14 AS builder
 
-RUN npm install -g serve
+WORKDIR /app
 
-WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install
+COPY package.json ./
+COPY yarn.lock ./
 
+RUN yarn
+
+COPY ./src ./src
+COPY ./public ./public
 COPY .env ./
 
-COPY ./public ./public
-COPY ./src ./src
+RUN yarn build
 
-RUN npm run build
+# deployment
+FROM nginx:1.19-alpine
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
-
-CMD [ "serve",  "-s",  "build" ]
+CMD ["nginx", "-g", "daemon off;"]
