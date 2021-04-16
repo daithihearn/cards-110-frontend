@@ -10,3 +10,4 @@ node_modules/
 .settings/
 *.sh
 *.bat
+yarn-error.log
