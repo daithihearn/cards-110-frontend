@@ -15,9 +15,16 @@ COPY .env ./
 RUN yarn build
 
 # deployment
-FROM nginx:1.19
+FROM nginx:1.19-alpine AS deployment
+
+RUN apk add gettext
+
 COPY --from=builder /app/build /usr/share/nginx/html
 COPY ./nginx/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
-CMD /bin/bash -c "envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf" && nginx -g 'daemon off;'
+# ENV PORT=80
+
+RUN envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+
+CMD ["nginx", "-g", "daemon off;"]
