@@ -13,9 +13,9 @@ import SecuredRoute from './utils/SecuredRoute';
 import Loadable from 'react-loadable';
 // Import Simple Line Icons Set
 import 'simple-line-icons/css/simple-line-icons.css';
-import LoadingIcon from '../src/assets/img/brand/loading.gif';
+import LoadingIcon from './assets/img/brand/loading.gif';
 // Import Main styles for this application
-import './scss/style.css';
+import './scss/style.scss';
 
 function Loading() {
   return <img src={LoadingIcon} className="loading" alt="Loading Icon" />;
@@ -30,8 +30,6 @@ const GamePage = Loadable({
   loader: () => import('./components/Game'),
   loading: Loading
 });
-
-
 
 class App extends Component {
   constructor(props) {
