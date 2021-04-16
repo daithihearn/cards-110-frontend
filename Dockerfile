@@ -18,5 +18,6 @@ RUN yarn build
 FROM nginx:1.19-alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx", "-g", "daemon off;"]
