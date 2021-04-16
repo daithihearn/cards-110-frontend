@@ -15,7 +15,7 @@ COPY .env ./
 RUN yarn build
 
 # deployment
-FROM nginx:1.19-alpine
+FROM nginx:1.19
 COPY --from=builder /app/build /usr/share/nginx/html
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
