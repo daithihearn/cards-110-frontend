@@ -249,7 +249,7 @@ class Game extends Component {
       state.players = players.data;
 
       let oidcProfile = auth0Client.getProfile();
-      let profile = state.players.filter(player => player.subject === oidcProfile.sub)[0];
+      let profile = state.players.filter(player => player.id === oidcProfile.sub)[0];
       state.profile = profile;
 
       Object.assign(state, this.updateGame(state.game));
@@ -1009,7 +1009,7 @@ class Game extends Component {
             </Modal>
           : null }
 
-        <SockJsClient url={ `${process.env.REACT_APP_API_URL}/websocket?gameId=${this.state.gameId}&tokenId=${auth0Client.getAccessToken()}`} topics={["/game", "/user/game"]}
+        <SockJsClient url={ `${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${this.state.gameId}&tokenId=${auth0Client.getAccessToken()}`} topics={["/game", "/user/game"]}
                 onMessage={ this.handleWebsocketMessage.bind(this) }
                 ref={ (client) => { this.clientRef = client }}/>
 
