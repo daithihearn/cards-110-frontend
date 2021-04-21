@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import RemoveImage from '../../assets/icons/remove.png';
 import AddIcon from '../../assets/icons/add.svg';
 
+import { useSelector, useDispatch } from 'react-redux';
 import gameService from '../../services/GameService';
 
 import { Modal, ModalBody, ModalHeader, ModalFooter, Label, Button, ButtonGroup, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
@@ -9,6 +10,20 @@ import Snackbar from "@material-ui/core/Snackbar";
 import BlockUi from 'react-block-ui';
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 import errorUtils from '../../utils/ErrorUtils';
+
+
+const getActiveGames = () =>  {
+  gameService.getActive().then(response => {
+    useDispatch()({ type: 'activeGames/updateAll', payload: response.data })
+    // thisObj.updateState({ activeGames: response.data });
+
+  })
+  .catch(error => {
+    // let stateUpdate = this.state;
+    // Object.assign(stateUpdate, errorUtils.parseError(error));
+    // this.setState(stateUpdate); 
+  })
+}
 
 class StartNewGame extends Component {
   constructor(props) {
@@ -104,6 +119,7 @@ class StartNewGame extends Component {
     gameService.put(payload).then(response => {
       thisObj.updateState({startGameDisabled: false, players: [], selectedPlayers: [], modalStartGame: false, newGameName: ''});
       thisObj.getAllPlayers();
+      getActiveGames()
     }).catch(error => {
       let stateUpdate = this.state;
       Object.assign(stateUpdate, errorUtils.parseError(error));

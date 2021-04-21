@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RemoveImage from '../../assets/icons/remove.png';
 
+import { connect, useSelector, useDispatch } from 'react-redux';
 import gameService from '../../services/GameService';
 
 import { Modal, ModalBody, ModalHeader, ModalFooter, Label, Button, ButtonGroup, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Card, CardBody, CardGroup, CardHeader, Table } from 'reactstrap';
@@ -8,11 +9,30 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MySnackbarContentWrapper from '../MySnackbarContentWrapper/MySnackbarContentWrapper.js';
 import errorUtils from '../../utils/ErrorUtils';
 
+const selectActiveGames = state => state.activeGames.activeGames;
+
+const getActiveGames = () => {
+  gameService.getActive().then(response => {
+    useDispatch()({ type: 'activeGames/updateAll', payload: response.data });
+    // thisObj.updateState({ activeGames: response.data });
+
+  })
+    .catch(error => {
+      // let stateUpdate = this.state;
+      // Object.assign(stateUpdate, errorUtils.parseError(error));
+      // this.setState(stateUpdate); 
+    });
+};
+
+const mapStateToProps = (store) => {
+  return { activeGames: store.activeGames.activeGames }
+}
+
 class ActiveGames extends Component {
   constructor(props) {
     super(props);
    
-    this.state = { 
+    this.state = {
       activeGames: [],
       modalDeleteGame:false,
       modalDeleteGameIdx: 0,
@@ -24,25 +44,12 @@ class ActiveGames extends Component {
   }
   
   async componentDidMount() {
-    this.getActiveGames();
+    // this.getActiveGames();
   }
 
   updateState(stateDelta) {
     this.setState(prevState => (stateDelta));
   }
-
-  getActiveGames()  {
-    let thisObj = this;
-
-    gameService.getActive().then(response => {
-      thisObj.updateState({ activeGames: response.data });
-    })
-      .catch(error => {
-        let stateUpdate = this.state;
-        Object.assign(stateUpdate, errorUtils.parseError(error));
-        this.setState(stateUpdate); 
-      });
-  };
 
   finishGame(game, idx) {
     if (this.state.finishGameDisabled) {
@@ -50,13 +57,13 @@ class ActiveGames extends Component {
     }
     this.updateState({finishGameDisabled: true});
     let thisObj = this;
-    let activeGames = [...this.state.activeGames];
+    let activeGames = useSelector(selectActiveGames);
     activeGames.splice(idx, 1);
 
     gameService.finish(game.id)
       .then(response => {
-        thisObj.updateState({ finishGameDisabled: false, activeGames: activeGames, snackOpen: true, snackMessage: "Game Finished", snackType: "success"  });
-        thisObj.getActiveGames();
+        thisObj.updateState({ finishGameDisabled: false, snackOpen: true, snackMessage: "Game Finished", snackType: "success"  });
+        getActiveGames();
       })
       .catch(error => {
         let stateUpdate = this.state;
@@ -73,7 +80,7 @@ class ActiveGames extends Component {
     }
     this.updateState({deleteGameDisabled: true});
     let thisObj = this;
-    let activeGames = [...this.state.activeGames];
+    let activeGames = useSelector(selectActiveGames);
     activeGames.splice(this.state.modalDeleteGameIdx, 1);
 
     gameService.delete(this.state.modalDeleteGameObject.id)
@@ -177,4 +184,4 @@ class ActiveGames extends Component {
   }
 }
 
-export default ActiveGames;
+export default connect(mapStateToProps)(ActiveGames)
