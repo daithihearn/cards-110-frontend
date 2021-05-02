@@ -16,6 +16,7 @@ const AutoActionManager = () => {
     const [previousGameHash, updatePreviousGameHash] = useState("")
 
     const deal = () => {
+        // Adding a check for trigger bounce
         if (Date.now() - dealEventTime > 3000) {
             updateDealEventTime(Date.now())
             setTimeout(() => processDeal(), 3000)
@@ -29,6 +30,7 @@ const AutoActionManager = () => {
     }
 
     const playCard = (card) => {
+        // Adding a check for trigger bounce
         if (Date.now() - playCardEventTime > 3000) {
             updatePlayCardEventTime(Date.now())
             dispatch({ type: 'game/disableActions' })
@@ -77,6 +79,7 @@ const AutoActionManager = () => {
         }
     }
 
+    // If the game hasn't changed don't do anything
     const currentGameHash = sha1(JSON.stringify(game) + JSON.stringify(autoPlayCards)).toString()
 
     if (currentGameHash !== previousGameHash && game.status !== "FINISHED") {

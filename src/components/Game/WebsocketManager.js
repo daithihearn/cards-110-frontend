@@ -126,32 +126,32 @@ const WebsocketHandler = () => {
     const processActons = (type, game) => {
         switch (type) {
             case ("DEAL"):
-                playShuffleSound();
-                break;
+                playShuffleSound()
+                break
             case ("BUY_CARDS"):
             case ("LAST_CARD_PLAYED"):
             case ("CARD_PLAYED"):
                 playPlayCardSound()
                 checkClearSelected()
-                break;
+                break
             case ("REPLAY"):
-                break;
+                break
             case ("GAME_OVER"):
-                break;
+                break
             case ("BUY_CARDS_NOTIFICATION"):
-                break;
+                break
             case ("HAND_COMPLETED"):
-                break;
+                break
             case ("ROUND_COMPLETED"):
-                break;
+                break
             case ("CALL"):
                 playCallSound()
-                break;
+                break
             case ("PASS"):
                 playPassSound()
-                break;
+                break
             case ("CHOOSE_FROM_DUMMY"):
-                break;
+                break
         }
     }
     
