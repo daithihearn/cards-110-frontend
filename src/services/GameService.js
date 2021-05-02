@@ -50,7 +50,7 @@ class GameService {
     }
   }
 
-  getMyActiveGames = () => {
+  getMyActive = () => {
     let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
 
     if (authHeader) {
@@ -62,22 +62,6 @@ class GameService {
       };
       const result = axios
         .get(`${process.env.REACT_APP_API_URL}/api/v1/game/active`, config)
-      return result;
-    }
-  }
-
-  getActive = () => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
-
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
-        }
-      };
-      const result = axios
-        .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/active`, config)
       return result;
     }
   }

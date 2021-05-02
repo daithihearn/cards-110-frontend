@@ -9,6 +9,16 @@
   font-family: $fontFamily;
 }
 
+.linknavbar {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.25em;
+}
+
+.linknavbar:hover {
+  cursor: pointer;
+}
+
 .card-group {
   padding-top: 10px;
   padding-bottom: 10px;

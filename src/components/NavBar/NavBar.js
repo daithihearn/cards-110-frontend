@@ -1,18 +1,23 @@
-import React from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import auth0Client from '../../Auth';
+import React from 'react'
+import auth0Client from '../../Auth'
+import { useDispatch } from 'react-redux'
 
-function NavBar(props) {
+const NavBar = () => {
+
+  const dispatch = useDispatch()
+
   const signOut = () => {
-    auth0Client.signOut();
-    props.history.replace('/');
-  };
+    auth0Client.signOut()
+    clearGame()
+  }
+
+  const clearGame = () => {
+    dispatch({ type: 'game/exit' })
+  }
 
   return (
     <nav className="navbar navbar-dark bg-primary fixed-top">
-      <Link className="navbar-brand" to="/">
-        Cards
-      </Link>
+      <div className="linknavbar" onClick={clearGame}>Cards</div>
       {
         !auth0Client.isAuthenticated() &&
         <button className="btn btn-dark" onClick={auth0Client.signIn}>Sign In</button>
@@ -21,11 +26,11 @@ function NavBar(props) {
         auth0Client.isAuthenticated() &&
         <div>
           <label className="mr-2 text-white"><img alt={auth0Client.getProfile().name} src={auth0Client.getProfile().picture} className="avatar" /></label>
-          <button className="btn btn-dark" onClick={() => {signOut()}}>Sign Out</button>
+          <button className="btn btn-dark" onClick={signOut}>Sign Out</button>
         </div>
       }
     </nav>
-  );
+  )
 }
 
-export default withRouter(NavBar);
+export default NavBar;

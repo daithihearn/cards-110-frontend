@@ -1,7 +1,0 @@
-{
-    "name": "leaderboard",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./Leaderboard.js"
-  }
-  

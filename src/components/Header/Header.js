@@ -1,29 +1,14 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 
-import NavBar from '../NavBar';
+import NavBar from '../NavBar/NavBar';
 
-const propTypes = {
-  children: PropTypes.node,
-};
+const DefaultHeader = () => {
 
-const defaultProps = {};
-
-class DefaultHeader extends Component {
-  render() {
-
-    // eslint-disable-next-line
-    const { children, ...attributes } = this.props;
-
-    return (
-      <React.Fragment>
-        <NavBar/>
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <NavBar />
+    </React.Fragment>
+  )
 }
-
-DefaultHeader.propTypes = propTypes;
-DefaultHeader.defaultProps = defaultProps;
 
 export default DefaultHeader;

@@ -1,0 +1,132 @@
+{
+    "me": {
+        "id": "google-oauth2|107433408841823408333",
+        "seatNumber": 1,
+        "call": 0,
+        "cardsBought": 4,
+        "score": 100,
+        "rings": 3,
+        "teamId": "google-oauth2|107433408841823408333"
+    },
+    "cards": [],
+    "status": "FINISHED",
+    "round": {
+        "timestamp": "2021-04-15T22:48:13.63",
+        "number": 27,
+        "dealerId": "google-oauth2|112382472559457576102",
+        "goerId": "google-oauth2|114350793033611955925",
+        "suit": "SPADES",
+        "status": "PLAYING",
+        "currentHand": {
+            "timestamp": "2021-04-15T22:52:31.213",
+            "leadOut": "TWO_SPADES",
+            "currentPlayerId": "google-oauth2|116774802387039395909",
+            "playedCards": {
+                "google-oauth2|114350793033611955925": "TWO_SPADES",
+                "google-oauth2|107433408841823408333": "QUEEN_HEARTS",
+                "google-oauth2|112382472559457576102": "EIGHT_DIAMONDS",
+                "google-oauth2|110786976405586086991": "NINE_DIAMONDS",
+                "google-oauth2|116774802387039395909": "KING_HEARTS"
+            }
+        },
+        "dealerSeeingCall": false,
+        "completedHands": [
+            {
+                "timestamp": "2021-04-15T22:48:13.63",
+                "leadOut": "TEN_CLUBS",
+                "currentPlayerId": "google-oauth2|114350793033611955925",
+                "playedCards": {
+                    "google-oauth2|107433408841823408333": "TEN_CLUBS",
+                    "google-oauth2|112382472559457576102": "FOUR_SPADES",
+                    "google-oauth2|110786976405586086991": "QUEEN_CLUBS",
+                    "google-oauth2|116774802387039395909": "THREE_DIAMONDS",
+                    "google-oauth2|114350793033611955925": "THREE_SPADES"
+                }
+            },
+            {
+                "timestamp": "2021-04-15T22:50:54.548",
+                "leadOut": "FIVE_SPADES",
+                "currentPlayerId": "google-oauth2|116774802387039395909",
+                "playedCards": {
+                    "google-oauth2|114350793033611955925": "FIVE_SPADES",
+                    "google-oauth2|107433408841823408333": "SIX_SPADES",
+                    "google-oauth2|112382472559457576102": "NINE_CLUBS",
+                    "google-oauth2|110786976405586086991": "TEN_SPADES",
+                    "google-oauth2|116774802387039395909": "FIVE_DIAMONDS"
+                }
+            },
+            {
+                "timestamp": "2021-04-15T22:51:10.494",
+                "leadOut": "ACE_HEARTS",
+                "currentPlayerId": "google-oauth2|116774802387039395909",
+                "playedCards": {
+                    "google-oauth2|114350793033611955925": "ACE_HEARTS",
+                    "google-oauth2|107433408841823408333": "JOKER",
+                    "google-oauth2|112382472559457576102": "EIGHT_CLUBS",
+                    "google-oauth2|110786976405586086991": "QUEEN_SPADES",
+                    "google-oauth2|116774802387039395909": "QUEEN_DIAMONDS"
+                }
+            },
+            {
+                "timestamp": "2021-04-15T22:51:28.352",
+                "leadOut": "SIX_CLUBS",
+                "currentPlayerId": "google-oauth2|114350793033611955925",
+                "playedCards": {
+                    "google-oauth2|107433408841823408333": "SIX_CLUBS",
+                    "google-oauth2|112382472559457576102": "TWO_CLUBS",
+                    "google-oauth2|110786976405586086991": "KING_SPADES",
+                    "google-oauth2|116774802387039395909": "KING_DIAMONDS",
+                    "google-oauth2|114350793033611955925": "ACE_SPADES"
+                }
+            }
+        ]
+    },
+    "maxCall": 20,
+    "playerProfiles": [
+        {
+            "id": "google-oauth2|114350793033611955925",
+            "seatNumber": 5,
+            "call": 20,
+            "cardsBought": 0,
+            "score": 125,
+            "rings": 2,
+            "teamId": "google-oauth2|114350793033611955925"
+        },
+        {
+            "id": "google-oauth2|107433408841823408333",
+            "seatNumber": 1,
+            "call": 0,
+            "cardsBought": 4,
+            "score": 100,
+            "rings": 3,
+            "teamId": "google-oauth2|107433408841823408333"
+        },
+        {
+            "id": "google-oauth2|112382472559457576102",
+            "seatNumber": 2,
+            "call": 0,
+            "cardsBought": 4,
+            "score": 40,
+            "rings": 3,
+            "teamId": "google-oauth2|112382472559457576102"
+        },
+        {
+            "id": "google-oauth2|110786976405586086991",
+            "seatNumber": 3,
+            "call": 15,
+            "cardsBought": 3,
+            "score": 60,
+            "rings": 2,
+            "teamId": "google-oauth2|110786976405586086991"
+        },
+        {
+            "id": "google-oauth2|116774802387039395909",
+            "seatNumber": 4,
+            "call": 0,
+            "cardsBought": 3,
+            "score": 30,
+            "rings": 3,
+            "teamId": "google-oauth2|116774802387039395909"
+        }
+    ]
+}
