@@ -1,0 +1,116 @@
+import React, { useState } from 'react'
+
+import RemoveImage from '../../assets/icons/remove.png'
+import { useSelector, useDispatch } from 'react-redux'
+
+import gameService from '../../services/GameService'
+import parseError from '../../utils/ErrorUtils'
+import DataTable from 'react-data-table-component'
+
+import { Modal, ModalBody, ModalHeader, ModalFooter, Button, Card, CardBody, CardGroup, CardHeader } from 'reactstrap'
+import moment from 'moment'
+
+import auth0Client from '../../Auth';
+
+const MyGames = () => {
+    const myGames = useSelector(state => state.myGames.games)
+    const dispatch = useDispatch()
+    const [modalDeleteGameOpen, updateModalDeleteGameOpen] = useState(false)
+    const [deleteGameId, updateDeleteGameId] = useState('')
+    const isAdmin = auth0Client.isAdmin()
+
+    const deleteGame = e => {
+        e.preventDefault()
+
+        gameService.delete(deleteGameId)
+            .then(response => {
+                dispatch({ type: 'myGames/removeGame', payload: deleteGameId })
+                dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game deleted' } })
+                handleCloseDeleteGameModal()
+            })
+            .catch(error => {
+                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+            })
+    }
+
+    const playGame = id => e => {
+        e.preventDefault()
+
+        gameService.getPlayersForGame(id)
+            .then(response => {
+                dispatch({ type: 'game/updatePlayers', payload: response.data })
+
+                gameService.getGameForPlayer(id)
+                    .then(response => {
+                        dispatch({ type: 'game/updateGame', payload: response.data })
+                        dispatch({ type: 'snackbar/message', payload: { type: 'success', message: "Game started succcessfully." } })
+                    })
+                    .catch(error => {
+                        dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+                    })
+            })
+            .catch(error => {
+                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+            })
+
+    }
+
+    const showDeleteGameModal = id => e => {
+        updateModalDeleteGameOpen(true)
+        updateDeleteGameId(id)
+    }
+
+    const handleCloseDeleteGameModal = () => {
+        updateModalDeleteGameOpen(false)
+        updateDeleteGameId('')
+    }
+
+    const columns = [
+        { name: 'Name', selector: 'name', sortable: true },
+        { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
+        { name: 'Status', selector: 'status', sortable: true, center: true },
+        {
+            cell: row => <Button type="button" color="success" onClick={playGame(row.id)}>Open</Button>,
+            center: true
+        },
+        {
+            cell: row => <Button type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
+            center: true,
+            omit: !isAdmin
+        }
+    ]
+
+    return (
+        <CardGroup>
+            <Card color="secondary" className="p-6">
+                <CardHeader tag="h2">Active Games</CardHeader>
+                <CardBody>
+                    <DataTable noHeader pagination theme="solarized"
+                        data={myGames} columns={columns}
+                        defaultSortField="timestamp" defaultSortAsc={false}
+                        highlightOnHover />
+                </CardBody>
+            </Card>
+
+            <Modal fade toggle={handleCloseDeleteGameModal} isOpen={modalDeleteGameOpen}>
+                <ModalHeader>
+                    You are about to Delete a game
+                </ModalHeader>
+
+                <ModalBody>Are you sure you want to delete this game?</ModalBody>
+
+                <ModalFooter>
+                    <Button color="secondary" onClick={handleCloseDeleteGameModal}>
+                        No
+                    </Button>
+                    <Button color="primary" onClick={deleteGame}>
+                        Yes
+                    </Button>
+                </ModalFooter>
+            </Modal>
+
+        </CardGroup>
+    )
+}
+
+export default MyGames;
