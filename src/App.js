@@ -47,7 +47,12 @@ createTheme('solarized', {
 const HomePage = Loadable({
     loader: () => import('./components/Home/Home'),
     loading: Loading
-});
+})
+
+const GamePage = Loadable({
+    loader: () => import('./components/Game/Game'),
+    loading: Loading
+})
 
 class App extends Component {
     constructor(props) {
@@ -77,7 +82,8 @@ class App extends Component {
             <div>
                 <Route exact path='/callback' component={Callback} />
 
-                <SecuredRoute path="/" name="Home" component={HomePage} checkingSession={this.state.checkingSession} match={match} location={location} history={history} />
+                <SecuredRoute path="/" exact name="Home" component={HomePage} checkingSession={this.state.checkingSession} match={match} location={location} history={history} />
+                <SecuredRoute path="/game/:id" exact name="Game" component={GamePage} checkingSession={this.state.checkingSession} match={match} location={location} history={history} />
             </div>
         );
     }

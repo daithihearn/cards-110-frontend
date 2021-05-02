@@ -1,60 +1,72 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { Card, CardGroup } from 'reactstrap'
-import MyCards from './MyCards'
-import PlayersAndCards from './PlayersAndCards'
-import GameHeader from './GameHeader'
-import Calling from './Calling'
-import Buying from './Buying'
-import SelectSuit from './SelectSuit'
+import DefaultHeader from '../Header/Header'
+import MySnackbar from '../Snackbar/MySnackbar'
+import GameWrapper from './GameWrapper'
 import GameOver from './GameOver'
-
+import gameService from '../../services/GameService'
 import WebsocketManager from './WebsocketManager'
-import AutoActionManager from './AutoActionManager'
+import parseError from '../../utils/ErrorUtils'
+
+import { useParams } from "react-router-dom"
+
+import { useDispatch } from 'react-redux'
 
 const Game = () => {
 
-    const game = useSelector(state => state.game.game)
+    let { id } = useParams()
+
+    const dispatch = useDispatch()
+
+    const playGame = () => {
+        gameService.getGameForPlayer(id)
+            .then(response => {
+                dispatch({ type: 'game/updateGame', payload: response.data })
+                dispatch({ type: 'snackbar/message', payload: { type: 'success', message: "Game started succcessfully." } })
+                getPlayers()
+            })
+            .catch(error => {
+                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+            })
+    }
+
+    const getPlayers = () => {
+        gameService.getPlayersForGame(id)
+            .then(response => {
+                dispatch({ type: 'game/updatePlayers', payload: response.data })
+            })
+            .catch(error => {
+                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+            })
+    }
+
+    playGame()
 
     return (
         <div>
+            <div className="main_content">
+                <span className="app" style={{ overflowX: 'hidden' }}>
+                    <div className="app_body">
+                        <main className="main">
+                            <DefaultHeader />
+                            <MySnackbar />
 
-            { !!game.id && game.status !== "FINISHED" ?
-
-                <CardGroup>
-
-                    <AutoActionManager />
-                    <WebsocketManager />
-
-                    <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
-
-                        <GameHeader />
-
-                        <PlayersAndCards />
-
-                        <MyCards />
-
-                        {/* Calling  */}
-
-                        <Calling />
-
-                        {/* BUYING  */}
-
-                        <Buying />
-
-                        {/* CALLED */}
-                        <SelectSuit />
-
-                    </Card>
-                </CardGroup>
-                : null}
+                            <div className="app carpet">
+                                <div className="game_wrap">
+                                    <div className="game_container">
+                                        <WebsocketManager gameId={id} />
+                                        <GameWrapper />
+                                        <GameOver />
+                                    </div>
+                                </div>
+                            </div>
 
 
-            {/* FINISHED  */}
-            { game.status === "FINISHED" ?
-                <GameOver />
-                : null}
+                        </main>
+                    </div>
+                </span>
+            </div>
         </div>
+
     )
 }
 

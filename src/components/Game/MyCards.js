@@ -11,9 +11,12 @@ const MyCards = () => {
     const dispatch = useDispatch()
 
     const game = useSelector(state => state.game.game)
-    const orderedCards = useSelector(state => state.game.orderedCards)
-    const selectedCards = useSelector(state => state.game.orderedCards.filter(card => card.selected))
-    const actionsDisabled = useSelector(state => state.game.actionsDisabled)
+
+    if (!game || !game.orderedCards) {
+        return null
+    }
+
+    const selectedCards = game.orderedCards.filter(card => card.selected)
 
     const [doubleClickTracker, updateDoubleClickTracker] = useState({})
 
@@ -25,7 +28,7 @@ const MyCards = () => {
             return
         }
 
-        let updatedCards = [...orderedCards]
+        let updatedCards = [...game.orderedCards]
 
         // If the round status is PLAYING then only allow one card to be selected
         if (game.round.status === "PLAYING") {
@@ -51,7 +54,7 @@ const MyCards = () => {
     const handleOnDragEnd = (result) => {
         if (!result.destination) return;
 
-        const newCards = Array.from(orderedCards)
+        const newCards = Array.from(game.orderedCards)
         const [reorderedItem] = newCards.splice(result.source.index, 1)
         newCards.splice(result.destination.index, 0, reorderedItem)
 
@@ -94,7 +97,7 @@ const MyCards = () => {
                         <Droppable droppableId="characters" direction="horizontal">
                             {(provided) => (
                                 <div className="characters" style={{ display: "inline-flex" }} {...provided.droppableProps} ref={provided.innerRef}>
-                                    {orderedCards.map((card, index) => {
+                                    {game.orderedCards.map((card, index) => {
                                         return (
 
                                             <Draggable key={card.card + index} draggableId={card.card + index} index={index} isDragDisabled={card.card === BLANK}>
@@ -121,7 +124,7 @@ const MyCards = () => {
                 <CardBody className="buttonArea">
 
                     <ButtonGroup size="lg">
-                        {game.myGo ? <Button id="playCardButton" type="button" disabled={actionsDisabled} onClick={playCard} color="warning"><b>Play Card</b></Button> : null}
+                        {game.myGo ? <Button id="playCardButton" type="button" disabled={game.actionsDisabled} onClick={playCard} color="warning"><b>Play Card</b></Button> : null}
                     </ButtonGroup>
 
                 </CardBody>

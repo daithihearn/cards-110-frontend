@@ -160,14 +160,12 @@ const WebsocketHandler = () => {
     return null
 }
 
-const WebsocketManager = () => {
-
-    const gameId = useSelector(state => state.game.game.id)
+const WebsocketManager = (props) => {
 
     console.log("Is this happening often?")
     
     return (
-        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${gameId}&tokenId=${auth0Client.getAccessToken()}`}>
+        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.gameId}&tokenId=${auth0Client.getAccessToken()}`}>
             <WebsocketHandler />
         </StompSessionProvider>
     )

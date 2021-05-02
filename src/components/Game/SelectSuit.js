@@ -12,7 +12,11 @@ const SelectSuit = () => {
     const dispatch = useDispatch()
 
     const game = useSelector(state => state.game.game)
-    const selectedCards = useSelector(state => state.game.orderedCards.filter(card => card.selected))
+    if (!game || !game.orderedCards) {
+        return null
+    }
+
+    const selectedCards = game.orderedCards.filter(card => card.selected)
 
     // TODO: Need to move this up to the app state
     const [actionsDisabled, updateActionsDisabled] = useState(false)

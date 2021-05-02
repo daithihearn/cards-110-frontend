@@ -8,7 +8,12 @@ import sha1 from 'crypto-js/sha1'
 const AutoActionManager = () => {
 
     const game = useSelector(state => state.game.game)
-    const autoPlayCards = useSelector(state => state.game.orderedCards.filter(card => card.autoplay && card.selected))
+    if (!game || !game.status || !game.orderedCards) {
+        return null
+    }
+    
+    const autoPlayCards = game.orderedCards.filter(card => card.autoplay && card.selected)
+
     const dispatch = useDispatch()
 
     const [dealEventTime, updateDealEventTime] = useState(0)

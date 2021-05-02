@@ -6,6 +6,9 @@ import { useSelector } from 'react-redux'
 const PlayersAndCards = () => {
     const game = useSelector(state => state.game.game)
     const players = useSelector(state => state.game.players)
+    if (!game || !game.status || !players || players.length === 0) {
+        return null
+    }
 
     const compareSeat = (a, b) => {
         let comparison = 0

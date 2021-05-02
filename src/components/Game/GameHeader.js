@@ -10,6 +10,9 @@ const GameHeader = () => {
 
     const players = useSelector(state => state.game.players)
     const game = useSelector(state => state.game.game)
+    if (!game || !game.status || !players || players.length === 0) {
+        return null
+    }
 
     const [modalLeaderboard, updateModalLeaderboard] = useState(false)
 

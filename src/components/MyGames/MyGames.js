@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import RemoveImage from '../../assets/icons/remove.png'
 import { useSelector, useDispatch } from 'react-redux'
+import { Link } from "react-router-dom"
 
 import gameService from '../../services/GameService'
 import parseError from '../../utils/ErrorUtils'
@@ -33,28 +34,6 @@ const MyGames = () => {
             })
     }
 
-    const playGame = id => e => {
-        e.preventDefault()
-
-        gameService.getPlayersForGame(id)
-            .then(response => {
-                dispatch({ type: 'game/updatePlayers', payload: response.data })
-
-                gameService.getGameForPlayer(id)
-                    .then(response => {
-                        dispatch({ type: 'game/updateGame', payload: response.data })
-                        dispatch({ type: 'snackbar/message', payload: { type: 'success', message: "Game started succcessfully." } })
-                    })
-                    .catch(error => {
-                        dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
-                    })
-            })
-            .catch(error => {
-                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
-            })
-
-    }
-
     const showDeleteGameModal = id => e => {
         updateModalDeleteGameOpen(true)
         updateDeleteGameId(id)
@@ -70,7 +49,7 @@ const MyGames = () => {
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
         { name: 'Status', selector: 'status', sortable: true, center: true },
         {
-            cell: row => <Button type="button" color="success" onClick={playGame(row.id)}>Open</Button>,
+            cell: row => <Link to={`/game/${row.id}`}><Button type="button" color="success">Open</Button></Link>,
             center: true
         },
         {
