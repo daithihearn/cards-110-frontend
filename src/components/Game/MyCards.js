@@ -36,6 +36,7 @@ const MyCards = () => {
                 updateDoubleClickTracker({ time: Date.now(), card: card })
 
             } else {
+                updateDoubleClickTracker({ time: Date.now(), card: card })
                 dispatch({ type: 'game/clearSelectedCards' })
                 return
             }

@@ -34,7 +34,7 @@ const AutoActionManager = () => {
         if (Date.now() - playCardEventTime > 3000) {
             updatePlayCardEventTime(Date.now())
             dispatch({ type: 'game/disableActions' })
-            setTimeout(() => processPlayCard(card), 400)
+            setTimeout(() => processPlayCard(card), 200)
         }
     }
 
