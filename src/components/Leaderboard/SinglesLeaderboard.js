@@ -1,18 +1,7 @@
 import React from 'react'
-import { Table } from 'reactstrap'
 import DataTable from 'react-data-table-component'
 
 import { useSelector } from 'react-redux'
-
-const compareScore = (a, b) => {
-    let comparison = 0;
-    if (b.score > a.score) {
-        comparison = 1;
-    } else if (b.score < a.score) {
-        comparison = -1;
-    }
-    return comparison;
-}
 
 const SinglesLeaderboard = () => {
 
