@@ -12,6 +12,8 @@ import auth0Client from '../../Auth'
 import shuffleAudio from '../../assets/sounds/shuffle.ogg'
 import playCardAudio from '../../assets/sounds/play_card.ogg'
 import alertAudio from '../../assets/sounds/alert.ogg'
+import callAudio from '../../assets/sounds/call.ogg'
+import passAudio from '../../assets/sounds/pass.ogg'
 
 const WebsocketHandler = () => {
 
@@ -36,7 +38,7 @@ const WebsocketHandler = () => {
         let publishContent = JSON.parse(payload.payload)
 
         updatePreviousAction(publishContent.type)
-        processActons(publishContent.type)
+        processActons(publishContent.type, publishContent.content)
 
         if (publishContent.type !== "BUY_CARDS_NOTIFICATION") {
             updateGame(publishContent.content)
@@ -50,13 +52,15 @@ const WebsocketHandler = () => {
     const shuffleSound = new Audio(shuffleAudio)
     const playCardSound = new Audio(playCardAudio)
     const alertSound = new Audio(alertAudio)
+    const callSound = new Audio(callAudio)
+    const passSound = new Audio(passAudio)
 
     const playShuffleSound = () => {
         shuffleSound.play().then(_ => {
             console.log("Shuffle sound played!")
         }).catch(error => {
             console.log("Error playing shuffle sound!")
-        });
+        })
     }
 
     const playPlayCardSound = () => {
@@ -64,7 +68,7 @@ const WebsocketHandler = () => {
             console.log("Play card sound played!")
         }).catch(error => {
             console.log("Error playing play card sound!")
-        });
+        })
     }
 
     const playAlertSound = () => {
@@ -72,7 +76,23 @@ const WebsocketHandler = () => {
             console.log("Alert sound played!")
         }).catch(error => {
             console.log("Error playing alert sound!")
-        });
+        })
+    }
+
+    const playCallSound = () => {
+        callSound.play().then(_ => {
+            console.log("Call sound played!")
+        }).catch(error => {
+            console.log("Error playing call sound!")
+        })
+    }
+
+    const playPassSound = () => {
+        passSound.play().then(_ => {
+            console.log("Call pass played!")
+        }).catch(error => {
+            console.log("Error playing pass sound!")
+        })
     }
 
     const checkClearSelected = () => {
@@ -103,11 +123,12 @@ const WebsocketHandler = () => {
         }
     }
 
-    const processActons = (type) => {
+    const processActons = (type, game) => {
         switch (type) {
             case ("DEAL"):
                 playShuffleSound();
                 break;
+            case ("BUY_CARDS"):
             case ("LAST_CARD_PLAYED"):
             case ("CARD_PLAYED"):
                 playPlayCardSound()
@@ -117,8 +138,6 @@ const WebsocketHandler = () => {
                 break;
             case ("GAME_OVER"):
                 break;
-            case ("BUY_CARDS"):
-                break;
             case ("BUY_CARDS_NOTIFICATION"):
                 break;
             case ("HAND_COMPLETED"):
@@ -126,6 +145,10 @@ const WebsocketHandler = () => {
             case ("ROUND_COMPLETED"):
                 break;
             case ("CALL"):
+                playCallSound()
+                break;
+            case ("PASS"):
+                playPassSound()
                 break;
             case ("CHOOSE_FROM_DUMMY"):
                 break;
