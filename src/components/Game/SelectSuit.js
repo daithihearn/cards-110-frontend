@@ -1,25 +1,26 @@
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Card, CardImg, CardBody, CardGroup } from 'reactstrap'
 
 import { useState } from 'react'
 import parseError from '../../utils/ErrorUtils'
 
-import gameService from '../../services/GameService'
+import GameService from '../../services/GameService'
+import { triggerBounceMessage } from '../../constants'
 
-const SelectSuit = () => {
+const SelectSuit = (props) => {
 
-    const dispatch = useDispatch()
-
-    const game = useSelector(state => state.game.game)
-    if (!game || !game.orderedCards) {
+    const game = props.game
+    const orderedCards = props.orderedCards
+    const actionsDisabled = props.actionsDisabled
+    if (!game || !orderedCards) {
         return null
     }
 
-    const selectedCards = game.orderedCards.filter(card => card.selected)
+    const dispatch = useDispatch()
 
-    // TODO: Need to move this up to the app state
-    const [actionsDisabled, updateActionsDisabled] = useState(false)
+    const selectedCards = orderedCards.filter(card => card.selected)
+
     const [selectedSuit, updateSelectedSuit] = useState({ suit: "", possibleIssue: false})
 
     const selectFromDummy = (suit) => e => {
@@ -47,12 +48,12 @@ const SelectSuit = () => {
     }
 
     const submitSelectFromDummy = (suit) => {
-        dispatch({ type: 'game/disableActions' })
-        gameService.chooseFromDummy(game.id, selectedCards.map(sc => sc.card), suit).catch(error => {
-            dispatch({ type: 'game/enableActions' })
+        GameService.chooseFromDummy(game.id, selectedCards.map(sc => sc.card), suit).then(response => {
+            dispatch({ type: 'game/clearSelectedCards' })
+        }).catch(error => {
+            if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
-        dispatch({ type: 'game/clearSelectedCards' })
     }
 
     const hideCancelSelectFromDummyDialog = () => {

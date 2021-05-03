@@ -1,17 +1,24 @@
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Form, Card, CardImg, CardBody, CardGroup } from 'reactstrap'
 
 import { useState } from 'react'
 import parseError from '../../utils/ErrorUtils'
 
-import gameService from '../../services/GameService'
+import GameService from '../../services/GameService'
+import { triggerBounceMessage } from '../../constants'
 
-const Buying = () => {
+const Buying = (props) => {
+    const game = props.game
+    const orderedCards = props.orderedCards
+    const actionsDisabled = props.actionsDisabled
+    if (!game || !orderedCards) {
+        return null
+    }
+
     const dispatch = useDispatch()
-    const game = useSelector(state => state.game.game)
-    const selectedCards = useSelector(state => state.game.orderedCards.filter(card => card.selected))
-    const actionsDisabled = useSelector(state => state.game.actionsDisabled)
+    
+    const selectedCards = orderedCards.filter(card => card.selected)
 
     const [deleteCardsDialog, updateDeleteCardsDialog] = useState(false)
 
@@ -30,12 +37,12 @@ const Buying = () => {
     }
 
     const submitBuyCards = () => {
-        dispatch({ type: 'game/disableActions' })
-        gameService.buyCards(game.id, selectedCards.map(sc => sc.card)).catch(error => {
-            dispatch({ type: 'game/enableActions' })
+        GameService.buyCards(game.id, selectedCards.map(sc => sc.card)).then(response =>
+            dispatch({ type: 'game/clearSelectedCards' })
+        ).catch(error => {
+            if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
-        dispatch({ type: 'game/clearSelectedCards' })
     }
 
     const riskOfMistakeBuyingCards = (suit) => {

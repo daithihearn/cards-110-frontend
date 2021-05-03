@@ -1,8 +1,7 @@
 const initialState = {
     game: {},
     players: [],
-    orderedCards: [],
-    actionsDisabled: true
+    orderedCards: []
 }
 
 const BLANK = "blank_card"
@@ -69,24 +68,21 @@ export default function gameReducer(state = initialState, action) {
             return {
                 game: action.payload,
                 players: state.players,
-                orderedCards: setMyCards(orderedCards),
-                actionsDisabled: !action.payload.myGo
+                orderedCards: setMyCards(orderedCards)
             }
         }
         case 'game/updatePlayers': {
             return {
                 game: state.game,
                 players: action.payload,
-                orderedCards: state.orderedCards,
-                actionsDisabled: state.actionsDisabled
+                orderedCards: state.orderedCards
             }
         }
         case 'game/updateOrderedCards': {
             return {
                 game: state.game,
                 players: state.players,
-                orderedCards: setMyCards(action.payload),
-                actionsDisabled: state.actionsDisabled
+                orderedCards: setMyCards(action.payload)
             }
         }
         case 'game/clearSelectedCards': {
@@ -97,24 +93,7 @@ export default function gameReducer(state = initialState, action) {
             return {
                 game: state.game,
                 players: state.players,
-                orderedCards: newOrderedCards,
-                actionsDisabled: state.actionsDisabled
-            }
-        }
-        case 'game/enableActions': {
-            return {
-                game: state.game,
-                players: state.players,
-                orderedCards: state.orderedCards,
-                actionsDisabled: false
-            }
-        }
-        case 'game/disableActions': {
-            return {
-                game: state.game,
-                players: state.players,
-                orderedCards: state.orderedCards,
-                actionsDisabled: true
+                orderedCards: newOrderedCards
             }
         }
         case 'game/exit': {

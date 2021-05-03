@@ -4,7 +4,7 @@ import RemoveImage from '../../assets/icons/remove.png'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from "react-router-dom"
 
-import gameService from '../../services/GameService'
+import GameService from '../../services/GameService'
 import parseError from '../../utils/ErrorUtils'
 import DataTable from 'react-data-table-component'
 
@@ -12,6 +12,7 @@ import { Modal, ModalBody, ModalHeader, ModalFooter, Button, Card, CardBody, Car
 import moment from 'moment'
 
 import auth0Client from '../../Auth';
+import { triggerBounceMessage } from '../../constants'
 
 const MyGames = () => {
     const myGames = useSelector(state => state.myGames.games)
@@ -23,13 +24,14 @@ const MyGames = () => {
     const deleteGame = e => {
         e.preventDefault()
 
-        gameService.delete(deleteGameId)
+        GameService.delete(deleteGameId)
             .then(response => {
                 dispatch({ type: 'myGames/removeGame', payload: deleteGameId })
                 dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game deleted' } })
                 handleCloseDeleteGameModal()
             })
             .catch(error => {
+                if (error.message === triggerBounceMessage) { return }
                 dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
             })
     }

@@ -1,16 +1,18 @@
 import SinglesLeaderboard from './SinglesLeaderboard'
 import DoublesLeaderboard from './DoublesLeaderboard'
 
-import { useSelector } from 'react-redux'
+const Leaderboard = (props) => {
 
-const Leaderboard = () => {
-
-    const numPlayers = useSelector(state => state.game.players.length)
-
-    if (numPlayers === 6) {
-        return (<DoublesLeaderboard />)
+    const players = props.players
+    const game = props.game
+    if (!game || !game.status || !players || players.length === 0) {
+        return null
     }
-    return (<SinglesLeaderboard />)
+
+    if (players.length === 6) {
+        return (<DoublesLeaderboard game={game} players={players}/>)
+    }
+    return (<SinglesLeaderboard game={game} players={players}/>)
 }
 
 export default Leaderboard

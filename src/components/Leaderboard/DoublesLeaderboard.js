@@ -1,8 +1,6 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
 
-import { useSelector } from 'react-redux'
-
 const compareScore = (a, b) => {
     let comparison = 0;
     if (b.score > a.score) {
@@ -23,10 +21,13 @@ const compareTeamIds = (a, b) => {
     return comparison;
 }
 
-const DoublesLeaderboard = () => {
+const DoublesLeaderboard = (props) => {
 
-    const players = useSelector(state => state.game.players)
-    const game = useSelector(state => state.game.game)
+    const players = props.players
+    const game = props.game
+    if (!game || !game.status || !players || players.length === 0) {
+        return null
+    }
     const previousHand = game.round.completedHands[game.round.completedHands.length - 1]
     const gameOver = game.status === "FINISHED"
 

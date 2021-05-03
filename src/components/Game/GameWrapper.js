@@ -12,22 +12,25 @@ import { useSelector } from 'react-redux'
 const GameWrapper = () => {
 
     const game = useSelector(state => state.game.game)
-    if (!game || !game.status || game.status === "FINISHED") {
+    const players = useSelector(state => state.game.players)
+    const orderedCards = useSelector(state => state.game.orderedCards)
+    const actionsDisabled = useSelector(state => state.game.actionsDisabled)
+    if (!game || !game.status || game.status === "FINISHED" || !players || players.length === 0) {
         return null
     }
 
     return (
         <CardGroup>
 
-            <AutoActionManager />
+            <AutoActionManager game={game} orderedCards={orderedCards}/>
 
             <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
-                <GameHeader />
-                <PlayersAndCards />
-                <MyCards />
-                <Calling />
-                <Buying />
-                <SelectSuit />
+                <GameHeader game={game} players={players}/>
+                <PlayersAndCards game={game} players={players}/>
+                <MyCards game={game} orderedCards={orderedCards} actionsDisabled={actionsDisabled}/>
+                <Calling game={game} actionsDisabled={actionsDisabled}/>
+                <Buying game={game} orderedCards={orderedCards} actionsDisabled={actionsDisabled}/>
+                <SelectSuit game={game} orderedCards={orderedCards} actionsDisabled={actionsDisabled}/>
             </Card>
         </CardGroup>
     )

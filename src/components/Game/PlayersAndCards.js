@@ -1,11 +1,8 @@
 import { Row, Col, CardImgOverlay, CardText, CardImg, CardBody, Container } from 'reactstrap'
 
-import { useSelector } from 'react-redux'
-
-
-const PlayersAndCards = () => {
-    const game = useSelector(state => state.game.game)
-    const players = useSelector(state => state.game.players)
+const PlayersAndCards = (props) => {
+    const game = props.game
+    const players = props.players
     if (!game || !game.status || !players || players.length === 0) {
         return null
     }

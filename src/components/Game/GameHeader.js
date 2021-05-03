@@ -1,15 +1,13 @@
 
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import { Modal, ModalBody, Button, Row, Col, CardImg, Container, CardHeader } from 'reactstrap'
 import Leaderboard from '../Leaderboard/Leaderboard'
 
+const GameHeader = (props) => {
 
-const GameHeader = () => {
-
-    const players = useSelector(state => state.game.players)
-    const game = useSelector(state => state.game.game)
+    const players = props.players
+    const game = props.game
     if (!game || !game.status || !players || players.length === 0) {
         return null
     }
@@ -57,7 +55,7 @@ const GameHeader = () => {
 
                 <Modal fade={true} size="lg" toggle={toggleLeaderboardModal} isOpen={modalLeaderboard}>
                     <ModalBody className="gameModalBody">
-                        <Leaderboard />
+                        <Leaderboard game={game} players={players}/>
                     </ModalBody>
                 </Modal>
 

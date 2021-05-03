@@ -3,7 +3,7 @@ import DefaultHeader from '../Header/Header'
 import MySnackbar from '../Snackbar/MySnackbar'
 import GameWrapper from './GameWrapper'
 import GameOver from './GameOver'
-import gameService from '../../services/GameService'
+import GameService from '../../services/GameService'
 import WebsocketManager from './WebsocketManager'
 import parseError from '../../utils/ErrorUtils'
 
@@ -18,7 +18,7 @@ const Game = () => {
     const dispatch = useDispatch()
 
     const playGame = () => {
-        gameService.getGameForPlayer(id)
+        GameService.getGameForPlayer(id)
             .then(response => {
                 dispatch({ type: 'game/updateGame', payload: response.data })
                 dispatch({ type: 'snackbar/message', payload: { type: 'success', message: "Game started succcessfully." } })
@@ -30,7 +30,7 @@ const Game = () => {
     }
 
     const getPlayers = () => {
-        gameService.getPlayersForGame(id)
+        GameService.getPlayersForGame(id)
             .then(response => {
                 dispatch({ type: 'game/updatePlayers', payload: response.data })
             })

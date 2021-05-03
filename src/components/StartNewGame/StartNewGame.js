@@ -2,12 +2,13 @@
 import React, { useState } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
-import gameService from '../../services/GameService'
+import GameService from '../../services/GameService'
 import DataTable from 'react-data-table-component'
 
 import { Label, Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup } from 'reactstrap'
 
 import parseError from '../../utils/ErrorUtils'
+import { triggerBounceMessage } from '../../constants'
 
 const StartNewGame = () => {
   const [newGameName, updateNewGameName] = useState('')
@@ -36,12 +37,13 @@ const StartNewGame = () => {
       name: newGameName
     }
 
-    gameService.put(payload).then(response => {
+    GameService.put(payload).then(response => {
       updateNewGameName('')
       dispatch({ type: 'myGames/addGame', payload: response.data })
       dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game started successfully' } })
 
     }).catch(error => {
+      if (error.message === triggerBounceMessage) { return }
       dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
     })
   }

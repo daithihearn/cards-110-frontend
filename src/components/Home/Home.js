@@ -1,7 +1,6 @@
 import React from 'react'
 import profileService from '../../services/ProfileService'
 import DefaultHeader from '../Header/Header'
-import { useSelector } from 'react-redux'
 
 import { Card, CardGroup, CardHeader } from 'reactstrap'
 
@@ -12,8 +11,6 @@ import StartNewGame from '../StartNewGame/StartNewGame'
 import MyGames from '../MyGames/MyGames'
 
 const Home = (props) => {
-
-    const game = useSelector(state => state.game.game)
 
     // Update Player Profile
     // TODO: Move this something more appropriate

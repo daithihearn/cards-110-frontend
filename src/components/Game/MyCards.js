@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Button, ButtonGroup, CardImg, CardBody } from 'reactstrap'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 import parseError from '../../utils/ErrorUtils'
 
-import gameService from '../../services/GameService'
+import GameService from '../../services/GameService'
+import { triggerBounceMessage } from '../../constants'
 
-const MyCards = () => {
-    const dispatch = useDispatch()
+const MyCards = (props) => {
 
-    const game = useSelector(state => state.game.game)
-
-    if (!game || !game.orderedCards) {
+    const game = props.game
+    const orderedCards = props.orderedCards
+    const actionsDisabled = props.actionsDisabled
+    if (!game || !orderedCards) {
         return null
     }
+    
+    const dispatch = useDispatch()
 
-    const selectedCards = game.orderedCards.filter(card => card.selected)
+    const selectedCards = orderedCards.filter(card => card.selected)
 
     const [doubleClickTracker, updateDoubleClickTracker] = useState({})
 
@@ -28,7 +31,7 @@ const MyCards = () => {
             return
         }
 
-        let updatedCards = [...game.orderedCards]
+        let updatedCards = [...orderedCards]
 
         // If the round status is PLAYING then only allow one card to be selected
         if (game.round.status === "PLAYING") {
@@ -54,7 +57,7 @@ const MyCards = () => {
     const handleOnDragEnd = (result) => {
         if (!result.destination) return;
 
-        const newCards = Array.from(game.orderedCards)
+        const newCards = Array.from(orderedCards)
         const [reorderedItem] = newCards.splice(result.source.index, 1)
         newCards.splice(result.destination.index, 0, reorderedItem)
 
@@ -80,9 +83,8 @@ const MyCards = () => {
         if (selectedCards.length !== 1) {
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError({ message: "Please select exactly one card to play" }) } })
         } else {
-            dispatch({ type: 'game/disableActions' })
-            gameService.playCard(game.id, selectedCards[0].card).catch(error => {
-                dispatch({ type: 'game/enableActions' })
+            GameService.playCard(game.id, selectedCards[0].card).catch(error => {
+                if (error.message === triggerBounceMessage) { return }
                 dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
             })
         }
@@ -97,7 +99,7 @@ const MyCards = () => {
                         <Droppable droppableId="characters" direction="horizontal">
                             {(provided) => (
                                 <div className="characters" style={{ display: "inline-flex" }} {...provided.droppableProps} ref={provided.innerRef}>
-                                    {game.orderedCards.map((card, index) => {
+                                    {orderedCards.map((card, index) => {
                                         return (
 
                                             <Draggable key={card.card + index} draggableId={card.card + index} index={index} isDragDisabled={card.card === BLANK}>
@@ -124,7 +126,7 @@ const MyCards = () => {
                 <CardBody className="buttonArea">
 
                     <ButtonGroup size="lg">
-                        {game.myGo ? <Button id="playCardButton" type="button" disabled={game.actionsDisabled} onClick={playCard} color="warning"><b>Play Card</b></Button> : null}
+                        {game.myGo ? <Button id="playCardButton" type="button" disabled={actionsDisabled} onClick={playCard} color="warning"><b>Play Card</b></Button> : null}
                     </ButtonGroup>
 
                 </CardBody>

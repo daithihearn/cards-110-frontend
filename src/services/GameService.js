@@ -1,257 +1,347 @@
-import auth0Client from '../Auth';
+import auth0Client from '../Auth'
+import { triggerBounceMessage, triggerBounceInterval } from '../constants'
 
-const axios = require('axios');
+const axios = require('axios')
 
 class GameService {
 
-  get = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    putEventTime = 0
+    finishEventTime = 0
+    cancelEventTime = 0
+    deleteEventTime = 0
+    replayEventTime = 0
+    buyCardsEventTime = 0
+    dealEventTime = 0
+    callEventTime = 0
+    playCardEventTime = 0
+    chooseFromDummyEventTime = 0
+    playCardEventTime = 0
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader
+    get = (gameId) => {
+
+        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+
+        if (authHeader) {
+            let config = {
+                headers: {
+                    Authorization: authHeader
+                }
+            }
+            const result = axios
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game?gameId=${gameId}`, config)
+            return result
         }
-      };
-      const result = axios
-        .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game?gameId=${gameId}`, config)
-      return result;
     }
-  }
 
-  getGameForPlayer = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    getGameForPlayer = (gameId) => {
+        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader
+        if (authHeader) {
+            let config = {
+                headers: {
+                    Authorization: authHeader
+                }
+            }
+            return axios
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/game?gameId=${gameId}`, config)
+
         }
-      };
-      return axios
-        .get(`${process.env.REACT_APP_API_URL}/api/v1/game?gameId=${gameId}`, config)
-
     }
-  }
 
-  getAll = () => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    getAll = () => {
+        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+        if (authHeader) {
+            let config = {
+                headers: {
+                    Authorization: authHeader,
+                    "Content-Type": "application/json"
+                }
+            }
+            return axios
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/all`, config)
+
         }
-      };
-      return axios
-        .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/all`, config)
-
     }
-  }
 
-  getMyActive = () => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    getMyActive = () => {
+        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+        if (authHeader) {
+            let config = {
+                headers: {
+                    Authorization: authHeader,
+                    "Content-Type": "application/json"
+                }
+            }
+            const result = axios
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/game/active`, config)
+            return result
         }
-      };
-      const result = axios
-        .get(`${process.env.REACT_APP_API_URL}/api/v1/game/active`, config)
-      return result;
     }
-  }
 
-  getAllPlayers = () => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    getAllPlayers = () => {
+        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+        if (authHeader) {
+            let config = {
+                headers: {
+                    Authorization: authHeader,
+                    "Content-Type": "application/json"
+                }
+            }
+            const result = axios
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/players/all`, config)
+            return result
         }
-      };
-      const result = axios
-        .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/players/all`, config)
-      return result;
     }
-  }
 
-  getPlayersForGame = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    getPlayersForGame = (gameId) => {
+        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+        if (authHeader) {
+            let config = {
+                headers: {
+                    Authorization: authHeader,
+                    "Content-Type": "application/json"
+                }
+            }
+            const result = axios
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/game/players?gameId=${gameId}`, config)
+            return result
         }
-      };
-      const result = axios
-        .get(`${process.env.REACT_APP_API_URL}/api/v1/game/players?gameId=${gameId}`, config)
-      return result;
     }
-  }
 
-  put = (createGame) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    put = (createGame) => {
+        if (Date.now() - this.putEventTime > triggerBounceInterval) {
+            this.putEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader
+                    }
+                }
+                const result = axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/admin/game`, createGame, config)
+                return result
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      const result = axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/admin/game`, createGame, config)
-      return result;
     }
-  }
 
-  finish = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    finish = (gameId) => {
+        if (Date.now() - this.finishEventTime > triggerBounceInterval) {
+            this.finishEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/finish?gameId=${gameId}`, null, config)
+
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/finish?gameId=${gameId}`, null, config)
-
     }
-  }
 
-  cancel = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    cancel = (gameId) => {
+        if (Date.now() - this.cancelEventTime > triggerBounceInterval) {
+            this.cancelEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/cancel?gameId=${gameId}`, null, config)
+
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
+
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/cancel?gameId=${gameId}`, null, config)
-
     }
-  }
 
-  delete = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    delete = (gameId) => {
+        if (Date.now() - this.deleteEventTime > triggerBounceInterval) {
+            this.deleteEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader
+                    }
+                }
+                return axios
+                    .delete(`${process.env.REACT_APP_API_URL}/api/v1/admin/game?gameId=${gameId}`, config)
+
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .delete(`${process.env.REACT_APP_API_URL}/api/v1/admin/game?gameId=${gameId}`, config)
-
     }
-  }
 
-  replay = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    replay = (gameId) => {
+        if (Date.now() - this.replayEventTime > triggerBounceInterval) {
+            this.replayEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader,
+                        "Content-Type": "application/json"
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/replay?gameId=${gameId}`, null, config)
+
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/replay?gameId=${gameId}`, null, config)
-
     }
-  }
 
-  deal = (gameId) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    deal = (gameId) => {
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+        if (Date.now() - this.dealEventTime > triggerBounceInterval) {
+            this.dealEventTime = Date.now()
+
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader,
+                        "Content-Type": "application/json"
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/deal?gameId=${gameId}`, null, config)
+
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/deal?gameId=${gameId}`, null, config)
-
     }
-  }
 
-  call = (gameId, call) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    call = (gameId, call) => {
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+        if (Date.now() - this.callEventTime > triggerBounceInterval) {
+            this.callEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader,
+                        "Content-Type": "application/json"
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/call?gameId=${gameId}&call=${call}`, null, config)
+
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/call?gameId=${gameId}&call=${call}`, null, config)
-
     }
-  }
 
-  buyCards = (gameId, cards) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    buyCards = (gameId, cards) => {
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+        if (Date.now() - this.buyCardsEventTime > triggerBounceInterval) {
+            this.buyCardsEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader,
+                        "Content-Type": "application/json"
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/buyCards?gameId=${gameId}`, cards, config)
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/buyCards?gameId=${gameId}`, cards, config);
     }
-  }
 
-  chooseFromDummy = (gameId, cards, suit) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    chooseFromDummy = (gameId, cards, suit) => {
+        if (Date.now() - this.chooseFromDummyEventTime > triggerBounceInterval) {
+            this.chooseFromDummyEventTime = Date.now()
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader,
+                        "Content-Type": "application/json"
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/chooseFromDummy?gameId=${gameId}&suit=${suit}`, cards, config)
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/chooseFromDummy?gameId=${gameId}&suit=${suit}`, cards, config);
     }
-  }
 
-  playCard = (gameId, card) => {
-    let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    playCard = (gameId, card) => {
+        if (Date.now() - this.playCardEventTime > triggerBounceInterval) {
+            this.playCardEventTime = Date.now()
 
-    if (authHeader) {
-      let config = {
-        headers: {
-          Authorization: authHeader,
-          "Content-Type": "application/json"
+            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+
+            if (authHeader) {
+                let config = {
+                    headers: {
+                        Authorization: authHeader,
+                        "Content-Type": "application/json"
+                    }
+                }
+                return axios
+                    .put(`${process.env.REACT_APP_API_URL}/api/v1/playCard?gameId=${gameId}&card=${card}`, null, config)
+            }
+        } else {
+            return new Promise((resolve, reject) => {
+                throw new Error(triggerBounceMessage)
+            })
         }
-      };
-      return axios
-        .put(`${process.env.REACT_APP_API_URL}/api/v1/playCard?gameId=${gameId}&card=${card}`, null, config);
     }
-  }
 }
 
-const gamesService = new GameService();
+const gameService = new GameService()
 
-export default gamesService;
+export default gameService

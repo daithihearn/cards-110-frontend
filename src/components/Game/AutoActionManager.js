@@ -1,64 +1,44 @@
 import { useState } from 'react'
-import gameService from '../../services/GameService'
+import GameService from '../../services/GameService'
 import parseError from '../../utils/ErrorUtils'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import sha1 from 'crypto-js/sha1'
+import { triggerBounceMessage } from '../../constants'
 
-const AutoActionManager = () => {
+const AutoActionManager = (props) => {
 
-    const game = useSelector(state => state.game.game)
-    if (!game || !game.status || !game.orderedCards) {
+    const game = props.game
+    const orderedCards = props.orderedCards
+    if (!game || !game.status || !orderedCards) {
         return null
     }
-    
-    const autoPlayCards = game.orderedCards.filter(card => card.autoplay && card.selected)
+
+    const autoPlayCards = orderedCards.filter(card => card.autoplay && card.selected)
 
     const dispatch = useDispatch()
 
-    const [dealEventTime, updateDealEventTime] = useState(0)
-    const [playCardEventTime, updatePlayCardEventTime] = useState(0)
     const [previousGameHash, updatePreviousGameHash] = useState("")
 
     const deal = () => {
-        // Adding a check for trigger bounce
-        if (Date.now() - dealEventTime > 3000) {
-            updateDealEventTime(Date.now())
-            setTimeout(() => processDeal(), 3000)
-        }
-    }
-
-    const processDeal = () => {
-        gameService.deal(game.id).catch(error => {
+        GameService.deal(game.id).catch(error => {
+            if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+
         })
     }
-
     const playCard = (card) => {
-        // Adding a check for trigger bounce
-        if (Date.now() - playCardEventTime > 3000) {
-            updatePlayCardEventTime(Date.now())
-            dispatch({ type: 'game/disableActions' })
-            setTimeout(() => processPlayCard(card), 200)
-        }
-    }
-
-    const processPlayCard = (card) => {
-        gameService.playCard(game.id, card).catch(error => {
-            dispatch({ type: 'game/enableActions' })
+        GameService.playCard(game.id, card).catch(error => {
+            if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
     }
 
     const buyCards = (cards) => {
-        dispatch({ type: 'game/disableActions' })
-        setTimeout(() => processBuyCards(cards), 500)
-        dispatch({ type: 'game/clearSelectedCards' })
-    }
-
-    const processBuyCards = (cards) => {
-        gameService.buyCards(game.id, cards).catch(error => {
-            dispatch({ type: 'game/enableActions' })
+        GameService.buyCards(game.id, cards).then(response => {
+            dispatch({ type: 'game/clearSelectedCards' })
+        }).catch(error => {
+            if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
     }
@@ -67,7 +47,7 @@ const AutoActionManager = () => {
 
         // Deal when it's your turn
         if (game.iamDealer && game.round.status === "CALLING" && game.cards.length === 0) {
-            deal()
+            setTimeout(() => deal(), 3000)
         }
         // Play card when you've pre-selected a card or you only have one left
         else if (game.round.status === "PLAYING" && game.myGo) {

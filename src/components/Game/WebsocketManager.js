@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {
     StompSessionProvider,
     useSubscription
-  } from "react-stomp-hooks"
+} from "react-stomp-hooks"
 
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -23,14 +23,13 @@ const WebsocketHandler = () => {
 
     const handleWebsocketMessage = (message) => {
 
-        if(previousAction === "LAST_CARD_PLAYED") {
+        if (previousAction === "LAST_CARD_PLAYED") {
             console.log("Waiting on last card to allow time to view cards...")
             setTimeout(() => processWebsocketMessage(message), 4000)
         } else {
             processWebsocketMessage(message)
         }
     }
-
 
     const processWebsocketMessage = (message) => {
 
@@ -128,6 +127,7 @@ const WebsocketHandler = () => {
             case ("DEAL"):
                 playShuffleSound()
                 break
+            case ("CHOOSE_FROM_DUMMY"):
             case ("BUY_CARDS"):
             case ("LAST_CARD_PLAYED"):
             case ("CARD_PLAYED"):
@@ -150,11 +150,9 @@ const WebsocketHandler = () => {
             case ("PASS"):
                 playPassSound()
                 break
-            case ("CHOOSE_FROM_DUMMY"):
-                break
         }
     }
-    
+
     useSubscription(["/game", "/user/game"], (message) => handleWebsocketMessage(message.body))
 
     return null
@@ -162,8 +160,6 @@ const WebsocketHandler = () => {
 
 const WebsocketManager = (props) => {
 
-    console.log("Is this happening often?")
-    
     return (
         <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.gameId}&tokenId=${auth0Client.getAccessToken()}`}>
             <WebsocketHandler />
