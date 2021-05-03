@@ -11,7 +11,6 @@ import { triggerBounceMessage } from '../../constants'
 const Buying = (props) => {
     const game = props.game
     const orderedCards = props.orderedCards
-    const actionsDisabled = props.actionsDisabled
     if (!game || !orderedCards) {
         return null
     }
@@ -25,9 +24,6 @@ const Buying = (props) => {
     const buyCards = e => {
         if (!!e) {
             e.preventDefault()
-        }
-        if (actionsDisabled) {
-            return;
         }
         if (riskOfMistakeBuyingCards(game.round.suit)) {
             showCancelDeleteCardsDialog()
@@ -93,7 +89,7 @@ const Buying = (props) => {
 
                     <Form onSubmit={buyCards}>
                         <ButtonGroup size="lg">
-                            {game.myGo ? <Button type="submit" disabled={actionsDisabled} color="warning"><b>Keep Cards</b></Button> : null}
+                            {game.myGo ? <Button type="submit" color="warning"><b>Keep Cards</b></Button> : null}
                         </ButtonGroup>
                     </Form>
 

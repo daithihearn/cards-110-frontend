@@ -12,7 +12,6 @@ const SelectSuit = (props) => {
 
     const game = props.game
     const orderedCards = props.orderedCards
-    const actionsDisabled = props.actionsDisabled
     if (!game || !orderedCards) {
         return null
     }
@@ -21,12 +20,9 @@ const SelectSuit = (props) => {
 
     const selectedCards = orderedCards.filter(card => card.selected)
 
-    const [selectedSuit, updateSelectedSuit] = useState({ suit: "", possibleIssue: false})
+    const [selectedSuit, updateSelectedSuit] = useState({ suit: "", possibleIssue: false })
 
     const selectFromDummy = (suit) => e => {
-        if (actionsDisabled) {
-            return;
-        }
 
         // Make sure a suit was selected
         if (suit !== "HEARTS" && suit !== "DIAMONDS" && suit !== "CLUBS" && suit !== "SPADES") {
@@ -95,47 +91,57 @@ const SelectSuit = (props) => {
 
     return (
         <div>
-            {!!game && !!game.round && game.iamGoer && game.round.status === "CALLED" ?
+            {!!game && !!game.round && game.round.status === "CALLED" ?
 
                 <CardBody className="buttonArea">
 
-                    <ButtonGroup size="lg">
+                    {game.iamGoer ?
+                        <div>
 
-                        <Button type="button" disabled={actionsDisabled} color="secondary" onClick={selectFromDummy("HEARTS")}><img alt="Hearts" src={"/cards/originals/HEARTS_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
-                        <Button type="button" disabled={actionsDisabled} color="secondary" onClick={selectFromDummy("DIAMONDS")}><img alt="Hearts" src={"/cards/originals/DIAMONDS_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
-                        <Button type="button" disabled={actionsDisabled} color="secondary" onClick={selectFromDummy("SPADES")}><img alt="Hearts" src={"/cards/originals/SPADES_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
-                        <Button type="button" disabled={actionsDisabled} color="secondary" onClick={selectFromDummy("CLUBS")}><img alt="Hearts" src={"/cards/originals/CLUBS_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
+                            <ButtonGroup size="lg">
 
-                    </ButtonGroup>
+                                <Button type="button" color="secondary" onClick={selectFromDummy("HEARTS")}><img alt="Hearts" src={"/cards/originals/HEARTS_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
+                                <Button type="button" color="secondary" onClick={selectFromDummy("DIAMONDS")}><img alt="Hearts" src={"/cards/originals/DIAMONDS_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
+                                <Button type="button" color="secondary" onClick={selectFromDummy("SPADES")}><img alt="Hearts" src={"/cards/originals/SPADES_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
+                                <Button type="button" color="secondary" onClick={selectFromDummy("CLUBS")}><img alt="Hearts" src={"/cards/originals/CLUBS_ICON.svg"} className="thumbnail_size_extra_small " /></Button>
 
-                    {selectedSuit.possibleIssue ?
-                        <Modal fade={true} size="lg" toggle={hideCancelSelectFromDummyDialog} isOpen={selectedSuit.possibleIssue}>
+                            </ButtonGroup>
 
-                            <ModalHeader><CardImg alt="Suit" src={`/cards/originals/${selectedSuit.suit}_ICON.svg`} className="thumbnail_size_extra_small left-padding" /> Are you sure you want to throw these cards away?</ModalHeader>
-                            <ModalBody className="called-modal">
-                                <CardGroup className="gameModalCardGroup">
-                                    <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
-                                        <CardBody className="cardArea">
+                            {selectedSuit.possibleIssue ?
+                                <Modal fade={true} size="lg" toggle={hideCancelSelectFromDummyDialog} isOpen={selectedSuit.possibleIssue}>
 
-                                            {removeAllFromArray(selectedCards.map(sc => sc.card), game.cards).map(card =>
-                                                <img key={"cancelSelectFromDummyModal_" + card} alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size" />
-                                            )}
+                                    <ModalHeader><CardImg alt="Suit" src={`/cards/originals/${selectedSuit.suit}_ICON.svg`} className="thumbnail_size_extra_small left-padding" /> Are you sure you want to throw these cards away?</ModalHeader>
+                                    <ModalBody className="called-modal">
+                                        <CardGroup className="gameModalCardGroup">
+                                            <Card className="p-6 tableCloth" style={{ backgroundColor: '#333', borderColor: '#333' }}>
+                                                <CardBody className="cardArea">
 
-                                        </CardBody>
+                                                    {removeAllFromArray(selectedCards.map(sc => sc.card), game.cards).map(card =>
+                                                        <img key={"cancelSelectFromDummyModal_" + card} alt={card} src={"/cards/thumbnails/" + card + ".png"} className="thumbnail_size" />
+                                                    )}
 
-                                        <CardBody className="buttonArea">
+                                                </CardBody>
 
-                                            <ButtonGroup size="lg">
-                                                <Button type="button" color="primary" onClick={hideCancelSelectFromDummyDialog}>Cancel</Button>
-                                                <Button type="button" color="warning" onClick={submitSelectFromDummyEvent(selectedSuit.suit)}>Throw Cards</Button>
-                                            </ButtonGroup>
+                                                <CardBody className="buttonArea">
 
-                                        </CardBody>
-                                    </Card>
-                                </CardGroup>
-                            </ModalBody>
-                        </Modal>
-                        : null}
+                                                    <ButtonGroup size="lg">
+                                                        <Button type="button" color="primary" onClick={hideCancelSelectFromDummyDialog}>Cancel</Button>
+                                                        <Button type="button" color="warning" onClick={submitSelectFromDummyEvent(selectedSuit.suit)}>Throw Cards</Button>
+                                                    </ButtonGroup>
+
+                                                </CardBody>
+                                            </Card>
+                                        </CardGroup>
+                                    </ModalBody>
+                                </Modal>
+                                : null}
+
+                        </div> :
+                        <ButtonGroup size="lg">
+
+                            <Button disabled type="button" color="primary">Please wait for the goer to choose their suit</Button>
+
+                        </ButtonGroup>}
 
                 </CardBody>
                 : null}

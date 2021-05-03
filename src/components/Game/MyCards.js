@@ -12,14 +12,14 @@ const MyCards = (props) => {
 
     const game = props.game
     const orderedCards = props.orderedCards
-    const actionsDisabled = props.actionsDisabled
     if (!game || !orderedCards) {
         return null
     }
-    
+
     const dispatch = useDispatch()
 
     const selectedCards = orderedCards.filter(card => card.selected)
+    const playButtonEnabled = game.myGo && game.round.status === "PLAYING" && game.round.completedHands.length + game.cards.length === 5
 
     const [doubleClickTracker, updateDoubleClickTracker] = useState({})
 
@@ -122,11 +122,12 @@ const MyCards = (props) => {
                 </CardBody>
                 : null}
 
-            {!!game && !!game.round && game.round.status === "PLAYING" ?
+            { game.round.status === "PLAYING" ?
+
                 <CardBody className="buttonArea">
 
                     <ButtonGroup size="lg">
-                        {game.myGo ? <Button id="playCardButton" type="button" disabled={actionsDisabled} onClick={playCard} color="warning"><b>Play Card</b></Button> : null}
+                        <Button id="playCardButton" disabled={!playButtonEnabled} type="button" onClick={playCard} color="warning"><b>Play Card</b></Button>
                     </ButtonGroup>
 
                 </CardBody>

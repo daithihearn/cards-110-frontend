@@ -14,7 +14,6 @@ const GameWrapper = () => {
     const game = useSelector(state => state.game.game)
     const players = useSelector(state => state.game.players)
     const orderedCards = useSelector(state => state.game.orderedCards)
-    const actionsDisabled = useSelector(state => state.game.actionsDisabled)
     if (!game || !game.status || game.status === "FINISHED" || !players || players.length === 0) {
         return null
     }
@@ -27,10 +26,10 @@ const GameWrapper = () => {
             <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
                 <GameHeader game={game} players={players}/>
                 <PlayersAndCards game={game} players={players}/>
-                <MyCards game={game} orderedCards={orderedCards} actionsDisabled={actionsDisabled}/>
-                <Calling game={game} actionsDisabled={actionsDisabled}/>
-                <Buying game={game} orderedCards={orderedCards} actionsDisabled={actionsDisabled}/>
-                <SelectSuit game={game} orderedCards={orderedCards} actionsDisabled={actionsDisabled}/>
+                <MyCards game={game} orderedCards={orderedCards}/>
+                <Calling game={game}/>
+                <Buying game={game} orderedCards={orderedCards}/>
+                <SelectSuit game={game} orderedCards={orderedCards}/>
             </Card>
         </CardGroup>
     )
