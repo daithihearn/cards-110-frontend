@@ -28,12 +28,12 @@ class GameService {
                 }
             }
             const result = axios
-                .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game?gameId=${gameId}`, config)
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/game?gameId=${gameId}`, config)
             return result
         }
     }
 
-    getGameForPlayer = (gameId) => {
+    getGameState = (gameId) => {
         let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
         if (authHeader) {
@@ -43,7 +43,7 @@ class GameService {
                 }
             }
             return axios
-                .get(`${process.env.REACT_APP_API_URL}/api/v1/game?gameId=${gameId}`, config)
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/gameState?gameId=${gameId}`, config)
 
         }
     }

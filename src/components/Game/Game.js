@@ -18,7 +18,7 @@ const Game = () => {
     const dispatch = useDispatch()
 
     const playGame = () => {
-        GameService.getGameForPlayer(id)
+        GameService.getGameState(id)
             .then(response => {
                 dispatch({ type: 'game/updateGame', payload: response.data })
                 dispatch({ type: 'snackbar/message', payload: { type: 'success', message: "Game started succcessfully." } })

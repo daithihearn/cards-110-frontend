@@ -40,31 +40,40 @@ const setMyCards = (cards) => {
     return myCards
 }
 
+const processOrderedCards = (state, action) => {
+    // If there was a card removed then remove it from both arrays. Need to detect when this happens
+
+    let orderedCards = []
+
+    if (action.payload.iamSpectator) {
+        return orderedCards
+    }
+
+    const delta = !!state.game.cards ? state.game.cards.filter(x => !action.payload.cards.includes(x)) : []
+
+    // 1. If cards in payload match ordered cards then don't change orderedCards
+    if (compareHands(state.game.cards, action.payload.cards)) {
+        orderedCards = state.orderedCards
+    }
+    // 2. If a card was removed then replace it with a Blank card in orderedCards
+    else if (!!state.game.cards && state.game.cards.length === action.payload.cards.length + 1 && delta.length === 1) {
+        const tempArr = [...state.orderedCards]
+        const idx = tempArr.findIndex(c => c.card === delta[0])
+        tempArr[idx].card = BLANK
+        tempArr[idx].selected = false
+        tempArr[idx].autoplay = false
+        orderedCards = tempArr
+    } else {
+        action.payload.cards.forEach(c => orderedCards.push({ card: c, autoplay: false, selected: false }))
+    }
+    return orderedCards
+}
+
 export default function gameReducer(state = initialState, action) {
     switch (action.type) {
         case 'game/updateGame': {
 
-            // If there was a card removed then remove it from both arrays. Need to detect when this happens
-
-            let orderedCards = []
-            const delta = !!state.game.cards ? state.game.cards.filter(x => !action.payload.cards.includes(x)) : []
-
-            // 1. If cards in payload match ordered cards then don't change orderedCards
-            if (compareHands(state.game.cards, action.payload.cards)) {
-                orderedCards = state.orderedCards
-            }
-            // 2. If a card was removed then replace it with a Blank card in orderedCards
-            else if (!!state.game.cards && state.game.cards.length === action.payload.cards.length + 1 && delta.length === 1) {
-                const tempArr = [...state.orderedCards]
-                const idx = tempArr.findIndex(c => c.card === delta[0])
-                tempArr[idx].card = BLANK
-                tempArr[idx].selected = false
-                tempArr[idx].autoplay = false
-                orderedCards = tempArr
-            } else {
-                action.payload.cards.forEach(c => orderedCards.push({ card: c, autoplay: false, selected: false }))
-            }
-
+            const orderedCards = processOrderedCards(state, action)
             return {
                 game: action.payload,
                 players: state.players,

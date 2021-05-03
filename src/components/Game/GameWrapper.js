@@ -26,10 +26,10 @@ const GameWrapper = () => {
             <Card className="p-6 tableCloth" inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
                 <GameHeader game={game} players={players}/>
                 <PlayersAndCards game={game} players={players}/>
-                <MyCards game={game} orderedCards={orderedCards}/>
-                <Calling game={game}/>
-                <Buying game={game} orderedCards={orderedCards}/>
-                <SelectSuit game={game} orderedCards={orderedCards}/>
+                { !game.iamSpectator ? <MyCards game={game} orderedCards={orderedCards}/> : null }
+                { !game.iamSpectator ? <Calling game={game}/> : null }
+                { !game.iamSpectator ? <Buying game={game} orderedCards={orderedCards}/> : null }
+                { !game.iamSpectator ? <SelectSuit game={game} orderedCards={orderedCards}/> : null }
             </Card>
         </CardGroup>
     )
