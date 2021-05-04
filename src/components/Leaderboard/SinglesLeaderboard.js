@@ -30,7 +30,7 @@ const SinglesLeaderboard = (props) => {
         const leaderboardData = []
         game.playerProfiles.forEach(profile => {
             const player = players.find(p => p.id === profile.id)
-            if (!!player) { return null }
+            if (!player) { return null }
             leaderboardData.push(
                 {
                     picture: player.picture,
