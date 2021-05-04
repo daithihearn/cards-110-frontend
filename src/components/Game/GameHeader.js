@@ -38,7 +38,7 @@ const GameHeader = (props) => {
                         </Col>
                         : null}
 
-                    {!game.iamSpectator && ((game.me.id !== game.round.dealerId && game.cards.length === 0) || (!!game.round && game.round.status === "CALLED" && !game.iamGoer)) ?
+                    {!game.iamSpectator && ((!game.iamDealer && game.cards.length === 0) || (!!game.round && game.round.status === "CALLED" && !game.iamGoer)) ?
                         <Col>
                             <div className="game-heading"><h4>Waiting...</h4></div>
                         </Col>
