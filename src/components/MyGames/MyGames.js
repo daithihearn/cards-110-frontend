@@ -20,6 +20,7 @@ const MyGames = () => {
     const [modalDeleteGameOpen, updateModalDeleteGameOpen] = useState(false)
     const [deleteGameId, updateDeleteGameId] = useState('')
     const isAdmin = auth0Client.isAdmin()
+    const profile = auth0Client.getProfile()
 
     const deleteGame = e => {
         e.preventDefault()
@@ -55,7 +56,7 @@ const MyGames = () => {
             center: true
         },
         {
-            cell: row => <Button type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
+            cell: row => <Button disabled={row.adminId !== profile.sub} type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
             center: true,
             omit: !isAdmin
         }
