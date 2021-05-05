@@ -50,11 +50,11 @@ const MyGames = () => {
     const columns = [
         { name: 'Name', selector: 'name', sortable: true },
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
-        { name: 'Status', selector: 'status', sortable: true, center: true },
         {
             cell: row => <Link to={`/game/${row.id}`}><Button type="button" color="success">Open</Button></Link>,
             center: true
         },
+        { name: 'Status', selector: 'status', sortable: true, center: true },
         {
             cell: row => <Button disabled={row.adminId !== profile.sub} type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
             center: true,
