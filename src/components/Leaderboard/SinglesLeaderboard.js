@@ -1,11 +1,12 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
+import {doPlayersMatchProfiles} from '../../constants'
 
 const SinglesLeaderboard = (props) => {
 
     const players = props.players
     const game = props.game
-    if (!game || !game.status || !players || players.length === 0) {
+    if (!game || !game.status || !players || players.length === 0 || !doPlayersMatchProfiles(players, game.playerProfiles)) {
         return null
     }
     const previousHand = game.round.completedHands[game.round.completedHands.length - 1]

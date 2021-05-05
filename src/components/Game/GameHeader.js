@@ -3,12 +3,13 @@ import { useState } from 'react'
 
 import { Modal, ModalBody, Button, Row, Col, CardImg, Container, CardHeader } from 'reactstrap'
 import Leaderboard from '../Leaderboard/Leaderboard'
+import {doPlayersMatchProfiles} from '../../constants'
 
 const GameHeader = (props) => {
 
     const players = props.players
     const game = props.game
-    if (!game || !game.status || !players || players.length === 0) {
+    if (!game || !game.status || !players || players.length === 0 || !doPlayersMatchProfiles(players, game.playerProfiles)) {
         return null
     }
 

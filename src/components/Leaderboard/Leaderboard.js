@@ -1,11 +1,12 @@
 import SinglesLeaderboard from './SinglesLeaderboard'
 import DoublesLeaderboard from './DoublesLeaderboard'
+import {doPlayersMatchProfiles} from '../../constants'
 
 const Leaderboard = (props) => {
 
     const players = props.players
     const game = props.game
-    if (!game || !game.status || !players || players.length === 0) {
+    if (!game || !game.status || !players || players.length === 0 || !doPlayersMatchProfiles(players, game.playerProfiles)) {
         return null
     }
 

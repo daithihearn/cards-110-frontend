@@ -1,9 +1,10 @@
 import { Row, Col, CardImgOverlay, CardText, CardImg, CardBody, Container } from 'reactstrap'
+import {doPlayersMatchProfiles} from '../../constants'
 
 const PlayersAndCards = (props) => {
     const game = props.game
     const players = props.players
-    if (!game || !game.status || !players || players.length === 0) {
+    if (!game || !game.status || !players || players.length === 0 || !doPlayersMatchProfiles(players, game.playerProfiles)) {
         return null
     }
 

@@ -1,31 +1,13 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
-
-const compareScore = (a, b) => {
-    let comparison = 0;
-    if (b.score > a.score) {
-        comparison = 1;
-    } else if (b.score < a.score) {
-        comparison = -1;
-    }
-    return comparison;
-}
-
-const compareTeamIds = (a, b) => {
-    let comparison = 0;
-    if (b.teamId > a.teamId) {
-        comparison = 1;
-    } else if (b.teamId < a.teamId) {
-        comparison = -1;
-    }
-    return comparison;
-}
+import {compareScore, compareTeamIds, doPlayersMatchProfiles} from '../../constants'
 
 const DoublesLeaderboard = (props) => {
 
     const players = props.players
     const game = props.game
-    if (!game || !game.status || !players || players.length === 0) {
+    
+    if (!game || !game.status || !players || players.length === 0 || !doPlayersMatchProfiles(players, game.playerProfiles)) {
         return null
     }
     const previousHand = game.round.completedHands[game.round.completedHands.length - 1]
