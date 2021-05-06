@@ -46,6 +46,7 @@ const SinglesLeaderboard = (props) => {
                     score: profile.score,
                     cardsBought: !!profile.cardsBought ? profile.cardsBought : "-",
                     previousCard: !!previousHand ? previousHand.playedCards[profile.id] : null,
+                    rings: profile.rings,
                     winner: profile.winner
                 }
             )
