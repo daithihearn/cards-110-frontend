@@ -1,6 +1,7 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
 import {compareScore, compareTeamIds, doPlayersMatchProfiles} from '../../constants'
+import TrophyImage from '../../assets/icons/trophy.png'
 
 const DoublesLeaderboard = (props) => {
 
@@ -47,7 +48,12 @@ const DoublesLeaderboard = (props) => {
             </div>
         },
         { name: 'Score', selector: 'score', sortable: true, center: true },
-        { name: 'Rings', selector: 'rings', sortable: true, center: true }
+        { name: 'Rings', selector: 'rings', sortable: true, center: true },
+        { 
+            cell: row => <div>{ row.winner ? <img src={TrophyImage} width="50px" height="50px"/> : null }</div>,
+            center: true, 
+            omit: !gameOver
+        }
     ]
 
     const buildTeams = () => {
@@ -55,9 +61,9 @@ const DoublesLeaderboard = (props) => {
 
         if (!ps) { return null }
         let teams = [
-            { id: ps[0].teamId, score: ps[0].score, rings: ps[0].rings, player1: ps[0], player2: ps[1] },
-            { id: ps[2].teamId, score: ps[2].score, rings: ps[2].rings, player1: ps[2], player2: ps[3] },
-            { id: ps[4].teamId, score: ps[4].score, rings: ps[4].rings, player1: ps[4], player2: ps[5] }
+            { id: ps[0].teamId, score: ps[0].score, rings: ps[0].rings, player1: ps[0], player2: ps[1], winner:ps[0].winner },
+            { id: ps[2].teamId, score: ps[2].score, rings: ps[2].rings, player1: ps[2], player2: ps[3], winner:ps[2].winner },
+            { id: ps[4].teamId, score: ps[4].score, rings: ps[4].rings, player1: ps[4], player2: ps[5], winner:ps[4].winner }
         ]
 
         return teams.sort(compareScore)
