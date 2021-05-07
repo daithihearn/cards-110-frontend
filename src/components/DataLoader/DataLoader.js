@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
 import GameService from '../../services/GameService'
+import StatsService from '../../services/StatsService'
 
 import parseError from '../../utils/ErrorUtils'
 
@@ -25,6 +26,12 @@ const DataLoader = () => {
         if (error.message === triggerBounceMessage) { return }
         dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
 
+    })
+
+    StatsService.gameStatsForPlayer().then(response => {
+        dispatch({ type: 'gameStats/update', payload: response.data })
+    }).catch(error => {
+        dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
     })
 
     return null

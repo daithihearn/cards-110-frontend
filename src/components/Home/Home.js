@@ -9,6 +9,7 @@ import MySnackbar from '../Snackbar/MySnackbar'
 import DataLoader from '../DataLoader/DataLoader'
 import StartNewGame from '../StartNewGame/StartNewGame'
 import MyGames from '../MyGames/MyGames'
+import GameStats from '../GameStats/GameStats'
 
 const Home = (props) => {
 
@@ -43,9 +44,10 @@ const Home = (props) => {
                                             <div>
                                                 {/* PLAYER - Section - START */}
                                                 {auth0Client.isPlayer() ?
-
-                                                    <MyGames history={props.history}/>
-
+                                                    <div>
+                                                        <MyGames history={props.history} />
+                                                        <GameStats />
+                                                    </div>
                                                     : null}
                                                 {/* PLAYER - Section - END */}
 
