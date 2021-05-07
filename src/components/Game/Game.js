@@ -4,7 +4,6 @@ import MySnackbar from '../Snackbar/MySnackbar'
 import GameWrapper from './GameWrapper'
 import GameOver from './GameOver'
 import GameService from '../../services/GameService'
-import WebsocketManager from './WebsocketManager'
 import parseError from '../../utils/ErrorUtils'
 
 import { useParams } from "react-router-dom"
@@ -53,7 +52,6 @@ const Game = () => {
                             <div className="app carpet">
                                 <div className="game_wrap">
                                     <div className="game_container">
-                                        <WebsocketManager gameId={id} />
                                         <GameWrapper />
                                         <GameOver />
                                     </div>

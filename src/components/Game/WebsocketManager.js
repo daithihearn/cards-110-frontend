@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import {doPlayersMatchProfiles} from '../../constants'
 
 import {
     StompSessionProvider,
@@ -15,10 +16,11 @@ import alertAudio from '../../assets/sounds/alert.ogg'
 import callAudio from '../../assets/sounds/call.ogg'
 import passAudio from '../../assets/sounds/pass.ogg'
 
-const WebsocketHandler = () => {
-
+const WebsocketHandler = (props) => {
     const dispatch = useDispatch()
-    const isMyGo = useSelector(state => state.game.game.myGo)
+    const game = props.game
+    const players = props.players
+
     const [previousAction, updatePreviousAction] = useState("")
 
     const handleWebsocketMessage = (message) => {
@@ -96,7 +98,7 @@ const WebsocketHandler = () => {
 
     const checkClearSelected = () => {
         // If I played the card clear the selected cards
-        if (isMyGo) {
+        if (game.isMyGo) {
             dispatch({ type: 'game/clearSelectedCards' })
         }
     }
@@ -122,7 +124,7 @@ const WebsocketHandler = () => {
         }
     }
 
-    const processActons = (type, game) => {
+    const processActons = (type, payload) => {
         switch (type) {
             case ("DEAL"):
                 playShuffleSound()
@@ -139,6 +141,9 @@ const WebsocketHandler = () => {
             case ("GAME_OVER"):
                 break
             case ("BUY_CARDS_NOTIFICATION"):
+                const player = players.find(p => p.id === payload.playerId)
+                if (!player) { break }
+                dispatch({ type: 'snackbar/message', payload: { type: 'success', message: `${player.name} bought ${payload.bought}` } })
                 break
             case ("HAND_COMPLETED"):
                 break
@@ -160,9 +165,15 @@ const WebsocketHandler = () => {
 
 const WebsocketManager = (props) => {
 
+    const game = props.game
+    const players = props.players
+    if (!game || !game.status || !players || players.length === 0 || !doPlayersMatchProfiles(players, game.playerProfiles)) {
+        return null
+    }
+
     return (
-        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.gameId}&tokenId=${auth0Client.getAccessToken()}`}>
-            <WebsocketHandler />
+        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.game.id}&tokenId=${auth0Client.getAccessToken()}`}>
+            <WebsocketHandler game={game} players={players}/>
         </StompSessionProvider>
     )
 }

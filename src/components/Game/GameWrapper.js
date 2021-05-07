@@ -6,6 +6,7 @@ import Calling from './Calling'
 import Buying from './Buying'
 import SelectSuit from './SelectSuit'
 import AutoActionManager from './AutoActionManager'
+import WebsocketManager from './WebsocketManager'
 
 import { useSelector } from 'react-redux'
 
@@ -20,6 +21,7 @@ const GameWrapper = () => {
 
     return (
         <CardGroup>
+            <WebsocketManager game={game} players={players} />
 
             <AutoActionManager game={game} orderedCards={orderedCards}/>
 
