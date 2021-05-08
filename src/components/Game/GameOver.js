@@ -8,6 +8,7 @@ const GameOver = () => {
 
     const players = useSelector(state => state.game.players)
     const game = useSelector(state => state.game.game)
+
     if (!game || !game.status || game.status !== "FINISHED" || !players || players.length === 0) {
         return null
     }

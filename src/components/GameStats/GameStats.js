@@ -16,8 +16,8 @@ const GameStats = () => {
             label: 'My First Dataset',
             data: [wins.length, stats.length - wins.length],
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)'
+                'rgb(54, 162, 235)',
+                'rgb(255, 99, 132)'
             ],
             hoverOffset: 4
         }]
