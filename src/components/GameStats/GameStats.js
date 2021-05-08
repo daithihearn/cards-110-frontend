@@ -7,7 +7,7 @@ const GameStats = () => {
     const stats = useSelector(state => state.gameStats.stats)
     if (!stats) { return null }
 
-    const [last3Months, updateLast3Months] = useState(false)
+    const [last3Months, updateLast3Months] = useState(true)
 
     const fromDate = new Date()
     fromDate.setMonth(fromDate.getMonth() - 3)
@@ -55,7 +55,7 @@ const GameStats = () => {
                         height={300} />        
                 </CardBody>
                 <Label>
-                    <Input type="checkbox" onChange={threeMonthsCheckboxChanged}/>Last 3 months
+                    <Input checked={last3Months} type="checkbox" onChange={threeMonthsCheckboxChanged}/>Last 3 months
                 </Label>
             </Card>
         </CardGroup>
