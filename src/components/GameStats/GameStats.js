@@ -35,7 +35,7 @@ const GameStats = () => {
         plugins: {
             title: {
                 display: true,
-                text: `Win Percentage (${(wins.length/filteredStats.length)*100}%)`,
+                text: `Win Percentage (${((wins.length/filteredStats.length)*100).toFixed(1)}%)`,
                 position: 'bottom'
             }
         }
