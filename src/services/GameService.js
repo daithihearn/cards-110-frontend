@@ -64,7 +64,7 @@ class GameService {
         }
     }
 
-    getMyActive = () => {
+    getMyGames = () => {
         let authHeader = `Bearer ${auth0Client.getAccessToken()}`
 
         if (authHeader) {
@@ -75,7 +75,7 @@ class GameService {
                 }
             }
             const result = axios
-                .get(`${process.env.REACT_APP_API_URL}/api/v1/game/active`, config)
+                .get(`${process.env.REACT_APP_API_URL}/api/v1/game/all`, config)
             return result
         }
     }
