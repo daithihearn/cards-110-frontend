@@ -1691,10 +1691,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stomp/stompjs@^6.0.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@stomp/stompjs/-/stompjs-6.1.0.tgz#b77ca240775a7a34289b2c09618e256be761d142"
-  integrity sha512-Bt+whL0V51rSKP35OkgM1yeVu/usunpz5l1VYuoWw8mGsDMNd3W3FpWa4/4eis6QfXO3uteNGfyE21XWn0pGAQ==
+"@stomp/stompjs@^6.1.0":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@stomp/stompjs/-/stompjs-6.1.2.tgz#4ac3c380e8d1de1da94a3623d404e67de69dd01e"
+  integrity sha512-FHDTrIFM5Ospi4L3Xhj6v2+NzCVAeNDcBe95YjUWhWiRMrBF6uN3I7AUOlRgT6jU/2WQvvYK8ZaIxFfxFp+uHQ==
 
 "@surma/rollup-plugin-off-main-thread@^1.1.1":
   version "1.4.2"
@@ -10244,13 +10244,13 @@ react-scripts@^4.0.2:
   optionalDependencies:
     fsevents "^2.1.3"
 
-react-stomp-hooks@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/react-stomp-hooks/-/react-stomp-hooks-1.2.3.tgz#2172d4b2e10862251f05f12c41f61d3807a2fa13"
-  integrity sha512-Hw9WWdShyQQpF2vAD7gMFG18EX3keVEYcad/1XBE1KWhjgHisdJnwkoiDdpOyvl03xKMAPm1IeamnTIdgYD9gQ==
+react-stomp-hooks@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-stomp-hooks/-/react-stomp-hooks-2.0.2.tgz#5173d91a5a54a687b5b8c32a76a2bac7439a6433"
+  integrity sha512-D620vfAK3CJ5eIgPFV58FTHyG/i6NhDo9CEk5QGWZ8vUUlc7bMS3MO/VnxB4hTR0yrBx02fE3l9Ah63JlQjYsQ==
   dependencies:
-    "@stomp/stompjs" "^6.0.0"
-    sockjs-client "^1.5.0"
+    "@stomp/stompjs" "^6.1.0"
+    sockjs-client "^1.5.1"
 
 react-transition-group@^2.3.1:
   version "2.9.0"
@@ -11210,6 +11210,18 @@ sockjs-client@^1.5.0:
     inherits "^2.0.4"
     json3 "^3.3.3"
     url-parse "^1.5.1"
+
+sockjs-client@^1.5.1:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/sockjs-client/-/sockjs-client-1.5.2.tgz#4bc48c2da9ce4769f19dc723396b50f5c12330a3"
+  integrity sha512-ZzRxPBISQE7RpzlH4tKJMQbHM9pabHluk0WBaxAQ+wm/UieeBVBou0p4wVnSQGN9QmpAZygQ0cDIypWuqOFmFQ==
+  dependencies:
+    debug "^3.2.6"
+    eventsource "^1.0.7"
+    faye-websocket "^0.11.3"
+    inherits "^2.0.4"
+    json3 "^3.3.3"
+    url-parse "^1.5.3"
 
 sockjs@^0.3.21:
   version "0.3.21"
@@ -12289,6 +12301,14 @@ url-parse@^1.4.3, url-parse@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.1.tgz#d5fa9890af8a5e1f274a2c98376510f6425f6e3b"
   integrity sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==
+  dependencies:
+    querystringify "^2.1.1"
+    requires-port "^1.0.0"
+
+url-parse@^1.5.3:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.4.tgz#e4f645a7e2a0852cc8a66b14b292a3e9a11a97fd"
+  integrity sha512-ITeAByWWoqutFClc/lRZnFplgXgEZr3WJ6XngMM/N9DMIm4K8zXPCZ1Jdu0rERwO84w1WC5wkle2ubwTA4NTBg==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"

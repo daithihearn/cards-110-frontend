@@ -13,7 +13,7 @@ const Calling = (props) => {
         return null
     }
 
-    const buttonsEnabled = !!game.round.currentHand && game.cards.length > 0 && game.myGo
+    const buttonsEnabled = !!game.round.currentHand && game.cards.length > 0 && game.isMyGo
 
     const dispatch = useDispatch()
 
