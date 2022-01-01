@@ -50,7 +50,7 @@ const AutoActionManager = (props) => {
             setTimeout(() => deal(), 3000)
         }
         // Play card when you've pre-selected a card or you only have one left
-        else if (game.round.status === "PLAYING" && game.myGo) {
+        else if (game.round.status === "PLAYING" && game.isMyGo) {
             if (game.cards.length === 1) {
                 playCard(game.cards[0])
             }
@@ -59,7 +59,7 @@ const AutoActionManager = (props) => {
             }
         }
         // Buy cards in if you are the goer
-        else if (game.myGo && game.iamGoer && game.round.status === "BUYING") {
+        else if (game.isMyGo && game.iamGoer && game.round.status === "BUYING") {
             buyCards(game.cards)
         }
     }

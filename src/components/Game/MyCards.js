@@ -19,7 +19,7 @@ const MyCards = (props) => {
     const dispatch = useDispatch()
 
     const selectedCards = orderedCards.filter(card => card.selected)
-    const playButtonEnabled = game.myGo && game.round.status === "PLAYING" && game.round.completedHands.length + game.cards.length === 5
+    const playButtonEnabled = game.isMyGo && game.round.status === "PLAYING" && game.round.completedHands.length + game.cards.length === 5
 
     const [doubleClickTracker, updateDoubleClickTracker] = useState({})
 

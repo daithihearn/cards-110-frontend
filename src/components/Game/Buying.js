@@ -89,7 +89,7 @@ const Buying = (props) => {
 
                     <Form onSubmit={buyCards}>
                         <ButtonGroup size="lg">
-                            {game.myGo ? <Button type="submit" color="warning"><b>Keep Cards</b></Button> : null}
+                            {game.isMyGo ? <Button type="submit" color="warning"><b>Keep Cards</b></Button> : null}
                         </ButtonGroup>
                     </Form>
 
