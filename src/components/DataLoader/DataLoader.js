@@ -20,7 +20,7 @@ const DataLoader = () => {
         })
     }
 
-    GameService.getMyGames().then(response => {
+    GameService.getAll().then(response => {
         dispatch({ type: 'myGames/updateAll', payload: response.data })
     }).catch(error => {
         if (error.message === triggerBounceMessage) { return }

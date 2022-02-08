@@ -59,24 +59,8 @@ class GameService {
                 }
             }
             return axios
-                .get(`${process.env.REACT_APP_API_URL}/api/v1/admin/game/all`, config)
-
-        }
-    }
-
-    getMyGames = () => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
-
-        if (authHeader) {
-            let config = {
-                headers: {
-                    Authorization: authHeader,
-                    "Content-Type": "application/json"
-                }
-            }
-            const result = axios
                 .get(`${process.env.REACT_APP_API_URL}/api/v1/game/all`, config)
-            return result
+
         }
     }
 
