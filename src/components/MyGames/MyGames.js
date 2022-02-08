@@ -65,7 +65,7 @@ const MyGames = () => {
     return (
         <CardGroup>
             <Card color="secondary" className="p-6">
-                <CardHeader tag="h2">My Games</CardHeader>
+                <CardHeader tag="h2">Games</CardHeader>
                 <CardBody>
                     <DataTable noHeader pagination theme="solarized"
                         data={myGames} columns={columns}
