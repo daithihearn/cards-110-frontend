@@ -47,11 +47,21 @@ const MyGames = () => {
         updateDeleteGameId('')
     }
 
+    const parsePlayButtonLabel = (game, myId) => {
+        if (game.status === "ACTIVE") {
+            if (game.players.some(e => e.id === myId)) {
+                return "Play"
+            }
+            return "Spectate"
+        }
+        return "Result"
+    }
+
     const columns = [
         { name: 'Name', selector: 'name', sortable: true },
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
         {
-            cell: row => <Link to={`/game/${row.id}`}><Button type="button" color="success">Open</Button></Link>,
+            cell: row => <Link to={`/game/${row.id}`}><Button type="button" color="success">{parsePlayButtonLabel(row, profile.sub)}</Button></Link>,
             center: true
         },
         { name: 'Status', selector: 'status', sortable: true, center: true },
