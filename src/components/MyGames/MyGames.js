@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 import GameService from '../../services/GameService'
 import parseError from '../../utils/ErrorUtils'
 import DataTable from 'react-data-table-component'
+import TrophyImage from '../../assets/icons/trophy.png'
 
 import { Modal, ModalBody, ModalHeader, ModalFooter, Button, Card, CardBody, CardGroup, CardHeader } from 'reactstrap'
 import moment from 'moment'
