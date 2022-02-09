@@ -79,7 +79,7 @@ const MyGames = () => {
             center: true
         },
         {
-            cell: row => <Button disabled={row.adminId !== profile.sub} type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
+            cell: row => <Button disabled={row.adminId !== profile.sub || row.status !== "ACTIVE"} type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
             center: true,
             omit: !isAdmin
         }
