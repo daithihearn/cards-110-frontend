@@ -82,7 +82,7 @@ const MyGames = () => {
         { name: 'Name', selector: 'name', sortable: true },
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
         { 
-            cell: row => <div>{ isWinner(row, profile.sub) ? <img src={TrophyImage} width="10px" height="10px"/> : null }</div>,
+            cell: row => <div>{ isWinner(row, profile.sub) ? <img src={TrophyImage} width="15px" height="15px"/> : null }</div>,
             center: true
         },
         {
