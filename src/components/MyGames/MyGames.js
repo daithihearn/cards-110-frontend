@@ -67,6 +67,12 @@ const MyGames = () => {
         return "secondary"
     }
 
+    const isWinner = (game, playerId) => {
+        const player = game.players.find(e => e.id === playerId)
+        
+        return !!player && player.winner
+    }
+
     const isInGame = (game, playerId) => {
         return game.players.some(e => e.id === playerId)
     }
@@ -74,6 +80,10 @@ const MyGames = () => {
     const columns = [
         { name: 'Name', selector: 'name', sortable: true },
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
+        { 
+            cell: row => <div>{ isWinner(row, profile.sub) ? <img src={TrophyImage} width="10px" height="10px"/> : null }</div>,
+            center: true
+        },
         {
             cell: row => <Link to={`/game/${row.id}`}><Button type="button" color={parsePlayButtonColour(row, profile.sub)}>{parsePlayButtonLabel(row, profile.sub)}</Button></Link>,
             center: true
