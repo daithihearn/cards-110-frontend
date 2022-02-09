@@ -62,9 +62,9 @@ const MyGames = () => {
             if (isInGame(game, playerId)) {
                 return "success"
             }
-            return "secondary"
+            return "primary"
         }
-        return "primary"
+        return "secondary"
     }
 
     const isInGame = (game, playerId) => {
