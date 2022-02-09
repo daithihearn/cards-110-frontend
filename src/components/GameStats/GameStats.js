@@ -7,7 +7,7 @@ const GameStats = () => {
     const stats = useSelector(state => state.gameStats.stats)
     if (!stats) { return null }
 
-    const [last3Months, updateLast3Months] = useState(true)
+    const [last3Months, updateLast3Months] = useState(false)
 
     const fromDate = new Date()
     fromDate.setMonth(fromDate.getMonth() - 3)
