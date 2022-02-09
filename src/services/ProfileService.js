@@ -46,6 +46,8 @@ class ProfileService {
             }
             const result = axios
                 .put(`${process.env.REACT_APP_API_URL}/api/v1/profile`, payload, config)
+            
+            auth0Client.updatePicture(result.picture)
             return result;
         }
     }
