@@ -35,7 +35,7 @@ const GameStats = () => {
         plugins: {
             title: {
                 display: true,
-                text: `Win Percentage (${((wins.length/filteredStats.length)*100).toFixed(1)}%)`,
+                text: `Win Percentage (${((wins.length / filteredStats.length) * 100).toFixed(1)}%)`,
                 position: 'bottom'
             }
         }
@@ -50,12 +50,14 @@ const GameStats = () => {
             <Card color="secondary" className="p-6">
                 <CardHeader tag="h2">My Stats </CardHeader>
                 <CardBody>
-                    <Doughnut data={data} options={options}
-                        width={300}
-                        height={300} />        
+                    {!!stats && stats.length > 0 ?
+                        <Doughnut data={data} options={options}
+                            width={300}
+                            height={300} />
+                        : "No stats available currently"}
                 </CardBody>
                 <Label>
-                    <Input checked={last3Months} type="checkbox" onChange={threeMonthsCheckboxChanged}/>Last 3 months
+                    <Input checked={last3Months} type="checkbox" onChange={threeMonthsCheckboxChanged} />Last 3 months
                 </Label>
             </Card>
         </CardGroup>
