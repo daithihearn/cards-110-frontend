@@ -13,7 +13,6 @@ class Auth {
     });
 
     this.getProfile = this.getProfile.bind(this);
-    this.updatePicture = this.updatePicture.bind(this);
     this.getIdToken = this.getIdToken.bind(this);
     this.getAccessToken = this.getAccessToken.bind(this);
     this.getScope = this.getScope.bind(this);
@@ -27,10 +26,6 @@ class Auth {
 
   getProfile() {
     return this.profile;
-  }
-
-  updatePicture(picture) {
-    this.profile.picture = picture
   }
 
   getIdToken() {

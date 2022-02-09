@@ -44,10 +44,9 @@ class ProfileService {
                     Authorization: authHeader
                 }
             }
-            const response = axios
-                .put(`${process.env.REACT_APP_API_URL}/api/v1/profile`, payload, config).then(result => auth0Client.updatePicture(result.picture))
-            
-            return response;
+            const result = axios
+                .put(`${process.env.REACT_APP_API_URL}/api/v1/profile`, payload, config)
+            return result;
         }
     }
 }
