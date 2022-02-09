@@ -47,9 +47,9 @@ const MyGames = () => {
         updateDeleteGameId('')
     }
 
-    const parsePlayButtonLabel = (game, myId) => {
+    const parsePlayButtonLabel = (game, playerId) => {
         if (game.status === "ACTIVE") {
-            if (game.players.some(e => e.id === myId)) {
+            if (isInGame(game, playerId)) {
                 return "Play"
             }
             return "Spectate"
@@ -57,11 +57,25 @@ const MyGames = () => {
         return "Result"
     }
 
+    const parsePlayButtonColour = (game, playerId) => {
+        if (game.status === "ACTIVE") {
+            if (isInGame(game, playerId)) {
+                return "success"
+            }
+            return "secondary"
+        }
+        return "primary"
+    }
+
+    const isInGame = (game, playerId) => {
+        return game.players.some(e => e.id === playerId)
+    }
+
     const columns = [
         { name: 'Name', selector: 'name', sortable: true },
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
         {
-            cell: row => <Link to={`/game/${row.id}`}><Button type="button" color="success">{parsePlayButtonLabel(row, profile.sub)}</Button></Link>,
+            cell: row => <Link to={`/game/${row.id}`}><Button type="button" color={parsePlayButtonColour(row, profile.sub)}>{parsePlayButtonLabel(row, profile.sub)}</Button></Link>,
             center: true
         },
         { name: 'Status', selector: 'status', sortable: true, center: true },
