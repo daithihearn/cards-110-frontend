@@ -21,12 +21,11 @@ const SecuredRoute = (props) => {
                     expiresAt: authResult.idTokenPayload.exp * 1000
                 }
             })
-            profileService.updateProfile({ name: authResult.idTokenPayload.name, email: authResult.idTokenPayload.email, picture: authResult.idTokenPayload.picture }, authResult.accessToken).then( myProfile => {
+            profileService.updateProfile({ name: authResult.idTokenPayload.name, picture: authResult.idTokenPayload.picture }, authResult.accessToken).then( myProfile => {
                 dispatch({
                     type: 'myProfile/update', payload: {
                         id: myProfile.data.id,
                         name: myProfile.data.name,
-                        email: myProfile.data.email,
                         picture: myProfile.data.picture,
                         isPlayer: authResult.scope.indexOf("read:game") !== -1,
                         isAdmin: authResult.scope.indexOf("read:admin") !== -1
