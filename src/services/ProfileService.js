@@ -1,11 +1,9 @@
-import auth0Client from '../Auth';
-
 const axios = require('axios');
 
 class ProfileService {
 
-    hasProfile = () => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    hasProfile = (accessToken) => {
+        let authHeader = `Bearer ${accessToken}`;
 
         if (authHeader) {
             let config = {
@@ -19,8 +17,8 @@ class ProfileService {
         }
     }
 
-    getProfile = () => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    getProfile = (accessToken) => {
+        let authHeader = `Bearer ${accessToken}`;
 
         if (authHeader) {
             let config = {
@@ -35,8 +33,8 @@ class ProfileService {
     }
 
 
-    updateProfile = (payload) => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`;
+    updateProfile = (payload, accessToken) => {
+        let authHeader = `Bearer ${accessToken}`;
 
         if (authHeader) {
             let config = {

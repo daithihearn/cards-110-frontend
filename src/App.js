@@ -7,7 +7,6 @@ import 'flag-icon-css/css/flag-icon.min.css'
 import 'font-awesome/css/font-awesome.min.css'
 import React, { Component } from 'react'
 import { Route, withRouter } from 'react-router-dom'
-import auth0Client from './Auth'
 import Callback from './views/Callback'
 import SecuredRoute from './utils/SecuredRoute'
 import Loadable from 'react-loadable'
@@ -57,24 +56,9 @@ const GamePage = Loadable({
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            checkingSession: true,
-        }
     }
 
-    async componentDidMount() {
-        if (!!this.props.location && this.props.location.pathname === '/callback') {
-            this.setState({ checkingSession: false });
-            return;
-        }
-        try {
-            await auth0Client.silentAuth();
-            this.forceUpdate();
-        } catch (err) {
-            if (err.error !== 'login_required') console.log(err.error);
-        }
-        this.setState({ checkingSession: false });
-    }
+    async componentDidMount() {}
 
     render() {
         const { match, location, history } = this.props;
@@ -82,8 +66,8 @@ class App extends Component {
             <div>
                 <Route exact path='/callback' component={Callback} />
 
-                <SecuredRoute path="/" exact name="Home" component={HomePage} checkingSession={this.state.checkingSession} match={match} location={location} history={history} />
-                <SecuredRoute path="/game/:id" exact name="Game" component={GamePage} checkingSession={this.state.checkingSession} match={match} location={location} history={history} />
+                <SecuredRoute path="/" exact name="Home" component={HomePage} match={match} location={location} history={history} />
+                <SecuredRoute path="/game/:id" exact name="Game" component={GamePage} match={match} location={location} history={history} />
             </div>
         );
     }

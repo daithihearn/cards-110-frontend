@@ -12,21 +12,21 @@ import TrophyImage from '../../assets/icons/trophy.png'
 import { Modal, ModalBody, ModalHeader, ModalFooter, Button, Card, CardBody, CardGroup, CardHeader } from 'reactstrap'
 import moment from 'moment'
 
-import auth0Client from '../../Auth';
 import { triggerBounceMessage } from '../../constants'
 
 const MyGames = () => {
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
     const myGames = useSelector(state => state.myGames.games)
+    const myProfile = useSelector(state => state.myProfile)
     const dispatch = useDispatch()
     const [modalDeleteGameOpen, updateModalDeleteGameOpen] = useState(false)
     const [deleteGameId, updateDeleteGameId] = useState('')
-    const isAdmin = auth0Client.isAdmin()
-    const profile = auth0Client.getProfile()
 
     const deleteGame = e => {
         e.preventDefault()
 
-        GameService.delete(deleteGameId)
+        GameService.delete(deleteGameId, accessToken)
             .then(response => {
                 dispatch({ type: 'myGames/removeGame', payload: deleteGameId })
                 dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game deleted' } })
@@ -82,17 +82,17 @@ const MyGames = () => {
         { name: 'Name', selector: 'name', sortable: true },
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
         { 
-            cell: row => <div>{ isWinner(row, profile.sub) ? <img src={TrophyImage} width="25px" height="25px"/> : null }</div>,
+            cell: row => <div>{ isWinner(row, myProfile.id) ? <img src={TrophyImage} width="25px" height="25px"/> : null }</div>,
             center: true
         },
         {
-            cell: row => <Link to={`/game/${row.id}`}><Button type="button" color={parsePlayButtonColour(row, profile.sub)}>{parsePlayButtonLabel(row, profile.sub)}</Button></Link>,
+            cell: row => <Link to={`/game/${row.id}`}><Button type="button" color={parsePlayButtonColour(row, myProfile.id)}>{parsePlayButtonLabel(row, myProfile.id)}</Button></Link>,
             center: true
         },
         {
-            cell: row => <Button disabled={row.adminId !== profile.sub || row.status !== "ACTIVE"} type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
+            cell: row => <Button disabled={row.adminId !== myProfile.id || row.status !== "ACTIVE"} type="button" color="link" onClick={showDeleteGameModal(row.id)}><img alt="Remove" src={RemoveImage} width="20px" height="20px" /></Button>,
             center: true,
-            omit: !isAdmin
+            omit: !myProfile.isAdmin
         }
     ]
 

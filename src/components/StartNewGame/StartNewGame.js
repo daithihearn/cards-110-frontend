@@ -11,100 +11,102 @@ import parseError from '../../utils/ErrorUtils'
 import { triggerBounceMessage } from '../../constants'
 
 const StartNewGame = () => {
-  const [newGameName, updateNewGameName] = useState('')
-  const allPlayers = useSelector(state => state.players.players)
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
+    const [newGameName, updateNewGameName] = useState('')
+    const allPlayers = useSelector(state => state.players.players)
 
-  const [selectedPlayers, updateSelectedPlayers] = useState([])
-  const dispatch = useDispatch()
+    const [selectedPlayers, updateSelectedPlayers] = useState([])
+    const dispatch = useDispatch()
 
-  const togglePlayer = (rows) => {
-    updateSelectedPlayers(rows.selectedRows)
-  }
-
-  const startGame = e => {
-    e.preventDefault()
-    if (selectedPlayers.length < 1) {
-      dispatch({ type: 'snackbar/message', payload: { type: 'error', message: 'You must select at least one player' } })
-      return;
-    }
-    if (newGameName === "") {
-      dispatch({ type: 'snackbar/message', payload: { type: 'error', message: 'You must provide a name for the game' } })
-      return;
+    const togglePlayer = (rows) => {
+        updateSelectedPlayers(rows.selectedRows)
     }
 
-    let payload = {
-      players: selectedPlayers.map(p => p.id),
-      name: newGameName
+    const startGame = e => {
+        e.preventDefault()
+        if (selectedPlayers.length < 1) {
+            dispatch({ type: 'snackbar/message', payload: { type: 'error', message: 'You must select at least one player' } })
+            return;
+        }
+        if (newGameName === "") {
+            dispatch({ type: 'snackbar/message', payload: { type: 'error', message: 'You must provide a name for the game' } })
+            return;
+        }
+
+        let payload = {
+            players: selectedPlayers.map(p => p.id),
+            name: newGameName
+        }
+
+        GameService.put(payload, accessToken).then(response => {
+            updateNewGameName('')
+            dispatch({ type: 'myGames/addGame', payload: response.data })
+            dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game started successfully' } })
+
+        }).catch(error => {
+            if (error.message === triggerBounceMessage) { return }
+            dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+        })
     }
 
-    GameService.put(payload).then(response => {
-      updateNewGameName('')
-      dispatch({ type: 'myGames/addGame', payload: response.data })
-      dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game started successfully' } })
-
-    }).catch(error => {
-      if (error.message === triggerBounceMessage) { return }
-      dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
-    })
-  }
-
-  const handleNameChange = e => {
-    updateNewGameName(e.target.value)
-  }
-
-  const columns = [
-    {
-      name: 'Avatar',
-      cell: row => <img alt="Image Preview" src={row.picture} className="avatar" />
-    },
-    {
-      name: 'Player',
-      selector: 'name',
-      sortable: true
+    const handleNameChange = e => {
+        updateNewGameName(e.target.value)
     }
-  ]
 
-  return (
-    <CardGroup>
-      <Card color="secondary">
-        <CardBody><h1>Start a new game</h1></CardBody>
-        <CardBody>
+    const columns = [
+        {
+            name: 'Avatar',
+            cell: row => <img alt="Image Preview" src={row.picture} className="avatar" />
+        },
+        {
+            name: 'Player',
+            selector: 'name',
+            sortable: true
+        }
+    ]
 
-          <FormGroup>
-            <h3 colSpan="2">Players</h3>
+    return (
+        <CardGroup>
+            <Card color="secondary">
+                <CardBody><h1>Start a new game</h1></CardBody>
+                <CardBody>
 
-            <DataTable noHeader pagination theme="solarized"
-              data={allPlayers} columns={columns}
-              highlightOnHover selectableRows Clicked onSelectedRowsChange={togglePlayer} />
+                    <FormGroup>
+                        <h3 colSpan="2">Players</h3>
+
+                        <DataTable noHeader pagination theme="solarized"
+                            data={allPlayers} columns={columns}
+                            highlightOnHover selectableRows Clicked onSelectedRowsChange={togglePlayer} />
 
 
-            <Form onSubmit={startGame}>
-              <FormGroup>
-                <Label for="exampleText">Name</Label>
-                <Input type="input"
-                  className="name"
-                  id="newGameName"
-                  name="newGameName"
-                  placeholder="Give the game a name"
-                  autoComplete="off"
-                  onChange={handleNameChange}
-                  value={newGameName}
-                  disabled={selectedPlayers.length < 2}
-                  required />
-              </FormGroup>
-              <ButtonGroup>
-                <Button size="lg" color="primary" type="submit" onClick={startGame} disabled={selectedPlayers.length < 2 || (!newGameName && newGameName === "")}>
-                  Start Game
+                        <Form onSubmit={startGame}>
+                            <FormGroup>
+                                <Label for="exampleText">Name</Label>
+                                <Input type="input"
+                                    className="name"
+                                    id="newGameName"
+                                    name="newGameName"
+                                    placeholder="Give the game a name"
+                                    autoComplete="off"
+                                    onChange={handleNameChange}
+                                    value={newGameName}
+                                    disabled={selectedPlayers.length < 2}
+                                    required />
+                            </FormGroup>
+                            <ButtonGroup>
+                                <Button size="lg" color="primary" type="submit" onClick={startGame} disabled={selectedPlayers.length < 2 || (!newGameName && newGameName === "")}>
+                                    Start Game
                           </Button>
-              </ButtonGroup>
-            </Form>
+                            </ButtonGroup>
+                        </Form>
 
-          </FormGroup>
-        </CardBody>
-      </Card>
-    </CardGroup>
+                    </FormGroup>
+                </CardBody>
+            </Card>
+        </CardGroup>
 
-  )
+    )
 
 }
 

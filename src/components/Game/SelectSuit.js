@@ -1,5 +1,5 @@
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Card, CardImg, CardBody, CardGroup } from 'reactstrap'
 
 import { useState } from 'react'
@@ -9,6 +9,9 @@ import GameService from '../../services/GameService'
 import { triggerBounceMessage } from '../../constants'
 
 const SelectSuit = (props) => {
+
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
 
     const game = props.game
     const orderedCards = props.orderedCards
@@ -44,7 +47,7 @@ const SelectSuit = (props) => {
     }
 
     const submitSelectFromDummy = (suit) => {
-        GameService.chooseFromDummy(game.id, selectedCards.map(sc => sc.card), suit).then(response => {
+        GameService.chooseFromDummy(game.id, selectedCards.map(sc => sc.card), suit, accessToken).then(response => {
             dispatch({ type: 'game/clearSelectedCards' })
         }).catch(error => {
             if (error.message === triggerBounceMessage) { return }

@@ -8,16 +8,19 @@ import parseError from '../../utils/ErrorUtils'
 
 import { useParams } from "react-router-dom"
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Game = () => {
 
-    let { id } = useParams()
-
     const dispatch = useDispatch()
 
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
+
+    let { id } = useParams()
+
     const playGame = () => {
-        GameService.getGameState(id)
+        GameService.getGameState(id, accessToken)
             .then(response => {
                 dispatch({ type: 'game/updateGame', payload: response.data })
                 dispatch({ type: 'snackbar/message', payload: { type: 'success', message: "Game started succcessfully." } })
@@ -29,7 +32,7 @@ const Game = () => {
     }
 
     const getPlayers = () => {
-        GameService.getPlayersForGame(id)
+        GameService.getPlayersForGame(id, accessToken)
             .then(response => {
                 dispatch({ type: 'game/updatePlayers', payload: response.data })
             })

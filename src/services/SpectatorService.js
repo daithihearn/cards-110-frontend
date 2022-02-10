@@ -1,4 +1,3 @@
-import auth0Client from '../Auth'
 import { triggerBounceMessage, triggerBounceInterval } from '../constants'
 
 const axios = require('axios')
@@ -7,10 +6,10 @@ class SpectatorService {
 
     registerEventTime = 0
 
-    register = (gameId) => {
+    register = (gameId, accessToken) => {
         if (Date.now() - this.registerEventTime > triggerBounceInterval) {
             this.registerEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {

@@ -1,17 +1,20 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import GameService from '../../services/GameService'
 import StatsService from '../../services/StatsService'
 
 import parseError from '../../utils/ErrorUtils'
 
-import auth0Client from '../../Auth'
 import { triggerBounceMessage } from '../../constants'
 
 const DataLoader = () => {
     const dispatch = useDispatch()
+    const myProfile = useSelector(state => state.myProfile)
+    if (!myProfile) { return null }
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
 
-    if (auth0Client.isAdmin()) {
-        GameService.getAllPlayers().then(response => {
+    if (myProfile.isAdmin) {
+        GameService.getAllPlayers(accessToken).then(response => {
             dispatch({ type: 'players/updateAll', payload: response.data })
         }).catch(error => {
             if (error.message === triggerBounceMessage) { return }
@@ -20,7 +23,7 @@ const DataLoader = () => {
         })
     }
 
-    GameService.getAll().then(response => {
+    GameService.getAll(accessToken).then(response => {
         dispatch({ type: 'myGames/updateAll', payload: response.data })
     }).catch(error => {
         if (error.message === triggerBounceMessage) { return }
@@ -28,7 +31,7 @@ const DataLoader = () => {
 
     })
 
-    StatsService.gameStatsForPlayer().then(response => {
+    StatsService.gameStatsForPlayer(accessToken).then(response => {
         dispatch({ type: 'gameStats/update', payload: response.data })
     }).catch(error => {
         dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })

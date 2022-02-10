@@ -1,19 +1,24 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
-import auth0Client from '../Auth';
-import LoadingIcon from '../../src/assets/img/brand/loading.gif';
+import React from 'react'
+import auth0Client from '../components/Auth/Auth'
+import LoadingIcon from '../../src/assets/img/brand/loading.gif'
+import { useHistory } from "react-router-dom"
 
-class Callback extends Component {
-  async componentDidMount() {
-    await auth0Client.handleAuthentication();
-    this.props.history.replace('/');
-  }
+const Callback = () => {
 
-  render() {
+    const history = useHistory()
+
+    auth0Client.handleAuthentication().then(authResult => {
+        console.log("Successful login!")
+        history.push('/')
+    }).catch(err => {
+        console.log(err)
+        auth0Client.signIn()
+    })
+
     return (
-      <img src={LoadingIcon} className="loading" alt="Loading Icon" />
-    );
-  }
+        <img src={LoadingIcon} className="loading" alt="Loading Icon" />
+    )
+
 }
 
-export default withRouter(Callback);
+export default Callback

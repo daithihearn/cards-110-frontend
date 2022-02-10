@@ -8,8 +8,6 @@ import {
 
 import { useDispatch, useSelector } from 'react-redux'
 
-import auth0Client from '../../Auth'
-
 import shuffleAudio from '../../assets/sounds/shuffle.ogg'
 import playCardAudio from '../../assets/sounds/play_card.ogg'
 import alertAudio from '../../assets/sounds/alert.ogg'
@@ -17,6 +15,7 @@ import callAudio from '../../assets/sounds/call.ogg'
 import passAudio from '../../assets/sounds/pass.ogg'
 
 const WebsocketHandler = (props) => {
+    
     const dispatch = useDispatch()
     const game = props.game
     const players = props.players
@@ -165,6 +164,9 @@ const WebsocketHandler = (props) => {
 
 const WebsocketManager = (props) => {
 
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
+
     const game = props.game
     const players = props.players
     if (!game || !game.status || !players || players.length === 0 || !doPlayersMatchProfiles(players, game.playerProfiles)) {
@@ -172,7 +174,7 @@ const WebsocketManager = (props) => {
     }
 
     return (
-        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.game.id}&tokenId=${auth0Client.getAccessToken()}`}>
+        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.game.id}&tokenId=${accessToken}`}>
             <WebsocketHandler game={game} players={players}/>
         </StompSessionProvider>
     )

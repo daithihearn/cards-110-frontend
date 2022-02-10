@@ -1,5 +1,5 @@
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Form, Card, CardImg, CardBody, CardGroup } from 'reactstrap'
 
 import { useState } from 'react'
@@ -9,6 +9,10 @@ import GameService from '../../services/GameService'
 import { triggerBounceMessage } from '../../constants'
 
 const Buying = (props) => {
+
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
+
     const game = props.game
     const orderedCards = props.orderedCards
     if (!game || !orderedCards) {
@@ -33,7 +37,7 @@ const Buying = (props) => {
     }
 
     const submitBuyCards = () => {
-        GameService.buyCards(game.id, selectedCards.map(sc => sc.card)).then(response =>
+        GameService.buyCards(game.id, selectedCards.map(sc => sc.card), accessToken).then(response =>
             dispatch({ type: 'game/clearSelectedCards' })
         ).catch(error => {
             if (error.message === triggerBounceMessage) { return }

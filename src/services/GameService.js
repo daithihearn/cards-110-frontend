@@ -1,4 +1,3 @@
-import auth0Client from '../Auth'
 import { triggerBounceMessage, triggerBounceInterval } from '../constants'
 
 const axios = require('axios')
@@ -17,9 +16,9 @@ class GameService {
     chooseFromDummyEventTime = 0
     playCardEventTime = 0
 
-    get = (gameId) => {
+    get = (gameId, accessToken) => {
 
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+        let authHeader = `Bearer ${accessToken}`
 
         if (authHeader) {
             let config = {
@@ -33,8 +32,8 @@ class GameService {
         }
     }
 
-    getGameState = (gameId) => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+    getGameState = (gameId, accessToken) => {
+        let authHeader = `Bearer ${accessToken}`
 
         if (authHeader) {
             let config = {
@@ -48,8 +47,8 @@ class GameService {
         }
     }
 
-    getAll = () => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+    getAll = (accessToken) => {
+        let authHeader = `Bearer ${accessToken}`
 
         if (authHeader) {
             let config = {
@@ -64,8 +63,8 @@ class GameService {
         }
     }
 
-    getAllPlayers = () => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+    getAllPlayers = (accessToken) => {
+        let authHeader = `Bearer ${accessToken}`
 
         if (authHeader) {
             let config = {
@@ -80,8 +79,8 @@ class GameService {
         }
     }
 
-    getPlayersForGame = (gameId) => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+    getPlayersForGame = (gameId, accessToken) => {
+        let authHeader = `Bearer ${accessToken}`
 
         if (authHeader) {
             let config = {
@@ -96,10 +95,10 @@ class GameService {
         }
     }
 
-    put = (createGame) => {
+    put = (createGame, accessToken) => {
         if (Date.now() - this.putEventTime > triggerBounceInterval) {
             this.putEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -118,10 +117,10 @@ class GameService {
         }
     }
 
-    finish = (gameId) => {
+    finish = (gameId, accessToken) => {
         if (Date.now() - this.finishEventTime > triggerBounceInterval) {
             this.finishEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -140,10 +139,10 @@ class GameService {
         }
     }
 
-    cancel = (gameId) => {
+    cancel = (gameId, accessToken) => {
         if (Date.now() - this.cancelEventTime > triggerBounceInterval) {
             this.cancelEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -163,10 +162,10 @@ class GameService {
         }
     }
 
-    delete = (gameId) => {
+    delete = (gameId, accessToken) => {
         if (Date.now() - this.deleteEventTime > triggerBounceInterval) {
             this.deleteEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -185,10 +184,10 @@ class GameService {
         }
     }
 
-    replay = (gameId) => {
+    replay = (gameId, accessToken) => {
         if (Date.now() - this.replayEventTime > triggerBounceInterval) {
             this.replayEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -208,12 +207,12 @@ class GameService {
         }
     }
 
-    deal = (gameId) => {
+    deal = (gameId, accessToken) => {
 
         if (Date.now() - this.dealEventTime > triggerBounceInterval) {
             this.dealEventTime = Date.now()
 
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -233,11 +232,11 @@ class GameService {
         }
     }
 
-    call = (gameId, call) => {
+    call = (gameId, call, accessToken) => {
 
         if (Date.now() - this.callEventTime > triggerBounceInterval) {
             this.callEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -257,11 +256,11 @@ class GameService {
         }
     }
 
-    buyCards = (gameId, cards) => {
+    buyCards = (gameId, cards, accessToken) => {
 
         if (Date.now() - this.buyCardsEventTime > triggerBounceInterval) {
             this.buyCardsEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -280,10 +279,10 @@ class GameService {
         }
     }
 
-    chooseFromDummy = (gameId, cards, suit) => {
+    chooseFromDummy = (gameId, cards, suit, accessToken) => {
         if (Date.now() - this.chooseFromDummyEventTime > triggerBounceInterval) {
             this.chooseFromDummyEventTime = Date.now()
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {
@@ -302,11 +301,11 @@ class GameService {
         }
     }
 
-    playCard = (gameId, card) => {
+    playCard = (gameId, card, accessToken) => {
         if (Date.now() - this.playCardEventTime > triggerBounceInterval) {
             this.playCardEventTime = Date.now()
 
-            let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+            let authHeader = `Bearer ${accessToken}`
 
             if (authHeader) {
                 let config = {

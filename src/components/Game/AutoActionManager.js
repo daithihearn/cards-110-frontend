@@ -2,11 +2,14 @@ import { useState } from 'react'
 import GameService from '../../services/GameService'
 import parseError from '../../utils/ErrorUtils'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import sha1 from 'crypto-js/sha1'
 import { triggerBounceMessage } from '../../constants'
 
 const AutoActionManager = (props) => {
+
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
 
     const game = props.game
     const orderedCards = props.orderedCards
@@ -21,21 +24,21 @@ const AutoActionManager = (props) => {
     const [previousGameHash, updatePreviousGameHash] = useState("")
 
     const deal = () => {
-        GameService.deal(game.id).catch(error => {
+        GameService.deal(game.id, accessToken).catch(error => {
             if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
 
         })
     }
     const playCard = (card) => {
-        GameService.playCard(game.id, card).catch(error => {
+        GameService.playCard(game.id, card, accessToken).catch(error => {
             if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
     }
 
     const buyCards = (cards) => {
-        GameService.buyCards(game.id, cards).then(response => {
+        GameService.buyCards(game.id, cards, accessToken).then(response => {
             dispatch({ type: 'game/clearSelectedCards' })
         }).catch(error => {
             if (error.message === triggerBounceMessage) { return }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, ButtonGroup, CardImg, CardBody } from 'reactstrap'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
@@ -9,6 +9,9 @@ import GameService from '../../services/GameService'
 import { triggerBounceMessage } from '../../constants'
 
 const MyCards = (props) => {
+
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
 
     const game = props.game
     const orderedCards = props.orderedCards
@@ -83,7 +86,7 @@ const MyCards = (props) => {
         if (selectedCards.length !== 1) {
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError({ message: "Please select exactly one card to play" }) } })
         } else {
-            GameService.playCard(game.id, selectedCards[0].card).catch(error => {
+            GameService.playCard(game.id, selectedCards[0].card, accessToken).catch(error => {
                 if (error.message === triggerBounceMessage) { return }
                 dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
             })

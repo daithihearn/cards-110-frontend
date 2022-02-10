@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { Button, ButtonGroup, CardBody } from 'reactstrap'
 
 import parseError from '../../utils/ErrorUtils'
@@ -7,6 +7,9 @@ import GameService from '../../services/GameService'
 import { triggerBounceMessage } from '../../constants'
 
 const Calling = (props) => {
+
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
 
     const game = props.game
     if (!game) {
@@ -18,7 +21,7 @@ const Calling = (props) => {
     const dispatch = useDispatch()
 
     const call = (callAmount) => e => {
-        GameService.call(game.id, callAmount).catch(error => {
+        GameService.call(game.id, callAmount, accessToken).catch(error => {
             if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })

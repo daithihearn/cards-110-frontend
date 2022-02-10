@@ -1,11 +1,9 @@
-import auth0Client from '../Auth'
-
 const axios = require('axios')
 
 class StatsService {
 
-    gameStatsForPlayer = () => {
-        let authHeader = `Bearer ${auth0Client.getAccessToken()}`
+    gameStatsForPlayer = (accessToken) => {
+        let authHeader = `Bearer ${accessToken}`
 
         if (authHeader) {
             let config = {

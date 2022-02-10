@@ -1,22 +1,22 @@
 import React from 'react'
-import profileService from '../../services/ProfileService'
 import DefaultHeader from '../Header/Header'
 
 import { Card, CardGroup, CardHeader } from 'reactstrap'
 
-import auth0Client from '../../Auth'
 import MySnackbar from '../Snackbar/MySnackbar'
 import DataLoader from '../DataLoader/DataLoader'
 import StartNewGame from '../StartNewGame/StartNewGame'
 import MyGames from '../MyGames/MyGames'
 import GameStats from '../GameStats/GameStats'
 
+import { useSelector } from 'react-redux'
+
 const Home = (props) => {
 
-    // Update Player Profile
-    // TODO: Move this something more appropriate
-    const profile = auth0Client.getProfile();
-    profileService.updateProfile({ name: profile.name, email: profile.email, picture: profile.picture });
+    const accessToken = useSelector(state => state.auth.accessToken)
+    if (!accessToken) { return null }
+    const myProfile = useSelector(state => state.myProfile)
+    if (!myProfile.id) { return null }
 
     return (
         <div>
@@ -34,7 +34,7 @@ const Home = (props) => {
                                     <div className="game_container">
 
 
-                                        {!auth0Client.isPlayer() && !auth0Client.isAdmin() ?
+                                        {!myProfile.isPlayer && !myProfile.isAdmin ?
                                             <CardGroup>
                                                 <Card color="secondary" className="p-6">
                                                     <CardHeader tag="h2">You are successfully logged in but don't yet have any access permissions. Please contact Daithi to get access.</CardHeader>
@@ -43,7 +43,7 @@ const Home = (props) => {
                                             :
                                             <div>
                                                 {/* PLAYER - Section - START */}
-                                                {auth0Client.isPlayer() ?
+                                                {myProfile.isPlayer ?
                                                     <div>
                                                         <MyGames history={props.history} />
                                                         <GameStats />
@@ -53,7 +53,7 @@ const Home = (props) => {
 
 
                                                 {/* ADMIN - Section - START */}
-                                                {auth0Client.isAdmin() ?
+                                                {myProfile.isAdmin ?
                                                     <div>
 
                                                         {/* ADMIN - Start a new Game - START */}
