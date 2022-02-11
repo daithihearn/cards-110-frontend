@@ -78,7 +78,7 @@ const NavBar = () => {
             {
                 isAuthenticated() &&
                 <div>
-                    <label className="mr-2 text-white"><img alt={myProfile.name} type="image" src={myProfile.picture} className="avatar clickable" onClick={showUpdateProfileModal} /></label>
+                    <label className="mr-2 text-white"><img alt={myProfile.name} src={myProfile.picture} className="avatar clickable" onClick={showUpdateProfileModal} /></label>
                     <button className="btn btn-dark" onClick={signOut}>Sign Out</button>
 
                     <Modal fade toggle={handleCloseUpdateProfileModal} isOpen={modalUpdateProfileOpen}>

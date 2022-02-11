@@ -1,9 +1,7 @@
 import auth0 from 'auth0-js'
-// import { useDispatch } from 'react-redux'
 
 class Auth {
     constructor() {
-        // this.dispatch = useDispatch()
         this.auth0 = new auth0.WebAuth({
             domain: process.env.REACT_APP_AUTH0_DOMAIN,
             audience: process.env.REACT_APP_AUTH0_AUDIENCE,
