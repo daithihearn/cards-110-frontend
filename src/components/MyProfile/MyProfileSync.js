@@ -6,6 +6,7 @@ import parseError from '../../utils/ErrorUtils'
 import { useDispatch } from 'react-redux'
 
 import { useAuth0 } from "@auth0/auth0-react"
+import jwt_decode from "jwt-decode"
 
 const MyProfileSync = () => {
 
@@ -18,18 +19,20 @@ const MyProfileSync = () => {
 
     if (!user) return null
 
-    getAccessTokenSilently().then(accessToken => {
+    getAccessTokenSilently().then( (accessToken )=> {
+
         ProfileService.updateProfile({ name: user.name, picture: user.picture }, accessToken).then(myProfile => {
+
+            const decodedAccessToken = jwt_decode(accessToken)
+            
             dispatch({
                 type: 'myProfile/update', payload: {
                     id: myProfile.data.id,
                     name: myProfile.data.name,
                     picture: myProfile.data.picture,
-                    isPlayer: true,
-                    isAdming: true,
-                    accessToken: accessToken
-                    // isPlayer: user.scope.indexOf("read:game") !== -1,
-                    // isAdmin: user.scope.indexOf("read:admin") !== -1
+                    accessToken: accessToken,
+                    isPlayer: decodedAccessToken.permissions.indexOf("read:game") !== -1,
+                    isAdmin: decodedAccessToken.permissions.indexOf("read:admin") !== -1
                 }
             })
         }).catch(error => {
