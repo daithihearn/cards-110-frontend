@@ -1,15 +1,13 @@
-import { useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, ButtonGroup, CardBody } from 'reactstrap'
 
 import parseError from '../../utils/ErrorUtils'
+import { useAuth0 } from '@auth0/auth0-react'
 
 import GameService from '../../services/GameService'
 import { triggerBounceMessage } from '../../constants'
 
 const Calling = (props) => {
-
-    const accessToken = useSelector(state => state.auth.accessToken)
-    if (!accessToken) { return null }
 
     const game = props.game
     if (!game) {
@@ -19,10 +17,15 @@ const Calling = (props) => {
     const buttonsEnabled = !!game.round.currentHand && game.cards.length > 0 && game.isMyGo
 
     const dispatch = useDispatch()
+    const { getAccessTokenSilently } = useAuth0()
 
     const call = (callAmount) => e => {
-        GameService.call(game.id, callAmount, accessToken).catch(error => {
-            if (error.message === triggerBounceMessage) { return }
+        getAccessTokenSilently().then(accessToken => {
+            GameService.call(game.id, callAmount, accessToken).catch(error => {
+                if (error.message === triggerBounceMessage) { return }
+                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+            })
+        }).catch(error => {
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
     }

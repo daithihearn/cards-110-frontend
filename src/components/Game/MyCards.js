@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, ButtonGroup, CardImg, CardBody } from 'reactstrap'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { useAuth0 } from '@auth0/auth0-react'
 
 import parseError from '../../utils/ErrorUtils'
 
@@ -10,9 +11,6 @@ import { triggerBounceMessage } from '../../constants'
 
 const MyCards = (props) => {
 
-    const accessToken = useSelector(state => state.auth.accessToken)
-    if (!accessToken) { return null }
-
     const game = props.game
     const orderedCards = props.orderedCards
     if (!game || !orderedCards) {
@@ -20,6 +18,7 @@ const MyCards = (props) => {
     }
 
     const dispatch = useDispatch()
+    const { getAccessTokenSilently } = useAuth0()
 
     const selectedCards = orderedCards.filter(card => card.selected)
     const playButtonEnabled = game.isMyGo && game.round.status === "PLAYING" && game.round.completedHands.length + game.cards.length === 5
@@ -86,8 +85,12 @@ const MyCards = (props) => {
         if (selectedCards.length !== 1) {
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError({ message: "Please select exactly one card to play" }) } })
         } else {
-            GameService.playCard(game.id, selectedCards[0].card, accessToken).catch(error => {
-                if (error.message === triggerBounceMessage) { return }
+            getAccessTokenSilently().then(accessToken => {
+                GameService.playCard(game.id, selectedCards[0].card, accessToken).catch(error => {
+                    if (error.message === triggerBounceMessage) { return }
+                    dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+                })
+            }).catch(error => {
                 dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
             })
         }

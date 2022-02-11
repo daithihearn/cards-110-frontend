@@ -6,9 +6,8 @@ import 'flag-icon-css/css/flag-icon.min.css'
 // Import Font Awesome Icons Set
 import 'font-awesome/css/font-awesome.min.css'
 import React, { Component } from 'react'
-import { Route, withRouter } from 'react-router-dom'
-import Callback from './views/Callback'
-import SecuredRoute from './utils/SecuredRoute'
+import { Router, Route, Switch, withRouter } from 'react-router-dom'
+// import Callback from './views/Callback'
 import Loadable from 'react-loadable'
 // Import Simple Line Icons Set
 import 'simple-line-icons/css/simple-line-icons.css'
@@ -16,10 +15,18 @@ import LoadingIcon from './assets/img/brand/loading.gif'
 // Import Main styles for this application
 import './scss/style.scss'
 import { createTheme } from 'react-data-table-component'
+import { Auth0Provider, withAuthenticationRequired } from "@auth0/auth0-react"
+import MyProfileSync from "./components/MyProfile/MyProfileSync"
+import { useHistory } from "react-router-dom"
 
 function Loading() {
     return <img src={LoadingIcon} className="loading" alt="Loading Icon" />;
 }
+
+const ProtectedRoute = ({ component, ...args }) => (
+    <Route component={withAuthenticationRequired(component)} {...args} />
+);
+
 
 createTheme('solarized', {
     text: {
@@ -53,24 +60,32 @@ const GamePage = Loadable({
     loading: Loading
 })
 
-class App extends Component {
-    constructor(props) {
-        super(props);
+const App = () => {
+    const history = useHistory()
+
+    const onRedirectCallback = (appState) => {
+        // Use the router's history module to replace the url
+        history.replace(appState?.returnTo || window.location.pathname)
     }
 
-    async componentDidMount() {}
+    return (
+        <Auth0Provider
+            domain={process.env.REACT_APP_AUTH0_DOMAIN}
+            audience={process.env.REACT_APP_AUTH0_AUDIENCE}
+            clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+            redirectUri={window.location.origin}
+            scope={process.env.REACT_APP_AUTH0_SCOPE}
+            onRedirectCallback={onRedirectCallback}
+            useRefreshTokens={true}>
 
-    render() {
-        const { match, location, history } = this.props;
-        return (
-            <div>
-                <Route exact path='/callback' component={Callback} />
-
-                <SecuredRoute path="/" exact name="Home" component={HomePage} match={match} location={location} history={history} />
-                <SecuredRoute path="/game/:id" exact name="Game" component={GamePage} match={match} location={location} history={history} />
-            </div>
-        );
-    }
+                <MyProfileSync />
+                <Router history={history}>
+                    <Switch>
+                        <ProtectedRoute path="/" exact name="Home" component={HomePage} />
+                        <ProtectedRoute path="/game/:id" exact name="Game" component={GamePage} />
+                    </Switch>
+                </Router>
+        </Auth0Provider>
+    )
 }
-
-export default withRouter(App);
+export default App

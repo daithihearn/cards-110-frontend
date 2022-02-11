@@ -1,5 +1,6 @@
 
 const parseError = (error) => {
+    console.log(error)
     let errorMessage = 'Undefined error';
     if (
         error.response !== undefined &&

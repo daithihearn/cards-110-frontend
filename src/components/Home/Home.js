@@ -8,15 +8,31 @@ import DataLoader from '../DataLoader/DataLoader'
 import StartNewGame from '../StartNewGame/StartNewGame'
 import MyGames from '../MyGames/MyGames'
 import GameStats from '../GameStats/GameStats'
+import { useAuth0 } from "@auth0/auth0-react"
 
 import { useSelector } from 'react-redux'
+import LoadingIcon from '../../assets/img/brand/loading.gif'
+
+const loading = () => {
+    return (<img src={LoadingIcon} className="loading" alt="Loading Icon" />)
+}
 
 const Home = (props) => {
 
-    const accessToken = useSelector(state => state.auth.accessToken)
-    if (!accessToken) { return null }
+    const {
+        isLoading,
+        isAuthenticated,
+        error,
+        loginWithRedirect
+    } = useAuth0();
+
+
+    if (isLoading) return loading()
+    if (error) throw Error(error)
+    if (!isAuthenticated) return loginWithRedirect()
+
     const myProfile = useSelector(state => state.myProfile)
-    if (!myProfile.id) { return null }
+    if (!myProfile.id) return loading()
 
     return (
         <div>

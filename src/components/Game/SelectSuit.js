@@ -4,14 +4,12 @@ import { Modal, ModalBody, ModalHeader, Button, ButtonGroup, Card, CardImg, Card
 
 import { useState } from 'react'
 import parseError from '../../utils/ErrorUtils'
+import { useAuth0 } from '@auth0/auth0-react'
 
 import GameService from '../../services/GameService'
 import { triggerBounceMessage } from '../../constants'
 
 const SelectSuit = (props) => {
-
-    const accessToken = useSelector(state => state.auth.accessToken)
-    if (!accessToken) { return null }
 
     const game = props.game
     const orderedCards = props.orderedCards
@@ -20,6 +18,7 @@ const SelectSuit = (props) => {
     }
 
     const dispatch = useDispatch()
+    const { getAccessTokenSilently } = useAuth0()
 
     const selectedCards = orderedCards.filter(card => card.selected)
 
@@ -47,10 +46,14 @@ const SelectSuit = (props) => {
     }
 
     const submitSelectFromDummy = (suit) => {
-        GameService.chooseFromDummy(game.id, selectedCards.map(sc => sc.card), suit, accessToken).then(response => {
-            dispatch({ type: 'game/clearSelectedCards' })
+        getAccessTokenSilently().then(accessToken => {
+            GameService.chooseFromDummy(game.id, selectedCards.map(sc => sc.card), suit, accessToken).then(response => {
+                dispatch({ type: 'game/clearSelectedCards' })
+            }).catch(error => {
+                if (error.message === triggerBounceMessage) { return }
+                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+            })
         }).catch(error => {
-            if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
     }

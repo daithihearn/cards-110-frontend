@@ -164,8 +164,8 @@ const WebsocketHandler = (props) => {
 
 const WebsocketManager = (props) => {
 
-    const accessToken = useSelector(state => state.auth.accessToken)
-    if (!accessToken) { return null }
+    const myProfile = useSelector(state => state.myProfile)
+    if (!myProfile.accessToken) return null
 
     const game = props.game
     const players = props.players
@@ -174,7 +174,7 @@ const WebsocketManager = (props) => {
     }
 
     return (
-        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.game.id}&tokenId=${accessToken}`}>
+        <StompSessionProvider url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${props.game.id}&tokenId=${myProfile.accessToken}`}>
             <WebsocketHandler game={game} players={players}/>
         </StompSessionProvider>
     )

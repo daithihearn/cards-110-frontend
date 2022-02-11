@@ -14,7 +14,8 @@ export default function myProfileReducer(state = initialState, action) {
                 name: action.payload.name,
                 picture: action.payload.picture,
                 isPlayer: action.payload.isPlayer,
-                isAdmin: action.payload.isAdmin
+                isAdmin: action.payload.isAdmin,
+                accessToken: action.payload.accessToken
             }
         }
         default:

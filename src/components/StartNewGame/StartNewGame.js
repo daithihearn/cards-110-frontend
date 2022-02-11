@@ -8,11 +8,11 @@ import DataTable from 'react-data-table-component'
 import { Label, Button, ButtonGroup, Form, FormGroup, Input, Card, CardBody, CardGroup } from 'reactstrap'
 
 import parseError from '../../utils/ErrorUtils'
+import { useAuth0 } from '@auth0/auth0-react'
 import { triggerBounceMessage } from '../../constants'
 
 const StartNewGame = () => {
-    const accessToken = useSelector(state => state.auth.accessToken)
-    if (!accessToken) { return null }
+    const { getAccessTokenSilently } = useAuth0()
     const [newGameName, updateNewGameName] = useState('')
     const allPlayers = useSelector(state => state.players.players)
 
@@ -39,13 +39,17 @@ const StartNewGame = () => {
             name: newGameName
         }
 
-        GameService.put(payload, accessToken).then(response => {
-            updateNewGameName('')
-            dispatch({ type: 'myGames/addGame', payload: response.data })
-            dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game started successfully' } })
+        getAccessTokenSilently().then(accessToken => {
+            GameService.put(payload, accessToken).then(response => {
+                updateNewGameName('')
+                dispatch({ type: 'myGames/addGame', payload: response.data })
+                dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game started successfully' } })
 
+            }).catch(error => {
+                if (error.message === triggerBounceMessage) { return }
+                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+            })
         }).catch(error => {
-            if (error.message === triggerBounceMessage) { return }
             dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
         })
     }

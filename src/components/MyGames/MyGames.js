@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import RemoveImage from '../../assets/icons/remove.png'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from "react-router-dom"
+import { useAuth0 } from '@auth0/auth0-react'
 
 import GameService from '../../services/GameService'
 import parseError from '../../utils/ErrorUtils'
@@ -15,8 +16,8 @@ import moment from 'moment'
 import { triggerBounceMessage } from '../../constants'
 
 const MyGames = () => {
-    const accessToken = useSelector(state => state.auth.accessToken)
-    if (!accessToken) { return null }
+
+    const { getAccessTokenSilently } = useAuth0()
     const myGames = useSelector(state => state.myGames.games)
     const myProfile = useSelector(state => state.myProfile)
     const dispatch = useDispatch()
@@ -26,16 +27,22 @@ const MyGames = () => {
     const deleteGame = e => {
         e.preventDefault()
 
-        GameService.delete(deleteGameId, accessToken)
-            .then(response => {
-                dispatch({ type: 'myGames/removeGame', payload: deleteGameId })
-                dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game deleted' } })
-                handleCloseDeleteGameModal()
-            })
-            .catch(error => {
-                if (error.message === triggerBounceMessage) { return }
-                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
-            })
+        getAccessTokenSilently().then(accessToken => {
+
+            GameService.delete(deleteGameId, accessToken)
+                .then(response => {
+                    dispatch({ type: 'myGames/removeGame', payload: deleteGameId })
+                    dispatch({ type: 'snackbar/message', payload: { type: 'info', message: 'Game deleted' } })
+                    handleCloseDeleteGameModal()
+                })
+                .catch(error => {
+                    if (error.message === triggerBounceMessage) { return }
+                    dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+                })
+
+        }).catch(error => {
+            dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+        })
     }
 
     const showDeleteGameModal = id => e => {
@@ -70,7 +77,7 @@ const MyGames = () => {
 
     const isWinner = (game, playerId) => {
         const player = game.players.find(e => e.id === playerId)
-        
+
         return !!player && player.winner
     }
 
@@ -81,8 +88,8 @@ const MyGames = () => {
     const columns = [
         { name: 'Name', selector: 'name', sortable: true },
         { name: 'Date', selector: 'timestamp', format: row => moment(row.timestamp).format('lll'), sortable: true },
-        { 
-            cell: row => <div>{ isWinner(row, myProfile.id) ? <img src={TrophyImage} width="25px" height="25px"/> : null }</div>,
+        {
+            cell: row => <div>{isWinner(row, myProfile.id) ? <img src={TrophyImage} width="25px" height="25px" /> : null}</div>,
             center: true
         },
         {
