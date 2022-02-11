@@ -48,8 +48,16 @@ const NavBar = () => {
 
             reader.onloadend = () => {
 
-                profileService.updateProfile({ name: myProfile.name, picture: reader.result, forceUpdate: true }, auth.accessToken).then(myProfile => {
-                    dispatch({ type: 'myProfile/updatePicture', payload: myProfile.data.picture })
+                profileService.updateProfile({ name: myProfile.name, picture: reader.result, forceUpdate: true }, auth.accessToken).then(profile => {
+                    dispatch({
+                        type: 'myProfile/update', payload: {
+                            id: myProfile.id,
+                            name: myProfile.name,
+                            picture: profile.data.picture,
+                            isPlayer: myProfile.isPlayer,
+                            isAdmin: myProfile.isAdmin
+                        }
+                    })
                 })
                 updateModalUpdateProfileOpen(false)
             }

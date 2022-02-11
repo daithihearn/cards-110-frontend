@@ -8,31 +8,6 @@ const initialState = {
 
 export default function myProfileReducer(state = initialState, action) {
     switch (action.type) {
-        case 'myProfile/updateId': {
-            return Object.assign(state, {
-                id: action.payload
-            })
-        }
-        case 'myProfile/updateName': {
-            return Object.assign(state, {
-                name: action.payload
-            })
-        }
-        case 'myProfile/updatePicture': {
-            return Object.assign(state, {
-                picture: action.payload
-            })
-        }
-        case 'myProfile/updateIsPlayer': {
-            return Object.assign(state, {
-                isPlayer: action.payload
-            })
-        }
-        case 'myProfile/updateIsAdmin': {
-            return Object.assign(state, {
-                isAdmin: action.payload
-            })
-        }
         case 'myProfile/update': {
             return {
                 id: action.payload.id,
