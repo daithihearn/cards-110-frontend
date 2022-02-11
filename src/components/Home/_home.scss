@@ -88,6 +88,10 @@
   border-radius: 50%;
 }
 
+.clickable:hover {
+  cursor: pointer;
+}
+
 .thumbnail_size {
   max-width: 100px;
   max-height: 153px;
