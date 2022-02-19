@@ -4,6 +4,7 @@ import profileService from '../../services/ProfileService'
 import { useAuth0 } from '@auth0/auth0-react'
 import parseError from '../../utils/ErrorUtils'
 import AvatarEditor from 'react-avatar-editor'
+import heic2any from "heic2any"
 
 import { Col, Modal, ModalBody, ModalHeader, ModalFooter, Button, Form, FormGroup, FormText, Label, Input, ButtonGroup } from 'reactstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -72,22 +73,29 @@ const NavBar = () => {
 
     const handleNewAvatarSelection = (event) => {
 
-        let file = event.target.files[0];
+        let file = event.target.files[0]
 
-        if (file.type.includes("image/")) {
-
-            let reader = new FileReader()
-
-            reader.onloadend = () => {
-                updateSelectedImage(reader.result)
-            }
-
-            reader.readAsDataURL(file)
-
-
+        if (file.type.includes("heic")) {
+            heic2any({ blob: file, toType: "image/jpg", quality: 1 })
+                .then((jpgFile) => {
+                    updateFile(jpgFile)
+                })
         } else {
-            dispatch({ type: 'snackbar/message', payload: { type: 'error', message: "Invalid File Type" } })
+            updateFile(file)
         }
+
+    }
+
+    const updateFile = (file) => {
+        let reader = new FileReader()
+
+        reader.onloadend = () => {
+
+            updateSelectedImage(reader.result)
+
+        }
+
+        reader.readAsDataURL(file)
     }
 
     return (
@@ -119,7 +127,7 @@ const NavBar = () => {
                                 <FormGroup row>
                                     <Label for="newAvatar" sm={2}>Avatar</Label>
                                     <Col sm={10}>
-                                        <Input type="file" accept="image/*" name="newAvatar" id="newAvatar" onChange={handleNewAvatarSelection} multiple={false} />
+                                        <Input type="file" accept="image/*,.heic" name="newAvatar" id="newAvatar" onChange={handleNewAvatarSelection} multiple={false} />
                                         <FormText color="muted">
                                             Please choose your new avatar
                                             </FormText>
