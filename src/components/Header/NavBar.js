@@ -20,7 +20,7 @@ const NavBar = () => {
     if (!myProfile) { return null }
 
     const [modalUpdateProfileOpen, updateModalUpdateProfileOpen] = useState(false)
-    const [selectedImage, updateSelectedImage] = useState(myProfile.picture)
+    const [selectedImage, updateSelectedImage] = useState(undefined)
     const [scale, updateScale] = useState(1.2)
     const [editor, setEditorRef] = useState(null)
 
@@ -125,7 +125,6 @@ const NavBar = () => {
                                     />
                                 </FormGroup>
                                 <FormGroup row>
-                                    <Label for="newAvatar" sm={2}>Avatar</Label>
                                     <Col sm={10}>
                                         <Input type="file" accept="image/*,.heic" name="newAvatar" id="newAvatar" onChange={handleNewAvatarSelection} multiple={false} />
                                         <FormText color="muted">
@@ -134,7 +133,7 @@ const NavBar = () => {
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
-                                    <Label for="scale">Zoom</Label>
+                                <Col sm={10}>
                                     <Input
                                         name="scale"
                                         type="range"
@@ -144,6 +143,7 @@ const NavBar = () => {
                                         step="0.01"
                                         defaultValue="1.2"
                                     />
+                                    </Col>
                                 </FormGroup>
                             </Form>
                         </ModalBody>
@@ -153,7 +153,7 @@ const NavBar = () => {
                                 <Button color="secondary" onClick={handleCloseUpdateProfileModal}>
                                     Cancel
                                 </Button>
-                                <Button color="primary" onClick={handleSave}>
+                                <Button color="primary" disabled={!selectedImage} onClick={handleSave}>
                                     Save
                                 </Button>
                             </ButtonGroup>
