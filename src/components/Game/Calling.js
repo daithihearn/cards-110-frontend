@@ -42,7 +42,7 @@ const Calling = (props) => {
                         {(game.iamDealer && game.maxCall <= 15) || game.maxCall < 15 ? <Button disabled={!buttonsEnabled} type="button" color="warning" onClick={call(15)}>15</Button> : null}
                         {(game.iamDealer && game.maxCall <= 20) || game.maxCall < 20 ? <Button disabled={!buttonsEnabled} type="button" color="warning" onClick={call(20)}>20</Button> : null}
                         {(game.iamDealer && game.maxCall <= 25) || game.maxCall < 25 ? <Button disabled={!buttonsEnabled} type="button" color="warning" onClick={call(25)}>25</Button> : null}
-                        <Button disabled={!buttonsEnabled} type="button" color="danger" onClick={call(30)}>Jink</Button>
+                        <Button disabled={!buttonsEnabled} type="button" color="danger" onClick={call(30)}>{game.playerProfiles.length > 2 ? "Jink":"30"}</Button>
                     </ButtonGroup>
 
                 </CardBody>
