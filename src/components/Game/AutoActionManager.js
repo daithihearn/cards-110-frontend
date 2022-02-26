@@ -112,7 +112,7 @@ const AutoActionManager = (props) => {
             setTimeout(() => deal(), 3000)
         }
         // If in the bunker, Pass
-        else if (game.round.status === "CALLING" && game.me.score < -30) {
+        else if (game.round.status === "CALLING" && game.isMyGo && game.me.score < -30) {
             call(0)
         }
         // Play card when you've pre-selected a card
