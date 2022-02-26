@@ -60,7 +60,8 @@ const PlayersAndCards = (props) => {
                                                 {(playerProfile.call === 15) ? <CardImg alt="15 Chip" src={"/cards/originals/call_15.png"} className="thumbnail_chips overlay-chip" /> : null}
                                                 {(playerProfile.call === 20) ? <CardImg alt="20 Chip" src={"/cards/originals/call_20.png"} className="thumbnail_chips overlay-chip" /> : null}
                                                 {(playerProfile.call === 25) ? <CardImg alt="25 Chip" src={"/cards/originals/call_25.png"} className="thumbnail_chips overlay-chip" /> : null}
-                                                {(playerProfile.call === 30) ? <CardImg alt="Jink Chip" src={"/cards/originals/call_jink.png"} className="thumbnail_chips overlay-chip" /> : null}
+                                                {(playerProfile.call === 30 && game.playerProfiles.length === 2) ? <CardImg alt="30 Chip" src={"/cards/originals/call_30.png"} className="thumbnail_chips overlay-chip" /> : null}
+                                                {(playerProfile.call === 30 && game.playerProfiles.length > 2) ? <CardImg alt="Jink Chip" src={"/cards/originals/call_jink.png"} className="thumbnail_chips overlay-chip" /> : null}
                                             </CardImgOverlay>
                                             : null}
 
