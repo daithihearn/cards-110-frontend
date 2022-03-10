@@ -94,12 +94,18 @@ const AutoActionManager = (props) => {
         const myTrumpCards = myCardsRich.filter(card => card.suit === suit || card.suit === "WILD")
 
         if (myTrumpCards.length > 0) {
-            // Sort Ascending
+            // Sort ascending by value
             myTrumpCards.sort((a, b) => a.value - b.value)
             playCard(myTrumpCards[0].name)
         } else {
-            // Sort Descending
+            // Sort ascending by cold value
             myCardsRich.sort((a, b) => a.coldValue - b.coldValue)
+
+            // if we can't find a cold card that is clearly the worst card then do nothing
+            if (myCardsRich.length > 1 && myCardsRich[0].coldValue === myCardsRich[1].coldValue) {
+                return
+            }
+            
             playCard(myCardsRich[0].name)
         }
 
@@ -109,7 +115,7 @@ const AutoActionManager = (props) => {
 
         // Deal when it's your turn
         if (game.iamDealer && game.round.status === "CALLING" && game.cards.length === 0) {
-            setTimeout(() => deal(), 3000)
+            deal()
         }
         // If in the bunker, Pass
         else if (game.round.status === "CALLING" && game.isMyGo && game.me.score < -30) {
