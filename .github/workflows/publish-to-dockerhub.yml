@@ -10,10 +10,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: "package.json"
+          prop_path: "version"
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: daithihearn/cards-110-frontend
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: "latest"
+          tags: "latest, ${{steps.version.outputs.prop}}"
