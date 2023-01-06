@@ -2,7 +2,7 @@
 @import "variables";
 
 // Import styles
-@import '@coreui/coreui/scss/coreui.scss';
+@import "@coreui/coreui/scss/coreui.scss";
 
 // If you want to add something do it here
 @import "custom";
@@ -10,6 +10,6 @@
 // Styles from Component
 // Enable Component Styles here
 
-@import '../components/Home/home';
-@import '../components/Header/header';
-@import '../components/Game/game';
+@import "../components/Home/home";
+@import "../components/Header/header";
+@import "../components/Game/game";

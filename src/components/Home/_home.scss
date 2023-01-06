@@ -38,8 +38,6 @@
   line-height: 24px;
   padding: 100px 20px 100px 20px;
 
- 
-  
   &_headerText {
     height: 40px;
     width: 92px;
@@ -73,7 +71,7 @@
     margin: 40px auto 20px auto;
 
     &_link {
-      color:$blue;
+      color: $blue;
       font-weight: $fontWeightBold;
       font-family: $fontFamily;
       cursor: pointer;
@@ -100,23 +98,19 @@
 .thumbnail_size_small {
   max-width: 70px;
   max-height: 100px;
- 
 }
-
 
 .thumbnail_size_extra_small {
   max-width: 45px;
   max-height: 45px;
- 
 }
 
 .thumbnail_chips {
   max-width: 70px;
   max-height: 70px;
- 
 }
 
-.background_white{
+.background_white {
   border-radius: 5px;
   background-color: white;
 }
@@ -129,7 +123,6 @@
   max-width: 512px;
   max-height: 512px;
 }
-
 
 .dropdown-menu-quizzes {
   // position: absolute;
@@ -191,46 +184,45 @@
   border-radius: 12px;
   box-shadow: 1px 4px 11px 2px rgba(0, 0, 0, 0.06);
 
-
   .rwd-table {
     min-width: 300px;
     max-width: 100%;
     margin-bottom: 10px;
   }
-  
+
   .TableBody {
     border: 1px solid $greyshade4;
   }
-  
+
   .rwd-table tr:first-child {
     background: $white;
     color: #808080;
   }
-  
+
   .rwd-table th {
     display: none;
   }
-  
+
   .rwd-table td {
     display: block;
   }
-  
+
   .rwd-table td:first-child {
     margin-top: 0.5em;
   }
-  
+
   .rwd-table td:last-child {
     margin-bottom: 0.5em;
   }
-  
+
   .rwd-table td:before {
-    content: attr(data-th) ': ';
+    content: attr(data-th) ": ";
     font-weight: $fontWeightBold;
     width: 120px;
     display: inline-block;
     color: $blackShade2;
   }
-  
+
   .rwd-table th,
   .rwd-table td {
     text-align: left;
@@ -240,16 +232,16 @@
   .rwd-table td:last-child {
     border-right: none;
   }
-  
+
   .rwd-table {
     color: #333;
     overflow-y: scroll;
   }
-  
+
   .rwd-table tr {
     border-color: #bfbfbf;
   }
-  
+
   .rwd-table th,
   .rwd-table td {
     padding: 0.5em 1em;
@@ -258,14 +250,13 @@
     .rwd-table tr:nth-child(2) {
       border-top: 1px solid $greyshade4 !important ;
     }
-  
+
     .rwd-table tr {
       border-right: none;
       border-bottom: 1px solid $greyshade4;
     }
   }
   @media screen and (min-width: 800px) {
-
     .game_wrap {
       min-width: 0;
       max-width: 790px;
@@ -285,7 +276,7 @@
     .rwd-table td:first-child {
       padding-left: 0;
     }
-  
+
     .rwd-table th,
     .rwd-table td {
       padding: 1em !important;
@@ -319,7 +310,6 @@
     text-align: left;
     pointer-events: none;
   }
-
 }
 
 .game_wrap {
@@ -333,7 +323,6 @@
 }
 
 @media only screen and (max-width: 1324px) {
-
   .game_wrap {
     min-width: 1100px;
     max-width: 1300px;
@@ -346,7 +335,6 @@
 }
 
 @media only screen and (max-width: 1224px) {
-
   .game_wrap {
     min-width: 900px;
     max-width: 1100px;
@@ -359,7 +347,6 @@
 }
 
 @media only screen and (max-width: 1124px) {
-
   .game_wrap {
     min-width: 800px;
     max-width: 1000px;
@@ -372,7 +359,6 @@
 }
 
 @media only screen and (max-width: 1024px) {
-
   .game_wrap {
     min-width: 700px;
     max-width: 900px;
@@ -386,7 +372,6 @@
 
 // Resposiveness for Mobile view.
 @media only screen and (max-width: 925px) {
-
   .game_wrap {
     min-width: 700px;
     max-width: 900px;
@@ -417,12 +402,10 @@
       margin-top: 28px;
       font-size: 30px;
     }
-
   }
 }
 
 @media only screen and (max-width: 900px) {
-
   .game_wrap {
     min-width: 750px;
     max-width: 823px;
@@ -435,7 +418,6 @@
 }
 
 @media only screen and (max-width: 823px) {
-
   .game_wrap {
     min-width: 700px;
     max-width: 800px;
@@ -448,7 +430,6 @@
 }
 
 @media only screen and (max-width: 812px) {
-
   .game_wrap {
     min-width: 0;
     max-width: 800px;
@@ -461,7 +442,7 @@
 }
 
 @media only screen and (max-width: 768px) {
-.game_wrap {
+  .game_wrap {
     max-width: 750px;
   }
 
@@ -472,7 +453,6 @@
 }
 
 @media only screen and (max-width: 736px) {
-
   .game_wrap {
     max-width: 710px;
   }
@@ -484,7 +464,6 @@
 }
 
 @media only screen and (max-width: 734px) {
-
   .game_wrap {
     max-width: 700px;
   }
@@ -496,7 +475,6 @@
 }
 
 @media only screen and (max-width: 667px) {
-
   .game_wrap {
     min-width: 600px;
     max-width: 650px;
@@ -509,7 +487,6 @@
 }
 
 @media only screen and (max-width: 570px) {
-
   .game_wrap {
     min-width: 550px;
     max-width: 560px;
@@ -518,7 +495,7 @@
   .diplay_image_size {
     max-width: 460px;
   }
-  
+
   .card-product_StatsHome {
     &_Content {
       font-size: 38px !important ;
@@ -527,7 +504,6 @@
 }
 
 @media only screen and (max-width: 420px) {
-
   .game_wrap {
     min-width: 400px;
     max-width: 410px;
@@ -536,7 +512,7 @@
   .diplay_image_size {
     max-width: 320px;
   }
-  
+
   .card-product_StatsHome {
     &_Content {
       font-size: 38px !important ;
@@ -545,7 +521,6 @@
 }
 
 @media only screen and (max-width: 385px) {
-
   .game_wrap {
     min-width: 370px;
     max-width: 375px;
@@ -554,11 +529,9 @@
   .diplay_image_size {
     max-width: 280px;
   }
-  
 }
 
 @media only screen and (max-width: 360px) {
-
   .game_wrap {
     min-width: 300px;
     max-width: 350px;
@@ -567,11 +540,9 @@
   .diplay_image_size {
     max-width: 260px;
   }
-  
 }
 
 @media only screen and (max-width: 320px) {
-
   .game_wrap {
     max-width: 310px;
   }
@@ -579,9 +550,7 @@
   .diplay_image_size {
     max-width: 220px;
   }
-  
 }
-
 
 @media (max-width: 277px) {
   .app {
@@ -589,4 +558,3 @@
     background: $white;
   }
 }
-

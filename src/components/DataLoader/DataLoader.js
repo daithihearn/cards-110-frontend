@@ -1,49 +1,71 @@
-import { useDispatch, useSelector } from 'react-redux'
-import GameService from '../../services/GameService'
-import StatsService from '../../services/StatsService'
-import { useAuth0 } from '@auth0/auth0-react'
+import { useDispatch, useSelector } from "react-redux"
+import GameService from "../../services/GameService"
+import StatsService from "../../services/StatsService"
+import { useAuth0 } from "@auth0/auth0-react"
 
-import parseError from '../../utils/ErrorUtils'
+import parseError from "../../utils/ErrorUtils"
 
-import { triggerBounceMessage } from '../../constants'
+import { triggerBounceMessage } from "../../constants"
 
 const DataLoader = () => {
-    const dispatch = useDispatch()
-    const { getAccessTokenSilently } = useAuth0()
-    const myProfile = useSelector(state => state.myProfile)
-    if (!myProfile) { return null }
-    
-    getAccessTokenSilently().then(accessToken => {
+  const dispatch = useDispatch()
+  const { getAccessTokenSilently } = useAuth0()
+  const myProfile = useSelector((state) => state.myProfile)
+  if (!myProfile) {
+    return null
+  }
 
-        if (myProfile.isAdmin) {
-            GameService.getAllPlayers(accessToken).then(response => {
-                dispatch({ type: 'players/updateAll', payload: response.data })
-            }).catch(error => {
-                if (error.message === triggerBounceMessage) { return }
-                dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
-
+  getAccessTokenSilently()
+    .then((accessToken) => {
+      if (myProfile.isAdmin) {
+        GameService.getAllPlayers(accessToken)
+          .then((response) => {
+            dispatch({ type: "players/updateAll", payload: response.data })
+          })
+          .catch((error) => {
+            if (error.message === triggerBounceMessage) {
+              return
+            }
+            dispatch({
+              type: "snackbar/message",
+              payload: { type: "error", message: parseError(error) },
             })
-        }
+          })
+      }
 
-        GameService.getAll(accessToken).then(response => {
-            dispatch({ type: 'myGames/updateAll', payload: response.data })
-        }).catch(error => {
-            if (error.message === triggerBounceMessage) { return }
-            dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
-
+      GameService.getAll(accessToken)
+        .then((response) => {
+          dispatch({ type: "myGames/updateAll", payload: response.data })
+        })
+        .catch((error) => {
+          if (error.message === triggerBounceMessage) {
+            return
+          }
+          dispatch({
+            type: "snackbar/message",
+            payload: { type: "error", message: parseError(error) },
+          })
         })
 
-        StatsService.gameStatsForPlayer(accessToken).then(response => {
-            dispatch({ type: 'gameStats/update', payload: response.data })
-        }).catch(error => {
-            dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+      StatsService.gameStatsForPlayer(accessToken)
+        .then((response) => {
+          dispatch({ type: "gameStats/update", payload: response.data })
         })
-    }).catch(error => {
-        dispatch({ type: 'snackbar/message', payload: { type: 'error', message: parseError(error) } })
+        .catch((error) => {
+          dispatch({
+            type: "snackbar/message",
+            payload: { type: "error", message: parseError(error) },
+          })
+        })
+    })
+    .catch((error) => {
+      dispatch({
+        type: "snackbar/message",
+        payload: { type: "error", message: parseError(error) },
+      })
     })
 
-    return null
-
+  return null
 }
 
 export default DataLoader

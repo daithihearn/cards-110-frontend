@@ -1,9 +1,8 @@
-import React from 'react';
+import React from "react"
 
-import NavBar from './NavBar';
+import NavBar from "./NavBar"
 
 const DefaultHeader = () => {
-
   return (
     <React.Fragment>
       <NavBar />
@@ -11,4 +10,4 @@ const DefaultHeader = () => {
   )
 }
 
-export default DefaultHeader;
+export default DefaultHeader
