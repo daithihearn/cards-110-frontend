@@ -1,15 +1,15 @@
 const initialState = {
-    players: []
+  players: [],
 }
 
 export default function playersReducer(state = initialState, action) {
-    switch (action.type) {
-        case 'players/updateAll': {
-            return {
-                players: action.payload
-            }
-        }
-        default:
-          return state
+  switch (action.type) {
+    case "players/updateAll": {
+      return {
+        players: action.payload,
+      }
     }
+    default:
+      return state
+  }
 }

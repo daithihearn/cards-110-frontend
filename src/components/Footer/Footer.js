@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react"
 
 class DefaultFooter extends Component {
   render() {
@@ -6,17 +6,14 @@ class DefaultFooter extends Component {
       <div>
         <div className="footer">
           <div className="footer-content">
-            <div className="footer-list_logo">
-
-            </div>
-            <div className="footer-list_Nav">
-            </div>
+            <div className="footer-list_logo"></div>
+            <div className="footer-list_Nav"></div>
             <div className="footer-list_Ad">Cards 110</div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default DefaultFooter;
+export default DefaultFooter
