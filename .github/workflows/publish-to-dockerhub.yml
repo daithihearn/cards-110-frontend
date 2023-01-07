@@ -23,14 +23,15 @@ jobs:
           file: public/manifest.json
           field: version
           value: ${{ github.ref_name }}
-
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Publish to Dockerhub
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: daithihearn/cards-110-frontend
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          platforms: linux/amd64, linux/arm64,linux/arm64/v8
+          platforms: linux/amd64,linux/arm64,linux/arm64/v8
           tags: "latest, ${{ github.ref_name }}"
 
       - name: Create PR with version changes
