@@ -5,8 +5,8 @@ import "@coreui/icons/css/all.min.css"
 import "flag-icon-css/css/flag-icon.min.css"
 // Import Font Awesome Icons Set
 import "font-awesome/css/font-awesome.min.css"
-import React, { Component } from "react"
-import { Router, Route, Switch, withRouter } from "react-router-dom"
+import React, { useCallback } from "react"
+import { Router, Route, Switch, useHistory } from "react-router-dom"
 // import Callback from './views/Callback'
 import Loadable from "react-loadable"
 // Import Simple Line Icons Set
@@ -17,7 +17,6 @@ import "./scss/style.scss"
 import { createTheme } from "react-data-table-component"
 import { Auth0Provider, withAuthenticationRequired } from "@auth0/auth0-react"
 import MyProfileSync from "./components/MyProfile/MyProfileSync"
-import { useHistory } from "react-router-dom"
 
 function Loading() {
   return <img src={LoadingIcon} className="loading" alt="Loading Icon" />
