@@ -1,25 +1,51 @@
 name: Publish to Dockerhub
 
 on:
-  push:
-    branches: ["main"]
+  release:
+    types: [published]
 
 jobs:
-  build:
+  publish:
+    name: Build and Publish docker image to dockerhub
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: read
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: get version
-        id: version
-        uses: notiz-dev/github-action-json-property@release
+      - name: Update version in package.json
+        run: yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
+      - name: Update manifest.json version
+        uses: jossef/action-set-json-field@v2
         with:
-          path: "package.json"
-          prop_path: "version"
-      - name: Publish to Registry
+          file: public/manifest.json
+          field: version
+          value: ${{ github.ref_name }}
+
+      - name: Publish to Dockerhub
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: daithihearn/cards-110-frontend
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: "latest, ${{steps.version.outputs.prop}}"
+          tags: "latest, ${{ github.ref_name }}"
+
+      - name: Create PR with version changes
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GH_TOKEN_RELEASE_PR }}
+          commit-message: Update latest version (${{ github.ref_name }})
+          title: Update latest version (${{ github.ref_name }})
+          body: |
+            Update latest version (${{ github.ref_name }})
+          branch: update-version-${{ github.ref_name }}
+          base: main
+          add-paths: |
+            package.json
+            public/manifest.json
+          labels: |
+            update
+          assignees: |
+            ${{ github.actor }}
