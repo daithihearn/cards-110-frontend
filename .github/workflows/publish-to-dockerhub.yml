@@ -35,7 +35,6 @@ jobs:
       - name: Create PR with version changes
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GH_TOKEN_RELEASE_PR }}
           commit-message: Update latest version (${{ github.ref_name }})
           title: Update latest version (${{ github.ref_name }})
           body: |
