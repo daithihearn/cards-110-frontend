@@ -62,10 +62,13 @@ const GamePage = Loadable({
 const App = () => {
   const history = useHistory()
 
-  const onRedirectCallback = (appState) => {
-    // Use the router's history module to replace the url
-    history.replace(appState?.returnTo || window.location.pathname)
-  }
+  const onRedirectCallback = useCallback(
+    (appState) => {
+      // Use the router's history module to replace the url
+      history.replace(appState?.returnTo || window.location.pathname)
+    },
+    [history]
+  )
 
   return (
     <Auth0Provider
