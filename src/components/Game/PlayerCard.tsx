@@ -12,14 +12,10 @@ interface PlayerRowI {
 }
 const PlayerCard: React.FC<PlayerRowI> = ({ player, profile }) => {
   const game = useAppSelector(getGame)
-  const [playedCard, setPlayedCard] = useState<Card>()
 
-  useEffect(() => {
+  const playedCard = useMemo(() => {
     if (game.round) {
-      if (game.round.currentHand.playedCards.get) {
-        const pl = game.round.currentHand.playedCards.get(player.id)
-        if (pl) setPlayedCard(pl)
-      }
+      return game.round.currentHand.playedCards[player.id]
     }
   }, [game])
 
@@ -47,7 +43,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, profile }) => {
         {playedCard ? (
           <CardImg
             alt={profile.name}
-            src={`/cards/thumbnails/${playedCard.name}.png`}
+            src={`/cards/thumbnails/${playedCard}.png`}
             className="thumbnail_size"
           />
         ) : (

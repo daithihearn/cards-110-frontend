@@ -20,7 +20,7 @@ const bestCardLead = (round: Round) => {
   // Remove played trump cards
   round.completedHands.forEach((hand) => {
     if (hand.playedCards.forEach) {
-      hand.playedCards.forEach((card) => {
+      hand.playedCards.forEach((card: Card) => {
         if (
           card.suit === round.suit ||
           card.name === "JOKER" ||
