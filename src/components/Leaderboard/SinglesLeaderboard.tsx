@@ -4,12 +4,11 @@ import TrophyImage from "../../assets/icons/trophy.png"
 import { getGame } from "../../caches/GameSlice"
 import { useAppSelector } from "../../caches/hooks"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { Card } from "../../model/Cards"
 import { GameStatus } from "../../model/Game"
 import { Player } from "../../model/Player"
 
 interface LeaderboardItem {
-  previousCard?: Card
+  previousCard?: string
   score: number
   rings: number
   winner: boolean
@@ -49,7 +48,8 @@ const SinglesLeaderboard = () => {
         score: player.score,
         cardsBought: player.cardsBought || 0,
         previousCard: previousHand
-          ? previousHand.playedCards.get(profile.id)
+          ? previousHand.playedCards.find((p) => p.playerId === profile.id)
+              ?.card
           : undefined,
         rings: player.rings,
         winner: player.winner,
@@ -99,7 +99,7 @@ const SinglesLeaderboard = () => {
     {
       cell: (row) => (
         <img
-          alt={row.previousCard?.name}
+          alt={row.previousCard}
           src={"/cards/thumbnails/" + row.previousCard + ".png"}
           className="thumbnail_size_small cardNotSelected"
         />

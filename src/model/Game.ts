@@ -36,6 +36,11 @@ export interface GameState {
   players: Player[]
 }
 
+export interface PlayedCard {
+  playerId: string
+  card: string
+}
+
 export interface GameStateResponse {
   id?: string
   iamSpectator: boolean
@@ -48,6 +53,7 @@ export interface GameStateResponse {
   maxCall?: number
   me?: Player
   players: Player[]
+  playedCards: PlayedCard[]
 }
 
 export interface CreateGame {

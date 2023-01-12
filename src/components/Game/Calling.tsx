@@ -2,7 +2,7 @@ import { Button, ButtonGroup, CardBody } from "reactstrap"
 
 import GameService from "../../services/GameService"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { getGame } from "../../caches/GameSlice"
+import { getGame, getGameId } from "../../caches/GameSlice"
 import { RoundStatus } from "../../model/Round"
 import { useCallback } from "react"
 import { useSnackbar } from "notistack"
@@ -10,6 +10,7 @@ import { useSnackbar } from "notistack"
 const Calling = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
+  const gameId = useAppSelector(getGameId)
   const game = useAppSelector(getGame)
 
   const buttonsEnabled =
@@ -17,11 +18,12 @@ const Calling = () => {
 
   const call = useCallback(
     (callAmount: number) => {
-      dispatch(GameService.call(game.id!, callAmount)).catch((e: Error) =>
-        enqueueSnackbar(e.message, { variant: "error" })
-      )
+      if (gameId)
+        dispatch(GameService.call(gameId, callAmount)).catch((e: Error) =>
+          enqueueSnackbar(e.message, { variant: "error" })
+        )
     },
-    [game]
+    [gameId]
   )
 
   if (!game) {

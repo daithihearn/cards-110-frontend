@@ -1,59 +1,72 @@
-import { useEffect, useMemo, useState } from "react"
-import { Col, CardImgOverlay, CardText, CardImg } from "reactstrap"
-import { getGame } from "../../caches/GameSlice"
+import { useMemo } from "react"
+import { Col, CardImgOverlay, CardText, CardImg, Card } from "reactstrap"
+import { getGamePlayers, getRound } from "../../caches/GameSlice"
 import { useAppSelector } from "../../caches/hooks"
-import { Card } from "../../model/Cards"
+import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
+import { BLANK_CARD } from "../../model/Cards"
 
-import { Player, PlayerProfile } from "../../model/Player"
+import { Player } from "../../model/Player"
 
 interface PlayerRowI {
   player: Player
-  profile?: PlayerProfile
 }
-const PlayerCard: React.FC<PlayerRowI> = ({ player, profile }) => {
-  const game = useAppSelector(getGame)
+const PlayerCard: React.FC<PlayerRowI> = ({ player }) => {
+  const round = useAppSelector(getRound)
+  const players = useAppSelector(getGamePlayers)
+  const playerProfiles = useAppSelector(getPlayerProfiles)
+
+  const profile = useMemo(
+    () => playerProfiles.find((p) => p.id === player.id),
+    [playerProfiles]
+  )
 
   const playedCard = useMemo(() => {
-    if (game.round) {
-      return game.round.currentHand.playedCards[player.id]
+    if (round) {
+      return round.currentHand.playedCards.find((c) => c.playerId === player.id)
     }
-  }, [game])
+    return BLANK_CARD
+  }, [round])
 
   const isCurrentPlayer: boolean = useMemo(
-    () => !!game.round && game.round.currentHand.currentPlayerId === player.id,
-    [game]
+    () => !!round && round.currentHand.currentPlayerId === player.id,
+    [round]
   )
 
   const isDealer: boolean = useMemo(
-    () => !!game.round && !game.round.suit && game.round.dealerId === player.id,
-    [game]
+    () => !!round && !round.suit && round.dealerId === player.id,
+    [round]
   )
 
-  if (!profile || !game.round) return null
+  if (!profile) return null
+
   return (
     <Col key={`playercard_col_${player.id}`} className="player-column">
-      <div>
-        <CardImg alt={profile.name} src={profile.picture} className="avatar" />
+      <Card className="card-transparent">
+        <CardImg
+          alt={profile.name}
+          src={profile.picture}
+          className="img-center avatar"
+        />
         <CardImgOverlay>
           <CardText className="overlay-score">{player.score}</CardText>
         </CardImgOverlay>
-      </div>
+      </Card>
 
-      <div>
+      <Card className="card-transparent">
         {playedCard ? (
           <CardImg
             alt={profile.name}
             src={`/cards/thumbnails/${playedCard}.png`}
-            className="thumbnail_size"
+            className="img-center thumbnail_size"
           />
         ) : (
-          <a>
+          <>
             <CardImg
               alt={profile.name}
               src={`/cards/thumbnails/${
                 isCurrentPlayer ? "yellow" : "blank_grey"
               }_back.png`}
-              className={`thumbnail_size ${
+              className={`img-center thumbnail_size ${
                 isCurrentPlayer ? "" : "transparent"
               }`}
             />
@@ -68,7 +81,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, profile }) => {
               </CardImgOverlay>
             ) : null}
 
-            {!game.round.suit ? (
+            {round && !round.suit ? (
               <CardImgOverlay>
                 {player.call === 10 ? (
                   <CardImg
@@ -98,14 +111,14 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, profile }) => {
                     className="thumbnail_chips overlay-chip"
                   />
                 ) : null}
-                {player.call === 30 && game.players.length === 2 ? (
+                {player.call === 30 && players.length === 2 ? (
                   <CardImg
                     alt="30 Chip"
                     src={"/cards/originals/call_30.png"}
                     className="thumbnail_chips overlay-chip"
                   />
                 ) : null}
-                {player.call === 30 && game.players.length > 2 ? (
+                {player.call === 30 && players.length > 2 ? (
                   <CardImg
                     alt="Jink Chip"
                     src={"/cards/originals/call_jink.png"}
@@ -114,11 +127,9 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, profile }) => {
                 ) : null}
               </CardImgOverlay>
             ) : null}
-          </a>
+          </>
         )}
-      </div>
-
-      <div></div>
+      </Card>
     </Col>
   )
 }

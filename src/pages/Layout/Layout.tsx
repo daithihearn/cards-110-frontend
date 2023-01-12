@@ -33,7 +33,10 @@ const Layout = () => {
                   <Outlet />
                 </>
               ) : (
-                <Loading />
+                <>
+                  <DefaultHeader />
+                  <Loading />
+                </>
               )}
             </main>
           </div>

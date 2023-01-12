@@ -1,4 +1,6 @@
 // Styles
+// Bootstrap styles
+import "bootstrap/dist/css/bootstrap.css"
 // CoreUI Icons Set
 import "@coreui/icons/css/all.min.css"
 // Import Flag Icons Set
@@ -21,7 +23,7 @@ import "./scss/style.scss"
 import { Auth0Provider } from "@auth0/auth0-react"
 import MyProfileSync from "./components/MyProfile/MyProfileSync"
 import { SnackbarProvider } from "notistack"
-import { ThemeProvider, createTheme, makeStyles } from "@mui/material/styles"
+
 import { store } from "./caches/caches"
 import { Provider } from "react-redux"
 import Home from "./pages/Home/Home"
@@ -33,13 +35,6 @@ const AUTHO_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN as string
 const AUTH0_AUDIENCE = process.env.REACT_APP_AUTH0_AUDIENCE as string
 const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID as string
 const AUTH0_SCOPE = process.env.REACT_APP_AUTH0_SCOPE as string
-
-const theme = createTheme()
-// const useStyles = makeStyles((theme) => {
-//   root: {
-//     // some CSS that accesses the theme
-//   }
-// })
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,21 +50,19 @@ const router = createBrowserRouter(
 const App = () => {
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3}>
-          <Auth0Provider
-            domain={AUTHO_DOMAIN}
-            audience={AUTH0_AUDIENCE}
-            clientId={AUTH0_CLIENT_ID}
-            redirectUri={window.location.origin}
-            scope={AUTH0_SCOPE}
-            useRefreshTokens={true}
-          >
-            <MyProfileSync />
-            <RouterProvider router={router} />
-          </Auth0Provider>
-        </SnackbarProvider>
-      </ThemeProvider>
+      <SnackbarProvider maxSnack={3}>
+        <Auth0Provider
+          domain={AUTHO_DOMAIN}
+          audience={AUTH0_AUDIENCE}
+          clientId={AUTH0_CLIENT_ID}
+          redirectUri={window.location.origin}
+          scope={AUTH0_SCOPE}
+          useRefreshTokens={true}
+        >
+          <MyProfileSync />
+          <RouterProvider router={router} />
+        </Auth0Provider>
+      </SnackbarProvider>
     </Provider>
   )
 }

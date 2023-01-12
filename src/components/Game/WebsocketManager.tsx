@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
@@ -56,14 +56,17 @@ const WebsocketHandler = () => {
 
   const [previousAction, updatePreviousAction] = useState<Actions>()
 
-  const handleWebsocketMessage = (message: string) => {
-    if (previousAction === "LAST_CARD_PLAYED") {
-      console.info("Waiting on last card to allow time to view cards...")
-      setTimeout(() => processWebsocketMessage(message), 4000)
-    } else {
-      processWebsocketMessage(message)
-    }
-  }
+  const handleWebsocketMessage = useCallback(
+    (message: string) => {
+      if (previousAction === "LAST_CARD_PLAYED") {
+        console.info("Waiting on last card to allow time to view cards...")
+        setTimeout(() => processWebsocketMessage(message), 4000)
+      } else {
+        processWebsocketMessage(message)
+      }
+    },
+    [previousAction]
+  )
 
   const processWebsocketMessage = (message: string) => {
     const payload = JSON.parse(message)
@@ -79,7 +82,7 @@ const WebsocketHandler = () => {
   const checkClearSelected = () => {
     // If I played the card clear the selected cards
     if (game.isMyGo) {
-      dispatch(clearSelectedCards())
+      dispatch(clearSelectedCards)
     }
   }
 

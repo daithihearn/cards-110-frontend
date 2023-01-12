@@ -26,7 +26,7 @@
 }
 
 .overlay-chip {
-  margin-top: 9.5rem;
+  margin-top: 5rem;
 }
 
 .overlay-score {
@@ -36,12 +36,22 @@
 }
 
 .overlay-dealer-chip {
-  margin-top: 6rem;
+  margin-top: 2rem;
 }
 
 .player-column {
   padding-left: 0;
   padding-right: 0;
+}
+
+.card-transparent {
+  background-color: transparent;
+}
+
+.img-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .cardArea {

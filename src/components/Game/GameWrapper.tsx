@@ -1,7 +1,7 @@
 import { Card, CardGroup } from "reactstrap"
 import MyCards from "./MyCards"
 import PlayersAndCards from "./PlayersAndCards"
-import GameHeader from "./GameHeader"
+
 import Calling from "./Calling"
 import Buying from "./Buying"
 import SelectSuit from "./SelectSuit"
@@ -24,7 +24,6 @@ const GameWrapper = () => {
         inverse
         style={{ backgroundColor: "#333", borderColor: "#333" }}
       >
-        <GameHeader />
         <PlayersAndCards />
 
         {!game.iamSpectator ? <MyCards /> : null}

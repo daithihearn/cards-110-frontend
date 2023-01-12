@@ -75,13 +75,18 @@ const DoublesLeaderboard = () => {
 
             {!gameOver && !!previousHand ? (
               <div>
-                {previousHand &&
-                previousHand.playedCards.get(row.player1.id) ? (
+                {previousHand ? (
                   <img
-                    alt={previousHand.playedCards.get(row.player1.id)!.name}
+                    alt={
+                      previousHand.playedCards.find(
+                        (p) => p.playerId === row.player1.id
+                      )?.card
+                    }
                     src={
                       "/cards/thumbnails/" +
-                      previousHand.playedCards.get(row.player1.id)!.name +
+                      previousHand.playedCards.find(
+                        (p) => p.playerId === row.player1.id
+                      )?.card +
                       ".png"
                     }
                     className="thumbnail_size_small cardNotSelected"
@@ -113,12 +118,18 @@ const DoublesLeaderboard = () => {
 
           {!gameOver && previousHand ? (
             <div>
-              {previousHand && previousHand.playedCards.get(row.player2.id) ? (
+              {previousHand ? (
                 <img
-                  alt={previousHand.playedCards.get(row.player2.id)!.name}
+                  alt={
+                    previousHand.playedCards.find(
+                      (p) => p.playerId === row.player2.id
+                    )?.card
+                  }
                   src={
                     "/cards/thumbnails/" +
-                    previousHand.playedCards.get(row.player2.id)!.name +
+                    previousHand.playedCards.find(
+                      (p) => p.playerId === row.player1.id
+                    )?.card +
                     ".png"
                   }
                   className="thumbnail_size_small cardNotSelected"

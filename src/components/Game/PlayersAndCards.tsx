@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react"
 import { Row, CardBody, Container } from "reactstrap"
-import { getGame } from "../../caches/GameSlice"
+import { getGame, getGamePlayers } from "../../caches/GameSlice"
 import { useAppSelector } from "../../caches/hooks"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { Player } from "../../model/Player"
@@ -13,30 +13,16 @@ const compareSeat = (a: Player, b: Player) => {
 }
 
 const PlayersAndCards = () => {
-  const playerProfiles = useAppSelector(getPlayerProfiles)
-  const game = useAppSelector(getGame)
+  const players = useAppSelector(getGamePlayers)
 
-  const sortedPlayers = useMemo(
-    () => [...game.players].sort(compareSeat),
-    [game]
-  )
-
-  const getProfile = useCallback(
-    (player: Player) =>
-      playerProfiles.find((p) => p.id === player.id, [playerProfiles]),
-    [playerProfiles]
-  )
+  const sortedPlayers = useMemo(() => [...players].sort(compareSeat), [players])
 
   return (
     <CardBody className="cardArea">
       <Container>
         <Row>
           {sortedPlayers.map((player) => (
-            <PlayerCard
-              key={`playercard_${player.id}`}
-              player={player}
-              profile={getProfile(player)}
-            />
+            <PlayerCard key={`playercard_${player.id}`} player={player} />
           ))}
         </Row>
       </Container>
