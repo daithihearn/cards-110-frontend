@@ -70,7 +70,7 @@ const MyCards: React.FC = () => {
       // If the round status is PLAYING then only allow one card to be selected
       if (game.round && game.round.status === RoundStatus.PLAYING) {
         if (
-          !!doubleClickTracker &&
+          doubleClickTracker &&
           doubleClickTracker.card === card &&
           Date.now() - doubleClickTracker.time < 500
         ) {
@@ -109,29 +109,37 @@ const MyCards: React.FC = () => {
     [game, doubleClickTracker]
   )
 
-  const handleOnDragEnd = useCallback((result: DropResult) => {
-    if (!result.destination) return
+  const handleOnDragEnd = useCallback(
+    (result: DropResult) => {
+      if (!result.destination) return
 
-    const newCards = Array.from(game.cards)
-    const [reorderedItem] = newCards.splice(result.source.index, 1)
-    newCards.splice(result.destination.index, 0, reorderedItem)
+      const updatedCards = game.cards.map((c) => {
+        return { ...c }
+      })
+      const [reorderedItem] = updatedCards.splice(result.source.index, 1)
+      updatedCards.splice(result.destination.index, 0, reorderedItem)
 
-    dispatch(updateCards(newCards))
-  }, [])
+      dispatch(updateCards(updatedCards))
+    },
+    [game]
+  )
 
-  const getStyleForCard = (card: PlayableCard) => {
-    let classes = "thumbnail_size "
+  const getStyleForCard = useCallback(
+    (card: PlayableCard) => {
+      let classes = "thumbnail_size"
 
-    if (cardsSelectable && card.name !== BLANK_CARD.name) {
-      if (card.autoplay) {
-        classes += "cardAutoPlayed"
-      } else if (!card.selected) {
-        classes += "cardNotSelected"
+      if (cardsSelectable && card.name !== BLANK_CARD.name) {
+        if (card.autoplay) {
+          classes += " cardAutoPlayed"
+        } else if (!card.selected) {
+          classes += " cardNotSelected"
+        }
       }
-    }
 
-    return classes
-  }
+      return classes
+    },
+    [cardsSelectable]
+  )
 
   const playCard = useCallback(() => {
     if (selectedCards.length !== 1) {
@@ -156,10 +164,13 @@ const MyCards: React.FC = () => {
                 ref={provided.innerRef}
               >
                 {game.cards.map((card, index) => {
+                  const draggableId = `${card.name}${
+                    card.name === BLANK_CARD.name ? index : ""
+                  }`
                   return (
                     <Draggable
-                      key={`${card.name}-${index}`}
-                      draggableId={`${card.name}-${index}`}
+                      key={draggableId}
+                      draggableId={draggableId}
                       index={index}
                       isDragDisabled={card.name === BLANK_CARD.name}
                     >

@@ -11,7 +11,7 @@ import {
   CardGroup,
 } from "reactstrap"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 
 import GameService from "../../services/GameService"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
@@ -26,12 +26,12 @@ const Buying = () => {
   const { enqueueSnackbar } = useSnackbar()
   const game = useAppSelector(getGame)
 
-  const [selectedCards, setSelectedCards] = useState<PlayableCard[]>([])
   const [deleteCardsDialog, updateDeleteCardsDialog] = useState(false)
 
-  useEffect(() => {
-    if (game.cards) setSelectedCards(game.cards.filter((c) => c.selected))
-  }, [game])
+  const selectedCards = useMemo(
+    () => game.cards.filter((c) => c.selected),
+    [game]
+  )
 
   const buyCards = useCallback(
     (e: React.FormEvent) => {

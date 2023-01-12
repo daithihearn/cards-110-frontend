@@ -56,29 +56,32 @@ const SelectSuit = () => {
         ).catch((e: Error) => enqueueSnackbar(e.message, { variant: "error" }))
       }
     },
-    [game, selectedCards, selectedSuit, possibleIssue]
+    [game, selectedCards]
   )
 
   const hideCancelSelectFromDummyDialog = useCallback(() => {
     setSelectedSuit(undefined)
     setPossibleIssues(false)
-  }, [selectedSuit, possibleIssue])
+  }, [])
 
-  const riskOfMistakeBuyingCards = (suit: Suit) => {
-    let deletingCards = removeAllFromArray(selectedCards, game.cards)
+  const riskOfMistakeBuyingCards = useCallback(
+    (suit: Suit) => {
+      let deletingCards = removeAllFromArray(selectedCards, game.cards)
 
-    for (const element of deletingCards) {
-      if (
-        element.name === "JOKER" ||
-        element.name === "ACE_HEARTS" ||
-        element.suit === suit
-      ) {
-        return true
+      for (const element of deletingCards) {
+        if (
+          element.name === "JOKER" ||
+          element.name === "ACE_HEARTS" ||
+          element.suit === suit
+        ) {
+          return true
+        }
       }
-    }
 
-    return false
-  }
+      return false
+    },
+    [selectedCards, game]
+  )
 
   const removeAllFromArray = (
     toRemove: PlayableCard[],
@@ -95,8 +98,8 @@ const SelectSuit = () => {
     elementValue: PlayableCard,
     originalArray: PlayableCard[]
   ) => {
-    let array = [...originalArray] // make a separate copy of the array
-    let index = array.indexOf(elementValue)
+    const array = [...originalArray] // make a separate copy of the array
+    const index = array.indexOf(elementValue)
     if (index !== -1) {
       array.splice(index, 1)
     }
@@ -110,7 +113,7 @@ const SelectSuit = () => {
 
   return (
     <div>
-      {!!game && !!game.round && game.round.status === RoundStatus.CALLED ? (
+      {!!game.round && game.round.status === RoundStatus.CALLED ? (
         <CardBody className="buttonArea">
           {game.iamGoer ? (
             <div>
@@ -186,9 +189,9 @@ const SelectSuit = () => {
                           {removeAllFromArray(selectedCards, game.cards).map(
                             (card) => (
                               <img
-                                key={"cancelSelectFromDummyModal_" + card}
+                                key={`cancelSelectFromDummyModal_${card.name}`}
                                 alt={card.name}
-                                src={"/cards/thumbnails/" + card + ".png"}
+                                src={`/cards/thumbnails/${card.name}.png`}
                                 className="thumbnail_size"
                               />
                             )
@@ -207,7 +210,7 @@ const SelectSuit = () => {
                             <Button
                               type="button"
                               color="warning"
-                              click={selectFromDummy(selectedSuit)}
+                              onClick={() => selectFromDummy(selectedSuit)}
                             >
                               Throw Cards
                             </Button>
