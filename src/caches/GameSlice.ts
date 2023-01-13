@@ -83,8 +83,7 @@ export const getAutoPlayCards = (state: RootState) =>
 export const getCanDeal = (state: RootState) =>
   state.game.iamDealer &&
   state.game.round &&
-  state.game.round.status === RoundStatus.CALLING &&
-  state.game.cards.length === 0
+  state.game.round.status === RoundStatus.DEALING
 export const getCanBuyCards = (state: RootState) =>
   state.game.isMyGo &&
   state.game.iamGoer &&

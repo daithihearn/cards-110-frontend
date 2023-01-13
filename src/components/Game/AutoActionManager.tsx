@@ -41,7 +41,7 @@ const bestCardLead = (round: Round) => {
   // Sort Descending
   trumpCards.sort((a, b) => b.value - a.value)
 
-  return round.currentHand.leadOut?.name === trumpCards[0].name
+  return round.currentHand.leadOut === trumpCards[0].name
 }
 
 const getWorstCard = (myCards: PlayableCard[], suit: Suit) => {
@@ -111,7 +111,7 @@ const AutoActionManager = () => {
   }
 
   const buyCards = (gameId: string, cardsToBuy: Card[]) => {
-    console.info(`AutoAction -> buyCards ${JSON.stringify(cardsToBuy)}`)
+    console.info(`AutoAction -> buy cards`)
     dispatch(
       GameService.buyCards(
         gameId,
@@ -122,13 +122,13 @@ const AutoActionManager = () => {
 
   // Deal when it's your turn
   useEffect(() => {
-    console.debug(`Rule -> Deal`)
+    console.info(`Rule -> Deal`)
     if (gameId && canDeal) deal(gameId)
   }, [gameId, canDeal])
 
   // If in the bunker, Pass
   useEffect(() => {
-    console.debug(`Rule -> Bunker`)
+    console.info(`Rule -> Bunker`)
     if (gameId && isInBunker) call(gameId, 0)
   }, [gameId, isInBunker])
 
@@ -136,12 +136,13 @@ const AutoActionManager = () => {
   // 2. Play card when you only have one left
   // 3. Play worst card if best card lead out
   useEffect(() => {
-    console.debug(`Rule -> play card`)
+    console.info(`Rule -> play card`)
     if (gameId && isMyGo) {
       if (autoPlayCards.length > 0) playCard(gameId, autoPlayCards[0])
-      else if (isRoundPlaying && myCards.length === 1)
+      else if (isRoundPlaying && myCards.length === 1) {
+        console.info("Only one card left")
         playCard(gameId, myCards[0])
-      else if (suit && round && round.suit && bestCardLead(round)) {
+      } else if (suit && round && round.suit && bestCardLead(round)) {
         const cardToPlay = getWorstCard(myCards, suit)
         if (cardToPlay) playCard(gameId, cardToPlay)
       }
@@ -150,7 +151,7 @@ const AutoActionManager = () => {
 
   // Buy cards in if you are the goer
   useEffect(() => {
-    console.debug(`Rule -> buy cards`)
+    console.info(`Rule -> buy cards`)
     if (gameId && canBuyCards) buyCards(gameId, myCards)
   }, [gameId, myCards, canBuyCards])
 

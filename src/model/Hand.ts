@@ -3,7 +3,7 @@ import { PlayedCard } from "./Game"
 
 export interface Hand {
   timestamp: string
-  leadOut?: Card
+  leadOut?: string
   currentPlayerId: string
   playedCards: PlayedCard[]
 }
