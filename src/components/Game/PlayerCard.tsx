@@ -4,6 +4,7 @@ import { getGamePlayers, getRound } from "../../caches/GameSlice"
 import { useAppSelector } from "../../caches/hooks"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { BLANK_CARD } from "../../model/Cards"
+import { PlayedCard } from "../../model/Game"
 
 import { Player } from "../../model/Player"
 
@@ -20,21 +21,21 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player }) => {
     [playerProfiles]
   )
 
-  const playedCard = useMemo(() => {
+  const playedCard = useMemo<PlayedCard | undefined>(() => {
     if (round) {
       return round.currentHand.playedCards.find((c) => c.playerId === player.id)
     }
-    return BLANK_CARD
-  }, [round])
+    return { card: BLANK_CARD.name, playerId: player.id }
+  }, [round, player])
 
   const isCurrentPlayer: boolean = useMemo(
     () => !!round && round.currentHand.currentPlayerId === player.id,
-    [round]
+    [round, player]
   )
 
   const isDealer: boolean = useMemo(
     () => !!round && !round.suit && round.dealerId === player.id,
-    [round]
+    [round, player]
   )
 
   if (!profile) return null
@@ -56,7 +57,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player }) => {
         {playedCard ? (
           <CardImg
             alt={profile.name}
-            src={`/cards/thumbnails/${playedCard}.png`}
+            src={`/cards/thumbnails/${playedCard.card}.png`}
             className="img-center thumbnail_size"
           />
         ) : (

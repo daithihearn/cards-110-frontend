@@ -82,7 +82,8 @@ export const getAutoPlayCards = (state: RootState) =>
   state.game.cards.filter((card) => card.autoplay && card.selected)
 export const getCanDeal = (state: RootState) =>
   state.game.iamDealer &&
-  state.game.round?.status === RoundStatus.CALLING &&
+  state.game.round &&
+  state.game.round.status === RoundStatus.CALLING &&
   state.game.cards.length === 0
 export const getCanBuyCards = (state: RootState) =>
   state.game.isMyGo &&

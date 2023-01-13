@@ -1,8 +1,7 @@
-import { useCallback, useMemo } from "react"
+import { useMemo } from "react"
 import { Row, CardBody, Container } from "reactstrap"
-import { getGame, getGamePlayers } from "../../caches/GameSlice"
+import { getGamePlayers } from "../../caches/GameSlice"
 import { useAppSelector } from "../../caches/hooks"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { Player } from "../../model/Player"
 import PlayerCard from "./PlayerCard"
 
