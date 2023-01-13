@@ -1,4 +1,4 @@
-import { Card, PlayableCard } from "./Cards"
+import { PlayableCard } from "./Cards"
 import { Player } from "./Player"
 import { Round } from "./Round"
 
