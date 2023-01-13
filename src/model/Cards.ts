@@ -8,9 +8,8 @@ export interface Card {
   renegable: boolean
 }
 
-export interface PlayableCard extends Card {
+export interface SelectableCard extends Card {
   selected: boolean
-  autoplay: boolean
 }
 
 export const BLANK_CARD: Card = {
@@ -21,7 +20,7 @@ export const BLANK_CARD: Card = {
   renegable: false,
 }
 
-export const cards: Card[] = [
+export const CARDS: Card[] = [
   { name: "EMPTY", value: 0, coldValue: 0, suit: Suit.EMPTY, renegable: false },
   {
     name: "TWO_HEARTS",
@@ -389,5 +388,3 @@ export const cards: Card[] = [
   },
   { name: "JOKER", value: 113, coldValue: 0, suit: Suit.WILD, renegable: true },
 ]
-
-export default cards

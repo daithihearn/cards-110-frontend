@@ -1,18 +1,16 @@
 import { Card } from "../model/Cards"
-import { CreateGame, Game, GameState, GameStateResponse } from "../model/Game"
+import { CreateGame, Game, GameState } from "../model/Game"
 import { Suit } from "../model/Suit"
 import axios from "axios"
 import { getDefaultConfig } from "../utils/AxiosUtils"
 import { Player, PlayerProfile } from "../model/Player"
 import { AppThunk } from "../caches/caches"
-import {
-  clearSelectedCards,
-  updateGame,
-  updatePlayers,
-} from "../caches/GameSlice"
+import { updateGame, updatePlayers } from "../caches/GameSlice"
 import { getAccessToken } from "../caches/MyProfileSlice"
 import { addMyGame, removeMyGame, updateMyGames } from "../caches/MyGamesSlice"
 import { updatePlayerProfiles } from "../caches/PlayerProfilesSlice"
+import { clearSelectedCards, updateMyCards } from "../caches/MyCardsSlice"
+import { clearAutoPlay } from "../caches/AutoPlaySlice"
 
 const getGame =
   (gameId: string): AppThunk<Promise<Game>> =>
@@ -30,11 +28,13 @@ const refreshGameState =
   (gameId: string): AppThunk<Promise<void>> =>
   async (dispatch, getState) => {
     const accessToken = getAccessToken(getState())
-    const response = await axios.get<GameStateResponse>(
+    const response = await axios.get<GameState>(
       `${process.env.REACT_APP_API_URL}/api/v1/gameState?gameId=${gameId}`,
       getDefaultConfig(accessToken)
     )
     dispatch(updateGame(response.data))
+    dispatch(updateMyCards(response.data.cards))
+    dispatch(clearAutoPlay())
   }
 
 const getAll = (): AppThunk<Promise<Game[]>> => async (dispatch, getState) => {
@@ -159,13 +159,13 @@ const call =
   }
 
 const buyCards =
-  (gameId: string, cards: Card[]): AppThunk<Promise<void>> =>
+  (gameId: string, cards: Card[] | string[]): AppThunk<Promise<void>> =>
   async (dispatch, getState) => {
     const accessToken = getAccessToken(getState())
 
     await axios.put(
       `${process.env.REACT_APP_API_URL}/api/v1/buyCards?gameId=${gameId}`,
-      cards.map((c) => c.name),
+      cards.map((c) => (typeof c === "string" ? c : c.name)),
       getDefaultConfig(accessToken)
     )
     dispatch(clearSelectedCards)
@@ -184,11 +184,11 @@ const chooseFromDummy =
   }
 
 const playCard =
-  (gameId: string, card: Card): AppThunk<Promise<void>> =>
+  (gameId: string, card: string): AppThunk<Promise<void>> =>
   async (_, getState) => {
     const accessToken = getAccessToken(getState())
     await axios.put(
-      `${process.env.REACT_APP_API_URL}/api/v1/playCard?gameId=${gameId}&card=${card.name}`,
+      `${process.env.REACT_APP_API_URL}/api/v1/playCard?gameId=${gameId}&card=${card}`,
       null,
       getDefaultConfig(accessToken)
     )

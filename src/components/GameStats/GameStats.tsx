@@ -3,6 +3,7 @@ import { Card, CardHeader, CardBody, CardGroup, Input, Label } from "reactstrap"
 import { useCallback, useState } from "react"
 import { useAppSelector } from "../../caches/hooks"
 import { getGameStats } from "../../caches/GameStatsSlice"
+import "chart.js/auto"
 import { ChartOptions } from "chart.js"
 
 const GameStats = () => {

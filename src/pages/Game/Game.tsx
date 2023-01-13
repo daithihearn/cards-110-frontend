@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
 import { isGameActive, resetGame } from "../../caches/GameSlice"
 import DataLoader from "../../components/DataLoader/DataLoader"
+import { clearAutoPlay } from "../../caches/AutoPlaySlice"
+import { clearMyCards } from "../../caches/MyCardsSlice"
 
 const Game = () => {
   const dispatch = useAppDispatch()
@@ -27,6 +29,8 @@ const Game = () => {
     return () => {
       console.log("Resetting game")
       dispatch(resetGame)
+      dispatch(clearMyCards)
+      dispatch(clearAutoPlay)
     }
   }, [id])
 

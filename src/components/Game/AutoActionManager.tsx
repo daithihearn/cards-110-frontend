@@ -1,34 +1,32 @@
 import { useEffect } from "react"
 import GameService from "../../services/GameService"
 
-import cards, { BLANK_CARD, Card, PlayableCard } from "../../model/Cards"
+import { CARDS } from "../../model/Cards"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import {
-  getAutoPlayCards,
   getCanBuyCards,
   getCanDeal,
+  getCards,
   getGameId,
   getIsInBunker,
   getIsMyGo,
-  getIsRoundPlaying,
-  getMyCards,
   getRound,
-  getSuit,
 } from "../../caches/GameSlice"
-import { Round } from "../../model/Round"
+import { Round, RoundStatus } from "../../model/Round"
 import { Suit } from "../../model/Suit"
 import { useSnackbar } from "notistack"
+import { getAutoPlayCard } from "../../caches/AutoPlaySlice"
 
 const bestCardLead = (round: Round) => {
-  let trumpCards = cards.filter(
-    (card) => card.suit === round.suit || card.suit === Suit.WILD
+  let trumpCards = CARDS.filter(
+    (c) => c.suit === round.suit || c.suit === Suit.WILD
   )
 
   // Remove played trump cards
   round.completedHands.forEach((hand) => {
     hand.playedCards.forEach((p) => {
-      const card = cards.find((c) => (c.name = p.card))
+      const card = CARDS.find((c) => (c.name = p.card))
       if (
         (card && card.suit === round.suit) ||
         p.card === "JOKER" ||
@@ -44,11 +42,9 @@ const bestCardLead = (round: Round) => {
   return round.currentHand.leadOut === trumpCards[0].name
 }
 
-const getWorstCard = (myCards: PlayableCard[], suit: Suit) => {
-  console.info(`AutoAction -> followWorst ${JSON.stringify(myCards)} ${suit}`)
-  const myCardsRich = cards.filter((card) =>
-    myCards.some((c) => c.name === card.name)
-  )
+const getWorstCard = (cards: string[], suit: Suit) => {
+  console.info(`AutoAction -> followWorst`)
+  const myCardsRich = CARDS.filter((card) => cards.some((c) => c === card.name))
   const myTrumpCards = myCardsRich.filter(
     (card) => card.suit === suit || card.suit === Suit.WILD
   )
@@ -78,16 +74,14 @@ const AutoActionManager = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const gameId = useAppSelector(getGameId)
-  const myCards = useAppSelector(getMyCards)
   const round = useAppSelector(getRound)
-  const suit = useAppSelector(getSuit)
+  const cards = useAppSelector(getCards)
 
-  const autoPlayCards = useAppSelector(getAutoPlayCards)
+  const autoPlayCard = useAppSelector(getAutoPlayCard)
   const canDeal = useAppSelector(getCanDeal)
   const canBuyCards = useAppSelector(getCanBuyCards)
   const isMyGo = useAppSelector(getIsMyGo)
   const isInBunker = useAppSelector(getIsInBunker)
-  const isRoundPlaying = useAppSelector(getIsRoundPlaying)
 
   const deal = (id: string) => {
     console.info(`AutoAction -> deal `)
@@ -96,8 +90,8 @@ const AutoActionManager = () => {
     )
   }
 
-  const playCard = (id: string, card: Card) => {
-    console.info(`AutoAction -> playCard ${JSON.stringify(card)}`)
+  const playCard = (id: string, card: string) => {
+    console.info(`AutoAction -> playCard`)
     dispatch(GameService.playCard(id, card)).catch((e: Error) =>
       enqueueSnackbar(e.message, { variant: "error" })
     )
@@ -110,14 +104,11 @@ const AutoActionManager = () => {
     )
   }
 
-  const buyCards = (gameId: string, cardsToBuy: Card[]) => {
+  const buyCards = (gameId: string, cardsToBuy: string[]) => {
     console.info(`AutoAction -> buy cards`)
-    dispatch(
-      GameService.buyCards(
-        gameId,
-        cardsToBuy.filter((c) => c.name !== BLANK_CARD.name)
-      )
-    ).catch((e: Error) => enqueueSnackbar(e.message, { variant: "error" }))
+    dispatch(GameService.buyCards(gameId, cardsToBuy)).catch((e: Error) =>
+      enqueueSnackbar(e.message, { variant: "error" })
+    )
   }
 
   // Deal when it's your turn
@@ -137,23 +128,26 @@ const AutoActionManager = () => {
   // 3. Play worst card if best card lead out
   useEffect(() => {
     console.info(`Rule -> play card`)
-    if (gameId && isMyGo) {
-      if (autoPlayCards.length > 0) playCard(gameId, autoPlayCards[0])
-      else if (isRoundPlaying && myCards.length === 1) {
-        console.info("Only one card left")
-        playCard(gameId, myCards[0])
-      } else if (suit && round && round.suit && bestCardLead(round)) {
-        const cardToPlay = getWorstCard(myCards, suit)
-        if (cardToPlay) playCard(gameId, cardToPlay)
+    if (
+      gameId &&
+      isMyGo &&
+      round?.suit &&
+      round.status === RoundStatus.PLAYING
+    ) {
+      if (autoPlayCard) playCard(gameId, autoPlayCard)
+      else if (cards.length === 1) playCard(gameId, cards[0])
+      else if (bestCardLead(round)) {
+        const cardToPlay = getWorstCard(cards, round.suit)
+        if (cardToPlay) playCard(gameId, cardToPlay.name)
       }
     }
-  }, [suit, gameId, round, isMyGo, myCards, isRoundPlaying, autoPlayCards])
+  }, [gameId, round, isMyGo, cards, autoPlayCard])
 
   // Buy cards in if you are the goer
   useEffect(() => {
     console.info(`Rule -> buy cards`)
-    if (gameId && canBuyCards) buyCards(gameId, myCards)
-  }, [gameId, myCards, canBuyCards])
+    if (gameId && canBuyCards) buyCards(gameId, cards)
+  }, [gameId, cards, canBuyCards])
 
   return null
 }

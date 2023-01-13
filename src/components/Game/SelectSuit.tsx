@@ -14,24 +14,28 @@ import { useCallback, useEffect, useState } from "react"
 
 import GameService from "../../services/GameService"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { getGame } from "../../caches/GameSlice"
-import { PlayableCard } from "../../model/Cards"
+import { getGameId, getIamGoer, getIsRoundCalled } from "../../caches/GameSlice"
+import { SelectableCard } from "../../model/Cards"
 import { Suit } from "../../model/Suit"
-import { RoundStatus } from "../../model/Round"
 import { useSnackbar } from "notistack"
+import { getMyCardsWithoutBlanks } from "../../caches/MyCardsSlice"
+import { removeAllFromHand } from "../../utils/GameUtils"
 
 const SelectSuit = () => {
   const dispatch = useAppDispatch()
-  const game = useAppSelector(getGame)
   const { enqueueSnackbar } = useSnackbar()
+  const gameId = useAppSelector(getGameId)
+  const myCards = useAppSelector(getMyCardsWithoutBlanks)
+  const iamGoer = useAppSelector(getIamGoer)
+  const isCalled = useAppSelector(getIsRoundCalled)
 
-  const [selectedCards, setSelectedCards] = useState<PlayableCard[]>([])
+  const [selectedCards, setSelectedCards] = useState<SelectableCard[]>([])
   const [selectedSuit, setSelectedSuit] = useState<Suit>()
   const [possibleIssue, setPossibleIssues] = useState(false)
 
   useEffect(() => {
-    if (game.cards) setSelectedCards(game.cards.filter((c) => c.selected))
-  }, [game])
+    if (myCards) setSelectedCards(myCards.filter((c) => c.selected))
+  }, [myCards])
 
   const selectFromDummy = useCallback(
     (suit: Suit) => {
@@ -52,11 +56,11 @@ const SelectSuit = () => {
         setPossibleIssues(true)
       } else {
         dispatch(
-          GameService.chooseFromDummy(game.id!, selectedCards, suit)
+          GameService.chooseFromDummy(gameId!, selectedCards, suit)
         ).catch((e: Error) => enqueueSnackbar(e.message, { variant: "error" }))
       }
     },
-    [game, selectedCards]
+    [gameId, selectedCards]
   )
 
   const hideCancelSelectFromDummyDialog = useCallback(() => {
@@ -66,7 +70,7 @@ const SelectSuit = () => {
 
   const riskOfMistakeBuyingCards = useCallback(
     (suit: Suit) => {
-      let deletingCards = removeAllFromArray(selectedCards, game.cards)
+      let deletingCards = removeAllFromHand(selectedCards, myCards)
 
       for (const element of deletingCards) {
         if (
@@ -80,42 +84,14 @@ const SelectSuit = () => {
 
       return false
     },
-    [selectedCards, game]
+    [myCards, selectedCards]
   )
-
-  const removeAllFromArray = (
-    toRemove: PlayableCard[],
-    originalArray: PlayableCard[]
-  ) => {
-    let array = [...originalArray]
-    toRemove.forEach((element) => {
-      array = removeFromArray(element, array)
-    })
-    return array
-  }
-
-  const removeFromArray = (
-    elementValue: PlayableCard,
-    originalArray: PlayableCard[]
-  ) => {
-    const array = [...originalArray] // make a separate copy of the array
-    const index = array.indexOf(elementValue)
-    if (index !== -1) {
-      array.splice(index, 1)
-    }
-
-    return array
-  }
-
-  if (!game || !game.cards) {
-    return null
-  }
 
   return (
     <div>
-      {!!game.round && game.round.status === RoundStatus.CALLED ? (
+      {isCalled ? (
         <CardBody className="buttonArea">
-          {game.iamGoer ? (
+          {iamGoer ? (
             <div>
               <ButtonGroup size="lg">
                 <Button
@@ -186,7 +162,7 @@ const SelectSuit = () => {
                         style={{ backgroundColor: "#333", borderColor: "#333" }}
                       >
                         <CardBody className="cardArea">
-                          {removeAllFromArray(selectedCards, game.cards).map(
+                          {removeAllFromHand(selectedCards, myCards).map(
                             (card) => (
                               <img
                                 key={`cancelSelectFromDummyModal_${card.name}`}

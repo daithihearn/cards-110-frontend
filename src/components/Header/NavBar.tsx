@@ -10,12 +10,12 @@ import ProfilePictureEditor from "../Avatar/ProfilePictureEditor"
 import GameHeader from "../Game/GameHeader"
 import { Col, Container, Row } from "reactstrap"
 import LeaderboardModal from "../Leaderboard/LeaderboardModal"
-import { getHasGame } from "../../caches/GameSlice"
+import { isGameActive } from "../../caches/GameSlice"
 
 const NavBar = () => {
   const { logout } = useAuth0()
 
-  const hasGame = useAppSelector(getHasGame)
+  const hasGame = useAppSelector(isGameActive)
   const [showEditAvatar, setShowEditAvatar] = useState(false)
 
   const myProfile = useAppSelector(getMyProfile)
@@ -32,40 +32,16 @@ const NavBar = () => {
 
   return (
     <nav className="custom-navbar bg-primary fixed-top">
-      <Container fluid className="nav-container">
+      <Container fluid xs="5" sm="5" md="5" lg="5" xl="5">
         <Row>
-          <Col
-            className="nav-col"
-            sm={{
-              size: 1,
-            }}
-          >
+          <Col className="nav-col">
             <Link to="/">
               <div className="linknavbar">Cards</div>
             </Link>
           </Col>
-          <Col
-            className="nav-col"
-            sm={{
-              size: 1,
-            }}
-          >
-            {hasGame && <LeaderboardModal />}
-          </Col>
-          <Col
-            className="nav-col"
-            sm={{
-              size: 4,
-            }}
-          >
-            {hasGame && <GameHeader />}
-          </Col>
-          <Col
-            className="nav-col"
-            sm={{
-              size: 1,
-            }}
-          >
+          <Col className="nav-col">{hasGame && <LeaderboardModal />}</Col>
+          <Col className="nav-col">{hasGame && <GameHeader />}</Col>
+          <Col className="nav-col">
             <div>
               <label className="mr-2 text-white">
                 <img
@@ -82,12 +58,7 @@ const NavBar = () => {
               />
             </div>
           </Col>
-          <Col
-            className="nav-col"
-            sm={{
-              size: 1,
-            }}
-          >
+          <Col className="nav-col">
             <button className="btn btn-dark" onClick={signOut}>
               Sign Out
             </button>

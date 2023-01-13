@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 
 import { CardImg } from "reactstrap"
-import { getGame } from "../../caches/GameSlice"
+import { getGamePlayers, getRound } from "../../caches/GameSlice"
 import { useAppSelector } from "../../caches/hooks"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { Player, PlayerProfile } from "../../model/Player"
@@ -12,13 +12,14 @@ interface PlayerAndProfile {
 }
 
 const GameHeader = () => {
+  const round = useAppSelector(getRound)
+  const players = useAppSelector(getGamePlayers)
   const playerProfiles = useAppSelector(getPlayerProfiles)
-  const game = useAppSelector(getGame)
 
   const goer = useMemo<PlayerAndProfile>(() => {
-    if (game.round && game.round.goerId) {
-      const profile = playerProfiles.find((p) => p.id === game.round?.goerId)
-      const player = game.players.find((p) => p.id === game.round?.goerId)
+    if (round && round.goerId) {
+      const profile = playerProfiles.find((p) => p.id === round.goerId)
+      const player = players.find((p) => p.id === round.goerId)
 
       return {
         profile,
@@ -26,7 +27,7 @@ const GameHeader = () => {
       }
     }
     return {}
-  }, [game, playerProfiles])
+  }, [round, players, playerProfiles])
 
   return (
     <>
@@ -47,10 +48,10 @@ const GameHeader = () => {
               />
             )}
 
-            {game.round && game.round.suit && (
+            {round && round.suit && (
               <CardImg
                 alt="Suit"
-                src={`/cards/originals/${game.round.suit}_ICON.svg`}
+                src={`/cards/originals/${round.suit}_ICON.svg`}
                 className="thumbnail_size_extra_small left-padding"
               />
             )}

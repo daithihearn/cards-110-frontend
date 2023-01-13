@@ -3,16 +3,18 @@ import React, { useCallback, useState } from "react"
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import {
-  clearSelectedCards,
   getGame,
   getGameId,
+  getIsMyGo,
   updateGame,
 } from "../../caches/GameSlice"
 import { getAccessToken } from "../../caches/MyProfileSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { GameState, GameStateResponse } from "../../model/Game"
+import { GameState } from "../../model/Game"
 import { Actions, BuyCardsEvent } from "../../model/Events"
 import { useSnackbar } from "notistack"
+import { clearSelectedCards, updateMyCards } from "../../caches/MyCardsSlice"
+import { clearAutoPlay } from "../../caches/AutoPlaySlice"
 
 // const shuffleSound = new Audio("../../assets/sounds/shuffle.ogg")
 // const playCardSound = new Audio("../../assets/sounds/play_card.ogg")
@@ -50,7 +52,7 @@ interface ActionEvent {
 const WebsocketHandler = () => {
   const dispatch = useAppDispatch()
 
-  const game = useAppSelector(getGame)
+  const isMyGo = useAppSelector(getIsMyGo)
   const playerProfiles = useAppSelector(getPlayerProfiles)
   const { enqueueSnackbar } = useSnackbar()
 
@@ -75,14 +77,9 @@ const WebsocketHandler = () => {
     updatePreviousAction(actionEvent.type)
     processActons(actionEvent.type, actionEvent.content)
 
-    if (actionEvent.type !== Actions.BuyCardsNotification)
-      dispatch(updateGame(actionEvent.content as GameStateResponse))
-  }
-
-  const checkClearSelected = () => {
-    // If I played the card clear the selected cards
-    if (game.isMyGo) {
-      dispatch(clearSelectedCards)
+    if (actionEvent.type !== Actions.BuyCardsNotification) {
+      const gameState = actionEvent.content as GameState
+      dispatch(updateGame(gameState))
     }
   }
 
@@ -96,7 +93,12 @@ const WebsocketHandler = () => {
       case "LAST_CARD_PLAYED":
       case "CARD_PLAYED":
         // playPlayCardSound()
-        checkClearSelected()
+        if (isMyGo) {
+          dispatch(clearSelectedCards)
+          dispatch(clearAutoPlay())
+          const gameState = payload as GameState
+          dispatch(updateMyCards(gameState.cards))
+        }
         break
       case "REPLAY":
         break
@@ -115,6 +117,7 @@ const WebsocketHandler = () => {
       case "HAND_COMPLETED":
         break
       case "ROUND_COMPLETED":
+        dispatch(clearAutoPlay())
         break
       case "CALL":
         // playCallSound()
