@@ -9,10 +9,10 @@ import AutoActionManager from "./AutoActionManager"
 import WebsocketManager from "./WebsocketManager"
 
 import { useAppSelector } from "../../caches/hooks"
-import { getGame } from "../../caches/GameSlice"
+import { getIamSpectator } from "../../caches/GameSlice"
 
 const GameWrapper = () => {
-  const game = useAppSelector(getGame)
+  const iamSpectator = useAppSelector(getIamSpectator)
 
   return (
     <CardGroup>
@@ -26,10 +26,10 @@ const GameWrapper = () => {
       >
         <PlayersAndCards />
 
-        {!game.iamSpectator ? <MyCards /> : null}
-        {!game.iamSpectator ? <Calling /> : null}
-        {!game.iamSpectator ? <Buying /> : null}
-        {!game.iamSpectator ? <SelectSuit /> : null}
+        {!iamSpectator ? <MyCards /> : null}
+        {!iamSpectator ? <Calling /> : null}
+        {!iamSpectator ? <Buying /> : null}
+        {!iamSpectator ? <SelectSuit /> : null}
       </Card>
     </CardGroup>
   )

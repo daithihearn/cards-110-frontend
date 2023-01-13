@@ -1,6 +1,6 @@
-import { AppState } from "@auth0/auth0-react"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { Game } from "../model/Game"
+import { RootState } from "./caches"
 
 export interface MyGamesState {
   games: Game[]
@@ -40,4 +40,4 @@ export const myGamesSlice = createSlice({
 
 export const { updateMyGames, addMyGame, removeMyGame } = myGamesSlice.actions
 
-export const getMyGames = (state: AppState) => state.myGames.games
+export const getMyGames = (state: RootState) => state.myGames.games

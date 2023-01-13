@@ -1,4 +1,3 @@
-import { Card } from "./Cards"
 import { PlayedCard } from "./Game"
 
 export interface Hand {

@@ -1,4 +1,3 @@
-import { PlayableCard } from "./Cards"
 import { Player } from "./Player"
 import { Round } from "./Round"
 
@@ -22,26 +21,12 @@ export interface Game {
   iamSpectator: boolean
 }
 
-export interface GameState {
-  id?: string
-  iamSpectator: boolean
-  isMyGo: boolean
-  iamGoer: boolean
-  iamDealer: boolean
-  cards: PlayableCard[]
-  status: GameStatus
-  round?: Round
-  maxCall?: number
-  me?: Player
-  players: Player[]
-}
-
 export interface PlayedCard {
   playerId: string
   card: string
 }
 
-export interface GameStateResponse {
+export interface GameState {
   id?: string
   iamSpectator: boolean
   isMyGo: boolean
