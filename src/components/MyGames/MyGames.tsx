@@ -86,6 +86,19 @@ const MyGames = () => {
   }
 
   const columns: TableColumn<Game>[] = [
+    {
+      cell: (row) => (
+        <Link to={`/game/${row.id}`}>
+          <Button
+            type="button"
+            color={parsePlayButtonColour(row, myProfile.id!)}
+          >
+            {parsePlayButtonLabel(row, myProfile.id!)}
+          </Button>
+        </Link>
+      ),
+      center: true,
+    },
     { name: "Name", selector: (row) => row.name, sortable: true },
     {
       name: "Date",
@@ -103,19 +116,7 @@ const MyGames = () => {
       ),
       center: true,
     },
-    {
-      cell: (row) => (
-        <Link to={`/game/${row.id}`}>
-          <Button
-            type="button"
-            color={parsePlayButtonColour(row, myProfile.id!)}
-          >
-            {parsePlayButtonLabel(row, myProfile.id!)}
-          </Button>
-        </Link>
-      ),
-      center: true,
-    },
+
     {
       cell: (row) => (
         <Button

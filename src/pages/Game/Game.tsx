@@ -1,7 +1,8 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import GameWrapper from "../../components/Game/GameWrapper"
 import GameOver from "../../components/Game/GameOver"
 import GameService from "../../services/GameService"
+import PullToRefresh from "react-simple-pull-to-refresh"
 
 import { withAuthenticationRequired } from "@auth0/auth0-react"
 
@@ -34,8 +35,15 @@ const Game = () => {
     }
   }, [id])
 
+  const handleRefresh = useCallback(async () => {
+    if (id)
+      await dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
+        enqueueSnackbar(e.message, { variant: "error" })
+      )
+  }, [id])
+
   return (
-    <>
+    <PullToRefresh onRefresh={handleRefresh}>
       <div className="app carpet">
         <div className="game_wrap">
           <div className="game_container">
@@ -44,7 +52,7 @@ const Game = () => {
           </div>
         </div>
       </div>
-    </>
+    </PullToRefresh>
   )
 }
 

@@ -10,34 +10,7 @@ import { Actions, BuyCardsEvent } from "../../model/Events"
 import { useSnackbar } from "notistack"
 import { clearSelectedCards, updateMyCards } from "../../caches/MyCardsSlice"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
-
-// const shuffleSound = new Audio("../../assets/sounds/shuffle.ogg")
-// const playCardSound = new Audio("../../assets/sounds/play_card.ogg")
-// const alertSound = new Audio("../../assets/sounds/alert.ogg")
-// const callSound = new Audio("../../assets/sounds/call.ogg")
-// const passSound = new Audio("../../assets/sounds/pass.ogg")
-
-// const playShuffleSound = () => {
-//   shuffleSound.play().catch(() => console.error("Error playing shuffle sound!"))
-// }
-
-// const playPlayCardSound = () => {
-//   playCardSound
-//     .play()
-//     .catch(() => console.error("Error playing play card sound!"))
-// }
-
-// const playAlertSound = () => {
-//   alertSound.play().catch(() => console.error("Error playing alert sound!"))
-// }
-
-// const playCallSound = () => {
-//   callSound.play().catch(() => console.error("Error playing call sound!"))
-// }
-
-// const playPassSound = () => {
-//   passSound.play().catch(() => console.error("Error playing pass sound!"))
-// }
+import useSound from "use-sound"
 
 interface ActionEvent {
   type: Actions
@@ -46,6 +19,26 @@ interface ActionEvent {
 
 const WebsocketHandler = () => {
   const dispatch = useAppDispatch()
+
+  const [shuffleSound] = useSound("../../assets/sounds/shuffle.ogg", {
+    volume: 0.25,
+  })
+
+  const [playCardSound] = useSound("../../assets/sounds/play_card.ogg", {
+    volume: 0.25,
+  })
+
+  // const [alertSound] = useSound("../../assets/sounds/alert.ogg", {
+  //   volume: 0.25,
+  // })
+
+  const [callSound] = useSound("../../assets/sounds/call.ogg", {
+    volume: 0.25,
+  })
+
+  const [passSound] = useSound("../../assets/sounds/pass.ogg", {
+    volume: 0.25,
+  })
 
   const playerProfiles = useAppSelector(getPlayerProfiles)
   const { enqueueSnackbar } = useSnackbar()
@@ -88,14 +81,14 @@ const WebsocketHandler = () => {
     (type: Actions, payload: unknown) => {
       switch (type) {
         case "DEAL":
-          // playShuffleSound()
+          shuffleSound()
           reloadCards(payload)
           break
         case "CHOOSE_FROM_DUMMY":
         case "BUY_CARDS":
         case "LAST_CARD_PLAYED":
         case "CARD_PLAYED":
-          // playPlayCardSound()
+          playCardSound()
           reloadCards(payload)
           break
         case "REPLAY":
@@ -120,11 +113,11 @@ const WebsocketHandler = () => {
           reloadCards(payload)
           break
         case "CALL":
-          // playCallSound()
+          callSound()
           reloadCards(payload)
           break
         case "PASS":
-          // playPassSound()
+          passSound()
           reloadCards(payload)
           break
       }
