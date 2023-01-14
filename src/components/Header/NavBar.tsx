@@ -10,12 +10,12 @@ import ProfilePictureEditor from "../Avatar/ProfilePictureEditor"
 import GameHeader from "../Game/GameHeader"
 import { Col, Container, Row } from "reactstrap"
 import LeaderboardModal from "../Leaderboard/LeaderboardModal"
-import { getHasGame } from "../../caches/GameSlice"
+import { isGameActive } from "../../caches/GameSlice"
 
 const NavBar = () => {
   const { logout } = useAuth0()
 
-  const hasGame = useAppSelector(getHasGame)
+  const gameActive = useAppSelector(isGameActive)
   const [showEditAvatar, setShowEditAvatar] = useState(false)
 
   const myProfile = useAppSelector(getMyProfile)
@@ -39,8 +39,8 @@ const NavBar = () => {
               <div className="linknavbar">Cards</div>
             </Link>
           </Col>
-          <Col className="nav-col">{hasGame && <LeaderboardModal />}</Col>
-          <Col className="nav-col">{hasGame && <GameHeader />}</Col>
+          <Col className="nav-col">{gameActive && <LeaderboardModal />}</Col>
+          <Col className="nav-col">{gameActive && <GameHeader />}</Col>
           <Col className="nav-col">
             <div>
               <label className="mr-2 text-white">

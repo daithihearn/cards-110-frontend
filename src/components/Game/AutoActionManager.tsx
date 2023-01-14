@@ -15,7 +15,6 @@ import {
 } from "../../caches/GameSlice"
 import { Round, RoundStatus } from "../../model/Round"
 import { Suit } from "../../model/Suit"
-import { useSnackbar } from "notistack"
 import { getAutoPlayCard } from "../../caches/AutoPlaySlice"
 
 const bestCardLead = (round: Round) => {
@@ -71,7 +70,6 @@ const getWorstCard = (cards: string[], suit: Suit) => {
 
 const AutoActionManager = () => {
   const dispatch = useAppDispatch()
-  const { enqueueSnackbar } = useSnackbar()
 
   const gameId = useAppSelector(getGameId)
   const round = useAppSelector(getRound)
@@ -83,43 +81,25 @@ const AutoActionManager = () => {
   const isMyGo = useAppSelector(getIsMyGo)
   const isInBunker = useAppSelector(getIsInBunker)
 
-  const deal = (id: string) => {
-    console.info(`AutoAction -> deal `)
-    dispatch(GameService.deal(id)).catch((e: Error) =>
-      enqueueSnackbar(e.message, { variant: "error" })
-    )
-  }
+  const deal = (id: string) =>
+    dispatch(GameService.deal(id)).catch(console.error)
 
-  const playCard = (id: string, card: string) => {
-    console.info(`AutoAction -> playCard`)
-    dispatch(GameService.playCard(id, card)).catch((e: Error) =>
-      enqueueSnackbar(e.message, { variant: "error" })
-    )
-  }
+  const playCard = (id: string, card: string) =>
+    dispatch(GameService.playCard(id, card)).catch(console.error)
 
-  const call = (id: string, callAmount: number) => {
-    console.info(`AutoAction -> call ${callAmount}`)
-    dispatch(GameService.call(id, callAmount)).catch((e: Error) =>
-      enqueueSnackbar(e.message, { variant: "error" })
-    )
-  }
+  const call = (id: string, callAmount: number) =>
+    dispatch(GameService.call(id, callAmount)).catch(console.error)
 
-  const buyCards = (gameId: string, cardsToBuy: string[]) => {
-    console.info(`AutoAction -> buy cards`)
-    dispatch(GameService.buyCards(gameId, cardsToBuy)).catch((e: Error) =>
-      enqueueSnackbar(e.message, { variant: "error" })
-    )
-  }
+  const buyCards = (gameId: string, cardsToBuy: string[]) =>
+    dispatch(GameService.buyCards(gameId, cardsToBuy)).catch(console.error)
 
   // Deal when it's your turn
   useEffect(() => {
-    console.info(`Rule -> Deal`)
     if (gameId && canDeal) deal(gameId)
   }, [gameId, canDeal])
 
   // If in the bunker, Pass
   useEffect(() => {
-    console.info(`Rule -> Bunker`)
     if (gameId && isInBunker) call(gameId, 0)
   }, [gameId, isInBunker])
 
@@ -127,7 +107,6 @@ const AutoActionManager = () => {
   // 2. Play card when you only have one left
   // 3. Play worst card if best card lead out
   useEffect(() => {
-    console.info(`Rule -> play card`)
     if (
       gameId &&
       isMyGo &&
@@ -145,7 +124,6 @@ const AutoActionManager = () => {
 
   // Buy cards in if you are the goer
   useEffect(() => {
-    console.info(`Rule -> buy cards`)
     if (gameId && canBuyCards) buyCards(gameId, cards)
   }, [gameId, cards, canBuyCards])
 

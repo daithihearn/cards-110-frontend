@@ -1,15 +1,4 @@
-import {
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Button,
-  ButtonGroup,
-  Form,
-  CardImg,
-  CardBody,
-  CardGroup,
-  Card,
-} from "reactstrap"
+import { Button, ButtonGroup, Form, CardBody } from "reactstrap"
 
 import { useCallback, useMemo, useState } from "react"
 
@@ -27,6 +16,7 @@ import {
   removeAllFromHand,
   riskOfMistakeBuyingCards,
 } from "../../utils/GameUtils"
+import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 
 const Buying = () => {
   const dispatch = useAppDispatch()
@@ -45,8 +35,8 @@ const Buying = () => {
   )
 
   const buyCards = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault()
+    (e?: React.FormEvent) => {
+      if (e) e.preventDefault()
       if (riskOfMistakeBuyingCards(suit!, selectedCards, myCards)) {
         showCancelDeleteCardsDialog()
       } else {
@@ -80,55 +70,13 @@ const Buying = () => {
             </ButtonGroup>
           </Form>
 
-          <Modal
-            fade={true}
-            size="lg"
-            toggle={hideCancelDeleteCardsDialog}
-            isOpen={deleteCardsDialog}
-          >
-            <ModalHeader>
-              <CardImg
-                alt="Suit"
-                src={`/cards/originals/${suit}_ICON.svg`}
-                className="thumbnail_size_extra_small left-padding"
-              />{" "}
-              Are you sure you want to throw these cards away?
-            </ModalHeader>
-            <ModalBody className="called-modal">
-              <CardGroup className="gameModalCardGroup">
-                <Card
-                  className="p-6 tableCloth"
-                  style={{ backgroundColor: "#333", borderColor: "#333" }}
-                >
-                  <CardBody className="cardArea">
-                    {removeAllFromHand(selectedCards, myCards).map((card) => (
-                      <img
-                        key={"deleteCardModal_" + card}
-                        alt={card.name}
-                        src={"/cards/thumbnails/" + card + ".png"}
-                        className="thumbnail_size"
-                      />
-                    ))}
-                  </CardBody>
-
-                  <CardBody className="buttonArea">
-                    <ButtonGroup size="lg">
-                      <Button
-                        type="button"
-                        color="primary"
-                        onClick={hideCancelDeleteCardsDialog}
-                      >
-                        Cancel
-                      </Button>
-                      <Button type="button" color="warning" onClick={buyCards}>
-                        Throw Cards
-                      </Button>
-                    </ButtonGroup>
-                  </CardBody>
-                </Card>
-              </CardGroup>
-            </ModalBody>
-          </Modal>
+          <ThrowCardsWarningModal
+            modalVisible={deleteCardsDialog}
+            cancelCallback={hideCancelDeleteCardsDialog}
+            continueCallback={buyCards}
+            suit={suit!}
+            cards={removeAllFromHand(selectedCards, myCards)}
+          />
         </CardBody>
       ) : null}
     </div>
