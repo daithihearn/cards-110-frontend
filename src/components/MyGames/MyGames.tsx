@@ -45,13 +45,10 @@ const MyGames = () => {
       .catch((e: Error) => enqueueSnackbar(e.message, { variant: "error" }))
   }
 
-  const showDeleteGameModal = useCallback(
-    (id: string) => () => {
-      updateModalDeleteGameOpen(true)
-      updateDeleteGameId(id)
-    },
-    []
-  )
+  const showDeleteGameModal = (id: string) => {
+    updateModalDeleteGameOpen(true)
+    updateDeleteGameId(id)
+  }
 
   const handleCloseDeleteGameModal = useCallback(() => {
     updateModalDeleteGameOpen(false)
