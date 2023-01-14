@@ -1,8 +1,7 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useEffect } from "react"
 
 import { Card, CardGroup, CardHeader } from "reactstrap"
 
-import DataLoader from "../../components/DataLoader/DataLoader"
 import StartNewGame from "../../components/StartNewGame/StartNewGame"
 import MyGames from "../../components/MyGames/MyGames"
 import GameStats from "../../components/GameStats/GameStats"
@@ -14,29 +13,33 @@ import { getMyProfile } from "../../caches/MyProfileSlice"
 import GameService from "../../services/GameService"
 import { useSnackbar } from "notistack"
 import StatsService from "../../services/StatsService"
+import Loading from "../../components/icons/Loading"
 
 const Home = () => {
   const dispatch = useAppDispatch()
   const myProfile = useAppSelector(getMyProfile)
   const { enqueueSnackbar } = useSnackbar()
 
-  const handleRefresh = useCallback(async () => {
+  const fetchData = async () => {
     if (myProfile.isAdmin)
-      dispatch(GameService.getAllPlayers()).catch((e: Error) =>
+      await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
         enqueueSnackbar(e.message, { variant: "error" })
       )
 
-    dispatch(GameService.getAll())
+    await dispatch(GameService.getAll())
 
-    dispatch(StatsService.gameStatsForPlayer()).catch((e: Error) =>
+    await dispatch(StatsService.gameStatsForPlayer()).catch((e: Error) =>
       enqueueSnackbar(e.message, { variant: "error" })
     )
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [])
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
+    <PullToRefresh onRefresh={fetchData} refreshingContent={<Loading />}>
       <div className="app carpet">
-        <DataLoader />
         <div className="game_wrap">
           <div className="game_container">
             {!myProfile.isPlayer && !myProfile.isAdmin ? (

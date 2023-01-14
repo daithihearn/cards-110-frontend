@@ -3,16 +3,9 @@ import { Outlet } from "react-router"
 import { useAppSelector } from "../../caches/hooks"
 import { getAccessToken } from "../../caches/MyProfileSlice"
 import DefaultHeader from "../../components/Header/Header"
-import LoadingIcon from "../../assets/img/brand/loading.gif"
 import { useEffect } from "react"
+import Loading from "../../components/icons/Loading"
 
-const Loading = () => {
-  return (
-    <>
-      <img src={LoadingIcon} className="loading" alt="Loading Icon" />
-    </>
-  )
-}
 const Layout = () => {
   const accessToken = useAppSelector(getAccessToken)
   const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()

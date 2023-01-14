@@ -11,9 +11,9 @@ import { useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
 import { getHasGame, resetGame } from "../../caches/GameSlice"
-import DataLoader from "../../components/DataLoader/DataLoader"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
 import { clearMyCards } from "../../caches/MyCardsSlice"
+import Loading from "../../components/icons/Loading"
 
 const Game = () => {
   const dispatch = useAppDispatch()
@@ -21,11 +21,19 @@ const Game = () => {
   const { enqueueSnackbar } = useSnackbar()
   const hasGame = useAppSelector(getHasGame)
 
-  useEffect(() => {
+  const fetchData = async () => {
     if (id)
-      dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
+      await dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
         enqueueSnackbar(e.message, { variant: "error" })
       )
+
+    await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
+      enqueueSnackbar(e.message, { variant: "error" })
+    )
+  }
+
+  useEffect(() => {
+    fetchData()
 
     return () => {
       console.log("Resetting game")
@@ -35,19 +43,11 @@ const Game = () => {
     }
   }, [id])
 
-  const handleRefresh = useCallback(async () => {
-    if (id)
-      await dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
-        enqueueSnackbar(e.message, { variant: "error" })
-      )
-  }, [id])
-
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
+    <PullToRefresh onRefresh={fetchData} refreshingContent={<Loading />}>
       <div className="app carpet">
         <div className="game_wrap">
           <div className="game_container">
-            <DataLoader />
             {hasGame ? <GameWrapper /> : <GameOver />}
           </div>
         </div>
