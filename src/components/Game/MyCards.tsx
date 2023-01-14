@@ -14,12 +14,17 @@ import { getGameId, getIsMyGo, getRound } from "../../caches/GameSlice"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
 import {
+  clearSelectedCards,
   getMyCards,
   replaceMyCards,
   toggleSelect,
   toggleUniqueSelect,
 } from "../../caches/MyCardsSlice"
-import { getAutoPlayCard, toggleAutoPlay } from "../../caches/AutoPlaySlice"
+import {
+  getAutoPlayCard,
+  toggleAutoPlay,
+  clearAutoPlay,
+} from "../../caches/AutoPlaySlice"
 
 interface DoubleClickTracker {
   time: number
@@ -73,20 +78,24 @@ const MyCards: React.FC = () => {
 
       // If the round status is PLAYING then only allow one card to be selected
       if (round && round.status === RoundStatus.PLAYING) {
-        if (
-          doubleClickTracker &&
-          doubleClickTracker.card === card.name &&
+        if (autoPlayCard === card.name) {
+          dispatch(clearAutoPlay())
+          dispatch(clearSelectedCards())
+        } else if (
+          doubleClickTracker?.card === card.name &&
           Date.now() - doubleClickTracker.time < 500
         ) {
           dispatch(toggleAutoPlay(card))
-        } else dispatch(toggleUniqueSelect(card))
-
-        updateDoubleClickTracker({ card: card.name, time: Date.now() })
+        } else {
+          dispatch(toggleUniqueSelect(card))
+          dispatch(clearAutoPlay())
+          updateDoubleClickTracker({ card: card.name, time: Date.now() })
+        }
       } else {
         dispatch(toggleSelect(card))
       }
     },
-    [round, myCards, doubleClickTracker]
+    [round, myCards, autoPlayCard, doubleClickTracker]
   )
 
   const handleOnDragEnd = useCallback(
