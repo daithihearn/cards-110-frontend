@@ -76,7 +76,7 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
                 >
                   Cancel
                 </Button>
-                <Button type="button" color="primary" onClick={callContinue}>
+                <Button type="button" color="warning" onClick={callContinue}>
                   Throw Cards
                 </Button>
               </ButtonGroup>

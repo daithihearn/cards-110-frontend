@@ -10,7 +10,34 @@ import { Actions, BuyCardsEvent } from "../../model/Events"
 import { useSnackbar } from "notistack"
 import { clearSelectedCards, updateMyCards } from "../../caches/MyCardsSlice"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
-import useSound from "use-sound"
+
+import shuffleAudioFile from "../../assets/sounds/shuffle.ogg"
+import playCardAudioFile from "../../assets/sounds/play_card.ogg"
+import callAudioFile from "../../assets/sounds/call.ogg"
+import passAudioFile from "../../assets/sounds/pass.ogg"
+
+const shuffleAudio = new Audio(shuffleAudioFile)
+const playCardAudio = new Audio(playCardAudioFile)
+const callAudio = new Audio(callAudioFile)
+const passAudio = new Audio(passAudioFile)
+
+const shuffleSound = () => {
+  shuffleAudio.play().catch(() => console.error("Error playing shuffle sound!"))
+}
+
+const playCardSound = () => {
+  playCardAudio
+    .play()
+    .catch(() => console.error("Error playing play card sound!"))
+}
+
+const callSound = () => {
+  callAudio.play().catch(() => console.error("Error playing call sound!"))
+}
+
+const passSound = () => {
+  passAudio.play().catch(() => console.error("Error playing pass sound!"))
+}
 
 interface ActionEvent {
   type: Actions
@@ -19,26 +46,6 @@ interface ActionEvent {
 
 const WebsocketHandler = () => {
   const dispatch = useAppDispatch()
-
-  const [shuffleSound] = useSound("../../assets/sounds/shuffle.ogg", {
-    volume: 0.25,
-  })
-
-  const [playCardSound] = useSound("../../assets/sounds/play_card.ogg", {
-    volume: 0.25,
-  })
-
-  // const [alertSound] = useSound("../../assets/sounds/alert.ogg", {
-  //   volume: 0.25,
-  // })
-
-  const [callSound] = useSound("../../assets/sounds/call.ogg", {
-    volume: 0.25,
-  })
-
-  const [passSound] = useSound("../../assets/sounds/pass.ogg", {
-    volume: 0.25,
-  })
 
   const playerProfiles = useAppSelector(getPlayerProfiles)
   const { enqueueSnackbar } = useSnackbar()
