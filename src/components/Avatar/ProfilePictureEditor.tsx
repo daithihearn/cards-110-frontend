@@ -41,38 +41,40 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
     updateScale(newScale)
   }, [])
 
-  const handleSave = useCallback(() => {
-    const canvasScaled = editorRef.current.getImageScaledToCanvas()
-    const croppedImg = canvasScaled.toDataURL()
+  const handleSave = useCallback(
+    (event: React.SyntheticEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+      const canvasScaled = editorRef.current.getImageScaledToCanvas()
+      const croppedImg = canvasScaled.toDataURL()
 
-    dispatch(
-      ProfileService.updateProfile({
-        name: myProfile.name,
-        picture: croppedImg,
-        forceUpdate: true,
-      })
-    )
-      .catch((e: Error) => enqueueSnackbar(e.message, { variant: "error" }))
-      .finally(() => callback())
-  }, [myProfile, editorRef])
-
-  const handleNewAvatarSelection = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (!event.target.files || event.target.files.length < 1) return
-      const file = event.target.files[0]
-
-      if (file.type.includes("heic")) {
-        heic2any({ blob: file, toType: "image/jpg", quality: 1 }).then(
-          (jpgFile) => {
-            updateSelectedImage(jpgFile as File)
-          }
-        )
-      } else {
-        updateSelectedImage(file)
-      }
+      dispatch(
+        ProfileService.updateProfile({
+          name: myProfile.name,
+          picture: croppedImg,
+          forceUpdate: true,
+        })
+      )
+        .catch((e: Error) => enqueueSnackbar(e.message, { variant: "error" }))
+        .finally(callback)
     },
-    []
+    [myProfile, editorRef]
   )
+
+  const handleNewAvatarSelection = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    event.preventDefault()
+    if (!event.target.files || event.target.files.length < 1) return
+    const file = event.target.files[0]
+
+    if (file.type.includes("heic")) {
+      heic2any({ blob: file, toType: "image/jpg", quality: 1 }).then(
+        (jpgFile) => {
+          updateSelectedImage(jpgFile as File)
+        }
+      )
+    } else updateSelectedImage(file)
+  }
 
   return (
     <Modal fade toggle={callback} isOpen={show}>
@@ -127,6 +129,7 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
           <Button
             color="primary"
             disabled={!selectedImage}
+            type="button"
             onClick={handleSave}
           >
             Save
