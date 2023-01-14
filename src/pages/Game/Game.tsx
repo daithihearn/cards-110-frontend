@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
-import { isGameActive, resetGame } from "../../caches/GameSlice"
+import { getHasGame, resetGame } from "../../caches/GameSlice"
 import DataLoader from "../../components/DataLoader/DataLoader"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
 import { clearMyCards } from "../../caches/MyCardsSlice"
@@ -18,7 +18,7 @@ const Game = () => {
   const dispatch = useAppDispatch()
   let { id } = useParams<string>()
   const { enqueueSnackbar } = useSnackbar()
-  const gameActive = useAppSelector(isGameActive)
+  const hasGame = useAppSelector(getHasGame)
 
   useEffect(() => {
     if (id)
@@ -40,7 +40,7 @@ const Game = () => {
         <div className="game_wrap">
           <div className="game_container">
             <DataLoader />
-            {gameActive ? <GameWrapper /> : <GameOver />}
+            {hasGame ? <GameWrapper /> : <GameOver />}
           </div>
         </div>
       </div>

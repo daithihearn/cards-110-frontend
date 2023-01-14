@@ -9,15 +9,15 @@ export const compareCards = (
     return false
   }
 
-  const arr1 = [...hand1].filter((ca) => ca !== BLANK_CARD).sort()
-  const arr2 = [...hand2].filter((ca) => ca !== BLANK_CARD).sort()
+  const arr1 = [...hand1].filter((ca) => ca.name !== BLANK_CARD.name).sort()
+  const arr2 = [...hand2].filter((ca) => ca.name !== BLANK_CARD.name).sort()
 
   if (arr1.length !== arr2.length) {
     return false
   }
 
   for (let i = 0; i < arr1.length; i++) {
-    if (arr1[i] !== arr2[i]) {
+    if (arr1[i].name !== arr2[i].name) {
       return false
     }
   }
@@ -39,20 +39,30 @@ export const processOrderedCardsAfterGameUpdate = (
   currentCards: SelectableCard[],
   updatedCardNames: string[]
 ): SelectableCard[] => {
-  // Find the delta between the existing cards and the updated cards we got from the api
-  const delta = currentCards.filter((x) => !updatedCardNames.includes(x.name))
+  // Remove blanks
+  const currentCardsNoBlanks = currentCards.filter(
+    (c) => c.name !== BLANK_CARD.name
+  )
 
-  const updatedCards = updatedCardNames.map<Card>(
-    (name) => CARDS.find((c) => c.name === name)!
+  // Find the delta between the existing cards and the updated cards we got from the api
+  const delta = currentCardsNoBlanks.filter(
+    (x) => !updatedCardNames.includes(x.name)
   )
 
   // 1. If cards in payload match ordered cards then don't change orderedCards
-  if (compareCards(currentCards, updatedCards)) return currentCards
+  if (
+    delta.length === 0 &&
+    currentCardsNoBlanks.length === updatedCardNames.length
+  ) {
+    console.log("1. returning cards as they are")
+    return currentCards
+  }
   // 2. If a card was removed then replace it with a Blank card in orderedCards
   else if (
-    currentCards.length === updatedCards.length + 1 &&
+    currentCardsNoBlanks.length === updatedCardNames.length + 1 &&
     delta.length === 1
   ) {
+    console.log("2. a card was removed, so replacing it with a blank")
     const updatedCurrentCards = [...currentCards]
     const idx = updatedCurrentCards.findIndex((c) => c.name === delta[0].name)
     updatedCurrentCards[idx] = { ...BLANK_CARD, selected: false }
@@ -61,11 +71,14 @@ export const processOrderedCardsAfterGameUpdate = (
 
     // 3. Else send back a fresh hand constructed from the API data
   } else {
-    const updatedCurrentCards: SelectableCard[] = []
-    updatedCards.forEach((c) =>
-      updatedCurrentCards.push({ ...c, selected: false })
-    )
-    return padMyHand(updatedCurrentCards)
+    console.log(`3. refreshing cards entirely currentCards`)
+
+    const updatedCards = updatedCardNames.map<SelectableCard>((name) => {
+      const card = CARDS.find((c) => c.name === name)!
+      return { ...card, selected: false }
+    })
+
+    return padMyHand(updatedCards)
   }
 }
 

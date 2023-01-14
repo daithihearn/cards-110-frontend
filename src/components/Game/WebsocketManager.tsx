@@ -2,12 +2,7 @@ import React, { useCallback, useState } from "react"
 
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import {
-  getGame,
-  getGameId,
-  getIsMyGo,
-  updateGame,
-} from "../../caches/GameSlice"
+import { getGameId, updateGame } from "../../caches/GameSlice"
 import { getAccessToken } from "../../caches/MyProfileSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { GameState } from "../../model/Game"
@@ -52,7 +47,6 @@ interface ActionEvent {
 const WebsocketHandler = () => {
   const dispatch = useAppDispatch()
 
-  const isMyGo = useAppSelector(getIsMyGo)
   const playerProfiles = useAppSelector(getPlayerProfiles)
   const { enqueueSnackbar } = useSnackbar()
 
@@ -83,50 +77,60 @@ const WebsocketHandler = () => {
     }
   }
 
-  const processActons = (type: Actions, payload: unknown) => {
-    switch (type) {
-      case "DEAL":
-        // playShuffleSound()
-        break
-      case "CHOOSE_FROM_DUMMY":
-      case "BUY_CARDS":
-      case "LAST_CARD_PLAYED":
-      case "CARD_PLAYED":
-        // playPlayCardSound()
-        if (isMyGo) {
-          dispatch(clearSelectedCards())
-          dispatch(clearAutoPlay())
-          const gameState = payload as GameState
-          dispatch(updateMyCards(gameState.cards))
-        }
-        break
-      case "REPLAY":
-        break
-      case "GAME_OVER":
-        break
-      case "BUY_CARDS_NOTIFICATION":
-        const buyCardsEvt = payload as BuyCardsEvent
-        const player = playerProfiles.find((p) => p.id === buyCardsEvt.playerId)
-        if (!player) {
-          break
-        }
-
-        enqueueSnackbar(`${player.name} bought ${buyCardsEvt.bought}`)
-
-        break
-      case "HAND_COMPLETED":
-        break
-      case "ROUND_COMPLETED":
-        dispatch(clearAutoPlay())
-        break
-      case "CALL":
-        // playCallSound()
-        break
-      case "PASS":
-        // playPassSound()
-        break
-    }
+  const reloadCards = (payload: unknown) => {
+    dispatch(clearSelectedCards())
+    dispatch(clearAutoPlay())
+    const gameState = payload as GameState
+    dispatch(updateMyCards(gameState.cards))
   }
+
+  const processActons = useCallback(
+    (type: Actions, payload: unknown) => {
+      switch (type) {
+        case "DEAL":
+          // playShuffleSound()
+          reloadCards(payload)
+          break
+        case "CHOOSE_FROM_DUMMY":
+        case "BUY_CARDS":
+        case "LAST_CARD_PLAYED":
+        case "CARD_PLAYED":
+          // playPlayCardSound()
+          reloadCards(payload)
+          break
+        case "REPLAY":
+          break
+        case "GAME_OVER":
+          break
+        case "BUY_CARDS_NOTIFICATION":
+          const buyCardsEvt = payload as BuyCardsEvent
+          const player = playerProfiles.find(
+            (p) => p.id === buyCardsEvt.playerId
+          )
+          if (!player) {
+            break
+          }
+
+          enqueueSnackbar(`${player.name} bought ${buyCardsEvt.bought}`)
+
+          break
+        case "HAND_COMPLETED":
+          break
+        case "ROUND_COMPLETED":
+          dispatch(clearAutoPlay())
+          break
+        case "CALL":
+          // playCallSound()
+          reloadCards(payload)
+          break
+        case "PASS":
+          // playPassSound()
+          reloadCards(payload)
+          break
+      }
+    },
+    [playerProfiles]
+  )
 
   useSubscription(["/game", "/user/game"], (message) =>
     handleWebsocketMessage(message.body)
