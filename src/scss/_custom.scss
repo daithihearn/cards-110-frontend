@@ -1,3 +1,10 @@
+html, body {
+  overflow-x: hidden;
+}
+body {
+  position: relative
+}
+
 // Here you can add other styles
 .main_content {
   background-color: $white;
