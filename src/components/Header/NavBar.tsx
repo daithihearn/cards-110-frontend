@@ -10,12 +10,12 @@ import ProfilePictureEditor from "../Avatar/ProfilePictureEditor"
 import GameHeader from "../Game/GameHeader"
 import { Col, Container, Row } from "reactstrap"
 import LeaderboardModal from "../Leaderboard/LeaderboardModal"
-import { isGameActive } from "../../caches/GameSlice"
+import { getHasGame } from "../../caches/GameSlice"
 
 const NavBar = () => {
   const { logout } = useAuth0()
 
-  const hasGame = useAppSelector(isGameActive)
+  const hasGame = useAppSelector(getHasGame)
   const [showEditAvatar, setShowEditAvatar] = useState(false)
 
   const myProfile = useAppSelector(getMyProfile)

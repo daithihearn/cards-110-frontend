@@ -28,9 +28,9 @@ const Game = () => {
 
     return () => {
       console.log("Resetting game")
-      dispatch(resetGame)
-      dispatch(clearMyCards)
-      dispatch(clearAutoPlay)
+      dispatch(resetGame())
+      dispatch(clearMyCards())
+      dispatch(clearAutoPlay())
     }
   }, [id])
 
