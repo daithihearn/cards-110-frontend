@@ -53,7 +53,7 @@ const updateProfile =
         picture: response.data.picture,
         isPlayer: decodedAccessToken.permissions.indexOf("read:game") !== -1,
         isAdmin: decodedAccessToken.permissions.indexOf("read:admin") !== -1,
-        accessToken,
+        accessToken: token,
       })
     )
   }
