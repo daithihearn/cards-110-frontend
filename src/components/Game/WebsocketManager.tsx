@@ -117,7 +117,7 @@ const WebsocketHandler = () => {
         case "HAND_COMPLETED":
           break
         case "ROUND_COMPLETED":
-          dispatch(clearAutoPlay())
+          reloadCards(payload)
           break
         case "CALL":
           // playCallSound()
