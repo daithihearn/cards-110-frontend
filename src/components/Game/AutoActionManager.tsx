@@ -6,7 +6,6 @@ import { CARDS } from "../../model/Cards"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import {
   getCanBuyCards,
-  getCanDeal,
   getCards,
   getGameId,
   getIsInBunker,
@@ -76,13 +75,10 @@ const AutoActionManager = () => {
   const cards = useAppSelector(getCards)
 
   const autoPlayCard = useAppSelector(getAutoPlayCard)
-  const canDeal = useAppSelector(getCanDeal)
+
   const canBuyCards = useAppSelector(getCanBuyCards)
   const isMyGo = useAppSelector(getIsMyGo)
   const isInBunker = useAppSelector(getIsInBunker)
-
-  const deal = (id: string) =>
-    dispatch(GameService.deal(id)).catch(console.error)
 
   const playCard = (id: string, card: string) =>
     dispatch(GameService.playCard(id, card)).catch(console.error)
@@ -92,11 +88,6 @@ const AutoActionManager = () => {
 
   const buyCards = (gameId: string, cardsToBuy: string[]) =>
     dispatch(GameService.buyCards(gameId, cardsToBuy)).catch(console.error)
-
-  // Deal when it's your turn
-  useEffect(() => {
-    if (gameId && canDeal) deal(gameId)
-  }, [gameId, canDeal])
 
   // If in the bunker, Pass
   useEffect(() => {
