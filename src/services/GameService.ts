@@ -134,18 +134,6 @@ const replay =
     )
   }
 
-const deal =
-  (gameId: string): AppThunk<Promise<void>> =>
-  async (_, getState) => {
-    const accessToken = getAccessToken(getState())
-
-    await axios.put(
-      `${process.env.REACT_APP_API_URL}/api/v1/deal?gameId=${gameId}`,
-      null,
-      getDefaultConfig(accessToken)
-    )
-  }
-
 const call =
   (gameId: string, call: number): AppThunk<Promise<void>> =>
   async (_, getState) => {
@@ -200,7 +188,6 @@ export default {
   getAll,
   getAllPlayers,
   getPlayersForGame,
-  deal,
   deleteGame,
   playCard,
   chooseFromDummy,

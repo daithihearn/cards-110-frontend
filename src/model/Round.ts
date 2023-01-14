@@ -6,7 +6,6 @@ export enum RoundStatus {
   CALLED = "CALLED",
   BUYING = "BUYING",
   PLAYING = "PLAYING",
-  DEALING = "DEALING",
 }
 
 export interface Round {

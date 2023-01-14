@@ -52,10 +52,6 @@ export const getIsRoundPlaying = (state: RootState) =>
   state.game.round?.status === RoundStatus.PLAYING
 export const isDoublesGame = (state: RootState) =>
   state.game.players.length === 6
-export const getCanDeal = (state: RootState) =>
-  state.game.iamDealer &&
-  state.game.round &&
-  state.game.round.status === RoundStatus.DEALING
 export const getCanBuyCards = (state: RootState) =>
   state.game.isMyGo &&
   state.game.iamGoer &&
