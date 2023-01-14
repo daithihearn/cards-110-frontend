@@ -119,7 +119,7 @@ const deleteGame =
       `${process.env.REACT_APP_API_URL}/api/v1/admin/game?gameId=${gameId}`,
       getDefaultConfig(accessToken)
     )
-    dispatch(removeMyGame)
+    dispatch(removeMyGame(gameId))
   }
 
 const replay =

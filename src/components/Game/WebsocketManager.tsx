@@ -94,7 +94,7 @@ const WebsocketHandler = () => {
       case "CARD_PLAYED":
         // playPlayCardSound()
         if (isMyGo) {
-          dispatch(clearSelectedCards)
+          dispatch(clearSelectedCards())
           dispatch(clearAutoPlay())
           const gameState = payload as GameState
           dispatch(updateMyCards(gameState.cards))

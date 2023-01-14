@@ -36,6 +36,7 @@ export const getRound = (state: RootState) => state.game.round
 export const getCards = (state: RootState) => state.game.cards
 export const getSuit = (state: RootState) => state.game.round?.suit
 export const getGameId = (state: RootState) => state.game.id
+export const getHasGame = (state: RootState) => !!state.game.id
 export const getGameStatus = (state: RootState) => state.game.status
 export const isGameActive = (state: RootState) =>
   state.game.status === GameStatus.ACTIVE ||
