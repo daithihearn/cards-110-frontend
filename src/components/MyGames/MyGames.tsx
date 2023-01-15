@@ -152,7 +152,7 @@ const MyGames = () => {
                         theme="solarized"
                         data={myGames}
                         columns={columns}
-                        defaultSortFieldId="timestamp"
+                        defaultSortFieldId={3}
                         defaultSortAsc={false}
                         highlightOnHover
                     />

@@ -129,7 +129,8 @@ const SinglesLeaderboard = () => {
                 data={leaderboardData}
                 columns={columns}
                 highlightOnHover
-                defaultSortFieldId="score"
+                defaultSortFieldId={3}
+                defaultSortAsc={false}
             />
         </React.Fragment>
     )
