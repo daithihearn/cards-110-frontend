@@ -13,7 +13,7 @@ import { useSnackbar } from "notistack"
 import { getHasGame, resetGame } from "../../caches/GameSlice"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
 import { clearMyCards } from "../../caches/MyCardsSlice"
-import Loading from "../../components/icons/Loading"
+import RefreshingData from "../../components/icons/RefreshingData"
 
 const Game = () => {
     const dispatch = useAppDispatch()
@@ -44,7 +44,9 @@ const Game = () => {
     }, [id])
 
     return (
-        <PullToRefresh onRefresh={fetchData} refreshingContent={<Loading />}>
+        <PullToRefresh
+            onRefresh={fetchData}
+            refreshingContent={<RefreshingData />}>
             <div className="app carpet">
                 <div className="game_wrap">
                     <div className="game_container">
