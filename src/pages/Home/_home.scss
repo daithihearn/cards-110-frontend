@@ -1,550 +1,550 @@
 .body {
-  font-family: $fontFamily;
+    font-family: $fontFamily;
 }
 .app_body {
-  background-color: $white;
-  width: auto;
-  flex: 1;
-  position: relative;
-  font-family: $fontFamily;
+    background-color: $white;
+    width: auto;
+    flex: 1;
+    position: relative;
+    font-family: $fontFamily;
 }
 
 .card-group {
-  padding-top: 10px;
-  padding-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .game_wrap {
-  min-width: 650px;
-  overflow: overlay;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  background-color: $white;
+    min-width: 650px;
+    overflow: overlay;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: $white;
 }
 
 .game_container {
-  font-size: 16px;
-  line-height: 24px;
-  padding: 100px 20px 100px 20px;
-
-  &_headerText {
-    height: 40px;
-    width: 92px;
-    color: #000000;
-    font-size: $fontSizeH2;
-    line-height: 40px;
-    font-weight: $fontWeightBold;
-    font-family: $fontFamily;
-    margin: 0 auto 24px auto;
-  }
-
-  &_subtext {
-    min-height: 44px;
-    max-width: 293px;
-    color: #0f0f0f;
-    font-family: $fontFamily;
-    font-size: $fontSizeBody;
-    line-height: 22px;
-    text-align: center;
-    margin: 0 auto 34px auto;
-  }
-
-  &_text {
-    height: auto;
-    max-width: 304px;
-    color: $black;
-    font-family: $fontFamily;
     font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    margin: 40px auto 20px auto;
+    line-height: 24px;
+    padding: 100px 20px 100px 20px;
 
-    &_link {
-      color: $blue;
-      font-weight: $fontWeightBold;
-      font-family: $fontFamily;
-      cursor: pointer;
+    &_headerText {
+        height: 40px;
+        width: 92px;
+        color: #000000;
+        font-size: $fontSizeH2;
+        line-height: 40px;
+        font-weight: $fontWeightBold;
+        font-family: $fontFamily;
+        margin: 0 auto 24px auto;
     }
-  }
+
+    &_subtext {
+        min-height: 44px;
+        max-width: 293px;
+        color: #0f0f0f;
+        font-family: $fontFamily;
+        font-size: $fontSizeBody;
+        line-height: 22px;
+        text-align: center;
+        margin: 0 auto 34px auto;
+    }
+
+    &_text {
+        height: auto;
+        max-width: 304px;
+        color: $black;
+        font-family: $fontFamily;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        margin: 40px auto 20px auto;
+
+        &_link {
+            color: $blue;
+            font-weight: $fontWeightBold;
+            font-family: $fontFamily;
+            cursor: pointer;
+        }
+    }
 }
 
 .avatar {
-  vertical-align: middle;
-  width: 75px;
-  height: 75px;
-  border-radius: 50%;
+    vertical-align: middle;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
 }
 
 .clickable:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .thumbnail_size {
-  max-width: 100px;
-  max-height: 153px;
+    max-width: 100px;
+    max-height: 153px;
 }
 
 .thumbnail_size_small {
-  max-width: 70px;
-  max-height: 100px;
+    max-width: 70px;
+    max-height: 100px;
 }
 
 .thumbnail_size_extra_small {
-  max-width: 45px;
-  max-height: 45px;
+    max-width: 45px;
+    max-height: 45px;
 }
 
 .thumbnail_chips {
-  max-width: 70px;
-  max-height: 70px;
+    max-width: 70px;
+    max-height: 70px;
 }
 
 .background_white {
-  border-radius: 5px;
-  background-color: white;
+    border-radius: 5px;
+    background-color: white;
 }
 
 .transparent {
-  opacity: 0.6;
+    opacity: 0.6;
 }
 
 .diplay_image_size {
-  max-width: 512px;
-  max-height: 512px;
+    max-width: 512px;
+    max-height: 512px;
 }
 
 .dropdown-menu-quizzes {
-  // position: absolute;
-  /* top: 100%; */
-  /* left: 0; */
-  z-index: 1000;
-  /* display: none; */
-  // float: left;
-  min-width: 10rem;
-  padding: 0 0;
-  margin: 0.125rem 0 0;
-  font-size: 0.875rem;
-  color: #23282c;
-  text-align: left;
-  list-style: none;
-  background-color: white;
-  background-clip: padding-box;
-  border: 1px solid #c8ced3;
-  border-radius: 0.25rem;
+    // position: absolute;
+    /* top: 100%; */
+    /* left: 0; */
+    z-index: 1000;
+    /* display: none; */
+    // float: left;
+    min-width: 10rem;
+    padding: 0 0;
+    margin: 0.125rem 0 0;
+    font-size: 0.875rem;
+    color: #23282c;
+    text-align: left;
+    list-style: none;
+    background-color: white;
+    background-clip: padding-box;
+    border: 1px solid #c8ced3;
+    border-radius: 0.25rem;
 }
 
 .home-tile_wrap {
-  max-width: 1140px;
-  overflow: overlay;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 20px 40px 0 40px;
-  font-size: $fontSizeH2;
-  font-family: $fontFamily;
-  color: $blackShade2;
-  font-weight: $fontWeightBlack;
-  line-height: 62px;
-  pointer-events: none;
-
-  &_sub {
-    font-size: $fontSizeBody;
-    line-height: 22px;
-    font-weight: $fontWeightRegular;
+    max-width: 1140px;
+    overflow: overlay;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px 40px 0 40px;
+    font-size: $fontSizeH2;
     font-family: $fontFamily;
+    color: $blackShade2;
+    font-weight: $fontWeightBlack;
+    line-height: 62px;
     pointer-events: none;
-  }
+
+    &_sub {
+        font-size: $fontSizeBody;
+        line-height: 22px;
+        font-weight: $fontWeightRegular;
+        font-family: $fontFamily;
+        pointer-events: none;
+    }
 }
 
 .tile_wrap {
-  max-width: 1140px;
-  overflow: overlay;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 40px 0 40px;
+    max-width: 1140px;
+    overflow: overlay;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 40px 0 40px;
 }
 
 .card-product_Stats {
-  margin: 35px 0 10px 0;
-  overflow: hidden;
-  min-height: 340px;
-  background: white;
-  display: flex;
-  align-items: center;
-  border-radius: 12px;
-  box-shadow: 1px 4px 11px 2px rgba(0, 0, 0, 0.06);
+    margin: 35px 0 10px 0;
+    overflow: hidden;
+    min-height: 340px;
+    background: white;
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 1px 4px 11px 2px rgba(0, 0, 0, 0.06);
 
-  .rwd-table {
-    min-width: 300px;
-    max-width: 100%;
-    margin-bottom: 10px;
-  }
+    .rwd-table {
+        min-width: 300px;
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
 
-  .TableBody {
-    border: 1px solid $greyshade4;
-  }
+    .TableBody {
+        border: 1px solid $greyshade4;
+    }
 
-  .rwd-table tr:first-child {
-    background: $white;
-    color: #808080;
-  }
+    .rwd-table tr:first-child {
+        background: $white;
+        color: #808080;
+    }
 
-  .rwd-table th {
-    display: none;
-  }
+    .rwd-table th {
+        display: none;
+    }
 
-  .rwd-table td {
-    display: block;
-  }
+    .rwd-table td {
+        display: block;
+    }
 
-  .rwd-table td:first-child {
-    margin-top: 0.5em;
-  }
+    .rwd-table td:first-child {
+        margin-top: 0.5em;
+    }
 
-  .rwd-table td:last-child {
-    margin-bottom: 0.5em;
-  }
+    .rwd-table td:last-child {
+        margin-bottom: 0.5em;
+    }
 
-  .rwd-table td:before {
-    content: attr(data-th) ": ";
-    font-weight: $fontWeightBold;
-    width: 120px;
-    display: inline-block;
-    color: $blackShade2;
-  }
+    .rwd-table td:before {
+        content: attr(data-th) ": ";
+        font-weight: $fontWeightBold;
+        width: 120px;
+        display: inline-block;
+        color: $blackShade2;
+    }
 
-  .rwd-table th,
-  .rwd-table td {
-    text-align: left;
-    border-right: 1px solid $greyshade4;
-  }
-  .rwd-table th:last-child,
-  .rwd-table td:last-child {
-    border-right: none;
-  }
+    .rwd-table th,
+    .rwd-table td {
+        text-align: left;
+        border-right: 1px solid $greyshade4;
+    }
+    .rwd-table th:last-child,
+    .rwd-table td:last-child {
+        border-right: none;
+    }
 
-  .rwd-table {
-    color: #333;
-    overflow-y: scroll;
-  }
-
-  .rwd-table tr {
-    border-color: #bfbfbf;
-  }
-
-  .rwd-table th,
-  .rwd-table td {
-    padding: 0.5em 1em;
-  }
-  @media screen and (max-width: 800px) {
-    .rwd-table tr:nth-child(2) {
-      border-top: 1px solid $greyshade4 !important ;
+    .rwd-table {
+        color: #333;
+        overflow-y: scroll;
     }
 
     .rwd-table tr {
-      border-right: none;
-      border-bottom: 1px solid $greyshade4;
-    }
-  }
-  @media screen and (min-width: 800px) {
-    .game_wrap {
-      min-width: 0;
-      max-width: 790px;
-    }
-    .rwd-table tr:hover:not(:first-child) {
-      background-color: #d8e7f3;
-    }
-    .rwd-table td:before {
-      display: none;
-    }
-    .rwd-table th,
-    .rwd-table td {
-      display: table-cell;
-      padding: 0.25em 0.5em;
-    }
-    .rwd-table th:first-child,
-    .rwd-table td:first-child {
-      padding-left: 0;
+        border-color: #bfbfbf;
     }
 
     .rwd-table th,
     .rwd-table td {
-      padding: 1em !important;
+        padding: 0.5em 1em;
     }
-  }
+    @media screen and (max-width: 800px) {
+        .rwd-table tr:nth-child(2) {
+            border-top: 1px solid $greyshade4 !important ;
+        }
 
-  &_textContent {
-    margin: 0px 20px 20px 80px;
-  }
+        .rwd-table tr {
+            border-right: none;
+            border-bottom: 1px solid $greyshade4;
+        }
+    }
+    @media screen and (min-width: 800px) {
+        .game_wrap {
+            min-width: 0;
+            max-width: 790px;
+        }
+        .rwd-table tr:hover:not(:first-child) {
+            background-color: #d8e7f3;
+        }
+        .rwd-table td:before {
+            display: none;
+        }
+        .rwd-table th,
+        .rwd-table td {
+            display: table-cell;
+            padding: 0.25em 0.5em;
+        }
+        .rwd-table th:first-child,
+        .rwd-table td:first-child {
+            padding-left: 0;
+        }
 
-  &_Content {
-    font-size: $fontSizeH1;
-    line-height: 68px;
-    color: #000000;
-    font-weight: $fontWeightBold;
-    font-family: $fontFamily;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    text-align: left;
-    max-width: 600px;
-    pointer-events: none;
-  }
+        .rwd-table th,
+        .rwd-table td {
+            padding: 1em !important;
+        }
+    }
 
-  &_subContent {
-    font-size: $fontSizeBody;
-    color: black;
-    font-weight: 300;
-    font-family: $fontFamily;
-    margin-top: 14px;
-    margin-bottom: 28px;
-    text-align: left;
-    pointer-events: none;
-  }
+    &_textContent {
+        margin: 0px 20px 20px 80px;
+    }
+
+    &_Content {
+        font-size: $fontSizeH1;
+        line-height: 68px;
+        color: #000000;
+        font-weight: $fontWeightBold;
+        font-family: $fontFamily;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        text-align: left;
+        max-width: 600px;
+        pointer-events: none;
+    }
+
+    &_subContent {
+        font-size: $fontSizeBody;
+        color: black;
+        font-weight: 300;
+        font-family: $fontFamily;
+        margin-top: 14px;
+        margin-bottom: 28px;
+        text-align: left;
+        pointer-events: none;
+    }
 }
 
 .game_wrap {
-  min-width: 1000px;
-  max-width: 1300px;
+    min-width: 1000px;
+    max-width: 1300px;
 }
 
 .diplay_image_size {
-  max-width: 1100px;
-  max-height: 1024px;
+    max-width: 1100px;
+    max-height: 1024px;
 }
 
 @media only screen and (max-width: 1324px) {
-  .game_wrap {
-    min-width: 1100px;
-    max-width: 1300px;
-  }
+    .game_wrap {
+        min-width: 1100px;
+        max-width: 1300px;
+    }
 
-  .diplay_image_size {
-    max-width: 1100px;
-    max-height: 1068px;
-  }
+    .diplay_image_size {
+        max-width: 1100px;
+        max-height: 1068px;
+    }
 }
 
 @media only screen and (max-width: 1224px) {
-  .game_wrap {
-    min-width: 900px;
-    max-width: 1100px;
-  }
+    .game_wrap {
+        min-width: 900px;
+        max-width: 1100px;
+    }
 
-  .diplay_image_size {
-    max-width: 1020px;
-    max-height: 868px;
-  }
+    .diplay_image_size {
+        max-width: 1020px;
+        max-height: 868px;
+    }
 }
 
 @media only screen and (max-width: 1124px) {
-  .game_wrap {
-    min-width: 800px;
-    max-width: 1000px;
-  }
+    .game_wrap {
+        min-width: 800px;
+        max-width: 1000px;
+    }
 
-  .diplay_image_size {
-    max-width: 920px;
-    max-height: 768px;
-  }
+    .diplay_image_size {
+        max-width: 920px;
+        max-height: 768px;
+    }
 }
 
 @media only screen and (max-width: 1024px) {
-  .game_wrap {
-    min-width: 700px;
-    max-width: 900px;
-  }
+    .game_wrap {
+        min-width: 700px;
+        max-width: 900px;
+    }
 
-  .diplay_image_size {
-    max-width: 800px;
-    max-height: 668px;
-  }
+    .diplay_image_size {
+        max-width: 800px;
+        max-height: 668px;
+    }
 }
 
 // Resposiveness for Mobile view.
 @media only screen and (max-width: 925px) {
-  .game_wrap {
-    min-width: 700px;
-    max-width: 900px;
-  }
-
-  .diplay_image_size {
-    max-width: 850px;
-  }
-
-  .tile_wrap {
-    padding: 0 20px 0 20px;
-  }
-
-  .card-product_Stats {
-    margin: 35px 0;
-    height: auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: column-reverse;
-
-    &_textContent {
-      margin: 0px 30px 10px 30px;
+    .game_wrap {
+        min-width: 700px;
+        max-width: 900px;
     }
 
-    &_Content {
-      margin-top: 28px;
-      font-size: 30px;
+    .diplay_image_size {
+        max-width: 850px;
     }
-  }
+
+    .tile_wrap {
+        padding: 0 20px 0 20px;
+    }
+
+    .card-product_Stats {
+        margin: 35px 0;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column-reverse;
+
+        &_textContent {
+            margin: 0px 30px 10px 30px;
+        }
+
+        &_Content {
+            margin-top: 28px;
+            font-size: 30px;
+        }
+    }
 }
 
 @media only screen and (max-width: 900px) {
-  .game_wrap {
-    min-width: 750px;
-    max-width: 823px;
-  }
+    .game_wrap {
+        min-width: 750px;
+        max-width: 823px;
+    }
 
-  .diplay_image_size {
-    max-width: 790px;
-    max-height: 411px;
-  }
+    .diplay_image_size {
+        max-width: 790px;
+        max-height: 411px;
+    }
 }
 
 @media only screen and (max-width: 823px) {
-  .game_wrap {
-    min-width: 700px;
-    max-width: 800px;
-  }
+    .game_wrap {
+        min-width: 700px;
+        max-width: 800px;
+    }
 
-  .diplay_image_size {
-    max-width: 760px;
-    max-height: 411px;
-  }
+    .diplay_image_size {
+        max-width: 760px;
+        max-height: 411px;
+    }
 }
 
 @media only screen and (max-width: 812px) {
-  .game_wrap {
-    min-width: 0;
-    max-width: 800px;
-  }
+    .game_wrap {
+        min-width: 0;
+        max-width: 800px;
+    }
 
-  .diplay_image_size {
-    max-width: 720px;
-    max-height: 375px;
-  }
+    .diplay_image_size {
+        max-width: 720px;
+        max-height: 375px;
+    }
 }
 
 @media only screen and (max-width: 768px) {
-  .game_wrap {
-    max-width: 750px;
-  }
+    .game_wrap {
+        max-width: 750px;
+    }
 
-  .diplay_image_size {
-    max-width: 660px;
-    max-height: 1024px;
-  }
+    .diplay_image_size {
+        max-width: 660px;
+        max-height: 1024px;
+    }
 }
 
 @media only screen and (max-width: 736px) {
-  .game_wrap {
-    max-width: 710px;
-  }
+    .game_wrap {
+        max-width: 710px;
+    }
 
-  .diplay_image_size {
-    max-width: 520px;
-    max-height: 414px;
-  }
+    .diplay_image_size {
+        max-width: 520px;
+        max-height: 414px;
+    }
 }
 
 @media only screen and (max-width: 734px) {
-  .game_wrap {
-    max-width: 700px;
-  }
+    .game_wrap {
+        max-width: 700px;
+    }
 
-  .diplay_image_size {
-    max-width: 520px;
-    max-height: 360px;
-  }
+    .diplay_image_size {
+        max-width: 520px;
+        max-height: 360px;
+    }
 }
 
 @media only screen and (max-width: 667px) {
-  .game_wrap {
-    min-width: 600px;
-    max-width: 650px;
-  }
+    .game_wrap {
+        min-width: 600px;
+        max-width: 650px;
+    }
 
-  .diplay_image_size {
-    max-width: 530px;
-    max-height: 375px;
-  }
+    .diplay_image_size {
+        max-width: 530px;
+        max-height: 375px;
+    }
 }
 
 @media only screen and (max-width: 570px) {
-  .game_wrap {
-    min-width: 550px;
-    max-width: 560px;
-  }
-
-  .diplay_image_size {
-    max-width: 460px;
-  }
-
-  .card-product_StatsHome {
-    &_Content {
-      font-size: 38px !important ;
+    .game_wrap {
+        min-width: 550px;
+        max-width: 560px;
     }
-  }
+
+    .diplay_image_size {
+        max-width: 460px;
+    }
+
+    .card-product_StatsHome {
+        &_Content {
+            font-size: 38px !important ;
+        }
+    }
 }
 
 @media only screen and (max-width: 420px) {
-  .game_wrap {
-    min-width: 400px;
-    max-width: 410px;
-  }
-
-  .diplay_image_size {
-    max-width: 320px;
-  }
-
-  .card-product_StatsHome {
-    &_Content {
-      font-size: 38px !important ;
+    .game_wrap {
+        min-width: 400px;
+        max-width: 410px;
     }
-  }
+
+    .diplay_image_size {
+        max-width: 320px;
+    }
+
+    .card-product_StatsHome {
+        &_Content {
+            font-size: 38px !important ;
+        }
+    }
 }
 
 @media only screen and (max-width: 385px) {
-  .game_wrap {
-    min-width: 370px;
-    max-width: 375px;
-  }
+    .game_wrap {
+        min-width: 370px;
+        max-width: 375px;
+    }
 
-  .diplay_image_size {
-    max-width: 280px;
-  }
+    .diplay_image_size {
+        max-width: 280px;
+    }
 }
 
 @media only screen and (max-width: 360px) {
-  .game_wrap {
-    min-width: 300px;
-    max-width: 350px;
-  }
+    .game_wrap {
+        min-width: 300px;
+        max-width: 350px;
+    }
 
-  .diplay_image_size {
-    max-width: 260px;
-  }
+    .diplay_image_size {
+        max-width: 260px;
+    }
 }
 
 @media only screen and (max-width: 320px) {
-  .game_wrap {
-    max-width: 310px;
-  }
+    .game_wrap {
+        max-width: 310px;
+    }
 
-  .diplay_image_size {
-    max-width: 220px;
-  }
+    .diplay_image_size {
+        max-width: 220px;
+    }
 }
 
 @media (max-width: 277px) {
-  .app {
-    position: absolute;
-    background: $white;
-  }
+    .app {
+        position: absolute;
+        background: $white;
+    }
 }

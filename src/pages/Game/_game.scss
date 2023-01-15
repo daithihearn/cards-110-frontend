@@ -1,19 +1,19 @@
 .body {
-  font-family: $fontFamily;
+    font-family: $fontFamily;
 }
 
 .cardNotSelected {
-  opacity: 0.9;
-  filter: brightness(70%);
+    opacity: 0.9;
+    filter: brightness(70%);
 }
 
 .cardAutoPlayed {
-  filter: drop-shadow(16px 16px 20px red);
+    filter: drop-shadow(16px 16px 20px red);
 }
 
 .tableCloth {
-  background-image: url("/assets/img/cloth.jpg");
-  min-height: 350px;
+    background-image: url("/assets/img/cloth.jpg");
+    min-height: 350px;
 }
 
 // .carpet {
@@ -21,138 +21,138 @@
 // }
 
 .wood {
-  background-image: url("/assets/img/wood.jpg");
-  background-color: brown;
+    background-image: url("/assets/img/wood.jpg");
+    background-color: brown;
 }
 
 .overlay-chip {
-  margin-top: 5rem;
+    margin-top: 5rem;
 }
 
 .overlay-score {
-  font-weight: bolder;
-  font-size: large;
-  margin-top: 3rem;
+    font-weight: bolder;
+    font-size: large;
+    margin-top: 3rem;
 }
 
 .overlay-dealer-chip {
-  margin-top: 2rem;
+    margin-top: 2rem;
 }
 
 .player-column {
-  padding-left: 0;
-  padding-right: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .card-transparent {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .img-center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cardArea {
-  padding: 0.5rem;
-  font-weight: bold;
-  text-align: center;
+    padding: 0.5rem;
+    font-weight: bold;
+    text-align: center;
 }
 
 .card-img-overlay {
-  padding-left: 0.2rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
-  padding-right: 0.2rem;
+    padding-left: 0.2rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-right: 0.2rem;
 }
 
 .cardAreaHeader {
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-  text-align: center;
-  width: 100%;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
 }
 
 .cardAreaHeaderContainer {
-  color: rgb(0, 0, 0);
-  background-color: #ced2d8;
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
+    color: rgb(0, 0, 0);
+    background-color: #ced2d8;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
 }
 
 .leaderboard-button {
-  padding: 0.1em;
+    padding: 0.1em;
 }
 
 .called-modal,
 .called-card-group {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .game-heading {
-  padding-top: 0.5em;
-  padding-bottom: 0.25em;
+    padding-top: 0.5em;
+    padding-bottom: 0.25em;
 }
 
 .headerArea {
-  min-height: 90px;
+    min-height: 90px;
 }
 
 .buttonArea {
-  min-height: 84px;
-  text-align: center;
+    min-height: 84px;
+    text-align: center;
 }
 
 .gameModalBody {
-  padding: 0;
+    padding: 0;
 }
 
 .leaderboardTable {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .gameModalCardGroup {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .left-padding {
-  padding-left: 5px;
+    padding-left: 5px;
 }
 
 #playCardButton:disabled {
-  display: none;
+    display: none;
 }
 
 @media (min-width: 576px) {
-  .modal-dialog {
-    max-width: 540px;
-  }
+    .modal-dialog {
+        max-width: 540px;
+    }
 }
 
 @media (max-width: 768px) {
-  .overlay-chip {
-    margin-top: 5rem;
-  }
+    .overlay-chip {
+        margin-top: 5rem;
+    }
 }
 
 @media (max-width: 420px) {
-  .card-img-overlay {
-    padding-left: 0;
-    top: 1rem;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-right: 0;
-  }
+    .card-img-overlay {
+        padding-left: 0;
+        top: 1rem;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-right: 0;
+    }
 
-  .overlay-score {
-    margin-top: 1.8em;
-  }
+    .overlay-score {
+        margin-top: 1.8em;
+    }
 
-  .overlay-chip {
-    margin-top: 4rem;
-  }
+    .overlay-chip {
+        margin-top: 4rem;
+    }
 }

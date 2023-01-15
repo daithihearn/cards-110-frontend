@@ -67,97 +67,97 @@ $zIndexU999: 999;
 // Variable overrides
 
 input[type="email"] {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  font-family: $fontFamily;
-  padding-left: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    font-family: $fontFamily;
+    padding-left: 16px;
 
-  &:focus {
-    outline: none;
-  }
+    &:focus {
+        outline: none;
+    }
 }
 
 input[type="password"] {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  font-family: $fontFamily;
-  padding-left: 16px;
-  width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    font-family: $fontFamily;
+    padding-left: 16px;
+    width: 100%;
 
-  &:focus {
-    outline: none;
-  }
+    &:focus {
+        outline: none;
+    }
 }
 
 input[type="input"] {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  font-family: $fontFamily;
-  padding-left: 16px;
-  width: 100%;
-  -webkit-user-select: text;
-  -khtml-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    font-family: $fontFamily;
+    padding-left: 16px;
+    width: 100%;
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 
-  &:focus {
-    outline: none;
-  }
+    &:focus {
+        outline: none;
+    }
 }
 
 input[type="dropdown"] {
-  text-align: center;
-  &:focus {
-    outline: none;
-  }
+    text-align: center;
+    &:focus {
+        outline: none;
+    }
 }
 
 button[type="submit"] {
-  &:focus {
-    outline: none;
-  }
+    &:focus {
+        outline: none;
+    }
 }
 
 button[type="button"] {
-  &:focus {
-    outline: none;
-  }
+    &:focus {
+        outline: none;
+    }
 }
 
 ::-webkit-inner-spin-button {
-  display: none;
+    display: none;
 }
 ::-webkit-calendar-picker-indicator {
-  background-color: $white;
+    background-color: $white;
 }
 input[type="date"] {
-  font-size: 20px;
+    font-size: 20px;
 
-  &:focus {
-    outline: none;
-  }
+    &:focus {
+        outline: none;
+    }
 }
 ::-webkit-datetime-edit-text {
-  color: #555555;
+    color: #555555;
 }
 ::-webkit-datetime-edit-month-field {
-  color: #555555;
+    color: #555555;
 }
 ::-webkit-datetime-edit-day-field {
-  color: #555555;
+    color: #555555;
 }
 ::-webkit-datetime-edit-year-field {
-  color: #555555;
+    color: #555555;
 }
 ::-webkit-calendar-picker-indicator {
-  background-image: url(http://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Calendar-icon.png);
-  cursor: pointer;
-  background-position: center;
-  background-size: 20px 20px;
-  background-repeat: no-repeat;
-  color: rgba(204, 204, 204, 0);
+    background-image: url(http://icons.iconarchive.com/icons/dakirby309/simply-styled/256/Calendar-icon.png);
+    cursor: pointer;
+    background-position: center;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    color: rgba(204, 204, 204, 0);
 }

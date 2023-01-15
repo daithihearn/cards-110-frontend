@@ -1,16 +1,16 @@
 {
-  "short_name": "Cards 110",
-  "name": "Cards 110",
-  "version": "3.2.4",
-  "icons": [
-    {
-      "src": "./assets/favicon.png",
-      "sizes": "100x100",
-      "type": "image/png"
-    }
-  ],
-  "start_url": "./index.html",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+    "short_name": "Cards 110",
+    "name": "Cards 110",
+    "version": "3.2.4",
+    "icons": [
+        {
+            "src": "./assets/favicon.png",
+            "sizes": "100x100",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "./index.html",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
 }

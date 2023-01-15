@@ -7,36 +7,36 @@ import { useEffect } from "react"
 import Loading from "../../components/icons/Loading"
 
 const Layout = () => {
-  const accessToken = useAppSelector(getAccessToken)
-  const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()
+    const accessToken = useAppSelector(getAccessToken)
+    const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) loginWithRedirect()
-  }, [isLoading, isAuthenticated])
+    useEffect(() => {
+        if (!isLoading && !isAuthenticated) loginWithRedirect()
+    }, [isLoading, isAuthenticated])
 
-  return (
-    <div>
-      <div className="main_content">
-        <span className="app" style={{ overflowX: "hidden" }}>
-          <div className="app_body">
-            <main className="main">
-              {isAuthenticated && accessToken ? (
-                <>
-                  <DefaultHeader />
-                  <Outlet />
-                </>
-              ) : (
-                <>
-                  <DefaultHeader />
-                  <Loading />
-                </>
-              )}
-            </main>
-          </div>
-        </span>
-      </div>
-    </div>
-  )
+    return (
+        <div>
+            <div className="main_content">
+                <span className="app" style={{ overflowX: "hidden" }}>
+                    <div className="app_body">
+                        <main className="main">
+                            {isAuthenticated && accessToken ? (
+                                <>
+                                    <DefaultHeader />
+                                    <Outlet />
+                                </>
+                            ) : (
+                                <>
+                                    <DefaultHeader />
+                                    <Loading />
+                                </>
+                            )}
+                        </main>
+                    </div>
+                </span>
+            </div>
+        </div>
+    )
 }
 
 export default Layout
