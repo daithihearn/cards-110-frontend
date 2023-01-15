@@ -15,26 +15,24 @@ const Layout = () => {
     }, [isLoading, isAuthenticated])
 
     return (
-        <div>
-            <div className="main_content">
-                <span className="app" style={{ overflowX: "hidden" }}>
-                    <div className="app_body">
-                        <main className="main">
-                            {isAuthenticated && accessToken ? (
-                                <>
-                                    <DefaultHeader />
-                                    <Outlet />
-                                </>
-                            ) : (
-                                <>
-                                    <DefaultHeader />
-                                    <Loading />
-                                </>
-                            )}
-                        </main>
-                    </div>
-                </span>
-            </div>
+        <div className="main_content">
+            <span className="app" style={{ overflowX: "hidden" }}>
+                <div className="app_body">
+                    <main className="main">
+                        {isAuthenticated && accessToken ? (
+                            <>
+                                <DefaultHeader />
+                                <Outlet />
+                            </>
+                        ) : (
+                            <>
+                                <DefaultHeader />
+                                <Loading />
+                            </>
+                        )}
+                    </main>
+                </div>
+            </span>
         </div>
     )
 }
