@@ -13,8 +13,8 @@ import { getMyProfile } from "../../caches/MyProfileSlice"
 import GameService from "../../services/GameService"
 import { useSnackbar } from "notistack"
 import StatsService from "../../services/StatsService"
-import Loading from "../../components/icons/Loading"
 import { Divider } from "@mui/material"
+import RefreshingData from "../../components/icons/RefreshingData"
 
 const Home = () => {
     const dispatch = useAppDispatch()
@@ -39,7 +39,9 @@ const Home = () => {
     }, [])
 
     return (
-        <PullToRefresh onRefresh={fetchData} refreshingContent={<Loading />}>
+        <PullToRefresh
+            onRefresh={fetchData}
+            refreshingContent={<RefreshingData />}>
             <div className="app carpet">
                 <div className="game_wrap">
                     <div className="game_container">
