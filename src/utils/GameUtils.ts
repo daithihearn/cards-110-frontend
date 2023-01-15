@@ -133,7 +133,7 @@ export const bestCardLead = (round: Round) => {
     // Remove played trump cards
     round.completedHands.forEach(hand => {
         hand.playedCards.forEach(p => {
-            const card = CARDS.find(c => (c.name = p.card))
+            const card = CARDS.find(c => c.name === p.card)
             if (
                 (card && card.suit === round.suit) ||
                 p.card === "JOKER" ||
