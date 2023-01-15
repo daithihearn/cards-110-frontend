@@ -12,9 +12,9 @@ All of the above can be configured in the `.env` file.
 
 # Technical Stack
 
-- NPM >=v14
-- Yarn
-- React
+-   NPM >=v14
+-   Yarn
+-   React
 
 # Building
 

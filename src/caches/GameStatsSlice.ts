@@ -2,31 +2,31 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./caches"
 
 export interface GameStats {
-  gameId: string
-  timestamp: string
-  winner: boolean
-  score: number
-  rings: number
+    gameId: string
+    timestamp: string
+    winner: boolean
+    score: number
+    rings: number
 }
 
 export interface GameStatsState {
-  stats: GameStats[]
+    stats: GameStats[]
 }
 
 const initialState: GameStatsState = {
-  stats: [],
+    stats: [],
 }
 
 export const gameStatsSlice = createSlice({
-  name: "gameStats",
-  initialState: initialState,
-  reducers: {
-    updateGameStats: (_, action: PayloadAction<GameStats[]>) => {
-      return {
-        stats: action.payload,
-      }
+    name: "gameStats",
+    initialState: initialState,
+    reducers: {
+        updateGameStats: (_, action: PayloadAction<GameStats[]>) => {
+            return {
+                stats: action.payload,
+            }
+        },
     },
-  },
 })
 
 export const { updateGameStats } = gameStatsSlice.actions

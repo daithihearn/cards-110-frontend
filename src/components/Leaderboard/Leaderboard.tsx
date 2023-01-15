@@ -4,11 +4,11 @@ import { useAppSelector } from "../../caches/hooks"
 import { isDoublesGame } from "../../caches/GameSlice"
 
 const Leaderboard = () => {
-  const isDoubles = useAppSelector(isDoublesGame)
+    const isDoubles = useAppSelector(isDoublesGame)
 
-  if (isDoubles) return <DoublesLeaderboard />
+    if (isDoubles) return <DoublesLeaderboard />
 
-  return <SinglesLeaderboard />
+    return <SinglesLeaderboard />
 }
 
 export default Leaderboard

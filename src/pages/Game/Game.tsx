@@ -16,44 +16,44 @@ import { clearMyCards } from "../../caches/MyCardsSlice"
 import Loading from "../../components/icons/Loading"
 
 const Game = () => {
-  const dispatch = useAppDispatch()
-  let { id } = useParams<string>()
-  const { enqueueSnackbar } = useSnackbar()
-  const hasGame = useAppSelector(getHasGame)
+    const dispatch = useAppDispatch()
+    let { id } = useParams<string>()
+    const { enqueueSnackbar } = useSnackbar()
+    const hasGame = useAppSelector(getHasGame)
 
-  const fetchData = async () => {
-    if (id)
-      await dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
-        enqueueSnackbar(e.message, { variant: "error" })
-      )
+    const fetchData = async () => {
+        if (id)
+            await dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
+                enqueueSnackbar(e.message, { variant: "error" }),
+            )
 
-    await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
-      enqueueSnackbar(e.message, { variant: "error" })
-    )
-  }
-
-  useEffect(() => {
-    fetchData()
-
-    return () => {
-      console.log("Resetting game")
-      dispatch(resetGame())
-      dispatch(clearMyCards())
-      dispatch(clearAutoPlay())
+        await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
+            enqueueSnackbar(e.message, { variant: "error" }),
+        )
     }
-  }, [id])
 
-  return (
-    <PullToRefresh onRefresh={fetchData} refreshingContent={<Loading />}>
-      <div className="app carpet">
-        <div className="game_wrap">
-          <div className="game_container">
-            {hasGame ? <GameWrapper /> : <GameOver />}
-          </div>
-        </div>
-      </div>
-    </PullToRefresh>
-  )
+    useEffect(() => {
+        fetchData()
+
+        return () => {
+            console.log("Resetting game")
+            dispatch(resetGame())
+            dispatch(clearMyCards())
+            dispatch(clearAutoPlay())
+        }
+    }, [id])
+
+    return (
+        <PullToRefresh onRefresh={fetchData} refreshingContent={<Loading />}>
+            <div className="app carpet">
+                <div className="game_wrap">
+                    <div className="game_container">
+                        {hasGame ? <GameWrapper /> : <GameOver />}
+                    </div>
+                </div>
+            </div>
+        </PullToRefresh>
+    )
 }
 
 export default withAuthenticationRequired(Game)

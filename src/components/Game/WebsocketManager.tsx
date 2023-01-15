@@ -22,136 +22,141 @@ const callAudio = new Audio(callAudioFile)
 const passAudio = new Audio(passAudioFile)
 
 const shuffleSound = () => {
-  shuffleAudio.play().catch(() => console.error("Error playing shuffle sound!"))
+    shuffleAudio
+        .play()
+        .catch(() => console.error("Error playing shuffle sound!"))
 }
 
 const playCardSound = () => {
-  playCardAudio
-    .play()
-    .catch(() => console.error("Error playing play card sound!"))
+    playCardAudio
+        .play()
+        .catch(() => console.error("Error playing play card sound!"))
 }
 
 const callSound = () => {
-  callAudio.play().catch(() => console.error("Error playing call sound!"))
+    callAudio.play().catch(() => console.error("Error playing call sound!"))
 }
 
 const passSound = () => {
-  passAudio.play().catch(() => console.error("Error playing pass sound!"))
+    passAudio.play().catch(() => console.error("Error playing pass sound!"))
 }
 
 interface ActionEvent {
-  type: Actions
-  content: unknown
+    type: Actions
+    content: unknown
 }
 
 const WebsocketHandler = () => {
-  const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch()
 
-  const playerProfiles = useAppSelector(getPlayerProfiles)
-  const { enqueueSnackbar } = useSnackbar()
+    const playerProfiles = useAppSelector(getPlayerProfiles)
+    const { enqueueSnackbar } = useSnackbar()
 
-  const [previousAction, updatePreviousAction] = useState<Actions>()
+    const [previousAction, updatePreviousAction] = useState<Actions>()
 
-  const handleWebsocketMessage = useCallback(
-    (message: string) => {
-      if (previousAction === "LAST_CARD_PLAYED") {
-        console.info("Waiting on last card to allow time to view cards...")
-        setTimeout(() => processWebsocketMessage(message), 4000)
-      } else {
-        processWebsocketMessage(message)
-      }
-    },
-    [previousAction]
-  )
+    const handleWebsocketMessage = useCallback(
+        (message: string) => {
+            if (previousAction === "LAST_CARD_PLAYED") {
+                console.info(
+                    "Waiting on last card to allow time to view cards...",
+                )
+                setTimeout(() => processWebsocketMessage(message), 4000)
+            } else {
+                processWebsocketMessage(message)
+            }
+        },
+        [previousAction],
+    )
 
-  const processWebsocketMessage = (message: string) => {
-    const payload = JSON.parse(message)
-    const actionEvent = JSON.parse(payload.payload) as ActionEvent
+    const processWebsocketMessage = (message: string) => {
+        const payload = JSON.parse(message)
+        const actionEvent = JSON.parse(payload.payload) as ActionEvent
 
-    updatePreviousAction(actionEvent.type)
-    processActons(actionEvent.type, actionEvent.content)
+        updatePreviousAction(actionEvent.type)
+        processActons(actionEvent.type, actionEvent.content)
 
-    if (actionEvent.type !== Actions.BuyCardsNotification) {
-      const gameState = actionEvent.content as GameState
-      dispatch(updateGame(gameState))
+        if (actionEvent.type !== Actions.BuyCardsNotification) {
+            const gameState = actionEvent.content as GameState
+            dispatch(updateGame(gameState))
+        }
     }
-  }
 
-  const reloadCards = (payload: unknown) => {
-    dispatch(clearSelectedCards())
-    dispatch(clearAutoPlay())
-    const gameState = payload as GameState
-    dispatch(updateMyCards(gameState.cards))
-  }
+    const reloadCards = (payload: unknown) => {
+        dispatch(clearSelectedCards())
+        dispatch(clearAutoPlay())
+        const gameState = payload as GameState
+        dispatch(updateMyCards(gameState.cards))
+    }
 
-  const processActons = useCallback(
-    (type: Actions, payload: unknown) => {
-      switch (type) {
-        case "DEAL":
-          shuffleSound()
-          reloadCards(payload)
-          break
-        case "CHOOSE_FROM_DUMMY":
-        case "BUY_CARDS":
-        case "LAST_CARD_PLAYED":
-        case "CARD_PLAYED":
-          playCardSound()
-          reloadCards(payload)
-          break
-        case "REPLAY":
-          break
-        case "GAME_OVER":
-          break
-        case "BUY_CARDS_NOTIFICATION":
-          const buyCardsEvt = payload as BuyCardsEvent
-          const player = playerProfiles.find(
-            (p) => p.id === buyCardsEvt.playerId
-          )
-          if (!player) {
-            break
-          }
+    const processActons = useCallback(
+        (type: Actions, payload: unknown) => {
+            switch (type) {
+                case "DEAL":
+                    shuffleSound()
+                    reloadCards(payload)
+                    break
+                case "CHOOSE_FROM_DUMMY":
+                case "BUY_CARDS":
+                case "LAST_CARD_PLAYED":
+                case "CARD_PLAYED":
+                    playCardSound()
+                    reloadCards(payload)
+                    break
+                case "REPLAY":
+                    break
+                case "GAME_OVER":
+                    break
+                case "BUY_CARDS_NOTIFICATION":
+                    const buyCardsEvt = payload as BuyCardsEvent
+                    const player = playerProfiles.find(
+                        p => p.id === buyCardsEvt.playerId,
+                    )
+                    if (!player) {
+                        break
+                    }
 
-          enqueueSnackbar(`${player.name} bought ${buyCardsEvt.bought}`)
+                    enqueueSnackbar(
+                        `${player.name} bought ${buyCardsEvt.bought}`,
+                    )
 
-          break
-        case "HAND_COMPLETED":
-          break
-        case "ROUND_COMPLETED":
-          reloadCards(payload)
-          break
-        case "CALL":
-          callSound()
-          reloadCards(payload)
-          break
-        case "PASS":
-          passSound()
-          reloadCards(payload)
-          break
-      }
-    },
-    [playerProfiles]
-  )
+                    break
+                case "HAND_COMPLETED":
+                    break
+                case "ROUND_COMPLETED":
+                    reloadCards(payload)
+                    break
+                case "CALL":
+                    callSound()
+                    reloadCards(payload)
+                    break
+                case "PASS":
+                    passSound()
+                    reloadCards(payload)
+                    break
+            }
+        },
+        [playerProfiles],
+    )
 
-  useSubscription(["/game", "/user/game"], (message) =>
-    handleWebsocketMessage(message.body)
-  )
+    useSubscription(["/game", "/user/game"], message =>
+        handleWebsocketMessage(message.body),
+    )
 
-  return null
+    return null
 }
 
 const WebsocketManager = () => {
-  const gameId = useAppSelector(getGameId)
-  const accessToken = useAppSelector(getAccessToken)
+    const gameId = useAppSelector(getGameId)
+    const accessToken = useAppSelector(getAccessToken)
 
-  if (!gameId) return null
+    if (!gameId) return null
 
-  return (
-    <StompSessionProvider
-      url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${gameId}&tokenId=${accessToken}`}
-    >
-      <WebsocketHandler />
-    </StompSessionProvider>
-  )
+    return (
+        <StompSessionProvider
+            url={`${process.env.REACT_APP_WEBSOCKET_URL}/websocket?gameId=${gameId}&tokenId=${accessToken}`}>
+            <WebsocketHandler />
+        </StompSessionProvider>
+    )
 }
 
 export default WebsocketManager

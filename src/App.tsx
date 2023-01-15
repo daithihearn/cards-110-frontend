@@ -9,10 +9,10 @@ import "@coreui/icons/css/all.min.css"
 import "font-awesome/css/font-awesome.min.css"
 import React from "react"
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
+    createBrowserRouter,
+    createRoutesFromElements,
+    Route,
+    RouterProvider,
 } from "react-router-dom"
 
 // Import Simple Line Icons Set
@@ -37,33 +37,32 @@ const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID as string
 const AUTH0_SCOPE = process.env.REACT_APP_AUTH0_SCOPE as string
 
 const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
-      <Route errorElement={<ErrorPage />}>
-        <Route path={"/"} element={<Home />} />
-        <Route path="/game/:id" element={<Game />} />
-      </Route>
-    </Route>
-  )
+    createRoutesFromElements(
+        <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
+            <Route errorElement={<ErrorPage />}>
+                <Route path={"/"} element={<Home />} />
+                <Route path="/game/:id" element={<Game />} />
+            </Route>
+        </Route>,
+    ),
 )
 
 const App = () => {
-  return (
-    <Provider store={store}>
-      <SnackbarProvider maxSnack={3}>
-        <Auth0Provider
-          domain={AUTHO_DOMAIN}
-          audience={AUTH0_AUDIENCE}
-          clientId={AUTH0_CLIENT_ID}
-          redirectUri={window.location.origin}
-          scope={AUTH0_SCOPE}
-          useRefreshTokens={true}
-        >
-          <MyProfileSync />
-          <RouterProvider router={router} />
-        </Auth0Provider>
-      </SnackbarProvider>
-    </Provider>
-  )
+    return (
+        <Provider store={store}>
+            <SnackbarProvider maxSnack={3}>
+                <Auth0Provider
+                    domain={AUTHO_DOMAIN}
+                    audience={AUTH0_AUDIENCE}
+                    clientId={AUTH0_CLIENT_ID}
+                    redirectUri={window.location.origin}
+                    scope={AUTH0_SCOPE}
+                    useRefreshTokens={true}>
+                    <MyProfileSync />
+                    <RouterProvider router={router} />
+                </Auth0Provider>
+            </SnackbarProvider>
+        </Provider>
+    )
 }
 export default App

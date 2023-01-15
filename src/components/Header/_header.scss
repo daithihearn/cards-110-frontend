@@ -1,313 +1,313 @@
 .custom-navbar {
-  padding: 5px;
+    padding: 5px;
 }
 
 .nav-container {
-  width: 100%;
-  max-width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: 15px;
-  margin-left: 15px;
+    width: 100%;
+    max-width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
 }
 
 .nav-col {
-  margin: auto;
+    margin: auto;
 }
 
 .linknavbar {
-  color: #fff;
-  font-weight: bold;
-  font-size: 1.25em;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.25em;
 }
 
 .linknavbar:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .header_background {
-  background-color: $white;
-  width: auto;
-  min-height: 80px;
-  position: relative;
-  transition-delay: 0.1s;
-  transition: all 0.2s linear;
+    background-color: $white;
+    width: auto;
+    min-height: 80px;
+    position: relative;
+    transition-delay: 0.1s;
+    transition: all 0.2s linear;
 }
 
 .header_backgroundSearch {
-  background-color: $white;
-  width: auto;
-  min-height: 80vh;
-  position: relative;
-  transition: 0.2s ease-in;
-  transition-delay: 0.1s;
+    background-color: $white;
+    width: auto;
+    min-height: 80vh;
+    position: relative;
+    transition: 0.2s ease-in;
+    transition-delay: 0.1s;
 }
 
 .navHeader {
-  display: flex;
-  flex-wrap: wrap;
-  line-height: 80px;
-  opacity: 1;
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 80px;
+    opacity: 1;
 }
 
 .navHeaderWrap {
-  margin: 0;
+    margin: 0;
 }
 
 .headerPageNav {
-  margin-left: 10px;
-  position: absolute;
-  width: 700px;
-  transition: 0.6s ease-in;
-  transition-delay: 0.9s;
+    margin-left: 10px;
+    position: absolute;
+    width: 700px;
+    transition: 0.6s ease-in;
+    transition-delay: 0.9s;
 }
 
 .headerPageButtons {
-  width: 136px;
-  height: 32px;
-  margin-left: 50px;
-  color: $greyshade5;
-  padding: 0px 10px 0px 10px;
-  font-size: $fontSizeBase;
-  line-height: 22px;
-  font-family: $fontFamily;
-  cursor: pointer;
-  transition: 0.2s ease-in;
-  transition-delay: 0s;
-  font-weight: $fontWeightBold;
+    width: 136px;
+    height: 32px;
+    margin-left: 50px;
+    color: $greyshade5;
+    padding: 0px 10px 0px 10px;
+    font-size: $fontSizeBase;
+    line-height: 22px;
+    font-family: $fontFamily;
+    cursor: pointer;
+    transition: 0.2s ease-in;
+    transition-delay: 0s;
+    font-weight: $fontWeightBold;
 
-  &:hover {
-    color: #000000;
-  }
+    &:hover {
+        color: #000000;
+    }
 }
 
 .headerPageProfile {
-  right: 0;
-  position: absolute;
+    right: 0;
+    position: absolute;
 }
 
 .headerPageNotification {
-  height: 36px;
-  width: 36px;
-  border-radius: 50%;
-  background-color: $white;
-  padding: 7px 4px;
-  cursor: pointer;
-  margin: 0 40px 0 0;
-  transition: 0.6s ease-in;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background-color: $white;
+    padding: 7px 4px;
+    cursor: pointer;
+    margin: 0 40px 0 0;
+    transition: 0.6s ease-in;
 }
 
 .headerPageNotificationIcon {
-  height: 24px;
-  width: 24px;
+    height: 24px;
+    width: 24px;
 }
 
 .headerPageProfileIcon {
-  background-color: #f7f8fa;
-  margin-left: 32px;
-  margin-right: 80px;
-  height: 36px;
-  border-radius: 21px;
-  padding: 13.5px 13px 14px 0px;
-  cursor: pointer;
+    background-color: #f7f8fa;
+    margin-left: 32px;
+    margin-right: 80px;
+    height: 36px;
+    border-radius: 21px;
+    padding: 13.5px 13px 14px 0px;
+    cursor: pointer;
 }
 
 .headerpageSearch {
-  font-size: $fontSizeBody;
-  width: 300px;
-  height: 20px;
-  border: none;
-  outline: none;
-  border-radius: 50px;
-  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  transition: all 0.6s;
-  transition-delay: 0.1s;
-  margin-right: 110px;
-  text-align: center;
-
-  &_button {
+    font-size: $fontSizeBody;
+    width: 300px;
     height: 20px;
-    position: absolute;
-    top: 31px;
-    right: 380px;
-    transition: 0.4s ease-in;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: all 0.6s;
     transition-delay: 0.1s;
-    cursor: pointer;
-    background-color: $white;
-  }
+    margin-right: 110px;
+    text-align: center;
 
-  &_CloseButton {
-    height: 20px;
-    position: absolute;
-    top: 25px;
-    right: 104px;
-    transition: 0.6s ease-in;
-    transition-delay: 0.1s;
-    background: black;
-    height: 28px;
-    width: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
+    &_button {
+        height: 20px;
+        position: absolute;
+        top: 31px;
+        right: 380px;
+        transition: 0.4s ease-in;
+        transition-delay: 0.1s;
+        cursor: pointer;
+        background-color: $white;
+    }
+
+    &_CloseButton {
+        height: 20px;
+        position: absolute;
+        top: 25px;
+        right: 104px;
+        transition: 0.6s ease-in;
+        transition-delay: 0.1s;
+        background: black;
+        height: 28px;
+        width: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
 }
 
 .headerpageSearch2 {
-  font-size: $fontSizeBody;
-  width: 0px;
-  height: 20px;
-  border: none;
-  outline: none;
-  border-radius: 50px;
-
-  transition: 0.6s ease-in;
-  margin-right: 100px;
-  text-align: center;
-  cursor: default;
-
-  &_button {
+    font-size: $fontSizeBody;
+    width: 0px;
     height: 20px;
-    position: absolute;
-    top: 33px;
-    right: 104px;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+
     transition: 0.6s ease-in;
-    cursor: pointer;
-  }
-  &_CloseButton {
-    display: none;
-    transition: 0.4s ease-in;
-    transition-delay: 0.1s;
-  }
+    margin-right: 100px;
+    text-align: center;
+    cursor: default;
+
+    &_button {
+        height: 20px;
+        position: absolute;
+        top: 33px;
+        right: 104px;
+        transition: 0.6s ease-in;
+        cursor: pointer;
+    }
+    &_CloseButton {
+        display: none;
+        transition: 0.4s ease-in;
+        transition-delay: 0.1s;
+    }
 }
 
 .headerSearchResult {
-  margin: 128px 40px 0 40px;
-  width: 100%;
-  transition: all 0.5s linear;
+    margin: 128px 40px 0 40px;
+    width: 100%;
+    transition: all 0.5s linear;
 }
 
 .headermobile {
-  &_logo {
-    display: none;
-  }
-  &_toggleButton {
-    display: none;
-  }
-  &_toggleButton2 {
-    display: none;
-  }
+    &_logo {
+        display: none;
+    }
+    &_toggleButton {
+        display: none;
+    }
+    &_toggleButton2 {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 767px) {
-  .header_background {
-    background-color: $blackShade2;
-    width: auto;
-    min-height: 70px;
-    position: relative;
-    transition: all 0.2s linear;
-  }
-  .header_backgroundSearch {
-    background-color: $blackShade2;
-    width: auto;
-    min-height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: all 0.1s;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-  }
-  .navHeader {
-    background-color: $blackShade2;
-  }
-
-  .navHeaderWrap {
-    margin: 0 auto;
-  }
-
-  .navheaderWrap {
-    margin: 0 auto;
-  }
-  .headerPageNav {
-    display: none;
-  }
-  .headerPageProfile {
-    right: 0;
-    position: relative;
-  }
-  .headermobile {
-    &_logo {
-      display: block;
-      margin: 20px auto;
-      height: 30px;
+    .header_background {
+        background-color: $blackShade2;
+        width: auto;
+        min-height: 70px;
+        position: relative;
+        transition: all 0.2s linear;
     }
-    &_toggleButton {
-      display: block;
-      height: 20px;
-      position: fixed;
-      bottom: 210px;
-      right: 24px;
-      transition: 0.2s ease-in;
-      transition-delay: 0.1s;
-      background: #000000;
-      height: 38px;
-      width: 38px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-      margin-bottom: 0;
-      z-index: 997;
-      box-shadow: $boxShadow2;
+    .header_backgroundSearch {
+        background-color: $blackShade2;
+        width: auto;
+        min-height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: all 0.1s;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+    }
+    .navHeader {
+        background-color: $blackShade2;
     }
 
-    &_toggleButton2 {
-      display: block;
-      height: 20px;
-      position: fixed;
-      bottom: 210px;
-      right: 24px;
-      transition: 0.2s ease-in;
-      transition-delay: 0.1s;
-      background: #000000;
-      height: 38px;
-      width: 38px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-      margin-bottom: 0;
-      z-index: 997;
-      padding: 0 5px;
-      box-shadow: $boxShadow2;
+    .navHeaderWrap {
+        margin: 0 auto;
     }
-  }
-  .headerpageSearch {
-    margin-right: 0;
-    width: 100%;
 
-    &_button {
-      top: 0px;
-      right: 85%;
+    .navheaderWrap {
+        margin: 0 auto;
     }
-    &_CloseButton {
-      display: none;
-      transition: 0.4s ease-in;
-      transition-delay: 0.1s;
+    .headerPageNav {
+        display: none;
     }
-  }
-  .headerpageSearch2 {
-    display: none;
-    &_button {
-      display: none;
+    .headerPageProfile {
+        right: 0;
+        position: relative;
     }
-  }
-  .headerPageNotification {
-    display: none;
-  }
+    .headermobile {
+        &_logo {
+            display: block;
+            margin: 20px auto;
+            height: 30px;
+        }
+        &_toggleButton {
+            display: block;
+            height: 20px;
+            position: fixed;
+            bottom: 210px;
+            right: 24px;
+            transition: 0.2s ease-in;
+            transition-delay: 0.1s;
+            background: #000000;
+            height: 38px;
+            width: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 0;
+            z-index: 997;
+            box-shadow: $boxShadow2;
+        }
 
-  .headerSearchResult {
-    margin: 0 20px;
-    width: 100%;
-    transition: all 0.5s linear;
-  }
+        &_toggleButton2 {
+            display: block;
+            height: 20px;
+            position: fixed;
+            bottom: 210px;
+            right: 24px;
+            transition: 0.2s ease-in;
+            transition-delay: 0.1s;
+            background: #000000;
+            height: 38px;
+            width: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 0;
+            z-index: 997;
+            padding: 0 5px;
+            box-shadow: $boxShadow2;
+        }
+    }
+    .headerpageSearch {
+        margin-right: 0;
+        width: 100%;
+
+        &_button {
+            top: 0px;
+            right: 85%;
+        }
+        &_CloseButton {
+            display: none;
+            transition: 0.4s ease-in;
+            transition-delay: 0.1s;
+        }
+    }
+    .headerpageSearch2 {
+        display: none;
+        &_button {
+            display: none;
+        }
+    }
+    .headerPageNotification {
+        display: none;
+    }
+
+    .headerSearchResult {
+        margin: 0 20px;
+        width: 100%;
+        transition: all 0.5s linear;
+    }
 }
