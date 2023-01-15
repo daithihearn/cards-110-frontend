@@ -5,14 +5,12 @@ import Leaderboard from "../Leaderboard/Leaderboard"
 const GameOver = () => {
     return (
         <CardGroup>
-            <Card color="secondary" className="p-6">
+            <Card className="p-6 data-card">
                 <CardHeader className="cardAreaHeaderContainer" tag="h2">
                     Game Over
                 </CardHeader>
                 <CardBody>
-                    <Container>
-                        <Leaderboard />
-                    </Container>
+                    <Leaderboard />
                 </CardBody>
             </Card>
         </CardGroup>

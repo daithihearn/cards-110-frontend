@@ -2,6 +2,10 @@
     font-family: $fontFamily;
 }
 
+.card {
+    --cui-card-bg: ;
+}
+
 .cardNotSelected {
     opacity: 0.9;
     filter: brightness(70%);
@@ -9,11 +13,6 @@
 
 .cardAutoPlayed {
     filter: drop-shadow(16px 16px 20px red);
-}
-
-.tableCloth {
-    background-image: url("/assets/img/cloth.jpg");
-    min-height: 350px;
 }
 
 // .carpet {

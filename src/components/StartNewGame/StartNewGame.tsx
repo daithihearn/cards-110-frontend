@@ -14,11 +14,13 @@ import {
     Card,
     CardBody,
     CardGroup,
+    CardHeader,
 } from "reactstrap"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { PlayerProfile } from "../../model/Player"
 import { useSnackbar } from "notistack"
+import { customStyles } from "../Tables/CustomStyles"
 
 const StartNewGame = () => {
     const dispatch = useAppDispatch()
@@ -96,14 +98,10 @@ const StartNewGame = () => {
 
     return (
         <CardGroup>
-            <Card color="secondary">
-                <CardBody>
-                    <h1>Start a new game</h1>
-                </CardBody>
+            <Card className="data-card">
+                <CardHeader tag="h2">Start a new game</CardHeader>
                 <CardBody>
                     <FormGroup>
-                        <h3>Players</h3>
-
                         <DataTable
                             noHeader
                             pagination
@@ -112,6 +110,7 @@ const StartNewGame = () => {
                             columns={columns}
                             highlightOnHover
                             selectableRows
+                            customStyles={customStyles}
                             onSelectedRowsChange={togglePlayer}
                         />
 

@@ -1,6 +1,14 @@
 import { useCallback, useState } from "react"
 
-import { Modal, ModalBody, Button } from "reactstrap"
+import {
+    Modal,
+    ModalBody,
+    Button,
+    CardGroup,
+    Card,
+    CardHeader,
+    CardBody,
+} from "reactstrap"
 
 import Leaderboard from "../Leaderboard/Leaderboard"
 
@@ -31,7 +39,14 @@ const LeaderboardModal = () => {
                 toggle={toggleLeaderboardModal}
                 isOpen={modalLeaderboard}>
                 <ModalBody className="gameModalBody">
-                    <Leaderboard />
+                    <CardGroup>
+                        <Card className="data-card">
+                            <CardHeader tag="h2">Leaderboard</CardHeader>
+                            <CardBody>
+                                <Leaderboard />
+                            </CardBody>
+                        </Card>
+                    </CardGroup>
                 </ModalBody>
             </Modal>
         </>

@@ -19,10 +19,7 @@ const GameWrapper = () => {
             <WebsocketManager />
             <AutoActionManager />
 
-            <Card
-                className="p-6 tableCloth"
-                inverse
-                style={{ backgroundColor: "#333", borderColor: "#333" }}>
+            <Card className="p-6" inverse>
                 <PlayersAndCards />
 
                 {!iamSpectator ? <MyCards /> : null}

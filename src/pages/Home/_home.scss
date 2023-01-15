@@ -2,17 +2,17 @@
     font-family: $fontFamily;
 }
 .app_body {
-    background-color: $white;
     width: auto;
     flex: 1;
     position: relative;
     font-family: $fontFamily;
 }
 
-.card-group {
-    padding-top: 10px;
-    padding-bottom: 10px;
+.data-card {
+    background-color: $white;
+    opacity: 0.95;
 }
+
 
 .game_wrap {
     min-width: 650px;
@@ -20,7 +20,6 @@
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    background-color: $white;
 }
 
 .game_container {
@@ -545,6 +544,5 @@
 @media (max-width: 277px) {
     .app {
         position: absolute;
-        background: $white;
     }
 }

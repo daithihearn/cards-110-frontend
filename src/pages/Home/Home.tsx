@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react"
+import React, { useEffect } from "react"
 
 import { Card, CardGroup, CardHeader } from "reactstrap"
 
@@ -14,6 +14,7 @@ import GameService from "../../services/GameService"
 import { useSnackbar } from "notistack"
 import StatsService from "../../services/StatsService"
 import Loading from "../../components/icons/Loading"
+import { Divider } from "@mui/material"
 
 const Home = () => {
     const dispatch = useAppDispatch()
@@ -44,7 +45,7 @@ const Home = () => {
                     <div className="game_container">
                         {!myProfile.isPlayer && !myProfile.isAdmin ? (
                             <CardGroup>
-                                <Card color="secondary" className="p-6">
+                                <Card className="p-6">
                                     <CardHeader tag="h2">
                                         You are successfully logged in but don't
                                         yet have any access permissions. Please
@@ -55,16 +56,18 @@ const Home = () => {
                         ) : (
                             <div>
                                 {myProfile.isPlayer ? (
-                                    <div>
+                                    <>
                                         <MyGames />
+                                        <Divider />
+                                        <Divider />
+                                        <Divider />
                                         <GameStats />
-                                    </div>
+                                        <Divider />
+                                        <Divider />
+                                        <Divider />
+                                    </>
                                 ) : null}
-                                {myProfile.isAdmin ? (
-                                    <div>
-                                        <StartNewGame />
-                                    </div>
-                                ) : null}
+                                {myProfile.isAdmin ? <StartNewGame /> : null}
                             </div>
                         )}
                     </div>

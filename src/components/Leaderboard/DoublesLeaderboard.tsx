@@ -7,6 +7,7 @@ import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { GameStatus } from "../../model/Game"
 import { compareScore, compareTeamIds } from "../../utils/PlayerUtils"
 import { Player, Team } from "../../model/Player"
+import { customStyles } from "../Tables/CustomStyles"
 
 const DoublesLeaderboard = () => {
     const game = useAppSelector(getGame)
@@ -196,6 +197,7 @@ const DoublesLeaderboard = () => {
                 data={teams}
                 columns={columns}
                 highlightOnHover
+                customStyles={customStyles}
                 defaultSortFieldId={3}
                 defaultSortAsc={false}
             />
