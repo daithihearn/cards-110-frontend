@@ -102,21 +102,8 @@ const StartNewGame = () => {
                 <CardHeader tag="h2">Start a new game</CardHeader>
                 <CardBody>
                     <FormGroup>
-                        <DataTable
-                            noHeader
-                            pagination
-                            theme="solarized"
-                            data={allPlayers}
-                            columns={columns}
-                            highlightOnHover
-                            selectableRows
-                            customStyles={customStyles}
-                            onSelectedRowsChange={togglePlayer}
-                        />
-
                         <Form onSubmit={startGame}>
                             <FormGroup>
-                                <Label for="exampleText">Name</Label>
                                 <Input
                                     className="name"
                                     id="newGameName"
@@ -125,7 +112,6 @@ const StartNewGame = () => {
                                     autoComplete="off"
                                     onChange={handleNameChange}
                                     value={newGameName}
-                                    disabled={selectedPlayers.length < 2}
                                     required
                                 />
                             </FormGroup>
@@ -143,6 +129,17 @@ const StartNewGame = () => {
                                 </Button>
                             </ButtonGroup>
                         </Form>
+                        <DataTable
+                            noHeader
+                            pagination
+                            theme="solarized"
+                            data={allPlayers}
+                            columns={columns}
+                            highlightOnHover
+                            selectableRows
+                            customStyles={customStyles}
+                            onSelectedRowsChange={togglePlayer}
+                        />
                     </FormGroup>
                 </CardBody>
             </Card>
