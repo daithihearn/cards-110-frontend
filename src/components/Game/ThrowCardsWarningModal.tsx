@@ -51,12 +51,7 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
             </ModalHeader>
             <ModalBody className="called-modal">
                 <CardGroup className="gameModalCardGroup">
-                    <CardComponent
-                        className="p-6 tableCloth"
-                        style={{
-                            backgroundColor: "#333",
-                            borderColor: "#333",
-                        }}>
+                    <CardComponent className="p-6">
                         <CardBody className="cardArea">
                             {cards.map(card => (
                                 <img

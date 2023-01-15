@@ -6,6 +6,7 @@ import { useAppSelector } from "../../caches/hooks"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { GameStatus } from "../../model/Game"
 import { Player } from "../../model/Player"
+import { customStyles } from "../Tables/CustomStyles"
 
 interface LeaderboardItem {
     previousCard?: string
@@ -129,7 +130,9 @@ const SinglesLeaderboard = () => {
                 data={leaderboardData}
                 columns={columns}
                 highlightOnHover
-                defaultSortFieldId="score"
+                customStyles={customStyles}
+                defaultSortFieldId={3}
+                defaultSortAsc={false}
             />
         </React.Fragment>
     )

@@ -25,6 +25,7 @@ import { getMyGames } from "../../caches/MyGamesSlice"
 import { getMyProfile } from "../../caches/MyProfileSlice"
 import { useSnackbar } from "notistack"
 import { Game, GameStatus } from "../../model/Game"
+import { customStyles } from "../Tables/CustomStyles"
 
 const MyGames = () => {
     const dispatch = useAppDispatch()
@@ -143,7 +144,7 @@ const MyGames = () => {
 
     return (
         <CardGroup>
-            <Card color="secondary" className="p-6">
+            <Card className="p-6 data-card">
                 <CardHeader tag="h2">Games</CardHeader>
                 <CardBody>
                     <DataTable
@@ -152,7 +153,8 @@ const MyGames = () => {
                         theme="solarized"
                         data={myGames}
                         columns={columns}
-                        defaultSortFieldId="timestamp"
+                        customStyles={customStyles}
+                        defaultSortFieldId={3}
                         defaultSortAsc={false}
                         highlightOnHover
                     />
