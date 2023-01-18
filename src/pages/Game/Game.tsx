@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
-import { getHasGame, resetGame } from "../../caches/GameSlice"
+import { getIsGameActive, resetGame } from "../../caches/GameSlice"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
 import { clearMyCards } from "../../caches/MyCardsSlice"
 import RefreshingData from "../../components/icons/RefreshingData"
@@ -19,7 +19,7 @@ const Game = () => {
     const dispatch = useAppDispatch()
     let { id } = useParams<string>()
     const { enqueueSnackbar } = useSnackbar()
-    const hasGame = useAppSelector(getHasGame)
+    const isGameActive = useAppSelector(getIsGameActive)
 
     const fetchData = async () => {
         if (id)
@@ -50,7 +50,7 @@ const Game = () => {
             <div className="app carpet">
                 <div className="game_wrap">
                     <div className="game_container">
-                        {hasGame ? <GameWrapper /> : <GameOver />}
+                        {isGameActive ? <GameWrapper /> : <GameOver />}
                     </div>
                 </div>
             </div>

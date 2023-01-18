@@ -5,7 +5,6 @@ import PlayersAndCards from "./PlayersAndCards"
 import Calling from "./Calling"
 import Buying from "./Buying"
 import SelectSuit from "./SelectSuit"
-import AutoActionManager from "./AutoActionManager"
 import WebsocketManager from "./WebsocketManager"
 
 import { useAppSelector } from "../../caches/hooks"
@@ -17,7 +16,6 @@ const GameWrapper = () => {
     return (
         <CardGroup>
             <WebsocketManager />
-            <AutoActionManager />
 
             <Card className="p-6" inverse>
                 <PlayersAndCards />
