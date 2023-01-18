@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
@@ -55,6 +55,13 @@ const WebsocketHandler = () => {
     const { enqueueSnackbar } = useSnackbar()
 
     const [previousAction, updatePreviousAction] = useState<Actions>()
+
+    // Enable the auto action manager after a delay if it isn't already active
+    useEffect(() => {
+        setTimeout(() => {
+            if (!autoActionEnabled) setAutoActionEnabled(true)
+        }, 4000)
+    }, [autoActionEnabled])
 
     const handleWebsocketMessage = useCallback(
         (message: string) => {
