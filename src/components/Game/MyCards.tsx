@@ -152,7 +152,7 @@ const MyCards: React.FC = () => {
                     <Droppable droppableId="characters" direction="horizontal">
                         {provided => (
                             <div
-                                className="characters"
+                                className="characters myCards"
                                 style={{ display: "inline-flex" }}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}>
