@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { MyProfile } from "../model/Player"
 import { RootState } from "./caches"
 
@@ -24,4 +24,8 @@ export const myProfileSlice = createSlice({
 export const { updateMyProfile } = myProfileSlice.actions
 
 export const getMyProfile = (state: RootState) => state.myProfile
-export const getAccessToken = (state: RootState) => state.myProfile.accessToken
+
+export const getAccessToken = createSelector(
+    getMyProfile,
+    myProfile => myProfile.accessToken,
+)

@@ -45,12 +45,12 @@ export const getHasGame = createSelector(
     getGameStatus,
     status => status === GameStatus.ACTIVE || status === GameStatus.NONE,
 )
-export const isGameActive = createSelector(
+export const getIsGameActive = createSelector(
     getGameStatus,
     status => status === GameStatus.ACTIVE,
 )
 
-export const isGameFinished = createSelector(
+export const getIsGameFinished = createSelector(
     getGameStatus,
     status => status === GameStatus.FINISHED,
 )
@@ -73,7 +73,7 @@ export const getIsRoundPlaying = createSelector(
     status => status === RoundStatus.PLAYING,
 )
 
-export const isDoublesGame = createSelector(
+export const getIsDoublesGame = createSelector(
     getGamePlayers,
     players => players.length === 6,
 )

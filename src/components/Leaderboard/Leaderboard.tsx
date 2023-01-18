@@ -1,12 +1,12 @@
 import SinglesLeaderboard from "./SinglesLeaderboard"
 import DoublesLeaderboard from "./DoublesLeaderboard"
 import { useAppSelector } from "../../caches/hooks"
-import { isDoublesGame } from "../../caches/GameSlice"
+import { getIsDoublesGame } from "../../caches/GameSlice"
 
 const Leaderboard = () => {
-    const isDoubles = useAppSelector(isDoublesGame)
+    const isDoublesGame = useAppSelector(getIsDoublesGame)
 
-    if (isDoubles) return <DoublesLeaderboard />
+    if (isDoublesGame) return <DoublesLeaderboard />
 
     return <SinglesLeaderboard />
 }

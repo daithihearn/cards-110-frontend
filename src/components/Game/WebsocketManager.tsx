@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
@@ -15,6 +15,7 @@ import shuffleAudioFile from "../../assets/sounds/shuffle.ogg"
 import playCardAudioFile from "../../assets/sounds/play_card.ogg"
 import callAudioFile from "../../assets/sounds/call.ogg"
 import passAudioFile from "../../assets/sounds/pass.ogg"
+import AutoActionManager from "./AutoActionManager"
 
 const shuffleAudio = new Audio(shuffleAudioFile)
 const playCardAudio = new Audio(playCardAudioFile)
@@ -49,10 +50,18 @@ interface ActionEvent {
 const WebsocketHandler = () => {
     const dispatch = useAppDispatch()
 
+    const [autoActionEnabled, setAutoActionEnabled] = useState(false)
     const playerProfiles = useAppSelector(getPlayerProfiles)
     const { enqueueSnackbar } = useSnackbar()
 
     const [previousAction, updatePreviousAction] = useState<Actions>()
+
+    // Enable the auto action manager after a delay if it isn't already active
+    useEffect(() => {
+        setTimeout(() => {
+            if (!autoActionEnabled) setAutoActionEnabled(true)
+        }, 4000)
+    }, [autoActionEnabled])
 
     const handleWebsocketMessage = useCallback(
         (message: string) => {
@@ -79,6 +88,9 @@ const WebsocketHandler = () => {
             const gameState = actionEvent.content as GameState
             dispatch(updateGame(gameState))
         }
+
+        // Only enable the auto action manager when we have successfully processed a message
+        if (!autoActionEnabled) setAutoActionEnabled(true)
     }
 
     const reloadCards = (payload: unknown) => {
@@ -142,7 +154,7 @@ const WebsocketHandler = () => {
         handleWebsocketMessage(message.body),
     )
 
-    return null
+    return <>{autoActionEnabled && <AutoActionManager />}</>
 }
 
 const WebsocketManager = () => {

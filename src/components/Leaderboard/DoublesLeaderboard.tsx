@@ -3,13 +3,11 @@ import DataTable, { TableColumn } from "react-data-table-component"
 import TrophyImage from "../../assets/icons/trophy.png"
 import { useAppSelector } from "../../caches/hooks"
 import {
-    getGame,
     getGamePlayers,
     getRound,
-    isGameFinished,
+    getIsGameFinished,
 } from "../../caches/GameSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { GameStatus } from "../../model/Game"
 import { compareScore, compareTeamIds } from "../../utils/PlayerUtils"
 import { Player } from "../../model/Player"
 import { customStyles } from "../Tables/CustomStyles"
@@ -34,7 +32,7 @@ const DoublesLeaderboard = () => {
     const round = useAppSelector(getRound)
     const players = useAppSelector(getGamePlayers)
     const playerProfiles = useAppSelector(getPlayerProfiles)
-    const gameOver = useAppSelector(isGameFinished)
+    const isGameFinished = useAppSelector(getIsGameFinished)
 
     const previousHand = useMemo(() => {
         if (round) return round.completedHands[round.completedHands.length - 1]
@@ -111,7 +109,7 @@ const DoublesLeaderboard = () => {
                             className="avatar"
                         />
 
-                        {!gameOver && !!row.player1.previousCard ? (
+                        {!isGameFinished && !!row.player1.previousCard ? (
                             <div>
                                 {previousHand ? (
                                     <img
@@ -127,7 +125,7 @@ const DoublesLeaderboard = () => {
                             </div>
                         ) : null}
 
-                        {!gameOver ? (
+                        {!isGameFinished ? (
                             <div>
                                 {!!row.player1.cardsBought
                                     ? `Bought: ${row.player1.cardsBought}`
@@ -148,7 +146,7 @@ const DoublesLeaderboard = () => {
                         className="avatar"
                     />
 
-                    {!gameOver && previousHand ? (
+                    {!isGameFinished && previousHand ? (
                         <div>
                             {previousHand ? (
                                 <img
@@ -164,7 +162,7 @@ const DoublesLeaderboard = () => {
                         </div>
                     ) : null}
 
-                    {!gameOver ? (
+                    {!isGameFinished ? (
                         <div>
                             {!!row.player2.cardsBought
                                 ? `Bought: ${row.player2.cardsBought}`
@@ -195,7 +193,7 @@ const DoublesLeaderboard = () => {
                 </div>
             ),
             center: true,
-            omit: !gameOver,
+            omit: !isGameFinished,
         },
     ]
 
