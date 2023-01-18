@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { GameState, GameStatus } from "../model/Game"
 import { Player } from "../model/Player"
@@ -31,39 +31,71 @@ export const gameSlice = createSlice({
 export const { updateGame, updatePlayers, resetGame } = gameSlice.actions
 
 export const getGame = (state: RootState) => state.game
-export const getGamePlayers = (state: RootState) => state.game.players
-export const getRound = (state: RootState) => state.game.round
-export const getCards = (state: RootState) => state.game.cards
-export const getSuit = (state: RootState) => state.game.round?.suit
-export const getGameId = (state: RootState) => state.game.id
-export const getHasGame = (state: RootState) =>
-    state.game.status === GameStatus.ACTIVE ||
-    state.game.status === GameStatus.NONE
-export const getGameStatus = (state: RootState) => state.game.status
-export const isGameActive = (state: RootState) =>
-    state.game.status === GameStatus.ACTIVE
-export const getIsRoundCalling = (state: RootState) =>
-    state.game.round?.status === RoundStatus.CALLING
-export const getIsRoundCalled = (state: RootState) =>
-    state.game.round?.status === RoundStatus.CALLED
-export const getIsRoundBuying = (state: RootState) =>
-    state.game.round?.status === RoundStatus.BUYING
-export const getIsRoundPlaying = (state: RootState) =>
-    state.game.round?.status === RoundStatus.PLAYING
-export const isDoublesGame = (state: RootState) =>
-    state.game.players.length === 6
-export const getCanBuyCards = (state: RootState) =>
-    state.game.isMyGo &&
-    state.game.iamGoer &&
-    state.game.round &&
-    state.game.round.status === RoundStatus.BUYING
+export const getGamePlayers = createSelector(getGame, game => game.players)
+export const getMe = createSelector(getGame, game => game.me)
 
-export const getIsInBunker = (state: RootState) =>
-    state.game.isMyGo &&
-    state.game.round?.status === RoundStatus.CALLING &&
-    state.game.me &&
-    state.game.me?.score < -30
+export const getRound = createSelector(getGame, game => game.round)
+export const getCards = createSelector(getGame, game => game.cards)
+export const getSuit = createSelector(getRound, round => round?.suit)
+export const getGameId = createSelector(getGame, game => game.id)
 
-export const getIsMyGo = (state: RootState) => state.game.isMyGo
-export const getIamGoer = (state: RootState) => state.game.iamGoer
-export const getIamSpectator = (state: RootState) => state.game.iamSpectator
+export const getGameStatus = createSelector(getGame, game => game.status)
+
+export const getHasGame = createSelector(
+    getGameStatus,
+    status => status === GameStatus.ACTIVE || status === GameStatus.NONE,
+)
+export const isGameActive = createSelector(
+    getGameStatus,
+    status => status === GameStatus.ACTIVE,
+)
+
+export const isGameFinished = createSelector(
+    getGameStatus,
+    status => status === GameStatus.FINISHED,
+)
+
+export const getRoundStatus = createSelector(getRound, round => round?.status)
+export const getIsRoundCalling = createSelector(
+    getRoundStatus,
+    status => status === RoundStatus.CALLING,
+)
+export const getIsRoundCalled = createSelector(
+    getRoundStatus,
+    status => status === RoundStatus.CALLED,
+)
+export const getIsRoundBuying = createSelector(
+    getRoundStatus,
+    status => status === RoundStatus.BUYING,
+)
+export const getIsRoundPlaying = createSelector(
+    getRoundStatus,
+    status => status === RoundStatus.PLAYING,
+)
+
+export const isDoublesGame = createSelector(
+    getGamePlayers,
+    players => players.length === 6,
+)
+
+export const getIsMyGo = createSelector(getGame, game => game.isMyGo)
+export const getIamGoer = createSelector(getGame, game => game.iamGoer)
+export const getIamSpectator = createSelector(
+    getGame,
+    game => game.iamSpectator,
+)
+
+export const getCanBuyCards = createSelector(
+    getIsMyGo,
+    getIamGoer,
+    getIsRoundBuying,
+    (isMyGo, iamGoer, isRoundBuying) => isMyGo && iamGoer && isRoundBuying,
+)
+
+export const getIsInBunker = createSelector(
+    getIsMyGo,
+    getIsRoundCalling,
+    getMe,
+    (isMyGo, isRoundCalling, me) =>
+        isMyGo && isRoundCalling && me && me?.score < -30,
+)

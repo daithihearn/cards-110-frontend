@@ -2,25 +2,43 @@ import React, { useCallback, useMemo } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
 import TrophyImage from "../../assets/icons/trophy.png"
 import { useAppSelector } from "../../caches/hooks"
-import { getGame } from "../../caches/GameSlice"
+import {
+    getGame,
+    getGamePlayers,
+    getRound,
+    isGameFinished,
+} from "../../caches/GameSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { GameStatus } from "../../model/Game"
 import { compareScore, compareTeamIds } from "../../utils/PlayerUtils"
-import { Player, Team } from "../../model/Player"
+import { Player } from "../../model/Player"
 import { customStyles } from "../Tables/CustomStyles"
 
+interface LeaderBoardPlayer {
+    cardsBought?: number
+    name: string
+    picture: string
+    previousCard?: string
+}
+
+interface DoublesLeaderboardItem {
+    teamId: string
+    score: number
+    rings: number
+    player1: LeaderBoardPlayer
+    player2: LeaderBoardPlayer
+    winner: boolean
+}
+
 const DoublesLeaderboard = () => {
-    const game = useAppSelector(getGame)
+    const round = useAppSelector(getRound)
+    const players = useAppSelector(getGamePlayers)
     const playerProfiles = useAppSelector(getPlayerProfiles)
+    const gameOver = useAppSelector(isGameFinished)
 
     const previousHand = useMemo(() => {
-        if (game.round)
-            return game.round.completedHands[
-                game.round.completedHands.length - 1
-            ]
-    }, [game])
-
-    const gameOver = useMemo(() => game.status === GameStatus.FINISHED, [game])
+        if (round) return round.completedHands[round.completedHands.length - 1]
+    }, [round])
 
     const getProfile = useCallback(
         (player: Player) =>
@@ -28,43 +46,60 @@ const DoublesLeaderboard = () => {
         [playerProfiles],
     )
 
-    const teams = useMemo<Team[]>(() => {
-        const ps = game.players.sort(compareTeamIds)
+    const mapToLeaderboard = useCallback(
+        (player: Player): LeaderBoardPlayer => {
+            const profile = getProfile(player)
+            if (!profile) throw Error("No profile for player")
+            const previousCard = previousHand?.playedCards.find(
+                c => c.playerId === player.id,
+            )
+            return {
+                cardsBought: player.cardsBought,
+                name: profile.name,
+                picture: profile.picture,
+                previousCard: previousCard?.card,
+            }
+        },
+        [previousHand],
+    )
+
+    const leaderboardData = useMemo<DoublesLeaderboardItem[]>(() => {
+        const ps = [...players].sort(compareTeamIds)
 
         if (!ps) {
             return []
         }
-        const teams: Team[] = [
+        const items: DoublesLeaderboardItem[] = [
             {
-                id: ps[0].teamId,
+                teamId: ps[0].teamId,
                 score: ps[0].score,
                 rings: ps[0].rings,
-                player1: ps[0],
-                player2: ps[1],
+                player1: mapToLeaderboard(ps[0]),
+                player2: mapToLeaderboard(ps[1]),
                 winner: ps[0].winner,
             },
             {
-                id: ps[2].teamId,
+                teamId: ps[2].teamId,
                 score: ps[2].score,
                 rings: ps[2].rings,
-                player1: ps[2],
-                player2: ps[3],
+                player1: mapToLeaderboard(ps[2]),
+                player2: mapToLeaderboard(ps[3]),
                 winner: ps[2].winner,
             },
             {
-                id: ps[4].teamId,
+                teamId: ps[4].teamId,
                 score: ps[4].score,
                 rings: ps[4].rings,
-                player1: ps[4],
-                player2: ps[5],
+                player1: mapToLeaderboard(ps[4]),
+                player2: mapToLeaderboard(ps[5]),
                 winner: ps[4].winner,
             },
         ]
 
-        return teams.sort(compareScore)
-    }, [])
+        return items.sort(compareScore)
+    }, [players])
 
-    const columns: TableColumn<Team>[] = [
+    const columns: TableColumn<DoublesLeaderboardItem>[] = [
         {
             name: "Player 1",
             cell: row => (
@@ -72,28 +107,18 @@ const DoublesLeaderboard = () => {
                     <div>
                         <img
                             alt="Image Preview"
-                            src={getProfile(row.player1)!.picture}
+                            src={row.player1.picture}
                             className="avatar"
                         />
 
-                        {!gameOver && !!previousHand ? (
+                        {!gameOver && !!row.player1.previousCard ? (
                             <div>
                                 {previousHand ? (
                                     <img
-                                        alt={
-                                            previousHand.playedCards.find(
-                                                p =>
-                                                    p.playerId ===
-                                                    row.player1.id,
-                                            )?.card
-                                        }
+                                        alt={row.player1.previousCard}
                                         src={
                                             "/cards/thumbnails/" +
-                                            previousHand.playedCards.find(
-                                                p =>
-                                                    p.playerId ===
-                                                    row.player1.id,
-                                            )?.card +
+                                            row.player1.previousCard +
                                             ".png"
                                         }
                                         className="thumbnail_size_small cardNotSelected"
@@ -119,7 +144,7 @@ const DoublesLeaderboard = () => {
                 <div>
                     <img
                         alt="Image Preview"
-                        src={getProfile(row.player2)!.picture}
+                        src={row.player2.picture}
                         className="avatar"
                     />
 
@@ -127,16 +152,10 @@ const DoublesLeaderboard = () => {
                         <div>
                             {previousHand ? (
                                 <img
-                                    alt={
-                                        previousHand.playedCards.find(
-                                            p => p.playerId === row.player2.id,
-                                        )?.card
-                                    }
+                                    alt={row.player2.previousCard}
                                     src={
                                         "/cards/thumbnails/" +
-                                        previousHand.playedCards.find(
-                                            p => p.playerId === row.player1.id,
-                                        )?.card +
+                                        row.player2.previousCard +
                                         ".png"
                                     }
                                     className="thumbnail_size_small cardNotSelected"
@@ -180,12 +199,7 @@ const DoublesLeaderboard = () => {
         },
     ]
 
-    if (
-        !game ||
-        !game.status ||
-        !playerProfiles ||
-        playerProfiles.length === 0
-    ) {
+    if (!playerProfiles || playerProfiles.length === 0) {
         return null
     }
 
@@ -194,7 +208,7 @@ const DoublesLeaderboard = () => {
             <DataTable
                 noHeader
                 theme="solarized"
-                data={teams}
+                data={leaderboardData}
                 columns={columns}
                 highlightOnHover
                 customStyles={customStyles}
