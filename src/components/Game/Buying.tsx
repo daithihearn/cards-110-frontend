@@ -1,22 +1,23 @@
 import { Button, ButtonGroup, Form, CardBody } from "reactstrap"
 
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useState } from "react"
 
 import GameService from "../../services/GameService"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
-import { getMyCardsWithoutBlanks } from "../../caches/MyCardsSlice"
+import {
+    getMyCardsWithoutBlanks,
+    getSelectedCards,
+} from "../../caches/MyCardsSlice"
 import {
     getGameId,
     getIsMyGo,
     getIsRoundBuying,
     getSuit,
 } from "../../caches/GameSlice"
-import {
-    removeAllFromHand,
-    riskOfMistakeBuyingCards,
-} from "../../utils/GameUtils"
+import { riskOfMistakeBuyingCards } from "../../utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
+import { SelectableCard } from "../../model/Cards"
 
 const Buying = () => {
     const dispatch = useAppDispatch()
@@ -29,28 +30,30 @@ const Buying = () => {
 
     const [deleteCardsDialog, updateDeleteCardsDialog] = useState(false)
 
-    const selectedCards = useMemo(
-        () => myCards.filter(c => c.selected),
-        [myCards],
-    )
+    const selectedCards = useAppSelector(getSelectedCards)
 
-    const buyCards = useCallback(
+    const buyCardsFormSubmit = useCallback(
         (e?: React.FormEvent) => {
             if (e) e.preventDefault()
-            if (riskOfMistakeBuyingCards(suit!, selectedCards, myCards)) {
+            if (!gameId) throw Error("No game id set")
+
+            if (riskOfMistakeBuyingCards(suit!, selectedCards, myCards))
                 showCancelDeleteCardsDialog()
-            } else {
-                dispatch(GameService.buyCards(gameId!, selectedCards)).catch(
-                    e => enqueueSnackbar(e.message, { variant: "error" }),
-                )
-            }
+            else buyCards(gameId, selectedCards)
         },
         [gameId, suit, selectedCards, myCards],
     )
 
+    const buyCards = (id: string, sel: SelectableCard[]) => {
+        console.log(`Keeping cards: ${JSON.stringify(sel)}`)
+        dispatch(GameService.buyCards(id, sel)).catch(e =>
+            enqueueSnackbar(e.message, { variant: "error" }),
+        )
+    }
+
     const hideCancelDeleteCardsDialog = useCallback(() => {
         updateDeleteCardsDialog(false)
-    }, [updateDeleteCardsDialog])
+    }, [])
 
     const showCancelDeleteCardsDialog = () => {
         updateDeleteCardsDialog(true)
@@ -60,7 +63,7 @@ const Buying = () => {
         <div>
             {isBuying ? (
                 <CardBody className="buttonArea">
-                    <Form onSubmit={buyCards}>
+                    <Form onSubmit={buyCardsFormSubmit}>
                         <ButtonGroup size="lg">
                             {isMyGo ? (
                                 <Button type="submit" color="warning">
@@ -75,7 +78,6 @@ const Buying = () => {
                         cancelCallback={hideCancelDeleteCardsDialog}
                         continueCallback={buyCards}
                         suit={suit!}
-                        cards={removeAllFromHand(selectedCards, myCards)}
                     />
                 </CardBody>
             ) : null}

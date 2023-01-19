@@ -1,4 +1,5 @@
-import React, { useCallback } from "react"
+import { useSnackbar } from "notistack"
+import React, { useCallback, useMemo } from "react"
 import {
     Modal,
     ModalBody,
@@ -10,15 +11,22 @@ import {
     CardGroup,
     Card as CardComponent,
 } from "reactstrap"
-import { Card } from "../../model/Cards"
+import { getGameId } from "../../caches/GameSlice"
+import { useAppDispatch, useAppSelector } from "../../caches/hooks"
+import {
+    getMyCardsWithoutBlanks,
+    getSelectedCards,
+} from "../../caches/MyCardsSlice"
+import { Card, SelectableCard } from "../../model/Cards"
 import { Suit } from "../../model/Suit"
+import GameService from "../../services/GameService"
+import { removeAllFromHand } from "../../utils/GameUtils"
 
 interface ModalOpts {
     modalVisible: boolean
     cancelCallback: () => void
-    continueCallback: () => void
+    continueCallback: (id: string, sel: SelectableCard[], suit?: Suit) => void
     suit: Suit
-    cards: Card[]
 }
 
 const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
@@ -26,15 +34,20 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
     cancelCallback,
     continueCallback,
     suit,
-    cards,
 }) => {
-    const callContinue = useCallback(
-        (event: React.SyntheticEvent<HTMLButtonElement>) => {
-            event.preventDefault()
-            continueCallback()
-        },
-        [],
+    const gameId = useAppSelector(getGameId)
+    const myCards = useAppSelector(getMyCardsWithoutBlanks)
+    const selectedCards = useAppSelector(getSelectedCards)
+
+    const cardsToBeThrown = useMemo(
+        () => removeAllFromHand(selectedCards, myCards),
+        [myCards, selectedCards],
     )
+
+    const callContinue = useCallback(() => {
+        if (!gameId) throw Error("GameId not set")
+        continueCallback(gameId, selectedCards, suit)
+    }, [gameId, selectedCards])
     return (
         <Modal
             fade={true}
@@ -46,14 +59,14 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
                     alt="Suit"
                     src={`/cards/originals/${suit}_ICON.svg`}
                     className="thumbnail_size_extra_small left-padding"
-                />{" "}
+                />
                 Are you sure you want to throw these cards away?
             </ModalHeader>
             <ModalBody className="called-modal">
                 <CardGroup className="gameModalCardGroup">
                     <CardComponent className="p-6">
                         <CardBody className="cardArea">
-                            {cards.map(card => (
+                            {cardsToBeThrown.map(card => (
                                 <img
                                     key={`deleteCardModal_${card.name}`}
                                     alt={card.name}
