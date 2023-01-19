@@ -60,3 +60,7 @@ export const getMyCards = (state: RootState) => state.myCards.cards
 export const getMyCardsWithoutBlanks = createSelector(getMyCards, cards =>
     cards.filter(c => c.name !== BLANK_CARD.name),
 )
+
+export const getSelectedCards = createSelector(getMyCards, cards =>
+    cards.filter(c => c.selected),
+)

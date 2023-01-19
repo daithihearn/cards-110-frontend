@@ -1,16 +1,19 @@
 import { Button, ButtonGroup, CardBody } from "reactstrap"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 
 import GameService from "../../services/GameService"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { getGameId, getIamGoer, getIsRoundCalled } from "../../caches/GameSlice"
-import { SelectableCard } from "../../model/Cards"
 import { Suit } from "../../model/Suit"
 import { useSnackbar } from "notistack"
-import { getMyCardsWithoutBlanks } from "../../caches/MyCardsSlice"
+import {
+    getMyCardsWithoutBlanks,
+    getSelectedCards,
+} from "../../caches/MyCardsSlice"
 import { removeAllFromHand } from "../../utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
+import { SelectableCard } from "../../model/Cards"
 
 const SelectSuit = () => {
     const dispatch = useAppDispatch()
@@ -20,13 +23,10 @@ const SelectSuit = () => {
     const iamGoer = useAppSelector(getIamGoer)
     const isCalled = useAppSelector(getIsRoundCalled)
 
-    const [selectedCards, setSelectedCards] = useState<SelectableCard[]>([])
     const [selectedSuit, setSelectedSuit] = useState<Suit>()
     const [possibleIssue, setPossibleIssues] = useState(false)
 
-    useEffect(() => {
-        if (myCards) setSelectedCards(myCards.filter(c => c.selected))
-    }, [myCards])
+    const selectedCards = useAppSelector(getSelectedCards)
 
     const selectFromDummy = useCallback(
         (suit: Suit) => {
@@ -56,19 +56,16 @@ const SelectSuit = () => {
         [gameId, selectedCards],
     )
 
-    const selectFromDummyCallback = useCallback(() => {
-        if (selectedSuit) {
-            dispatch(
-                GameService.chooseFromDummy(
-                    gameId!,
-                    selectedCards,
-                    selectedSuit,
-                ),
-            ).catch((e: Error) =>
-                enqueueSnackbar(e.message, { variant: "error" }),
-            )
-        }
-    }, [gameId, selectedCards, selectedSuit])
+    const selectFromDummyCallback = (
+        id: string,
+        sel: SelectableCard[],
+        suit?: Suit,
+    ) => {
+        if (!suit) throw Error("Must provide a suit")
+        dispatch(GameService.chooseFromDummy(id, sel, suit)).catch((e: Error) =>
+            enqueueSnackbar(e.message, { variant: "error" }),
+        )
+    }
 
     const hideCancelSelectFromDummyDialog = useCallback(() => {
         setSelectedSuit(undefined)
@@ -159,10 +156,6 @@ const SelectSuit = () => {
                                     }
                                     continueCallback={selectFromDummyCallback}
                                     suit={selectedSuit}
-                                    cards={removeAllFromHand(
-                                        selectedCards,
-                                        myCards,
-                                    )}
                                 />
                             )}
                         </div>

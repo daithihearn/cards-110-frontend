@@ -16,6 +16,7 @@ import { useSnackbar } from "notistack"
 import {
     clearSelectedCards,
     getMyCards,
+    getSelectedCards,
     replaceMyCards,
     toggleSelect,
     toggleUniqueSelect,
@@ -44,10 +45,7 @@ const MyCards: React.FC = () => {
     const [doubleClickTracker, updateDoubleClickTracker] =
         useState<DoubleClickTracker>()
 
-    const selectedCards = useMemo(
-        () => myCards.filter(c => c.selected),
-        [myCards],
-    )
+    const selectedCards = useAppSelector(getSelectedCards)
 
     const playButtonEnabled = useMemo(
         () =>
