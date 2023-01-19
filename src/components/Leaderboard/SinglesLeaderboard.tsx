@@ -62,56 +62,63 @@ const SinglesLeaderboard = () => {
         return leaderboardData
     }, [playerProfiles, game, getProfile, previousHand])
 
-    const columns: TableColumn<LeaderboardItem>[] = [
-        {
-            name: "Avatar",
-            cell: row => (
-                <img alt="Image Preview" src={row.picture} className="avatar" />
-            ),
-        },
-        { name: "Player", selector: row => row.name, sortable: true },
-        {
-            name: "Score",
-            selector: row => row.score,
-            sortable: true,
-            center: true,
-        },
-        {
-            name: "Rings",
-            selector: row => row.rings,
-            sortable: true,
-            center: true,
-        },
-        {
-            name: "Bought",
-            selector: row => row.cardsBought,
-            sortable: true,
-            center: true,
-            omit: gameOver,
-        },
-        {
-            cell: row => (
-                <div>
-                    {row.winner ? (
-                        <img src={TrophyImage} width="50px" height="50px" />
-                    ) : null}
-                </div>
-            ),
-            center: true,
-            omit: !gameOver,
-        },
-        {
-            cell: row => (
-                <img
-                    alt={row.previousCard}
-                    src={"/cards/thumbnails/" + row.previousCard + ".png"}
-                    className="thumbnail_size_small cardNotSelected"
-                />
-            ),
-            center: true,
-            omit: gameOver || !previousHand,
-        },
-    ]
+    const columns: TableColumn<LeaderboardItem>[] = useMemo(
+        () => [
+            {
+                name: "Avatar",
+                cell: row => (
+                    <img
+                        alt="Image Preview"
+                        src={row.picture}
+                        className="avatar"
+                    />
+                ),
+            },
+            { name: "Player", selector: row => row.name, sortable: true },
+            {
+                name: "Score",
+                selector: row => row.score,
+                sortable: true,
+                center: true,
+            },
+            {
+                name: "Rings",
+                selector: row => row.rings,
+                sortable: true,
+                center: true,
+            },
+            {
+                name: "Bought",
+                selector: row => row.cardsBought,
+                sortable: true,
+                center: true,
+                omit: gameOver,
+            },
+            {
+                cell: row => (
+                    <div>
+                        {row.winner ? (
+                            <img src={TrophyImage} width="50px" height="50px" />
+                        ) : null}
+                    </div>
+                ),
+                center: true,
+                omit: !gameOver,
+            },
+            {
+                cell: row => (
+                    <img
+                        alt={row.previousCard}
+                        src={"/cards/thumbnails/" + row.previousCard + ".png"}
+                        className="thumbnail_size_small cardNotSelected"
+                    />
+                ),
+                center: true,
+                omit: gameOver || !previousHand,
+            },
+        ],
+        [gameOver, previousHand],
+    )
 
     if (
         !game ||
