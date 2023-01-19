@@ -45,7 +45,6 @@ const Buying = () => {
     )
 
     const buyCards = (id: string, sel: SelectableCard[]) => {
-        console.log(`Keeping cards: ${JSON.stringify(sel)}`)
         dispatch(GameService.buyCards(id, sel)).catch(e =>
             enqueueSnackbar(e.message, { variant: "error" }),
         )
