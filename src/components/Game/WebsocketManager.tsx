@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react"
 
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { getGameId, updateGame } from "../../caches/GameSlice"
+import { getGameId, getIsMyGo, updateGame } from "../../caches/GameSlice"
 import { getAccessToken } from "../../caches/MyProfileSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { GameState } from "../../model/Game"
@@ -51,6 +51,7 @@ const WebsocketHandler = () => {
     const dispatch = useAppDispatch()
 
     const [autoActionEnabled, setAutoActionEnabled] = useState(false)
+    const isMyGo = useAppSelector(getIsMyGo)
     const playerProfiles = useAppSelector(getPlayerProfiles)
     const { enqueueSnackbar } = useSnackbar()
 
@@ -60,7 +61,7 @@ const WebsocketHandler = () => {
     useEffect(() => {
         setTimeout(() => {
             if (!autoActionEnabled) setAutoActionEnabled(true)
-        }, 4000)
+        }, 2000)
     }, [autoActionEnabled])
 
     const handleWebsocketMessage = useCallback(
@@ -93,10 +94,13 @@ const WebsocketHandler = () => {
         if (!autoActionEnabled) setAutoActionEnabled(true)
     }
 
-    const reloadCards = (payload: unknown) => {
-        dispatch(clearSelectedCards())
-        dispatch(clearAutoPlay())
+    const reloadCards = (payload: unknown, clearSelected = false) => {
         const gameState = payload as GameState
+
+        if (clearSelected) {
+            dispatch(clearSelectedCards())
+            dispatch(clearAutoPlay())
+        }
         dispatch(updateMyCards(gameState.cards))
     }
 
@@ -105,14 +109,14 @@ const WebsocketHandler = () => {
             switch (type) {
                 case "DEAL":
                     shuffleSound()
-                    reloadCards(payload)
+                    reloadCards(payload, true)
                     break
                 case "CHOOSE_FROM_DUMMY":
                 case "BUY_CARDS":
                 case "LAST_CARD_PLAYED":
                 case "CARD_PLAYED":
                     playCardSound()
-                    reloadCards(payload)
+                    reloadCards(payload, isMyGo)
                     break
                 case "REPLAY":
                     break
@@ -139,15 +143,15 @@ const WebsocketHandler = () => {
                     break
                 case "CALL":
                     callSound()
-                    reloadCards(payload)
+                    reloadCards(payload, true)
                     break
                 case "PASS":
                     passSound()
-                    reloadCards(payload)
+                    reloadCards(payload, true)
                     break
             }
         },
-        [playerProfiles],
+        [playerProfiles, isMyGo],
     )
 
     useSubscription(["/game", "/user/game"], message =>
