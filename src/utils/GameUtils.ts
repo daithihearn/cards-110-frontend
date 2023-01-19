@@ -54,16 +54,13 @@ export const processOrderedCardsAfterGameUpdate = (
     if (
         delta.length === 0 &&
         currentCardsNoBlanks.length === updatedCardNames.length
-    ) {
-        console.log("1. returning cards as they are")
+    )
         return currentCards
-    }
     // 2. If a card was removed then replace it with a Blank card in orderedCards
     else if (
         currentCardsNoBlanks.length === updatedCardNames.length + 1 &&
         delta.length === 1
     ) {
-        console.log("2. a card was removed, so replacing it with a blank")
         const updatedCurrentCards = [...currentCards]
         const idx = updatedCurrentCards.findIndex(c => c.name === delta[0].name)
         updatedCurrentCards[idx] = { ...BLANK_CARD, selected: false }
@@ -72,8 +69,6 @@ export const processOrderedCardsAfterGameUpdate = (
 
         // 3. Else send back a fresh hand constructed from the API data
     } else {
-        console.log(`3. refreshing cards entirely currentCards`)
-
         const updatedCards = updatedCardNames.map<SelectableCard>(name => {
             const card = CARDS.find(c => c.name === name)!
             return { ...card, selected: false }
