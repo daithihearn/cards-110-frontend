@@ -10,7 +10,13 @@ import { BLANK_CARD, SelectableCard } from "../../model/Cards"
 
 import GameService from "../../services/GameService"
 import { RoundStatus } from "../../model/Round"
-import { getGameId, getIsMyGo, getRound } from "../../caches/GameSlice"
+import {
+    getGameId,
+    getIamGoer,
+    getIsMyGo,
+    getIsRoundCalled,
+    getRound,
+} from "../../caches/GameSlice"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
 import {
@@ -37,8 +43,10 @@ const MyCards: React.FC = () => {
     const dispatch = useAppDispatch()
     const gameId = useAppSelector(getGameId)
     const round = useAppSelector(getRound)
+    const isRoundCalled = useAppSelector(getIsRoundCalled)
     const myCards = useAppSelector(getMyCards)
     const autoPlayCard = useAppSelector(getAutoPlayCard)
+    const iamGoer = useAppSelector(getIamGoer)
     const isMyGo = useAppSelector(getIsMyGo)
 
     const { enqueueSnackbar } = useSnackbar()
@@ -69,6 +77,11 @@ const MyCards: React.FC = () => {
                 RoundStatus.PLAYING,
             ].includes(round.status),
         [round],
+    )
+
+    const showDummy = useMemo(
+        () => isRoundCalled && iamGoer,
+        [isRoundCalled, iamGoer],
     )
 
     const handleSelectCard = useCallback(
@@ -117,6 +130,24 @@ const MyCards: React.FC = () => {
         [myCards],
     )
 
+    const handleOnDragEndDummy = useCallback(
+        (result: DropResult) => {
+            if (!result.destination) return
+
+            const updatedCards = myCards.map(c => {
+                return { ...c }
+            })
+            const [reorderedItem] = updatedCards.splice(
+                result.source.index + 5,
+                1,
+            )
+            updatedCards.splice(result.destination.index + 5, 0, reorderedItem)
+
+            dispatch(replaceMyCards(updatedCards))
+        },
+        [myCards],
+    )
+
     const getStyleForCard = useCallback(
         (card: SelectableCard) => {
             let classes = "thumbnail_size"
@@ -148,14 +179,14 @@ const MyCards: React.FC = () => {
         <div>
             <CardBody className="cardArea">
                 <DragDropContext onDragEnd={handleOnDragEnd}>
-                    <Droppable droppableId="characters" direction="horizontal">
+                    <Droppable droppableId="myCards" direction="horizontal">
                         {provided => (
                             <div
                                 className="characters myCards"
                                 style={{ display: "inline-flex" }}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}>
-                                {myCards.map((card, index) => {
+                                {myCards.slice(0, 5).map((card, index) => {
                                     const draggableId = `${card.name}${
                                         card.name === BLANK_CARD.name
                                             ? index
@@ -197,6 +228,61 @@ const MyCards: React.FC = () => {
                     </Droppable>
                 </DragDropContext>
             </CardBody>
+
+            {showDummy && (
+                <CardBody className="cardArea">
+                    <DragDropContext onDragEnd={handleOnDragEndDummy}>
+                        <Droppable droppableId="dummy" direction="horizontal">
+                            {provided => (
+                                <div
+                                    className="characters myCards"
+                                    style={{ display: "inline-flex" }}
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}>
+                                    {myCards.slice(5, 10).map((card, index) => {
+                                        const draggableId = `${card.name}${
+                                            card.name === BLANK_CARD.name
+                                                ? index
+                                                : ""
+                                        }`
+                                        return (
+                                            <Draggable
+                                                key={draggableId}
+                                                draggableId={draggableId}
+                                                index={index}
+                                                isDragDisabled={
+                                                    card.name ===
+                                                    BLANK_CARD.name
+                                                }>
+                                                {provided => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}>
+                                                        <CardImg
+                                                            alt={card.name}
+                                                            onClick={() =>
+                                                                handleSelectCard(
+                                                                    card,
+                                                                )
+                                                            }
+                                                            src={`/cards/thumbnails/${card.name}.png`}
+                                                            className={getStyleForCard(
+                                                                card,
+                                                            )}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        )
+                                    })}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                </CardBody>
+            )}
 
             {round?.status === RoundStatus.PLAYING ? (
                 <CardBody className="buttonArea">
