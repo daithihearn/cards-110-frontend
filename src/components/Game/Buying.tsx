@@ -18,6 +18,7 @@ import {
 import { riskOfMistakeBuyingCards } from "../../utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 import { SelectableCard } from "../../model/Cards"
+import parseError from "../../utils/ErrorUtils"
 
 const Buying = () => {
     const dispatch = useAppDispatch()
@@ -46,7 +47,7 @@ const Buying = () => {
 
     const buyCards = (id: string, sel: SelectableCard[]) => {
         dispatch(GameService.buyCards(id, sel)).catch(e =>
-            enqueueSnackbar(e.message, { variant: "error" }),
+            enqueueSnackbar(parseError(e), { variant: "error" }),
         )
     }
 

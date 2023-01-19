@@ -26,6 +26,7 @@ import {
     toggleAutoPlay,
     clearAutoPlay,
 } from "../../caches/AutoPlaySlice"
+import parseError from "../../utils/ErrorUtils"
 
 interface DoubleClickTracker {
     time: number
@@ -139,7 +140,7 @@ const MyCards: React.FC = () => {
         } else {
             dispatch(
                 GameService.playCard(gameId!, selectedCards[0].name),
-            ).catch(e => enqueueSnackbar(e.message, { variant: "error" }))
+            ).catch(e => enqueueSnackbar(parseError(e), { variant: "error" }))
         }
     }, [gameId, selectedCards])
 

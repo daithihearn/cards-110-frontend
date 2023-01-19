@@ -5,6 +5,7 @@ import ProfileService from "../../services/ProfileService"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useAppDispatch } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
+import parseError from "../../utils/ErrorUtils"
 
 const MyProfileSync: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -28,13 +29,13 @@ const MyProfileSync: React.FC = () => {
                             accessToken,
                         ),
                     ).catch((e: Error) =>
-                        enqueueSnackbar(`Service: ${e.message}`, {
+                        enqueueSnackbar(parseError(e), {
                             variant: "error",
                         }),
                     ),
                 )
                 .catch((e: Error) =>
-                    enqueueSnackbar(`AccessToken: ${e.message}`, {
+                    enqueueSnackbar(parseError(e), {
                         variant: "error",
                     }),
                 )

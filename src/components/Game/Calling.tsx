@@ -6,6 +6,7 @@ import { getGame, getGameId } from "../../caches/GameSlice"
 import { RoundStatus } from "../../model/Round"
 import { useCallback } from "react"
 import { useSnackbar } from "notistack"
+import parseError from "../../utils/ErrorUtils"
 
 const Calling = () => {
     const dispatch = useAppDispatch()
@@ -24,7 +25,7 @@ const Calling = () => {
             if (gameId)
                 dispatch(GameService.call(gameId, callAmount)).catch(
                     (e: Error) =>
-                        enqueueSnackbar(e.message, { variant: "error" }),
+                        enqueueSnackbar(parseError(e), { variant: "error" }),
                 )
         },
         [gameId],
