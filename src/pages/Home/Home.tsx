@@ -15,6 +15,7 @@ import { useSnackbar } from "notistack"
 import StatsService from "../../services/StatsService"
 import { Divider } from "@mui/material"
 import RefreshingData from "../../components/icons/RefreshingData"
+import parseError from "../../utils/ErrorUtils"
 
 const Home = () => {
     const dispatch = useAppDispatch()
@@ -24,13 +25,13 @@ const Home = () => {
     const fetchData = async () => {
         if (myProfile.isAdmin)
             await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
-                enqueueSnackbar(e.message, { variant: "error" }),
+                enqueueSnackbar(parseError(e), { variant: "error" }),
             )
 
         await dispatch(GameService.getAll())
 
         await dispatch(StatsService.gameStatsForPlayer()).catch((e: Error) =>
-            enqueueSnackbar(e.message, { variant: "error" }),
+            enqueueSnackbar(parseError(e), { variant: "error" }),
         )
     }
 

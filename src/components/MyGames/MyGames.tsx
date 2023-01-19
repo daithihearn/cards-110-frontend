@@ -26,6 +26,7 @@ import { getMyProfile } from "../../caches/MyProfileSlice"
 import { useSnackbar } from "notistack"
 import { Game, GameStatus } from "../../model/Game"
 import { customStyles } from "../Tables/CustomStyles"
+import parseError from "../../utils/ErrorUtils"
 
 const MyGames = () => {
     const dispatch = useAppDispatch()
@@ -44,7 +45,7 @@ const MyGames = () => {
                 handleCloseDeleteGameModal()
             })
             .catch((e: Error) =>
-                enqueueSnackbar(e.message, { variant: "error" }),
+                enqueueSnackbar(parseError(e), { variant: "error" }),
             )
     }
 

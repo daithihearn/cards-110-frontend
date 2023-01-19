@@ -14,6 +14,7 @@ import {
 import { removeAllFromHand } from "../../utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 import { SelectableCard } from "../../model/Cards"
+import parseError from "../../utils/ErrorUtils"
 
 const SelectSuit = () => {
     const dispatch = useAppDispatch()
@@ -49,7 +50,7 @@ const SelectSuit = () => {
                 dispatch(
                     GameService.chooseFromDummy(gameId!, selectedCards, suit),
                 ).catch((e: Error) =>
-                    enqueueSnackbar(e.message, { variant: "error" }),
+                    enqueueSnackbar(parseError(e), { variant: "error" }),
                 )
             }
         },
@@ -63,7 +64,7 @@ const SelectSuit = () => {
     ) => {
         if (!suit) throw Error("Must provide a suit")
         dispatch(GameService.chooseFromDummy(id, sel, suit)).catch((e: Error) =>
-            enqueueSnackbar(e.message, { variant: "error" }),
+            enqueueSnackbar(parseError(e), { variant: "error" }),
         )
     }
 

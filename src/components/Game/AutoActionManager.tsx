@@ -13,9 +13,12 @@ import {
 import { RoundStatus } from "../../model/Round"
 import { getAutoPlayCard } from "../../caches/AutoPlaySlice"
 import { bestCardLead, getWorstCard } from "../../utils/GameUtils"
+import { useSnackbar } from "notistack"
+import parseError from "../../utils/ErrorUtils"
 
 const AutoActionManager = () => {
     const dispatch = useAppDispatch()
+    const { enqueueSnackbar } = useSnackbar()
 
     const gameId = useAppSelector(getGameId)
     const round = useAppSelector(getRound)
@@ -27,8 +30,14 @@ const AutoActionManager = () => {
     const isMyGo = useAppSelector(getIsMyGo)
     const isInBunker = useAppSelector(getIsInBunker)
 
-    const playCard = (id: string, card: string) =>
-        dispatch(GameService.playCard(id, card)).catch(console.error)
+    const playCard = (id: string, card: string, suppressError = false) =>
+        dispatch(GameService.playCard(id, card)).catch(e => {
+            if (!suppressError)
+                enqueueSnackbar(parseError(e), {
+                    variant: "error",
+                })
+            else console.error(e)
+        })
 
     const call = (id: string, callAmount: number) =>
         dispatch(GameService.call(id, callAmount)).catch(console.error)
@@ -51,11 +60,11 @@ const AutoActionManager = () => {
             round?.suit &&
             round.status === RoundStatus.PLAYING
         ) {
-            if (autoPlayCard) playCard(gameId, autoPlayCard)
-            else if (cards.length === 1) playCard(gameId, cards[0])
+            if (autoPlayCard) playCard(gameId, autoPlayCard, true)
+            else if (cards.length === 1) playCard(gameId, cards[0], true)
             else if (bestCardLead(round)) {
                 const cardToPlay = getWorstCard(cards, round.suit)
-                if (cardToPlay) playCard(gameId, cardToPlay.name)
+                if (cardToPlay) playCard(gameId, cardToPlay.name, true)
             }
         }
     }, [gameId, round, isMyGo, cards, autoPlayCard])

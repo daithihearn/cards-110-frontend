@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { getMyProfile } from "../../caches/MyProfileSlice"
 import ProfileService from "../../services/ProfileService"
 import AvatarEditor from "react-avatar-editor"
+import parseError from "../../utils/ErrorUtils"
 
 interface InputsI {
     show: boolean
@@ -58,7 +59,7 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
                 }),
             )
                 .catch((e: Error) =>
-                    enqueueSnackbar(e.message, { variant: "error" }),
+                    enqueueSnackbar(parseError(e), { variant: "error" }),
                 )
                 .finally(callback)
         },

@@ -14,6 +14,7 @@ import { getIsGameActive, resetGame } from "../../caches/GameSlice"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
 import { clearMyCards } from "../../caches/MyCardsSlice"
 import RefreshingData from "../../components/icons/RefreshingData"
+import parseError from "../../utils/ErrorUtils"
 
 const Game = () => {
     const dispatch = useAppDispatch()
@@ -24,11 +25,11 @@ const Game = () => {
     const fetchData = async () => {
         if (id)
             await dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
-                enqueueSnackbar(e.message, { variant: "error" }),
+                enqueueSnackbar(parseError(e), { variant: "error" }),
             )
 
         await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
-            enqueueSnackbar(e.message, { variant: "error" }),
+            enqueueSnackbar(parseError(e), { variant: "error" }),
         )
     }
 

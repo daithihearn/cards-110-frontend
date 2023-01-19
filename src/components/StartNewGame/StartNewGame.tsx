@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { PlayerProfile } from "../../model/Player"
 import { useSnackbar } from "notistack"
 import { customStyles } from "../Tables/CustomStyles"
+import parseError from "../../utils/ErrorUtils"
 
 const StartNewGame = () => {
     const dispatch = useAppDispatch()
@@ -69,7 +70,7 @@ const StartNewGame = () => {
                     })
                 })
                 .catch((e: Error) =>
-                    enqueueSnackbar(e.message, { variant: "error" }),
+                    enqueueSnackbar(parseError(e), { variant: "error" }),
                 )
         },
         [selectedPlayers, newGameName],
