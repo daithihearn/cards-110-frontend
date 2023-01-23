@@ -167,7 +167,9 @@ const MyCards: React.FC = () => {
 
     const playCard = useCallback(() => {
         if (selectedCards.length !== 1) {
-            enqueueSnackbar("Please select exactly one card to play")
+            enqueueSnackbar("Please select exactly one card to play", {
+                variant: "warning",
+            })
         } else {
             dispatch(
                 GameService.playCard(gameId!, selectedCards[0].name),

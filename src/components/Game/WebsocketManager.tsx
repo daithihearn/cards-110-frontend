@@ -86,7 +86,9 @@ const WebsocketHandler = () => {
                 p => p.id === buyCardsEvt.playerId,
             )
             if (player)
-                enqueueSnackbar(`${player.name} bought ${buyCardsEvt.bought}`)
+                enqueueSnackbar(`${player.name} bought ${buyCardsEvt.bought}`, {
+                    variant: "info",
+                })
         },
         [playerProfiles],
     )
