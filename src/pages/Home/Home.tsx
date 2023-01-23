@@ -6,7 +6,6 @@ import StartNewGame from "../../components/StartNewGame/StartNewGame"
 import MyGames from "../../components/MyGames/MyGames"
 import GameStats from "../../components/GameStats/GameStats"
 import { withAuthenticationRequired } from "@auth0/auth0-react"
-// import PullToRefresh from "react-simple-pull-to-refresh"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { getMyProfile } from "../../caches/MyProfileSlice"
@@ -14,7 +13,6 @@ import GameService from "../../services/GameService"
 import { useSnackbar } from "notistack"
 import StatsService from "../../services/StatsService"
 import { Divider } from "@mui/material"
-import RefreshingData from "../../components/icons/RefreshingData"
 import parseError from "../../utils/ErrorUtils"
 
 const Home = () => {
@@ -40,9 +38,6 @@ const Home = () => {
     }, [])
 
     return (
-        // <PullToRefresh
-        //     onRefresh={fetchData}
-        //     refreshingContent={<RefreshingData />}>
         <div className="app carpet">
             <div className="game_wrap">
                 <div className="game_container">
@@ -76,7 +71,6 @@ const Home = () => {
                 </div>
             </div>
         </div>
-        // </PullToRefresh>
     )
 }
 
