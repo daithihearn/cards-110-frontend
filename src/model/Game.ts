@@ -38,7 +38,6 @@ export interface GameState {
     maxCall?: number
     me?: Player
     players: Player[]
-    playedCards: PlayedCard[]
 }
 
 export interface CreateGame {

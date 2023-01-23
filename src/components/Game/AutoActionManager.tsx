@@ -51,8 +51,7 @@ const AutoActionManager = () => {
     }, [gameId, isInBunker])
 
     // 1. Play card when you've pre-selected a card
-    // 2. Play card when you only have one left
-    // 3. Play worst card if best card lead out
+    // 2. Play worst card if best card lead out
     useEffect(() => {
         if (
             gameId &&
@@ -61,7 +60,6 @@ const AutoActionManager = () => {
             round.status === RoundStatus.PLAYING
         ) {
             if (autoPlayCard) playCard(gameId, autoPlayCard, true)
-            else if (cards.length === 1) playCard(gameId, cards[0], true)
             else if (bestCardLead(round)) {
                 const cardToPlay = getWorstCard(cards, round.suit)
                 if (cardToPlay) playCard(gameId, cardToPlay.name, true)

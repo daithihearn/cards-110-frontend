@@ -1,16 +1,13 @@
 export enum Actions {
-    Deal = "DEAL",
-    ChooseFromDummy = "CHOOSE_FROM_DUMMY",
-    BuyCards = "BUY_CARDS",
-    LastCardPlayed = "LAST_CARD_PLAYED",
-    CardPlayed = "CARD_PLAYED",
-    Replay = "REPLAY",
-    GameOver = "GAME_OVER",
-    BuyCardsNotification = "BUY_CARDS_NOTIFICATION",
-    HandCompleted = "HAND_COMPLETED",
-    RoundCompleted = "ROUND_COMPLETED",
-    Call = "CALL",
-    Pass = "PASS",
+    REPLAY = "REPLAY",
+    CALL = "CALL",
+    PASS = "PASS",
+    CHOOSE_FROM_DUMMY = "CHOOSE_FROM_DUMMY",
+    BUY_CARDS = "BUY_CARDS",
+    CARD_PLAYED = "CARD_PLAYED",
+    GAME_OVER = "GAME_OVER",
+    ROUND_COMPLETED = "ROUND_COMPLETED",
+    HAND_COMPLETED = "HAND_COMPLETED",
 }
 
 export interface BuyCardsEvent {

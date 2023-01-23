@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { GameState, GameStatus } from "../model/Game"
+import { GameState, GameStatus, PlayedCard } from "../model/Game"
 import { Player } from "../model/Player"
 import { RoundStatus } from "../model/Round"
 import { RootState } from "./caches"
@@ -13,7 +13,6 @@ const initialState: GameState = {
     cards: [],
     status: GameStatus.NONE,
     players: [],
-    playedCards: [],
 }
 
 export const gameSlice = createSlice({
@@ -24,11 +23,24 @@ export const gameSlice = createSlice({
         updatePlayers: (state, action: PayloadAction<Player[]>) => {
             state.players = action.payload
         },
+        updatePlayedCards: (state, action: PayloadAction<PlayedCard[]>) => {
+            if (state.round)
+                state.round.currentHand.playedCards = action.payload
+        },
+        disableActions: state => {
+            state.isMyGo = false
+        },
         resetGame: () => initialState,
     },
 })
 
-export const { updateGame, updatePlayers, resetGame } = gameSlice.actions
+export const {
+    updateGame,
+    disableActions,
+    updatePlayedCards,
+    updatePlayers,
+    resetGame,
+} = gameSlice.actions
 
 export const getGame = (state: RootState) => state.game
 export const getGamePlayers = createSelector(getGame, game => game.players)
