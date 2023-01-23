@@ -32,31 +32,29 @@ const GameHeader = () => {
     return (
         <>
             {goer.profile && goer.player && (
-                <>
-                    <h2 className="cardAreaHeader">
+                <div className="cardAreaHeader">
+                    <CardImg
+                        alt={goer.profile.name}
+                        src={goer.profile.picture}
+                        className="thumbnail_size_extra_small"
+                    />
+
+                    {goer.player.call && (
                         <CardImg
-                            alt={goer.profile.name}
-                            src={goer.profile.picture}
-                            className="thumbnail_size_extra_small"
+                            alt="Chip"
+                            src={`/cards/originals/call_${goer.player.call}.png`}
+                            className="thumbnail_size_extra_small left-padding"
                         />
+                    )}
 
-                        {goer.player.call && (
-                            <CardImg
-                                alt="Chip"
-                                src={`/cards/originals/call_${goer.player.call}.png`}
-                                className="thumbnail_size_extra_small left-padding"
-                            />
-                        )}
-
-                        {round && round.suit && (
-                            <CardImg
-                                alt="Suit"
-                                src={`/cards/originals/${round.suit}_ICON.svg`}
-                                className="thumbnail_size_extra_small left-padding"
-                            />
-                        )}
-                    </h2>
-                </>
+                    {round && round.suit && (
+                        <CardImg
+                            alt="Suit"
+                            src={`/cards/originals/${round.suit}_ICON.svg`}
+                            className="thumbnail_size_extra_small left-padding"
+                        />
+                    )}
+                </div>
             )}
         </>
     )
