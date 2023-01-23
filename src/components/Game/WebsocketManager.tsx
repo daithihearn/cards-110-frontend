@@ -2,7 +2,13 @@ import React, { useCallback, useEffect, useState } from "react"
 
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { getGameId, getIsMyGo, updateGame } from "../../caches/GameSlice"
+import {
+    disableActions,
+    getGameId,
+    getIsMyGo,
+    updateGame,
+    updatePlayedCards,
+} from "../../caches/GameSlice"
 import { getAccessToken } from "../../caches/MyProfileSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { GameState } from "../../model/Game"
@@ -16,6 +22,7 @@ import playCardAudioFile from "../../assets/sounds/play_card.ogg"
 import callAudioFile from "../../assets/sounds/call.ogg"
 import passAudioFile from "../../assets/sounds/pass.ogg"
 import AutoActionManager from "./AutoActionManager"
+import { Round } from "../../model/Round"
 
 const shuffleAudio = new Audio(shuffleAudioFile)
 const playCardAudio = new Audio(playCardAudioFile)
@@ -44,7 +51,8 @@ const passSound = () => {
 
 interface ActionEvent {
     type: Actions
-    content: unknown
+    gameState: GameState
+    transitionData: unknown
 }
 
 const WebsocketHandler = () => {
@@ -55,8 +63,6 @@ const WebsocketHandler = () => {
     const playerProfiles = useAppSelector(getPlayerProfiles)
     const { enqueueSnackbar } = useSnackbar()
 
-    const [previousAction, updatePreviousAction] = useState<Actions>()
-
     // Enable the auto action manager after a delay if it isn't already active
     useEffect(() => {
         setTimeout(() => {
@@ -64,91 +70,124 @@ const WebsocketHandler = () => {
         }, 2000)
     }, [autoActionEnabled])
 
-    const handleWebsocketMessage = useCallback(
-        (message: string) => {
-            if (previousAction === "LAST_CARD_PLAYED") {
-                console.info(
-                    "Waiting on last card to allow time to view cards...",
-                )
-                setTimeout(() => processWebsocketMessage(message), 4000)
-            } else {
-                processWebsocketMessage(message)
-            }
-        },
-        [previousAction],
-    )
-
-    const processWebsocketMessage = (message: string) => {
+    const handleWebsocketMessage = (message: string) => {
         const payload = JSON.parse(message)
         const actionEvent = JSON.parse(payload.payload) as ActionEvent
 
-        updatePreviousAction(actionEvent.type)
-        processActons(actionEvent.type, actionEvent.content)
-
-        if (actionEvent.type !== Actions.BuyCardsNotification) {
-            const gameState = actionEvent.content as GameState
-            dispatch(updateGame(gameState))
-        }
+        processAction(actionEvent)
 
         // Only enable the auto action manager when we have successfully processed a message
         if (!autoActionEnabled) setAutoActionEnabled(true)
     }
 
-    const reloadCards = (payload: unknown, clearSelected = false) => {
-        const gameState = payload as GameState
+    const sendCardsBoughtNotification = useCallback(
+        (buyCardsEvt: BuyCardsEvent) => {
+            const player = playerProfiles.find(
+                p => p.id === buyCardsEvt.playerId,
+            )
+            if (player)
+                enqueueSnackbar(`${player.name} bought ${buyCardsEvt.bought}`, {
+                    variant: "info",
+                })
+        },
+        [playerProfiles],
+    )
 
+    const reloadCards = (cards: string[], clearSelected = false) => {
         if (clearSelected) {
             dispatch(clearSelectedCards())
             dispatch(clearAutoPlay())
         }
-        dispatch(updateMyCards(gameState.cards))
+        dispatch(updateMyCards(cards))
     }
 
-    const processActons = useCallback(
-        (type: Actions, payload: unknown) => {
-            switch (type) {
-                case "DEAL":
-                    shuffleSound()
-                    reloadCards(payload, true)
-                    break
-                case "CHOOSE_FROM_DUMMY":
-                case "BUY_CARDS":
-                case "LAST_CARD_PLAYED":
-                case "CARD_PLAYED":
-                    playCardSound()
-                    reloadCards(payload, isMyGo)
-                    break
-                case "REPLAY":
-                    break
-                case "GAME_OVER":
-                    break
-                case "BUY_CARDS_NOTIFICATION":
-                    const buyCardsEvt = payload as BuyCardsEvent
-                    const player = playerProfiles.find(
-                        p => p.id === buyCardsEvt.playerId,
-                    )
-                    if (!player) {
-                        break
-                    }
+    // On hand completion we need to display the last card to the user
+    const processHandCompleted = async (
+        game: GameState,
+        previousRound: Round,
+    ) => {
+        // Disable actions by setting isMyGo to false
+        dispatch(disableActions())
 
-                    enqueueSnackbar(
-                        `${player.name} bought ${buyCardsEvt.bought}`,
-                    )
+        // Show the last card of the last roung being played
+        playCardSound()
+        dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+        await new Promise(r => setTimeout(r, 4000))
 
-                    break
+        // Finally update the game with the latest state
+        dispatch(updateGame(game))
+        dispatch(updateMyCards(game.cards))
+    }
+
+    // On round completion we need to display the last round to the user
+    const processRoundCompleted = async (
+        game: GameState,
+        previousRound: Round,
+    ) => {
+        // Disable actions by setting isMyGo to false
+        dispatch(disableActions())
+
+        // Show the last card of the penultimate round being played
+        playCardSound()
+        const penultimateHand = previousRound.completedHands.pop()
+        if (!penultimateHand) throw Error("Failed to get the penultimate round")
+        dispatch(updatePlayedCards(penultimateHand.playedCards))
+        await new Promise(r => setTimeout(r, 4000))
+
+        // Next show the final round being played
+        playCardSound()
+        dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+        dispatch(updateMyCards([]))
+        await new Promise(r => setTimeout(r, 6000))
+
+        // Finally update the game with the latest state
+        shuffleSound()
+        dispatch(updateGame(game))
+        dispatch(updateMyCards(game.cards))
+    }
+
+    const processAction = useCallback(
+        async (action: ActionEvent) => {
+            console.log(action.type)
+            switch (action.type) {
                 case "HAND_COMPLETED":
+                    await processHandCompleted(
+                        action.gameState,
+                        action.transitionData as Round,
+                    )
                     break
                 case "ROUND_COMPLETED":
-                    reloadCards(payload)
+                    await processRoundCompleted(
+                        action.gameState,
+                        action.transitionData as Round,
+                    )
+                    break
+                case "BUY_CARDS":
+                    const buyCardsEvt = action.transitionData as BuyCardsEvent
+                    sendCardsBoughtNotification(buyCardsEvt)
+                    reloadCards(action.gameState.cards, isMyGo)
+                    dispatch(updateGame(action.gameState))
+                    break
+                case "CHOOSE_FROM_DUMMY":
+                case "CARD_PLAYED":
+                    playCardSound()
+                    reloadCards(action.gameState.cards, isMyGo)
+                    dispatch(updateGame(action.gameState))
                     break
                 case "CALL":
                     callSound()
-                    reloadCards(payload, true)
+                    reloadCards(action.gameState.cards, true)
+                    dispatch(updateGame(action.gameState))
                     break
                 case "PASS":
                     passSound()
-                    reloadCards(payload, true)
+                    reloadCards(action.gameState.cards, true)
+                    dispatch(updateGame(action.gameState))
                     break
+
+                case "REPLAY":
+                case "GAME_OVER":
+                    dispatch(updateGame(action.gameState))
             }
         },
         [playerProfiles, isMyGo],

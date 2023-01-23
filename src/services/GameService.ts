@@ -9,7 +9,11 @@ import { updateGame, updatePlayers } from "../caches/GameSlice"
 import { getAccessToken } from "../caches/MyProfileSlice"
 import { addMyGame, removeMyGame, updateMyGames } from "../caches/MyGamesSlice"
 import { updatePlayerProfiles } from "../caches/PlayerProfilesSlice"
-import { clearSelectedCards, updateMyCards } from "../caches/MyCardsSlice"
+import {
+    clearSelectedCards,
+    removeCard,
+    updateMyCards,
+} from "../caches/MyCardsSlice"
 import { clearAutoPlay } from "../caches/AutoPlaySlice"
 
 const getGame =
@@ -173,7 +177,9 @@ const chooseFromDummy =
 
 const playCard =
     (gameId: string, card: string): AppThunk<Promise<void>> =>
-    async (_, getState) => {
+    async (dispatch, getState) => {
+        dispatch(removeCard(card))
+        dispatch(clearAutoPlay())
         const accessToken = getAccessToken(getState())
         await axios.put(
             `${process.env.REACT_APP_API_URL}/api/v1/playCard?gameId=${gameId}&card=${card}`,

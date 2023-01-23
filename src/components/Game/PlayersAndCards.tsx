@@ -22,7 +22,12 @@ const PlayersAndCards = () => {
     return (
         <CardBody className="cardArea">
             <Container>
-                <Row xs="6" sm="6" md="6" lg="6" xl="6">
+                <Row
+                    xs={sortedPlayers.length}
+                    sm={sortedPlayers.length}
+                    md={sortedPlayers.length}
+                    lg={sortedPlayers.length}
+                    xl={sortedPlayers.length}>
                     {sortedPlayers.map(player => (
                         <PlayerCard
                             key={`playercard_${player.id}`}
