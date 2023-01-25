@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import React, { useCallback, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 
 import { useAuth0 } from "@auth0/auth0-react"
 
@@ -8,23 +8,55 @@ import { getMyProfile } from "../../caches/MyProfileSlice"
 
 import ProfilePictureEditor from "../Avatar/ProfilePictureEditor"
 import GameHeader from "../Game/GameHeader"
-import { Col, Container, Row } from "reactstrap"
-import LeaderboardModal from "../Leaderboard/LeaderboardModal"
+import {
+    Button,
+    Card,
+    CardBody,
+    CardGroup,
+    CardHeader,
+    Col,
+    Container,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Modal,
+    ModalBody,
+    Row,
+} from "reactstrap"
 import { getIsGameActive } from "../../caches/GameSlice"
+import Leaderboard from "../Leaderboard/Leaderboard"
 
 const NavBar = () => {
     const { logout } = useAuth0()
 
+    const navigate = useNavigate()
+
     const isGameActive = useAppSelector(getIsGameActive)
     const [showEditAvatar, setShowEditAvatar] = useState(false)
+    const [showDropdown, setShowDropdown] = useState(false)
+    const [modalLeaderboard, updateModalLeaderboard] = useState(false)
+
+    const toggleDropdown = useCallback(
+        () => setShowDropdown(!showDropdown),
+        [showDropdown],
+    )
+
+    const toggleLeaderboardModal = useCallback(
+        () => updateModalLeaderboard(!modalLeaderboard),
+        [modalLeaderboard],
+    )
+
+    const toggleEditAvatar = useCallback(
+        () => setShowEditAvatar(!showEditAvatar),
+        [showEditAvatar],
+    )
+
+    const navigateHome = () => navigate("/")
 
     const myProfile = useAppSelector(getMyProfile)
 
     const signOut = () => logout({ returnTo: window.location.origin })
-
-    const showUpdateProfileModal = () => {
-        setShowEditAvatar(true)
-    }
 
     if (!myProfile) {
         return null
@@ -32,43 +64,65 @@ const NavBar = () => {
 
     return (
         <nav className="custom-navbar bg-primary fixed-top">
-            <Container fluid xs="5" sm="5" md="5" lg="5" xl="5">
+            <Container fluid xs="2" sm="2" md="2" lg="2" xl="2">
                 <Row>
                     <Col className="nav-col">
-                        <Link to="/">
-                            <div className="linknavbar">Cards</div>
-                        </Link>
-                    </Col>
-                    <Col className="nav-col">
-                        {isGameActive && <LeaderboardModal />}
-                    </Col>
-                    <Col className="nav-col">
-                        {isGameActive && <GameHeader />}
-                    </Col>
-                    <Col className="nav-col">
-                        <div>
-                            <label className="mr-2 text-white">
+                        <Dropdown isOpen={showDropdown} toggle={toggleDropdown}>
+                            <DropdownToggle data-toggle="dropdown" tag="span">
                                 <img
                                     alt={myProfile.name}
                                     src={myProfile.picture}
                                     className="avatar clickable"
-                                    onClick={showUpdateProfileModal}
+                                    onClick={() => setShowDropdown(true)}
                                 />
-                            </label>
-
-                            <ProfilePictureEditor
-                                show={showEditAvatar}
-                                callback={() => setShowEditAvatar(false)}
-                            />
-                        </div>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={navigateHome}>
+                                    Home
+                                </DropdownItem>
+                                <DropdownItem onClick={toggleEditAvatar}>
+                                    Change Avatar
+                                </DropdownItem>
+                                {isGameActive && (
+                                    <DropdownItem
+                                        onClick={toggleLeaderboardModal}>
+                                        Game Stats
+                                    </DropdownItem>
+                                )}
+                                <DropdownItem onClick={signOut}>
+                                    Sign Out
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
                     </Col>
+
                     <Col className="nav-col">
-                        <button className="btn btn-dark" onClick={signOut}>
-                            Sign Out
-                        </button>
+                        {isGameActive && <GameHeader />}
                     </Col>
                 </Row>
             </Container>
+
+            <ProfilePictureEditor
+                show={showEditAvatar}
+                callback={toggleEditAvatar}
+            />
+
+            <Modal
+                fade={true}
+                size="lg"
+                toggle={toggleLeaderboardModal}
+                isOpen={modalLeaderboard}>
+                <ModalBody className="gameModalBody">
+                    <CardGroup>
+                        <Card className="data-card">
+                            <CardHeader tag="h2">Leaderboard</CardHeader>
+                            <CardBody>
+                                <Leaderboard />
+                            </CardBody>
+                        </Card>
+                    </CardGroup>
+                </ModalBody>
+            </Modal>
         </nav>
     )
 }

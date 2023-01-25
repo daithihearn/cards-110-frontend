@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react"
+import React, { useEffect } from "react"
 import GameWrapper from "../../components/Game/GameWrapper"
 import GameOver from "../../components/Game/GameOver"
 import GameService from "../../services/GameService"
@@ -56,6 +56,7 @@ const Game = () => {
                 </div>
             </div>
         </PullToRefresh>
+
     )
 }
 
