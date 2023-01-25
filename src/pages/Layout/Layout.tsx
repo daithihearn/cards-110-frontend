@@ -15,7 +15,7 @@ const Layout = () => {
     }, [isLoading, isAuthenticated])
 
     return (
-        <div className="main_content">
+        <div className="main_content no-horizontal-scroll">
             <span className="app" style={{ overflowX: "hidden" }}>
                 <div className="app_body">
                     <main className="main">

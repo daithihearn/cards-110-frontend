@@ -17,6 +17,11 @@ body {
     }
 }
 
+.no-horizontal-scroll {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 @media (min-width: 992px) {
     .sidebar-fixed .sidebar {
         position: fixed;
