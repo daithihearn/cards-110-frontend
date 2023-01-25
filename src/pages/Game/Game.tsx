@@ -56,7 +56,6 @@ const Game = () => {
                 </div>
             </div>
         </PullToRefresh>
-
     )
 }
 
