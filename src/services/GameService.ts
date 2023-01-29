@@ -178,14 +178,14 @@ const chooseFromDummy =
 const playCard =
     (gameId: string, card: string): AppThunk<Promise<void>> =>
     async (dispatch, getState) => {
-        dispatch(removeCard(card))
-        dispatch(clearAutoPlay())
         const accessToken = getAccessToken(getState())
         await axios.put(
             `${process.env.REACT_APP_API_URL}/api/v1/playCard?gameId=${gameId}&card=${card}`,
             null,
             getDefaultConfig(accessToken),
         )
+        dispatch(removeCard(card))
+        dispatch(clearAutoPlay())
     }
 
 export default {
