@@ -6,6 +6,7 @@ import {
     disableActions,
     getGameId,
     getIsMyGo,
+    getIamSpectator,
     updateGame,
     updatePlayedCards,
 } from "../../caches/GameSlice"
@@ -60,6 +61,7 @@ const WebsocketHandler = () => {
 
     const [autoActionEnabled, setAutoActionEnabled] = useState(false)
     const isMyGo = useAppSelector(getIsMyGo)
+    const iamSpectator = useAppSelector(getIamSpectator)
     const playerProfiles = useAppSelector(getPlayerProfiles)
     const { enqueueSnackbar } = useSnackbar()
 
@@ -146,6 +148,31 @@ const WebsocketHandler = () => {
         dispatch(updateMyCards(game.cards))
     }
 
+    // On game completion we need to display the last round to the user
+    const processGameCompleted = async (
+        game: GameState,
+        previousRound: Round,
+    ) => {
+        // Disable actions by setting isMyGo to false
+        dispatch(disableActions())
+
+        // Show the last card of the penultimate round being played
+        playCardSound()
+        const penultimateHand = previousRound.completedHands.pop()
+        if (!penultimateHand) throw Error("Failed to get the penultimate round")
+        dispatch(updatePlayedCards(penultimateHand.playedCards))
+        await new Promise(r => setTimeout(r, 4000))
+
+        // Next show the final round being played
+        playCardSound()
+        dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+        dispatch(updateMyCards([]))
+        await new Promise(r => setTimeout(r, 6000))
+
+        // Finally update the game with the latest state
+        dispatch(updateGame(game))
+    }
+
     const processAction = useCallback(
         async (action: ActionEvent) => {
             console.log(action.type)
@@ -165,32 +192,39 @@ const WebsocketHandler = () => {
                 case "BUY_CARDS":
                     const buyCardsEvt = action.transitionData as BuyCardsEvent
                     sendCardsBoughtNotification(buyCardsEvt)
-                    reloadCards(action.gameState.cards, isMyGo)
+                    if (!iamSpectator)
+                        reloadCards(action.gameState.cards, isMyGo)
                     dispatch(updateGame(action.gameState))
                     break
                 case "CHOOSE_FROM_DUMMY":
                 case "CARD_PLAYED":
                     playCardSound()
-                    reloadCards(action.gameState.cards, isMyGo)
+                    if (!iamSpectator)
+                        reloadCards(action.gameState.cards, isMyGo)
                     dispatch(updateGame(action.gameState))
                     break
                 case "CALL":
                     callSound()
-                    reloadCards(action.gameState.cards, true)
+                    if (!iamSpectator) reloadCards(action.gameState.cards, true)
                     dispatch(updateGame(action.gameState))
                     break
                 case "PASS":
                     passSound()
-                    reloadCards(action.gameState.cards, true)
+                    if (!iamSpectator) reloadCards(action.gameState.cards, true)
                     dispatch(updateGame(action.gameState))
                     break
 
                 case "REPLAY":
-                case "GAME_OVER":
                     dispatch(updateGame(action.gameState))
+                    break
+                case "GAME_OVER":
+                    await processGameCompleted(
+                        action.gameState,
+                        action.transitionData as Round,
+                    )
             }
         },
-        [playerProfiles, isMyGo],
+        [playerProfiles, iamSpectator, isMyGo],
     )
 
     useSubscription(["/game", "/user/game"], message =>

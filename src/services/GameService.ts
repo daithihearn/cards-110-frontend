@@ -29,7 +29,7 @@ const getGame =
     }
 
 const refreshGameState =
-    (gameId: string): AppThunk<Promise<void>> =>
+    (gameId: string, iamSpectator: boolean): AppThunk<Promise<void>> =>
     async (dispatch, getState) => {
         const accessToken = getAccessToken(getState())
         const response = await axios.get<GameState>(
@@ -37,8 +37,10 @@ const refreshGameState =
             getDefaultConfig(accessToken),
         )
         dispatch(updateGame(response.data))
-        dispatch(updateMyCards(response.data.cards))
-        dispatch(clearAutoPlay())
+        if (!iamSpectator) {
+            dispatch(updateMyCards(response.data.cards))
+            dispatch(clearAutoPlay())
+        }
     }
 
 const getAll = (): AppThunk<Promise<Game[]>> => async (dispatch, getState) => {
@@ -178,14 +180,14 @@ const chooseFromDummy =
 const playCard =
     (gameId: string, card: string): AppThunk<Promise<void>> =>
     async (dispatch, getState) => {
-        dispatch(removeCard(card))
-        dispatch(clearAutoPlay())
         const accessToken = getAccessToken(getState())
         await axios.put(
             `${process.env.REACT_APP_API_URL}/api/v1/playCard?gameId=${gameId}&card=${card}`,
             null,
             getDefaultConfig(accessToken),
         )
+        dispatch(removeCard(card))
+        dispatch(clearAutoPlay())
     }
 
 export default {

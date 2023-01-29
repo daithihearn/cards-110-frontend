@@ -30,13 +30,11 @@ const AutoActionManager = () => {
     const isMyGo = useAppSelector(getIsMyGo)
     const isInBunker = useAppSelector(getIsInBunker)
 
-    const playCard = (id: string, card: string, suppressError = false) =>
+    const playCard = (id: string, card: string) =>
         dispatch(GameService.playCard(id, card)).catch(e => {
-            if (!suppressError)
-                enqueueSnackbar(parseError(e), {
-                    variant: "error",
-                })
-            else console.error(e)
+            enqueueSnackbar(parseError(e), {
+                variant: "error",
+            })
         })
 
     const call = (id: string, callAmount: number) =>
@@ -59,17 +57,17 @@ const AutoActionManager = () => {
             round?.suit &&
             round.status === RoundStatus.PLAYING
         ) {
-            if (autoPlayCard) playCard(gameId, autoPlayCard, true)
+            if (autoPlayCard) playCard(gameId, autoPlayCard)
             else if (bestCardLead(round)) {
                 const cardToPlay = getWorstCard(cards, round.suit)
-                if (cardToPlay) playCard(gameId, cardToPlay.name, true)
+                if (cardToPlay) playCard(gameId, cardToPlay.name)
             }
         }
     }, [gameId, round, isMyGo, cards, autoPlayCard])
 
     // Buy cards in if you are the goer
     useEffect(() => {
-        if (gameId && canBuyCards) buyCards(gameId, cards)
+        if (gameId && canBuyCards && cards.length <= 5) buyCards(gameId, cards)
     }, [gameId, cards, canBuyCards])
 
     return null
