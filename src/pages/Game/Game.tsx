@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import GameWrapper from "../../components/Game/GameWrapper"
 import GameOver from "../../components/Game/GameOver"
 import GameService from "../../services/GameService"
@@ -10,7 +10,11 @@ import { useParams } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import { useSnackbar } from "notistack"
-import { getIsGameActive, resetGame } from "../../caches/GameSlice"
+import {
+    getIamSpectator,
+    getIsGameActive,
+    resetGame,
+} from "../../caches/GameSlice"
 import { clearAutoPlay } from "../../caches/AutoPlaySlice"
 import { clearMyCards } from "../../caches/MyCardsSlice"
 import RefreshingData from "../../components/icons/RefreshingData"
@@ -20,18 +24,21 @@ const Game = () => {
     const dispatch = useAppDispatch()
     let { id } = useParams<string>()
     const { enqueueSnackbar } = useSnackbar()
+    const iamSpectator = useAppSelector(getIamSpectator)
     const isGameActive = useAppSelector(getIsGameActive)
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         if (id)
-            await dispatch(GameService.refreshGameState(id)).catch((e: Error) =>
+            await dispatch(
+                GameService.refreshGameState(id, iamSpectator),
+            ).catch((e: Error) =>
                 enqueueSnackbar(parseError(e), { variant: "error" }),
             )
 
         await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
             enqueueSnackbar(parseError(e), { variant: "error" }),
         )
-    }
+    }, [iamSpectator])
 
     useEffect(() => {
         fetchData()

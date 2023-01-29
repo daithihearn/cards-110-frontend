@@ -6,6 +6,7 @@ import {
     disableActions,
     getGameId,
     getIsMyGo,
+    getIamSpectator,
     updateGame,
     updatePlayedCards,
 } from "../../caches/GameSlice"
@@ -60,6 +61,7 @@ const WebsocketHandler = () => {
 
     const [autoActionEnabled, setAutoActionEnabled] = useState(false)
     const isMyGo = useAppSelector(getIsMyGo)
+    const iamSpectator = useAppSelector(getIamSpectator)
     const playerProfiles = useAppSelector(getPlayerProfiles)
     const { enqueueSnackbar } = useSnackbar()
 
@@ -190,23 +192,25 @@ const WebsocketHandler = () => {
                 case "BUY_CARDS":
                     const buyCardsEvt = action.transitionData as BuyCardsEvent
                     sendCardsBoughtNotification(buyCardsEvt)
-                    reloadCards(action.gameState.cards, isMyGo)
+                    if (!iamSpectator)
+                        reloadCards(action.gameState.cards, isMyGo)
                     dispatch(updateGame(action.gameState))
                     break
                 case "CHOOSE_FROM_DUMMY":
                 case "CARD_PLAYED":
                     playCardSound()
-                    reloadCards(action.gameState.cards, isMyGo)
+                    if (!iamSpectator)
+                        reloadCards(action.gameState.cards, isMyGo)
                     dispatch(updateGame(action.gameState))
                     break
                 case "CALL":
                     callSound()
-                    reloadCards(action.gameState.cards, true)
+                    if (!iamSpectator) reloadCards(action.gameState.cards, true)
                     dispatch(updateGame(action.gameState))
                     break
                 case "PASS":
                     passSound()
-                    reloadCards(action.gameState.cards, true)
+                    if (!iamSpectator) reloadCards(action.gameState.cards, true)
                     dispatch(updateGame(action.gameState))
                     break
 
@@ -220,7 +224,7 @@ const WebsocketHandler = () => {
                     )
             }
         },
-        [playerProfiles, isMyGo],
+        [playerProfiles, iamSpectator, isMyGo],
     )
 
     useSubscription(["/game", "/user/game"], message =>
