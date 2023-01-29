@@ -69,7 +69,7 @@ const AutoActionManager = () => {
 
     // Buy cards in if you are the goer
     useEffect(() => {
-        if (gameId && canBuyCards) buyCards(gameId, cards)
+        if (gameId && canBuyCards && cards.length <= 5) buyCards(gameId, cards)
     }, [gameId, cards, canBuyCards])
 
     return null
