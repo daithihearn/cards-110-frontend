@@ -49,7 +49,7 @@ const Game = () => {
             dispatch(clearMyCards())
             dispatch(clearAutoPlay())
         }
-    }, [id])
+    }, [id, iamSpectator])
 
     return (
         <PullToRefresh
