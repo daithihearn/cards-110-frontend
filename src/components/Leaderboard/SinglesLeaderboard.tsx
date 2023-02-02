@@ -67,14 +67,20 @@ const SinglesLeaderboard = () => {
             {
                 name: "Avatar",
                 cell: row => (
-                    <img
-                        alt="Image Preview"
-                        src={row.picture}
-                        className="avatar"
-                    />
+                    <img alt={row.name} src={row.picture} className="avatar" />
                 ),
             },
-            { name: "Player", selector: row => row.name, sortable: true },
+            {
+                cell: row => (
+                    <img
+                        alt={row.previousCard}
+                        src={"/cards/thumbnails/" + row.previousCard + ".png"}
+                        className="thumbnail_size_small cardNotSelected"
+                    />
+                ),
+                center: true,
+                omit: gameOver || !previousHand,
+            },
             {
                 name: "Score",
                 selector: row => row.score,
@@ -104,17 +110,6 @@ const SinglesLeaderboard = () => {
                 ),
                 center: true,
                 omit: !gameOver,
-            },
-            {
-                cell: row => (
-                    <img
-                        alt={row.previousCard}
-                        src={"/cards/thumbnails/" + row.previousCard + ".png"}
-                        className="thumbnail_size_small cardNotSelected"
-                    />
-                ),
-                center: true,
-                omit: gameOver || !previousHand,
             },
         ],
         [gameOver, previousHand],
