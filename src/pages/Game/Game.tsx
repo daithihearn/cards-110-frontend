@@ -38,18 +38,20 @@ const Game = () => {
         await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
             enqueueSnackbar(parseError(e), { variant: "error" }),
         )
-    }, [iamSpectator])
+    }, [id, iamSpectator])
 
     useEffect(() => {
         fetchData()
+    }, [id, iamSpectator])
 
+    useEffect(() => {
         return () => {
-            console.log("Resetting game")
-            dispatch(resetGame())
+            console.log("Clearing game")
             dispatch(clearMyCards())
             dispatch(clearAutoPlay())
+            dispatch(resetGame())
         }
-    }, [id, iamSpectator])
+    }, [])
 
     return (
         <PullToRefresh
