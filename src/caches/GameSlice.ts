@@ -92,16 +92,23 @@ export const getIsDoublesGame = createSelector(
 
 export const getIsMyGo = createSelector(getGame, game => game.isMyGo)
 export const getIamGoer = createSelector(getGame, game => game.iamGoer)
+export const getIHavePlayed = createSelector(getGame, game => {
+    if (game.iamGoer) return false
+
+    const myPosition = game.players.findIndex(p => p.id === game.me?.id)
+    const currentPlayerPosition = game.players.findIndex(
+        p => p.id === game.round?.currentHand.currentPlayerId,
+    )
+    return myPosition < currentPlayerPosition
+})
 export const getIamSpectator = createSelector(
     getGame,
     game => game.iamSpectator,
 )
 
-export const getCanBuyCards = createSelector(
-    getIsMyGo,
-    getIamGoer,
+export const haveBoughtCards = createSelector(
     getIsRoundBuying,
-    (isMyGo, iamGoer, isRoundBuying) => isMyGo && iamGoer && isRoundBuying,
+    isRoundBuying => isRoundBuying,
 )
 
 export const getIsInBunker = createSelector(

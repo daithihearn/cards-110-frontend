@@ -3,7 +3,6 @@ import GameService from "../../services/GameService"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
 import {
-    getCanBuyCards,
     getCards,
     getGameId,
     getIsInBunker,
@@ -26,7 +25,6 @@ const AutoActionManager = () => {
 
     const autoPlayCard = useAppSelector(getAutoPlayCard)
 
-    const canBuyCards = useAppSelector(getCanBuyCards)
     const isMyGo = useAppSelector(getIsMyGo)
     const isInBunker = useAppSelector(getIsInBunker)
 
@@ -39,9 +37,6 @@ const AutoActionManager = () => {
 
     const call = (id: string, callAmount: number) =>
         dispatch(GameService.call(id, callAmount)).catch(console.error)
-
-    const buyCards = (gameId: string, cardsToBuy: string[]) =>
-        dispatch(GameService.buyCards(gameId, cardsToBuy)).catch(console.error)
 
     // If in the bunker, Pass
     useEffect(() => {
@@ -64,11 +59,6 @@ const AutoActionManager = () => {
             }
         }
     }, [gameId, round, isMyGo, cards, autoPlayCard])
-
-    // Buy cards in if you are the goer
-    useEffect(() => {
-        if (gameId && canBuyCards && cards.length <= 5) buyCards(gameId, cards)
-    }, [gameId, cards, canBuyCards])
 
     return null
 }
