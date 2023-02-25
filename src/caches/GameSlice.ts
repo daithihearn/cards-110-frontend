@@ -93,8 +93,6 @@ export const getIsDoublesGame = createSelector(
 export const getIsMyGo = createSelector(getGame, game => game.isMyGo)
 export const getIamGoer = createSelector(getGame, game => game.iamGoer)
 export const getIHavePlayed = createSelector(getGame, game => {
-    if (game.iamGoer) return false
-
     const myPosition = game.players.findIndex(p => p.id === game.me?.id)
     const currentPlayerPosition = game.players.findIndex(
         p => p.id === game.round?.currentHand.currentPlayerId,
