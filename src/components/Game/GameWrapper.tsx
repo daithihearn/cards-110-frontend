@@ -8,10 +8,16 @@ import SelectSuit from "./SelectSuit"
 import WebsocketManager from "./WebsocketManager"
 
 import { useAppSelector } from "../../caches/hooks"
-import { getIamSpectator } from "../../caches/GameSlice"
+import {
+    getIamSpectator,
+    getIsRoundBuying,
+    getIsRoundCalling,
+} from "../../caches/GameSlice"
 
 const GameWrapper = () => {
     const iamSpectator = useAppSelector(getIamSpectator)
+    const isBuying = useAppSelector(getIsRoundBuying)
+    const isCalling = useAppSelector(getIsRoundCalling)
 
     return (
         <CardGroup>
@@ -21,8 +27,8 @@ const GameWrapper = () => {
                 <PlayersAndCards />
 
                 {!iamSpectator ? <MyCards /> : null}
-                {!iamSpectator ? <Calling /> : null}
-                {!iamSpectator ? <Buying /> : null}
+                {!iamSpectator && isCalling ? <Calling /> : null}
+                {!iamSpectator && isBuying ? <Buying /> : null}
                 {!iamSpectator ? <SelectSuit /> : null}
             </Card>
         </CardGroup>

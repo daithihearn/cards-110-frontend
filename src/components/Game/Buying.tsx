@@ -1,6 +1,6 @@
-import { Button, ButtonGroup, Form, CardBody } from "reactstrap"
+import { Button, ButtonGroup, CardBody } from "reactstrap"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import GameService from "../../services/GameService"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
@@ -8,11 +8,13 @@ import { useSnackbar } from "notistack"
 import {
     getMyCardsWithoutBlanks,
     getSelectedCards,
+    selectAll,
 } from "../../caches/MyCardsSlice"
 import {
     getGameId,
+    getIamGoer,
+    getIHavePlayed,
     getIsMyGo,
-    getIsRoundBuying,
     getSuit,
 } from "../../caches/GameSlice"
 import { riskOfMistakeBuyingCards } from "../../utils/GameUtils"
@@ -26,24 +28,18 @@ const Buying = () => {
     const gameId = useAppSelector(getGameId)
     const suit = useAppSelector(getSuit)
     const myCards = useAppSelector(getMyCardsWithoutBlanks)
-    const isBuying = useAppSelector(getIsRoundBuying)
+    const [readyToBuy, setReadyToBuy] = useState(false)
+    const iHavePlayed = useAppSelector(getIHavePlayed)
     const isMyGo = useAppSelector(getIsMyGo)
+    const iamGoer = useAppSelector(getIamGoer)
 
     const [deleteCardsDialog, updateDeleteCardsDialog] = useState(false)
 
     const selectedCards = useAppSelector(getSelectedCards)
 
-    const buyCardsFormSubmit = useCallback(
-        (e?: React.FormEvent) => {
-            if (e) e.preventDefault()
-            if (!gameId) throw Error("No game id set")
-
-            if (riskOfMistakeBuyingCards(suit!, selectedCards, myCards))
-                showCancelDeleteCardsDialog()
-            else buyCards(gameId, selectedCards)
-        },
-        [gameId, suit, selectedCards, myCards],
-    )
+    const toggleReadyToBuy = useCallback(() => {
+        setReadyToBuy(!readyToBuy)
+    }, [readyToBuy])
 
     const buyCards = (id: string, sel: SelectableCard[]) => {
         dispatch(GameService.buyCards(id, sel)).catch(e =>
@@ -55,32 +51,51 @@ const Buying = () => {
         updateDeleteCardsDialog(false)
     }, [])
 
-    const showCancelDeleteCardsDialog = () => {
-        updateDeleteCardsDialog(true)
-    }
+    useEffect(() => {
+        if (iamGoer) {
+            dispatch(selectAll())
+            setReadyToBuy(true)
+        }
+    }, [iamGoer])
+
+    useEffect(() => {
+        if (isMyGo && readyToBuy) {
+            if (!gameId) throw Error("No game id set")
+
+            if (riskOfMistakeBuyingCards(suit!, selectedCards, myCards)) {
+                setReadyToBuy(false)
+                updateDeleteCardsDialog(true)
+            } else buyCards(gameId, selectedCards)
+        }
+    }, [gameId, suit, selectedCards, myCards, isMyGo, readyToBuy])
 
     return (
         <div>
-            {isBuying ? (
-                <CardBody className="buttonArea">
-                    <Form onSubmit={buyCardsFormSubmit}>
-                        <ButtonGroup size="lg">
-                            {isMyGo ? (
-                                <Button type="submit" color="warning">
-                                    <b>Keep Cards</b>
-                                </Button>
-                            ) : null}
-                        </ButtonGroup>
-                    </Form>
+            <CardBody className="buttonArea">
+                <ButtonGroup size="lg">
+                    {!iHavePlayed ? (
+                        <Button
+                            type="button"
+                            onClick={toggleReadyToBuy}
+                            color={
+                                isMyGo || !readyToBuy ? "warning" : "secondary"
+                            }>
+                            <b>
+                                {isMyGo || !readyToBuy
+                                    ? "Keep Cards"
+                                    : "Waiting to buy cards (click to cancel)"}
+                            </b>
+                        </Button>
+                    ) : null}
+                </ButtonGroup>
 
-                    <ThrowCardsWarningModal
-                        modalVisible={deleteCardsDialog}
-                        cancelCallback={hideCancelDeleteCardsDialog}
-                        continueCallback={buyCards}
-                        suit={suit!}
-                    />
-                </CardBody>
-            ) : null}
+                <ThrowCardsWarningModal
+                    modalVisible={deleteCardsDialog}
+                    cancelCallback={hideCancelDeleteCardsDialog}
+                    continueCallback={buyCards}
+                    suit={suit!}
+                />
+            </CardBody>
         </div>
     )
 }
