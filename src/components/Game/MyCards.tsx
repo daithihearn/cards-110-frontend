@@ -34,11 +34,6 @@ import {
 } from "../../caches/AutoPlaySlice"
 import parseError from "../../utils/ErrorUtils"
 
-interface DoubleClickTracker {
-    time: number
-    card: string
-}
-
 const MyCards: React.FC = () => {
     const dispatch = useAppDispatch()
     const gameId = useAppSelector(getGameId)
@@ -50,9 +45,6 @@ const MyCards: React.FC = () => {
     const isMyGo = useAppSelector(getIsMyGo)
 
     const { enqueueSnackbar } = useSnackbar()
-
-    const [doubleClickTracker, updateDoubleClickTracker] =
-        useState<DoubleClickTracker>()
 
     const selectedCards = useAppSelector(getSelectedCards)
 
@@ -85,7 +77,10 @@ const MyCards: React.FC = () => {
     )
 
     const handleSelectCard = useCallback(
-        (card: SelectableCard) => {
+        (
+            card: SelectableCard,
+            event: React.MouseEvent<HTMLImageElement, MouseEvent>,
+        ) => {
             if (!cardsSelectable || card.name === BLANK_CARD.name) {
                 return
             }
@@ -95,24 +90,17 @@ const MyCards: React.FC = () => {
                 if (autoPlayCard === card.name) {
                     dispatch(clearAutoPlay())
                     dispatch(clearSelectedCards())
-                } else if (
-                    doubleClickTracker?.card === card.name &&
-                    Date.now() - doubleClickTracker.time < 500
-                ) {
+                } else if (event.detail === 2) {
                     dispatch(toggleAutoPlay(card))
                 } else {
                     dispatch(toggleUniqueSelect(card))
                     dispatch(clearAutoPlay())
-                    updateDoubleClickTracker({
-                        card: card.name,
-                        time: Date.now(),
-                    })
                 }
             } else {
                 dispatch(toggleSelect(card))
             }
         },
-        [round, myCards, autoPlayCard, doubleClickTracker],
+        [round, myCards, autoPlayCard],
     )
 
     const handleOnDragEnd = useCallback(
@@ -209,9 +197,10 @@ const MyCards: React.FC = () => {
                                                     {...provided.dragHandleProps}>
                                                     <CardImg
                                                         alt={card.name}
-                                                        onClick={() =>
+                                                        onClick={event =>
                                                             handleSelectCard(
                                                                 card,
+                                                                event,
                                                             )
                                                         }
                                                         src={`/cards/thumbnails/${card.name}.png`}
@@ -263,9 +252,10 @@ const MyCards: React.FC = () => {
                                                         {...provided.dragHandleProps}>
                                                         <CardImg
                                                             alt={card.name}
-                                                            onClick={() =>
+                                                            onClick={event =>
                                                                 handleSelectCard(
                                                                     card,
+                                                                    event,
                                                                 )
                                                             }
                                                             src={`/cards/thumbnails/${card.name}.png`}
@@ -294,7 +284,7 @@ const MyCards: React.FC = () => {
                             disabled={!playButtonEnabled}
                             type="button"
                             onClick={playCard}
-                            color="warning">
+                            color="primary">
                             <b>Play Card</b>
                         </Button>
                     </ButtonGroup>
