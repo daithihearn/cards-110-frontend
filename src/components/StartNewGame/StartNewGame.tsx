@@ -23,6 +23,7 @@ import { useSnackbar } from "notistack"
 import { customStyles } from "../Tables/CustomStyles"
 import parseError from "../../utils/ErrorUtils"
 import moment from "moment"
+import { FormatName } from "../../utils/FormattingUtils"
 
 const StartNewGame = () => {
     const dispatch = useAppDispatch()
@@ -94,6 +95,7 @@ const StartNewGame = () => {
         {
             name: "Player",
             selector: row => row.name,
+            format: row => FormatName(row.name),
             sortable: true,
         },
         {
