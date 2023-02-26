@@ -28,7 +28,7 @@ const PlayerSwitcher: React.FC = () => {
     useEffect(() => {
         const me = players.find(p => p.id === myProfile.id)
         if (me) setCurrentPlayer(me)
-    }, [myProfile])
+    }, [players, myProfile])
 
     useEffect(() => {
         if (currentPlayer)
@@ -51,7 +51,9 @@ const PlayerSwitcher: React.FC = () => {
                     onClick={() => setShowDropdown(true)}
                 />
             </DropdownToggle>
-            <DropdownMenu>
+            <DropdownMenu
+                container="body"
+                style={{ maxHeight: "20em", overflow: "scroll" }}>
                 {players.map(p => {
                     return (
                         <DropdownItem
