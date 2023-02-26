@@ -22,7 +22,7 @@ const GameStats = () => {
             last3Months
                 ? stats.filter(s => new Date(s.timestamp) >= fromDate)
                 : stats,
-        [stats],
+        [last3Months, stats],
     )
 
     const wins = useMemo(
@@ -75,9 +75,11 @@ const GameStats = () => {
         <CardGroup>
             <Card className="p-6 data-card">
                 <CardHeader tag="h2">Stats </CardHeader>
-                {myProfile.isAdmin ? <PlayerSwitcher /> : null}
                 <CardBody>
-                    {!!stats && stats.length > 0 ? (
+                    {myProfile.isAdmin ? <PlayerSwitcher /> : null}
+                </CardBody>
+                <CardBody>
+                    {filteredStats.length > 0 ? (
                         <Doughnut
                             data={data}
                             options={options}
