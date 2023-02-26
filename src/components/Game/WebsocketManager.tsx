@@ -124,23 +124,32 @@ const WebsocketHandler = () => {
     // On round completion we need to display the last round to the user
     const processRoundCompleted = async (
         game: GameState,
-        previousRound: Round,
+        previousRound?: Round,
     ) => {
         // Disable actions by setting isMyGo to false
         dispatch(disableActions())
 
-        // Show the last card of the penultimate round being played
-        playCardSound()
-        const penultimateHand = previousRound.completedHands.pop()
-        if (!penultimateHand) throw Error("Failed to get the penultimate round")
-        dispatch(updatePlayedCards(penultimateHand.playedCards))
-        await new Promise(r => setTimeout(r, 4000))
+        // Previous round will be undefined nobody called
+        if (previousRound) {
+            // Show the last card of the penultimate round being played
+            playCardSound()
+            const penultimateHand = previousRound.completedHands.pop()
+            if (!penultimateHand)
+                throw Error("Failed to get the penultimate round")
+            dispatch(updatePlayedCards(penultimateHand.playedCards))
+            await new Promise(r => setTimeout(r, 4000))
 
-        // Next show the final round being played
-        playCardSound()
-        dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
-        dispatch(updateMyCards([]))
-        await new Promise(r => setTimeout(r, 6000))
+            // Next show the final round being played
+            playCardSound()
+            dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+            dispatch(updateMyCards([]))
+            await new Promise(r => setTimeout(r, 6000))
+        } else {
+            enqueueSnackbar("Nobody called. Redealing....", {
+                variant: "info",
+            })
+            await new Promise(r => setTimeout(r, 2000))
+        }
 
         // Finally update the game with the latest state
         shuffleSound()
@@ -186,7 +195,9 @@ const WebsocketHandler = () => {
                 case "ROUND_COMPLETED":
                     await processRoundCompleted(
                         action.gameState,
-                        action.transitionData as Round,
+                        action.transitionData
+                            ? (action.transitionData as Round)
+                            : undefined,
                     )
                     break
                 case "BUY_CARDS":
