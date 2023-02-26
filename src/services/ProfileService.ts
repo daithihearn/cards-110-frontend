@@ -25,6 +25,7 @@ interface ProfileResponse {
     name: string
     picture: string
     pictureLocked: boolean
+    lastAccess: string
 }
 
 interface JWTToken {
@@ -56,6 +57,7 @@ const updateProfile =
                 isAdmin:
                     decodedAccessToken.permissions.indexOf("read:admin") !== -1,
                 accessToken: token,
+                lastAccess: response.data.lastAccess,
             }),
         )
     }

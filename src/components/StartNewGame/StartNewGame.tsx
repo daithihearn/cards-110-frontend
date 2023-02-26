@@ -22,6 +22,7 @@ import { PlayerProfile } from "../../model/Player"
 import { useSnackbar } from "notistack"
 import { customStyles } from "../Tables/CustomStyles"
 import parseError from "../../utils/ErrorUtils"
+import moment from "moment"
 
 const StartNewGame = () => {
     const dispatch = useAppDispatch()
@@ -95,6 +96,14 @@ const StartNewGame = () => {
             selector: row => row.name,
             sortable: true,
         },
+        {
+            name: "Last Access",
+            id: "lastAccess",
+            selector: row => row.lastAccess,
+            format: row => moment(row.lastAccess).format("lll"),
+            sortable: true,
+            omit: true,
+        },
     ]
 
     return (
@@ -140,6 +149,8 @@ const StartNewGame = () => {
                             selectableRows
                             customStyles={customStyles}
                             onSelectedRowsChange={togglePlayer}
+                            defaultSortFieldId="lastAccess"
+                            defaultSortAsc={false}
                         />
                     </FormGroup>
                 </CardBody>
