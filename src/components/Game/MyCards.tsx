@@ -294,7 +294,7 @@ const MyCards: React.FC = () => {
                             disabled={!playButtonEnabled}
                             type="button"
                             onClick={playCard}
-                            color="warning">
+                            color="primary">
                             <b>Play Card</b>
                         </Button>
                     </ButtonGroup>
