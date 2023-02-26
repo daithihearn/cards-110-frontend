@@ -1,3 +1,4 @@
+import { useSnackbar } from "notistack"
 import { useCallback, useEffect, useState } from "react"
 import {
     Dropdown,
@@ -17,6 +18,7 @@ const PlayerSwitcher: React.FC = () => {
     const players = useAppSelector(getPlayerProfiles)
     const [showDropdown, setShowDropdown] = useState(false)
     const [currentPlayer, setCurrentPlayer] = useState<PlayerProfile>()
+    const { enqueueSnackbar } = useSnackbar()
 
     const toggleDropdown = useCallback(
         () => setShowDropdown(!showDropdown),
@@ -29,7 +31,14 @@ const PlayerSwitcher: React.FC = () => {
     }, [myProfile])
 
     useEffect(() => {
-        dispatch(StatsService.gameStatsForPlayer(currentPlayer?.id))
+        if (currentPlayer)
+            dispatch(StatsService.gameStatsForPlayer(currentPlayer.id)).catch(
+                e =>
+                    enqueueSnackbar(
+                        `Failed to get game stats for player ${currentPlayer.name}`,
+                        { variant: "error" },
+                    ),
+            )
     }, [currentPlayer])
 
     return (
