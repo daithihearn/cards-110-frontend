@@ -16,6 +16,7 @@ export interface PlayerProfile {
     id: string
     name: string
     picture: string
+    lastAccess: string
 }
 
 export interface Team extends Scorable {

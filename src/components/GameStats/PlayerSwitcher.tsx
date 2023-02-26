@@ -1,5 +1,5 @@
 import { useSnackbar } from "notistack"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import {
     Dropdown,
     DropdownItem,
@@ -25,10 +25,21 @@ const PlayerSwitcher: React.FC = () => {
         [showDropdown],
     )
 
+    const sortedPlayers = useMemo(
+        () =>
+            [...players].sort((a, b) => {
+                const aDate = new Date(a.lastAccess)
+                const bDate = new Date(b.lastAccess)
+                if (aDate === bDate) return 0
+                return aDate > bDate ? -1 : 1
+            }),
+        [players],
+    )
+
     useEffect(() => {
         const me = players.find(p => p.id === myProfile.id)
         if (me) setCurrentPlayer(me)
-    }, [players, myProfile])
+    }, [sortedPlayers, myProfile])
 
     useEffect(() => {
         if (currentPlayer)
@@ -54,7 +65,7 @@ const PlayerSwitcher: React.FC = () => {
             <DropdownMenu
                 container="body"
                 style={{ maxHeight: "20em", overflow: "scroll" }}>
-                {players.map(p => {
+                {sortedPlayers.map(p => {
                     return (
                         <DropdownItem
                             key={p.id}
