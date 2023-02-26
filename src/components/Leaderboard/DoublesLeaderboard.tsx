@@ -99,7 +99,6 @@ const DoublesLeaderboard = () => {
 
     const columns: TableColumn<DoublesLeaderboardItem>[] = [
         {
-            name: "Player 1",
             cell: row => (
                 <>
                     <div>
@@ -137,7 +136,6 @@ const DoublesLeaderboard = () => {
             ),
         },
         {
-            name: "Player 2",
             cell: row => (
                 <div>
                     <img

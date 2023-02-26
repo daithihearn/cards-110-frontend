@@ -11,6 +11,7 @@ import { getMyProfile } from "../../caches/MyProfileSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { PlayerProfile } from "../../model/Player"
 import StatsService from "../../services/StatsService"
+import { FormatName } from "../../utils/FormattingUtils"
 
 const PlayerSwitcher: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -70,7 +71,7 @@ const PlayerSwitcher: React.FC = () => {
                         <DropdownItem
                             key={p.id}
                             onClick={() => setCurrentPlayer(p)}>
-                            {p.name}
+                            {FormatName(p.name)}
                         </DropdownItem>
                     )
                 })}
