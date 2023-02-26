@@ -12,7 +12,7 @@ const GameStats = () => {
     const myProfile = useAppSelector(getMyProfile)
     const stats = useAppSelector(getGameStats)
 
-    const [last3Months, updateLast3Months] = useState(false)
+    const [last3Months, updateLast3Months] = useState(true)
 
     const fromDate = new Date()
     fromDate.setMonth(fromDate.getMonth() - 3)
