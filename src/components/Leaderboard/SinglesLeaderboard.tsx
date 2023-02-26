@@ -65,7 +65,6 @@ const SinglesLeaderboard = () => {
     const columns: TableColumn<LeaderboardItem>[] = useMemo(
         () => [
             {
-                name: "Avatar",
                 cell: row => (
                     <img alt={row.name} src={row.picture} className="avatar" />
                 ),
