@@ -64,6 +64,10 @@ const Home = () => {
                                         <Divider />
                                         <Divider />
                                         <Divider />
+                                    </>
+                                ) : null}
+                                {myProfile.isPlayer && !myProfile.isAdmin ? (
+                                    <>
                                         <GameStats />
                                         <Divider />
                                         <Divider />

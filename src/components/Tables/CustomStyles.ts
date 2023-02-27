@@ -17,6 +17,7 @@ export const customStyles = {
             borderRadius: "25px",
             outline: "1px solid #FFFFFF",
         },
+        maxHeight: "2em",
     },
     pagination: {
         style: {

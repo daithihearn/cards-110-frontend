@@ -5,7 +5,6 @@ import DataTable, { TableColumn } from "react-data-table-component"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 
 import {
-    Label,
     Button,
     ButtonGroup,
     Form,
@@ -15,6 +14,7 @@ import {
     CardBody,
     CardGroup,
     CardHeader,
+    Label,
 } from "reactstrap"
 
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
@@ -24,6 +24,8 @@ import { customStyles } from "../Tables/CustomStyles"
 import parseError from "../../utils/ErrorUtils"
 import moment from "moment"
 import { FormatName } from "../../utils/FormattingUtils"
+import WinPercentageGraph from "../GameStats/WinPercentageGraph"
+import { Divider } from "@mui/material"
 
 const StartNewGame = () => {
     const dispatch = useAppDispatch()
@@ -87,16 +89,30 @@ const StartNewGame = () => {
 
     const columns: TableColumn<PlayerProfile>[] = [
         {
-            name: "Avatar",
-            cell: (row: PlayerProfile) => (
-                <img alt="Image Preview" src={row.picture} className="avatar" />
-            ),
-        },
-        {
             name: "Player",
             selector: row => row.name,
+            cell: (row: PlayerProfile) => (
+                <div>
+                    <img
+                        alt="Image Preview"
+                        src={row.picture}
+                        className="avatar"
+                    />
+                    <Divider />
+                    <span>
+                        <b>{FormatName(row.name)}</b>
+                    </span>
+                </div>
+            ),
             format: row => FormatName(row.name),
             sortable: true,
+        },
+        {
+            name: "Stats (3 months)",
+            cell: (pp: PlayerProfile) => (
+                <WinPercentageGraph player={pp} last3Months={true} />
+            ),
+            center: true,
         },
         {
             name: "Last Access",
