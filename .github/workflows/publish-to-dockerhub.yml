@@ -17,7 +17,14 @@ jobs:
             - uses: actions/checkout@v3
             - name: Update version in package.json
               run: yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
+            - name: Get version in manifest.json
+              id: manifestversion
+              uses: notiz-dev/github-action-json-property@release
+              with:
+                  path: "public/manifest.json"
+                  prop_path: "version"
             - name: Update manifest.json version
+              if: ${{ steps.manifestversion.outputs.prop !== github.ref_name }}
               uses: jossef/action-set-json-field@v2
               with:
                   file: public/manifest.json
