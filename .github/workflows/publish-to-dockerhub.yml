@@ -23,11 +23,9 @@ jobs:
               with:
                   path: "public/manifest.json"
                   prop_path: "version"
-            - name: Output manifest version
-              run: echo ${{ steps.manifestversion.outputs.prop }}
             - name: Update manifest.json version
               uses: jossef/action-set-json-field@v2
-              if: steps.manifestversion.outputs.prop != ${{ github.ref_name }}
+              if: ${{ steps.manifestversion.outputs.prop }} != ${{ github.ref_name }}
               with:
                   file: public/manifest.json
                   field: version
