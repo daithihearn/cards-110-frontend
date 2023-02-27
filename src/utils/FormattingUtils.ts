@@ -1,6 +1,7 @@
 export const FormatName = (name: string) =>
     name
-        .split(" ")
+        .split("@")[0]
+        .split(RegExp("[ .,]+"))
         .map(word =>
             word.length < 3
                 ? word
