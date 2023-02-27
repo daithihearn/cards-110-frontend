@@ -9,7 +9,6 @@ import {
 
 import { myProfileSlice } from "./MyProfileSlice"
 import { gameSlice } from "./GameSlice"
-import { gameStatsSlice } from "./GameStatsSlice"
 import { myGamesSlice } from "./MyGamesSlice"
 import { myCardsSlice } from "./MyCardsSlice"
 import { autoPlaySlice } from "./AutoPlaySlice"
@@ -19,7 +18,6 @@ const combinedReducer = combineReducers({
     myProfile: myProfileSlice.reducer,
     game: gameSlice.reducer,
     myGames: myGamesSlice.reducer,
-    gameStats: gameStatsSlice.reducer,
     playerProfiles: playerProfilesSlice.reducer,
     myCards: myCardsSlice.reducer,
     autoPlay: autoPlaySlice.reducer,

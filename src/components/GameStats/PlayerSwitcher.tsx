@@ -1,4 +1,3 @@
-import { useSnackbar } from "notistack"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
     Dropdown,
@@ -6,20 +5,21 @@ import {
     DropdownMenu,
     DropdownToggle,
 } from "reactstrap"
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
+import { useAppSelector } from "../../caches/hooks"
 import { getMyProfile } from "../../caches/MyProfileSlice"
 import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
 import { PlayerProfile } from "../../model/Player"
-import StatsService from "../../services/StatsService"
 import { FormatName } from "../../utils/FormattingUtils"
 
-const PlayerSwitcher: React.FC = () => {
-    const dispatch = useAppDispatch()
+interface Props {
+    onChange: (player: PlayerProfile) => void
+}
+
+const PlayerSwitcher: React.FC<Props> = ({ onChange }) => {
     const myProfile = useAppSelector(getMyProfile)
     const players = useAppSelector(getPlayerProfiles)
     const [showDropdown, setShowDropdown] = useState(false)
     const [currentPlayer, setCurrentPlayer] = useState<PlayerProfile>()
-    const { enqueueSnackbar } = useSnackbar()
 
     const toggleDropdown = useCallback(
         () => setShowDropdown(!showDropdown),
@@ -43,14 +43,7 @@ const PlayerSwitcher: React.FC = () => {
     }, [sortedPlayers, myProfile])
 
     useEffect(() => {
-        if (currentPlayer)
-            dispatch(StatsService.gameStatsForPlayer(currentPlayer.id)).catch(
-                e =>
-                    enqueueSnackbar(
-                        `Failed to get game stats for player ${currentPlayer.name}`,
-                        { variant: "error" },
-                    ),
-            )
+        if (currentPlayer) onChange(currentPlayer)
     }, [currentPlayer])
 
     return (
