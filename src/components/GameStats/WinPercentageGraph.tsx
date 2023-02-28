@@ -4,7 +4,6 @@ import { Doughnut } from "react-chartjs-2"
 import "chart.js/auto"
 import { ChartOptions } from "chart.js"
 import { useAppDispatch } from "../../caches/hooks"
-import { useSnackbar } from "notistack"
 import StatsService from "../../services/StatsService"
 
 interface Props {
@@ -23,18 +22,11 @@ const WinPercentageGraph: React.FC<Props> = ({
     showLegend = true,
 }) => {
     const dispatch = useAppDispatch()
-    const { enqueueSnackbar } = useSnackbar()
     const [stats, setStats] = useState<PlayerGameStats[]>([])
 
     useEffect(() => {
         dispatch(StatsService.gameStatsForPlayer(player.id))
             .then(setStats)
-            .catch(e =>
-                enqueueSnackbar(
-                    `Failed to get game stats for player ${player.name}`,
-                    { variant: "error" },
-                ),
-            )
     }, [player])
 
     const filteredStats = useMemo(() => {
