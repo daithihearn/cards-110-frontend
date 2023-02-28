@@ -19,6 +19,7 @@
 
 .game_wrap {
     min-width: 650px;
+    max-width: 800px;
     overflow: overlay;
     margin-left: auto;
     margin-right: auto;
@@ -257,7 +258,6 @@
     }
     @media screen and (min-width: 800px) {
         .game_wrap {
-            min-width: 0;
             max-width: 790px;
         }
         .rwd-table tr:hover:not(:first-child) {
@@ -311,21 +311,12 @@
     }
 }
 
-.game_wrap {
-    min-width: 1000px;
-    max-width: 1300px;
-}
-
 .diplay_image_size {
     max-width: 1100px;
     max-height: 1024px;
 }
 
 @media only screen and (max-width: 1324px) {
-    .game_wrap {
-        min-width: 1100px;
-        max-width: 1300px;
-    }
 
     .diplay_image_size {
         max-width: 1100px;
@@ -334,10 +325,6 @@
 }
 
 @media only screen and (max-width: 1224px) {
-    .game_wrap {
-        min-width: 900px;
-        max-width: 1100px;
-    }
 
     .diplay_image_size {
         max-width: 1020px;
@@ -346,10 +333,6 @@
 }
 
 @media only screen and (max-width: 1124px) {
-    .game_wrap {
-        min-width: 800px;
-        max-width: 1000px;
-    }
 
     .diplay_image_size {
         max-width: 920px;
@@ -358,10 +341,6 @@
 }
 
 @media only screen and (max-width: 1024px) {
-    .game_wrap {
-        min-width: 700px;
-        max-width: 900px;
-    }
 
     .diplay_image_size {
         max-width: 800px;
@@ -371,10 +350,6 @@
 
 // Resposiveness for Mobile view.
 @media only screen and (max-width: 925px) {
-    .game_wrap {
-        min-width: 700px;
-        max-width: 900px;
-    }
 
     .diplay_image_size {
         max-width: 850px;
@@ -405,10 +380,6 @@
 }
 
 @media only screen and (max-width: 900px) {
-    .game_wrap {
-        min-width: 750px;
-        max-width: 823px;
-    }
 
     .diplay_image_size {
         max-width: 790px;
@@ -417,10 +388,6 @@
 }
 
 @media only screen and (max-width: 823px) {
-    .game_wrap {
-        min-width: 700px;
-        max-width: 800px;
-    }
 
     .diplay_image_size {
         max-width: 760px;
@@ -429,10 +396,6 @@
 }
 
 @media only screen and (max-width: 812px) {
-    .game_wrap {
-        min-width: 0;
-        max-width: 800px;
-    }
 
     .diplay_image_size {
         max-width: 720px;
