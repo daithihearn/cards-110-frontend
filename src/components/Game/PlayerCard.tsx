@@ -71,9 +71,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player }) => {
                             src={`/cards/thumbnails/${
                                 isCurrentPlayer ? "yellow" : "blank_grey"
                             }_back.png`}
-                            className={`img-center thumbnail_size ${
-                                isCurrentPlayer ? "" : "transparent"
-                            }`}
+                            className={`img-center thumbnail_size`}
                         />
 
                         {isDealer ? (
