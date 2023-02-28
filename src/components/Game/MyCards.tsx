@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from "react"
-import { Button, ButtonGroup, CardImg, CardBody } from "reactstrap"
+import React, { useCallback, useMemo } from "react"
+import { CardImg, CardBody } from "reactstrap"
 import {
     DragDropContext,
     Draggable,
@@ -8,21 +8,12 @@ import {
 } from "react-beautiful-dnd"
 import { BLANK_CARD, SelectableCard } from "../../model/Cards"
 
-import GameService from "../../services/GameService"
 import { RoundStatus } from "../../model/Round"
-import {
-    getGameId,
-    getIamGoer,
-    getIsMyGo,
-    getIsRoundCalled,
-    getRound,
-} from "../../caches/GameSlice"
+import { getIamGoer, getIsRoundCalled, getRound } from "../../caches/GameSlice"
 import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { useSnackbar } from "notistack"
 import {
     clearSelectedCards,
     getMyCards,
-    getSelectedCards,
     replaceMyCards,
     toggleSelect,
     toggleUniqueSelect,
@@ -32,7 +23,6 @@ import {
     toggleAutoPlay,
     clearAutoPlay,
 } from "../../caches/AutoPlaySlice"
-import parseError from "../../utils/ErrorUtils"
 
 const EMPTY_HAND = [
     { ...BLANK_CARD, selected: false },
@@ -44,29 +34,11 @@ const EMPTY_HAND = [
 
 const MyCards: React.FC = () => {
     const dispatch = useAppDispatch()
-    const gameId = useAppSelector(getGameId)
     const round = useAppSelector(getRound)
     const isRoundCalled = useAppSelector(getIsRoundCalled)
     const myCards = useAppSelector(getMyCards)
     const autoPlayCard = useAppSelector(getAutoPlayCard)
     const iamGoer = useAppSelector(getIamGoer)
-    const isMyGo = useAppSelector(getIsMyGo)
-
-    const { enqueueSnackbar } = useSnackbar()
-
-    const selectedCards = useAppSelector(getSelectedCards)
-
-    const playButtonEnabled = useMemo(
-        () =>
-            isMyGo &&
-            round &&
-            round.status === RoundStatus.PLAYING &&
-            round.completedHands.length +
-                myCards.filter(c => c.name !== BLANK_CARD.name).length ===
-                5,
-
-        [isMyGo, round, myCards],
-    )
 
     const cardsSelectable = useMemo(
         () =>
@@ -160,18 +132,6 @@ const MyCards: React.FC = () => {
         },
         [cardsSelectable, autoPlayCard],
     )
-
-    const playCard = useCallback(() => {
-        if (selectedCards.length !== 1) {
-            enqueueSnackbar("Please select exactly one card to play", {
-                variant: "warning",
-            })
-        } else {
-            dispatch(
-                GameService.playCard(gameId!, selectedCards[0].name),
-            ).catch(e => enqueueSnackbar(parseError(e), { variant: "error" }))
-        }
-    }, [gameId, selectedCards])
 
     return (
         <div>
@@ -283,21 +243,6 @@ const MyCards: React.FC = () => {
                     </Droppable>
                 </DragDropContext>
             </CardBody>
-
-            {round?.status === RoundStatus.PLAYING ? (
-                <CardBody className="buttonArea">
-                    <ButtonGroup size="lg">
-                        <Button
-                            id="playCardButton"
-                            disabled={!playButtonEnabled}
-                            type="button"
-                            onClick={playCard}
-                            color="primary">
-                            <b>Play Card</b>
-                        </Button>
-                    </ButtonGroup>
-                </CardBody>
-            ) : null}
         </div>
     )
 }

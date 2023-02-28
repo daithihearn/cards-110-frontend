@@ -90,8 +90,10 @@ export const getIsDoublesGame = createSelector(
     players => players.length === 6,
 )
 
+export const getMaxCall = createSelector(getGame, game => game.maxCall || 0)
 export const getIsMyGo = createSelector(getGame, game => game.isMyGo)
 export const getIamGoer = createSelector(getGame, game => game.iamGoer)
+export const getIamDealer = createSelector(getGame, game => game.iamDealer)
 export const getIHavePlayed = createSelector(getGame, game => {
     const myPosition = game.players.findIndex(p => p.id === game.me?.id)
     const currentPlayerPosition = game.players.findIndex(
