@@ -26,10 +26,10 @@ const GameWrapper = () => {
             <Card className="p-6 gameContainer" inverse>
                 <PlayersAndCards />
 
-                {!iamSpectator ? <MyCards /> : null}
                 {!iamSpectator && isCalling ? <Calling /> : null}
                 {!iamSpectator && isBuying ? <Buying /> : null}
                 {!iamSpectator ? <SelectSuit /> : null}
+                {!iamSpectator ? <MyCards /> : null}
             </Card>
         </CardGroup>
     )
