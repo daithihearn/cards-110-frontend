@@ -162,8 +162,8 @@ const SelectSuit = () => {
                         </div>
                     ) : (
                         <ButtonGroup size="lg">
-                            <Button disabled type="button" color="primary">
-                                Please wait for the goer to choose their suit
+                            <Button disabled type="button" color="info">
+                                <b>Waiting for suit...</b>
                             </Button>
                         </ButtonGroup>
                     )}

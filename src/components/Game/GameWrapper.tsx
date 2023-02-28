@@ -23,7 +23,7 @@ const GameWrapper = () => {
         <CardGroup>
             <WebsocketManager />
 
-            <Card className="p-6" inverse>
+            <Card className="p-6 gameContainer" inverse>
                 <PlayersAndCards />
 
                 {!iamSpectator ? <MyCards /> : null}

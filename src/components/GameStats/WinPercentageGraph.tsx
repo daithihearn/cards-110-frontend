@@ -10,9 +10,18 @@ import StatsService from "../../services/StatsService"
 interface Props {
     player: PlayerProfile
     last3Months: boolean
+    width?: number
+    height?: number
+    showLegend?: boolean
 }
 
-const WinPercentageGraph: React.FC<Props> = ({ player, last3Months }) => {
+const WinPercentageGraph: React.FC<Props> = ({
+    player,
+    last3Months,
+    width = 300,
+    height = 300,
+    showLegend = true,
+}) => {
     const dispatch = useAppDispatch()
     const { enqueueSnackbar } = useSnackbar()
     const [stats, setStats] = useState<PlayerGameStats[]>([])
@@ -46,7 +55,6 @@ const WinPercentageGraph: React.FC<Props> = ({ player, last3Months }) => {
             labels: ["Win", "Loss"],
             datasets: [
                 {
-                    label: "My Win Percentage",
                     data: [wins.length, filteredStats.length - wins.length],
                     backgroundColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)"],
                     hoverOffset: 4,
@@ -61,11 +69,14 @@ const WinPercentageGraph: React.FC<Props> = ({ player, last3Months }) => {
             plugins: {
                 title: {
                     display: true,
-                    text: `Win Percentage (${(
+                    text: `${(
                         (wins.length / filteredStats.length) *
                         100
-                    ).toFixed(1)}%)`,
+                    ).toFixed(1)}% win rate`,
                     position: "bottom",
+                },
+                legend: {
+                    display: showLegend,
                 },
             },
         }
@@ -78,8 +89,8 @@ const WinPercentageGraph: React.FC<Props> = ({ player, last3Months }) => {
                     <Doughnut
                         data={data}
                         options={options}
-                        width={300}
-                        height={300}
+                        width={width}
+                        height={height}
                     />
                 </>
             ) : (

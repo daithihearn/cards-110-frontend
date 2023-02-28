@@ -106,7 +106,7 @@ const MyGames = () => {
         {
             name: "Date",
             selector: row => row.timestamp,
-            format: row => moment(row.timestamp).format("lll"),
+            format: row => moment(row.timestamp).format("llll"),
             sortable: true,
         },
         {

@@ -96,7 +96,7 @@ const StartNewGame = () => {
                     <img
                         alt="Image Preview"
                         src={row.picture}
-                        className="avatar"
+                        className="avatar-large"
                     />
                     <Divider />
                     <span>
@@ -108,9 +108,28 @@ const StartNewGame = () => {
             sortable: true,
         },
         {
-            name: "Stats (3 months)",
+            name: "Last 3 months",
             cell: (pp: PlayerProfile) => (
-                <WinPercentageGraph player={pp} last3Months={true} />
+                <WinPercentageGraph
+                    player={pp}
+                    last3Months={true}
+                    width={120}
+                    height={120}
+                    showLegend={false}
+                />
+            ),
+            center: true,
+        },
+        {
+            name: "All Time",
+            cell: (pp: PlayerProfile) => (
+                <WinPercentageGraph
+                    player={pp}
+                    last3Months={false}
+                    width={150}
+                    height={150}
+                    showLegend={false}
+                />
             ),
             center: true,
         },

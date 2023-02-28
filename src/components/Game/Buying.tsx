@@ -77,13 +77,11 @@ const Buying = () => {
                         <Button
                             type="button"
                             onClick={toggleReadyToBuy}
-                            color={
-                                isMyGo || !readyToBuy ? "primary" : "secondary"
-                            }>
+                            color={isMyGo || !readyToBuy ? "primary" : "info"}>
                             <b>
                                 {isMyGo || !readyToBuy
                                     ? "Keep Cards"
-                                    : "Waiting to buy cards (click to cancel)"}
+                                    : "Waiting to buy cards..."}
                             </b>
                         </Button>
                     ) : null}
