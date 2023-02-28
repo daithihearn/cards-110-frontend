@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 import { useAuth0 } from "@auth0/auth0-react"
 
@@ -9,7 +9,6 @@ import { getMyProfile } from "caches/MyProfileSlice"
 import ProfilePictureEditor from "components/Avatar/ProfilePictureEditor"
 import GameHeader from "components/Game/GameHeader"
 import {
-    Button,
     Card,
     CardBody,
     CardGroup,
@@ -64,7 +63,14 @@ const NavBar = () => {
 
     return (
         <nav className="custom-navbar bg-primary fixed-top">
-            <Container fluid xs="2" sm="2" md="2" lg="2" xl="2">
+            <Container
+                className="navBarInner"
+                fluid
+                xs="2"
+                sm="2"
+                md="2"
+                lg="2"
+                xl="2">
                 <Row>
                     <Col className="nav-col">
                         <Dropdown isOpen={showDropdown} toggle={toggleDropdown}>
