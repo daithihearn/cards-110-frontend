@@ -24,7 +24,7 @@ jobs:
                   path: "public/manifest.json"
                   prop_path: "version"
             - name: Update manifest.json version from ${{ steps.manifestversion.outputs.prop }} to ${{ github.ref_name }}
-              if: ${{ steps.manifestversion.outputs.prop }} != ${{ github.ref_name }}
+              if: ${{ steps.manifestversion.outputs.prop != github.ref_name }}
               uses: jossef/action-set-json-field@v2
               with:
                   file: public/manifest.json
@@ -44,6 +44,7 @@ jobs:
                   tags: "latest, ${{ github.ref_name }}"
 
             - name: Create PR with version changes
+              id: cpr
               uses: peter-evans/create-pull-request@v4
               with:
                   token: ${{ secrets.PAT_PR }}
@@ -52,6 +53,7 @@ jobs:
                   body: |
                       Update latest version (${{ github.ref_name }})
                   branch: update-version-${{ github.ref_name }}
+                  delete-branch: true
                   base: main
                   add-paths: |
                       package.json
@@ -60,3 +62,10 @@ jobs:
                       update
                   assignees: |
                       ${{ github.actor }}
+            - name: Enable Pull Request Automerge
+              if: steps.cpr.outputs.pull-request-operation == 'created'
+              uses: peter-evans/enable-pull-request-automerge@v2
+              with:
+                  token: ${{ secrets.PAT }}
+                  pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+                  merge-method: squash

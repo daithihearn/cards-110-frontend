@@ -1,3 +1,5 @@
+const MAX_LENGTH = 20
+
 export const FormatName = (name: string) =>
     name
         .split("@")[0]
@@ -9,3 +11,4 @@ export const FormatName = (name: string) =>
                   word.slice(1).toLocaleLowerCase(),
         )
         .join(" ")
+        .substring(0, MAX_LENGTH)
