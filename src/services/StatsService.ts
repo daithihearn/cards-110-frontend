@@ -1,8 +1,8 @@
 import axios from "axios"
-import { AppThunk } from "../caches/caches"
-import { getAccessToken } from "../caches/MyProfileSlice"
-import { PlayerGameStats } from "../model/Player"
-import { getDefaultConfig } from "../utils/AxiosUtils"
+import { AppThunk } from "caches/caches"
+import { getAccessToken } from "caches/MyProfileSlice"
+import { PlayerGameStats } from "model/Player"
+import { getDefaultConfig } from "utils/AxiosUtils"
 
 const gameStatsForPlayer =
     (playerId?: string): AppThunk<Promise<PlayerGameStats[]>> =>

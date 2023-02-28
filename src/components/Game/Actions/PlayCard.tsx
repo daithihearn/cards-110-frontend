@@ -2,17 +2,14 @@ import { Button } from "reactstrap"
 
 import { useCallback, useMemo } from "react"
 
-import GameService from "../../../services/GameService"
-import { useAppDispatch, useAppSelector } from "../../../caches/hooks"
+import GameService from "services/GameService"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { useSnackbar } from "notistack"
-import {
-    getMyCardsWithoutBlanks,
-    getSelectedCards,
-} from "../../../caches/MyCardsSlice"
-import { getGameId, getIsMyGo, getRound } from "../../../caches/GameSlice"
-import { BLANK_CARD } from "../../../model/Cards"
-import parseError from "../../../utils/ErrorUtils"
-import { RoundStatus } from "../../../model/Round"
+import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
+import { getGameId, getIsMyGo, getRound } from "caches/GameSlice"
+import { BLANK_CARD } from "model/Cards"
+import parseError from "utils/ErrorUtils"
+import { RoundStatus } from "model/Round"
 
 const WaitingForYourGo = () => (
     <Button disabled type="button" color="info">

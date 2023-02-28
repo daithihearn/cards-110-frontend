@@ -3,11 +3,11 @@ import { Link, useNavigate } from "react-router-dom"
 
 import { useAuth0 } from "@auth0/auth0-react"
 
-import { useAppSelector } from "../../caches/hooks"
-import { getMyProfile } from "../../caches/MyProfileSlice"
+import { useAppSelector } from "caches/hooks"
+import { getMyProfile } from "caches/MyProfileSlice"
 
-import ProfilePictureEditor from "../Avatar/ProfilePictureEditor"
-import GameHeader from "../Game/GameHeader"
+import ProfilePictureEditor from "components/Avatar/ProfilePictureEditor"
+import GameHeader from "components/Game/GameHeader"
 import {
     Button,
     Card,
@@ -24,8 +24,8 @@ import {
     ModalBody,
     Row,
 } from "reactstrap"
-import { getIsGameActive } from "../../caches/GameSlice"
-import Leaderboard from "../Leaderboard/Leaderboard"
+import { getIsGameActive } from "caches/GameSlice"
+import Leaderboard from "components/Leaderboard/Leaderboard"
 
 const NavBar = () => {
     const { logout } = useAuth0()

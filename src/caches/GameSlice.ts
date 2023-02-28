@@ -1,8 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { GameState, GameStatus, PlayedCard } from "../model/Game"
-import { Player } from "../model/Player"
-import { RoundStatus } from "../model/Round"
+import { GameState, GameStatus, PlayedCard } from "model/Game"
+import { Player } from "model/Player"
+import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
 
 const initialState: GameState = {

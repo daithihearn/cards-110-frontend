@@ -1,4 +1,4 @@
-import { Player, PlayerProfile, Scorable } from "../model/Player"
+import { Player, PlayerProfile, Scorable } from "model/Player"
 
 export const compareScore = (a: Scorable, b: Scorable) => {
     let comparison = 0

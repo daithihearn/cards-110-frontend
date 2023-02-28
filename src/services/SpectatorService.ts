@@ -1,7 +1,7 @@
 import axios from "axios"
-import { AppThunk } from "../caches/caches"
-import { getAccessToken } from "../caches/MyProfileSlice"
-import { getDefaultConfig } from "../utils/AxiosUtils"
+import { AppThunk } from "caches/caches"
+import { getAccessToken } from "caches/MyProfileSlice"
+import { getDefaultConfig } from "utils/AxiosUtils"
 
 const register =
     (gameId: string): AppThunk<Promise<void>> =>

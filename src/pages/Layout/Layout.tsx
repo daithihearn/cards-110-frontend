@@ -1,10 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react"
 import { Outlet } from "react-router"
-import { useAppSelector } from "../../caches/hooks"
-import { getAccessToken } from "../../caches/MyProfileSlice"
-import DefaultHeader from "../../components/Header/Header"
+import { useAppSelector } from "caches/hooks"
+import { getAccessToken } from "caches/MyProfileSlice"
+import DefaultHeader from "components/Header/Header"
 import { useEffect } from "react"
-import Loading from "../../components/icons/Loading"
+import Loading from "components/icons/Loading"
 
 const Layout = () => {
     const accessToken = useAppSelector(getAccessToken)

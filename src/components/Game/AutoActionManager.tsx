@@ -1,19 +1,19 @@
 import { useEffect } from "react"
-import GameService from "../../services/GameService"
+import GameService from "services/GameService"
 
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     getCards,
     getGameId,
     getIsInBunker,
     getIsMyGo,
     getRound,
-} from "../../caches/GameSlice"
-import { RoundStatus } from "../../model/Round"
-import { getAutoPlayCard } from "../../caches/AutoPlaySlice"
-import { bestCardLead, getWorstCard } from "../../utils/GameUtils"
+} from "caches/GameSlice"
+import { RoundStatus } from "model/Round"
+import { getAutoPlayCard } from "caches/AutoPlaySlice"
+import { bestCardLead, getWorstCard } from "utils/GameUtils"
 import { useSnackbar } from "notistack"
-import parseError from "../../utils/ErrorUtils"
+import parseError from "utils/ErrorUtils"
 
 const AutoActionManager = () => {
     const dispatch = useAppDispatch()

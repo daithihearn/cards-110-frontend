@@ -1,12 +1,12 @@
 import { useMemo } from "react"
 import { Col, CardImgOverlay, CardText, CardImg, Card } from "reactstrap"
-import { getGamePlayers, getRound } from "../../caches/GameSlice"
-import { useAppSelector } from "../../caches/hooks"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { BLANK_CARD } from "../../model/Cards"
-import { PlayedCard } from "../../model/Game"
+import { getGamePlayers, getRound } from "caches/GameSlice"
+import { useAppSelector } from "caches/hooks"
+import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
+import { BLANK_CARD } from "model/Cards"
+import { PlayedCard } from "model/Game"
 
-import { Player } from "../../model/Player"
+import { Player } from "model/Player"
 
 interface PlayerRowI {
     player: Player

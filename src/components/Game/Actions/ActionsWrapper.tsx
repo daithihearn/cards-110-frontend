@@ -4,8 +4,8 @@ import {
     getIsRoundCalled,
     getIsRoundCalling,
     getIsRoundPlaying,
-} from "../../../caches/GameSlice"
-import { useAppSelector } from "../../../caches/hooks"
+} from "caches/GameSlice"
+import { useAppSelector } from "caches/hooks"
 import Buying from "./Buying"
 import Calling from "./Calling"
 import PlayCard from "./PlayCard"

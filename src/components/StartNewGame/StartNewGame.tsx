@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react"
 
-import GameService from "../../services/GameService"
+import GameService from "services/GameService"
 import DataTable, { TableColumn } from "react-data-table-component"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
+import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 
 import {
     Button,
@@ -17,14 +17,14 @@ import {
     Label,
 } from "reactstrap"
 
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { PlayerProfile } from "../../model/Player"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { PlayerProfile } from "model/Player"
 import { useSnackbar } from "notistack"
-import { customStyles } from "../Tables/CustomStyles"
-import parseError from "../../utils/ErrorUtils"
+import { customStyles } from "components/Tables/CustomStyles"
+import parseError from "utils/ErrorUtils"
 import moment from "moment"
-import { FormatName } from "../../utils/FormattingUtils"
-import WinPercentageGraph from "../GameStats/WinPercentageGraph"
+import { FormatName } from "utils/FormattingUtils"
+import WinPercentageGraph from "components/GameStats/WinPercentageGraph"
 import { Divider } from "@mui/material"
 
 const StartNewGame = () => {

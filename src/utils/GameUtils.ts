@@ -1,6 +1,6 @@
-import { CARDS, BLANK_CARD, Card, SelectableCard } from "../model/Cards"
-import { Round } from "../model/Round"
-import { Suit } from "../model/Suit"
+import { CARDS, BLANK_CARD, Card, SelectableCard } from "model/Cards"
+import { Round } from "model/Round"
+import { Suit } from "model/Suit"
 
 export const compareCards = (
     hand1: Card[] | undefined,

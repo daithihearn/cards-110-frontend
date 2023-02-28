@@ -1,6 +1,6 @@
 import { Card, CardBody, CardGroup, Container, CardHeader } from "reactstrap"
 
-import Leaderboard from "../Leaderboard/Leaderboard"
+import Leaderboard from "components/Leaderboard/Leaderboard"
 
 const GameOver = () => {
     return (

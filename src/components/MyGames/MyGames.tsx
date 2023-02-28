@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from "react"
 
-import RemoveImage from "../../assets/icons/remove.png"
+import RemoveImage from "assets/icons/remove.png"
 import { Link } from "react-router-dom"
 
-import GameService from "../../services/GameService"
+import GameService from "services/GameService"
 
 import DataTable, { TableColumn } from "react-data-table-component"
-import TrophyImage from "../../assets/icons/trophy.png"
+import TrophyImage from "assets/icons/trophy.png"
 
 import {
     Modal,
@@ -20,13 +20,13 @@ import {
     CardHeader,
 } from "reactstrap"
 import moment from "moment"
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { getMyGames } from "../../caches/MyGamesSlice"
-import { getMyProfile } from "../../caches/MyProfileSlice"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { getMyGames } from "caches/MyGamesSlice"
+import { getMyProfile } from "caches/MyProfileSlice"
 import { useSnackbar } from "notistack"
-import { Game, GameStatus } from "../../model/Game"
-import { customStyles } from "../Tables/CustomStyles"
-import parseError from "../../utils/ErrorUtils"
+import { Game, GameStatus } from "model/Game"
+import { customStyles } from "components/Tables/CustomStyles"
+import parseError from "utils/ErrorUtils"
 
 const MyGames = () => {
     const dispatch = useAppDispatch()

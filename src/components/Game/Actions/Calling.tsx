@@ -1,7 +1,7 @@
 import { Button } from "reactstrap"
 
-import GameService from "../../../services/GameService"
-import { useAppDispatch, useAppSelector } from "../../../caches/hooks"
+import GameService from "services/GameService"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     getCards,
     getGameId,
@@ -10,10 +10,10 @@ import {
     getIsMyGo,
     getMaxCall,
     getRound,
-} from "../../../caches/GameSlice"
+} from "caches/GameSlice"
 import { useCallback, useMemo } from "react"
 import { useSnackbar } from "notistack"
-import parseError from "../../../utils/ErrorUtils"
+import parseError from "utils/ErrorUtils"
 
 const Calling = () => {
     const dispatch = useAppDispatch()

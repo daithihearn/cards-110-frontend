@@ -1,10 +1,10 @@
 import { Card, CardHeader, CardBody, CardGroup, Input, Label } from "reactstrap"
 import { useCallback, useEffect, useState } from "react"
-import { useAppSelector } from "../../caches/hooks"
-import { getMyProfile } from "../../caches/MyProfileSlice"
+import { useAppSelector } from "caches/hooks"
+import { getMyProfile } from "caches/MyProfileSlice"
 import PlayerSwitcher from "./PlayerSwitcher"
 import WinPercentageGraph from "./WinPercentageGraph"
-import { PlayerProfile } from "../../model/Player"
+import { PlayerProfile } from "model/Player"
 
 const GameStats = () => {
     const myProfile = useAppSelector(getMyProfile)

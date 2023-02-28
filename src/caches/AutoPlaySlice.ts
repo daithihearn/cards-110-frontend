@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Card } from "../model/Cards"
+import { Card } from "model/Cards"
 import { RootState } from "./caches"
 
 export interface AutoPlayState {
