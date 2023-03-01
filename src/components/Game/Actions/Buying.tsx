@@ -2,25 +2,25 @@ import { Button } from "reactstrap"
 
 import { useCallback, useEffect, useState } from "react"
 
-import GameService from "../../..//services/GameService"
-import { useAppDispatch, useAppSelector } from "../../..//caches/hooks"
+import GameService from "services/GameService"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { useSnackbar } from "notistack"
 import {
     getMyCardsWithoutBlanks,
     getSelectedCards,
     selectAll,
-} from "../../..//caches/MyCardsSlice"
+} from "caches/MyCardsSlice"
 import {
     getGameId,
     getIamGoer,
     getIHavePlayed,
     getIsMyGo,
     getSuit,
-} from "../../..//caches/GameSlice"
-import { riskOfMistakeBuyingCards } from "../../../utils/GameUtils"
+} from "caches/GameSlice"
+import { riskOfMistakeBuyingCards } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
-import { SelectableCard } from "../../../model/Cards"
-import parseError from "../../../utils/ErrorUtils"
+import { SelectableCard } from "model/Cards"
+import parseError from "utils/ErrorUtils"
 
 const WaitingForRoundToStart = () => (
     <Button disabled type="button" color="info">

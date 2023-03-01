@@ -1,20 +1,20 @@
-import { Card } from "../model/Cards"
-import { CreateGame, Game, GameState } from "../model/Game"
-import { Suit } from "../model/Suit"
+import { Card } from "model/Cards"
+import { CreateGame, Game, GameState } from "model/Game"
+import { Suit } from "model/Suit"
 import axios from "axios"
-import { getDefaultConfig } from "../utils/AxiosUtils"
-import { Player, PlayerProfile } from "../model/Player"
-import { AppThunk } from "../caches/caches"
-import { updateGame, updatePlayers } from "../caches/GameSlice"
-import { getAccessToken } from "../caches/MyProfileSlice"
-import { addMyGame, removeMyGame, updateMyGames } from "../caches/MyGamesSlice"
-import { updatePlayerProfiles } from "../caches/PlayerProfilesSlice"
+import { getDefaultConfig } from "utils/AxiosUtils"
+import { Player, PlayerProfile } from "model/Player"
+import { AppThunk } from "caches/caches"
+import { updateGame, updatePlayers } from "caches/GameSlice"
+import { getAccessToken } from "caches/MyProfileSlice"
+import { addMyGame, removeMyGame, updateMyGames } from "caches/MyGamesSlice"
+import { updatePlayerProfiles } from "caches/PlayerProfilesSlice"
 import {
     clearSelectedCards,
     removeCard,
     updateMyCards,
-} from "../caches/MyCardsSlice"
-import { clearAutoPlay } from "../caches/AutoPlaySlice"
+} from "caches/MyCardsSlice"
+import { clearAutoPlay } from "caches/AutoPlaySlice"
 
 const getGame =
     (gameId: string): AppThunk<Promise<Game>> =>

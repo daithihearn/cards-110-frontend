@@ -1,24 +1,20 @@
 import React, { useCallback, useEffect } from "react"
-import GameWrapper from "../../components/Game/GameWrapper"
-import GameOver from "../../components/Game/GameOver"
-import GameService from "../../services/GameService"
+import GameWrapper from "components/Game/GameWrapper"
+import GameOver from "components/Game/GameOver"
+import GameService from "services/GameService"
 import PullToRefresh from "react-simple-pull-to-refresh"
 
 import { withAuthenticationRequired } from "@auth0/auth0-react"
 
 import { useParams } from "react-router-dom"
 
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { useSnackbar } from "notistack"
-import {
-    getIamSpectator,
-    getIsGameActive,
-    resetGame,
-} from "../../caches/GameSlice"
-import { clearAutoPlay } from "../../caches/AutoPlaySlice"
-import { clearMyCards } from "../../caches/MyCardsSlice"
-import RefreshingData from "../../components/icons/RefreshingData"
-import parseError from "../../utils/ErrorUtils"
+import { getIamSpectator, getIsGameActive, resetGame } from "caches/GameSlice"
+import { clearAutoPlay } from "caches/AutoPlaySlice"
+import { clearMyCards } from "caches/MyCardsSlice"
+import RefreshingData from "components/icons/RefreshingData"
+import parseError from "utils/ErrorUtils"
 
 const Game = () => {
     const dispatch = useAppDispatch()

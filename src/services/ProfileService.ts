@@ -1,9 +1,9 @@
-import { getDefaultConfig } from "../utils/AxiosUtils"
+import { getDefaultConfig } from "utils/AxiosUtils"
 
 import axios from "axios"
 import jwt_decode from "jwt-decode"
-import { AppThunk } from "../caches/caches"
-import { getAccessToken, updateMyProfile } from "../caches/MyProfileSlice"
+import { AppThunk } from "caches/caches"
+import { getAccessToken, updateMyProfile } from "caches/MyProfileSlice"
 
 const hasProfile = (): AppThunk<Promise<boolean>> => async (_, getState) => {
     const accessToken = getAccessToken(getState())

@@ -1,16 +1,12 @@
 import React, { useCallback, useMemo } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
-import TrophyImage from "../../assets/icons/trophy.png"
-import { useAppSelector } from "../../caches/hooks"
-import {
-    getGamePlayers,
-    getRound,
-    getIsGameFinished,
-} from "../../caches/GameSlice"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { compareScore, compareTeamIds } from "../../utils/PlayerUtils"
-import { Player } from "../../model/Player"
-import { customStyles } from "../Tables/CustomStyles"
+import TrophyImage from "assets/icons/trophy.png"
+import { useAppSelector } from "caches/hooks"
+import { getGamePlayers, getRound, getIsGameFinished } from "caches/GameSlice"
+import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
+import { compareScore, compareTeamIds } from "utils/PlayerUtils"
+import { Player } from "model/Player"
+import { customStyles } from "components/Tables/CustomStyles"
 
 interface LeaderBoardPlayer {
     cardsBought?: number

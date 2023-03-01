@@ -2,19 +2,16 @@ import { Button } from "reactstrap"
 
 import { useCallback, useState } from "react"
 
-import GameService from "../../../services/GameService"
-import { useAppDispatch, useAppSelector } from "../../../caches/hooks"
-import { getGameId, getIamGoer } from "../../../caches/GameSlice"
-import { Suit } from "../../../model/Suit"
+import GameService from "services/GameService"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { getGameId, getIamGoer } from "caches/GameSlice"
+import { Suit } from "model/Suit"
 import { useSnackbar } from "notistack"
-import {
-    getMyCardsWithoutBlanks,
-    getSelectedCards,
-} from "../../../caches/MyCardsSlice"
-import { removeAllFromHand } from "../../../utils/GameUtils"
+import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
+import { removeAllFromHand } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
-import { SelectableCard } from "../../../model/Cards"
-import parseError from "../../../utils/ErrorUtils"
+import { SelectableCard } from "model/Cards"
+import parseError from "utils/ErrorUtils"
 
 const WaitingForSuit = () => (
     <Button disabled type="button" color="info">

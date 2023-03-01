@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo } from "react"
 import DataTable, { TableColumn } from "react-data-table-component"
-import TrophyImage from "../../assets/icons/trophy.png"
-import { getGame } from "../../caches/GameSlice"
-import { useAppSelector } from "../../caches/hooks"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { GameStatus } from "../../model/Game"
-import { Player } from "../../model/Player"
-import { customStyles } from "../Tables/CustomStyles"
+import TrophyImage from "assets/icons/trophy.png"
+import { getGame } from "caches/GameSlice"
+import { useAppSelector } from "caches/hooks"
+import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
+import { GameStatus } from "model/Game"
+import { Player } from "model/Player"
+import { customStyles } from "components/Tables/CustomStyles"
 
 interface LeaderboardItem {
     previousCard?: string

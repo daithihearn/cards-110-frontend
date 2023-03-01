@@ -13,11 +13,11 @@ import {
     Input,
     ButtonGroup,
 } from "reactstrap"
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { getMyProfile } from "../../caches/MyProfileSlice"
-import ProfileService from "../../services/ProfileService"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { getMyProfile } from "caches/MyProfileSlice"
+import ProfileService from "services/ProfileService"
 import AvatarEditor from "react-avatar-editor"
-import parseError from "../../utils/ErrorUtils"
+import parseError from "utils/ErrorUtils"
 
 interface InputsI {
     show: boolean

@@ -1,4 +1,4 @@
-import LoadingIcon from "../../assets/img/brand/loading.gif"
+import LoadingIcon from "assets/img/brand/loading.gif"
 
 const Loading = () => {
     return (

@@ -1,8 +1,8 @@
 import { useMemo } from "react"
 import { Row, CardBody, Container } from "reactstrap"
-import { getGamePlayers } from "../../caches/GameSlice"
-import { useAppSelector } from "../../caches/hooks"
-import { Player } from "../../model/Player"
+import { getGamePlayers } from "caches/GameSlice"
+import { useAppSelector } from "caches/hooks"
+import { Player } from "model/Player"
 import PlayerCard from "./PlayerCard"
 
 const compareSeat = (a: Player, b: Player) => {

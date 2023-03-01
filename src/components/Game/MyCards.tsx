@@ -6,23 +6,23 @@ import {
     Droppable,
     DropResult,
 } from "react-beautiful-dnd"
-import { BLANK_CARD, SelectableCard } from "../../model/Cards"
+import { BLANK_CARD, SelectableCard } from "model/Cards"
 
-import { RoundStatus } from "../../model/Round"
-import { getIamGoer, getIsRoundCalled, getRound } from "../../caches/GameSlice"
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
+import { RoundStatus } from "model/Round"
+import { getIamGoer, getIsRoundCalled, getRound } from "caches/GameSlice"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     clearSelectedCards,
     getMyCards,
     replaceMyCards,
     toggleSelect,
     toggleUniqueSelect,
-} from "../../caches/MyCardsSlice"
+} from "caches/MyCardsSlice"
 import {
     getAutoPlayCard,
     toggleAutoPlay,
     clearAutoPlay,
-} from "../../caches/AutoPlaySlice"
+} from "caches/AutoPlaySlice"
 
 const EMPTY_HAND = [
     { ...BLANK_CARD, selected: false },

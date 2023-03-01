@@ -1,10 +1,10 @@
 import { useMemo } from "react"
 
 import { CardImg } from "reactstrap"
-import { getGamePlayers, getRound } from "../../caches/GameSlice"
-import { useAppSelector } from "../../caches/hooks"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { Player, PlayerProfile } from "../../model/Player"
+import { getGamePlayers, getRound } from "caches/GameSlice"
+import { useAppSelector } from "caches/hooks"
+import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
+import { Player, PlayerProfile } from "model/Player"
 
 interface PlayerAndProfile {
     player?: Player

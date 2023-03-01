@@ -4,8 +4,8 @@ import PlayersAndCards from "./PlayersAndCards"
 
 import WebsocketManager from "./WebsocketManager"
 
-import { useAppSelector } from "../../caches/hooks"
-import { getIamSpectator } from "../../caches/GameSlice"
+import { useAppSelector } from "caches/hooks"
+import { getIamSpectator } from "caches/GameSlice"
 import ActionsWrapper from "./Actions/ActionsWrapper"
 
 const GameWrapper = () => {

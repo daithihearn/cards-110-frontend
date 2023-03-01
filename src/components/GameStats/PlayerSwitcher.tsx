@@ -5,11 +5,11 @@ import {
     DropdownMenu,
     DropdownToggle,
 } from "reactstrap"
-import { useAppSelector } from "../../caches/hooks"
-import { getMyProfile } from "../../caches/MyProfileSlice"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { PlayerProfile } from "../../model/Player"
-import { FormatName } from "../../utils/FormattingUtils"
+import { useAppSelector } from "caches/hooks"
+import { getMyProfile } from "caches/MyProfileSlice"
+import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
+import { PlayerProfile } from "model/Player"
+import { FormatName } from "utils/FormattingUtils"
 
 interface Props {
     onChange: (player: PlayerProfile) => void

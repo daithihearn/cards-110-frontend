@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Game } from "../model/Game"
+import { Game } from "model/Game"
 import { RootState } from "./caches"
 
 export interface MyGamesState {

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks"
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     disableActions,
     getGameId,
@@ -9,21 +9,21 @@ import {
     getIamSpectator,
     updateGame,
     updatePlayedCards,
-} from "../../caches/GameSlice"
-import { getAccessToken } from "../../caches/MyProfileSlice"
-import { getPlayerProfiles } from "../../caches/PlayerProfilesSlice"
-import { GameState } from "../../model/Game"
-import { Actions, BuyCardsEvent } from "../../model/Events"
+} from "caches/GameSlice"
+import { getAccessToken } from "caches/MyProfileSlice"
+import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
+import { GameState } from "model/Game"
+import { Actions, BuyCardsEvent } from "model/Events"
 import { useSnackbar } from "notistack"
-import { clearSelectedCards, updateMyCards } from "../../caches/MyCardsSlice"
-import { clearAutoPlay } from "../../caches/AutoPlaySlice"
+import { clearSelectedCards, updateMyCards } from "caches/MyCardsSlice"
+import { clearAutoPlay } from "caches/AutoPlaySlice"
 
-import shuffleAudioFile from "../../assets/sounds/shuffle.ogg"
-import playCardAudioFile from "../../assets/sounds/play_card.ogg"
-import callAudioFile from "../../assets/sounds/call.ogg"
-import passAudioFile from "../../assets/sounds/pass.ogg"
+import shuffleAudioFile from "assets/sounds/shuffle.ogg"
+import playCardAudioFile from "assets/sounds/play_card.ogg"
+import callAudioFile from "assets/sounds/call.ogg"
+import passAudioFile from "assets/sounds/pass.ogg"
 import AutoActionManager from "./AutoActionManager"
-import { Round } from "../../model/Round"
+import { Round } from "model/Round"
 
 const shuffleAudio = new Audio(shuffleAudioFile)
 const playCardAudio = new Audio(playCardAudioFile)

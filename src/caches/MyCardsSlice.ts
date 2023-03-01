@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { BLANK_CARD, SelectableCard } from "../model/Cards"
-import { processOrderedCardsAfterGameUpdate } from "../utils/GameUtils"
+import { BLANK_CARD, SelectableCard } from "model/Cards"
+import { processOrderedCardsAfterGameUpdate } from "utils/GameUtils"
 import { RootState } from "./caches"
 
 export interface MyCardsState {

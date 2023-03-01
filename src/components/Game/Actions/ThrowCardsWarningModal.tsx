@@ -10,15 +10,12 @@ import {
     CardGroup,
     Card as CardComponent,
 } from "reactstrap"
-import { getGameId } from "../../../caches/GameSlice"
-import { useAppSelector } from "../../../caches/hooks"
-import {
-    getMyCardsWithoutBlanks,
-    getSelectedCards,
-} from "../../../caches/MyCardsSlice"
-import { SelectableCard } from "../../../model/Cards"
-import { Suit } from "../../../model/Suit"
-import { removeAllFromHand } from "../../../utils/GameUtils"
+import { getGameId } from "caches/GameSlice"
+import { useAppSelector } from "caches/hooks"
+import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
+import { SelectableCard } from "model/Cards"
+import { Suit } from "model/Suit"
+import { removeAllFromHand } from "utils/GameUtils"
 
 interface ModalOpts {
     modalVisible: boolean

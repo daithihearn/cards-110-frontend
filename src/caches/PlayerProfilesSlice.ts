@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { PlayerProfile } from "../model/Player"
+import { PlayerProfile } from "model/Player"
 import { RootState } from "./caches"
 
 export interface PlayersState {

@@ -2,20 +2,20 @@ import React, { useEffect } from "react"
 
 import { Card, CardGroup, CardHeader } from "reactstrap"
 
-import StartNewGame from "../../components/StartNewGame/StartNewGame"
-import MyGames from "../../components/MyGames/MyGames"
-import GameStats from "../../components/GameStats/GameStats"
+import StartNewGame from "components/StartNewGame/StartNewGame"
+import MyGames from "components/MyGames/MyGames"
+import GameStats from "components/GameStats/GameStats"
 import { withAuthenticationRequired } from "@auth0/auth0-react"
 import PullToRefresh from "react-simple-pull-to-refresh"
 
-import { useAppDispatch, useAppSelector } from "../../caches/hooks"
-import { getMyProfile } from "../../caches/MyProfileSlice"
-import GameService from "../../services/GameService"
+import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { getMyProfile } from "caches/MyProfileSlice"
+import GameService from "services/GameService"
 import { useSnackbar } from "notistack"
-import StatsService from "../../services/StatsService"
+import StatsService from "services/StatsService"
 import { Divider } from "@mui/material"
-import parseError from "../../utils/ErrorUtils"
-import RefreshingData from "../../components/icons/RefreshingData"
+import parseError from "utils/ErrorUtils"
+import RefreshingData from "components/icons/RefreshingData"
 
 const Home = () => {
     const dispatch = useAppDispatch()

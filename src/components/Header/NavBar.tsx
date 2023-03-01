@@ -1,15 +1,14 @@
 import React, { useCallback, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 import { useAuth0 } from "@auth0/auth0-react"
 
-import { useAppSelector } from "../../caches/hooks"
-import { getMyProfile } from "../../caches/MyProfileSlice"
+import { useAppSelector } from "caches/hooks"
+import { getMyProfile } from "caches/MyProfileSlice"
 
-import ProfilePictureEditor from "../Avatar/ProfilePictureEditor"
-import GameHeader from "../Game/GameHeader"
+import ProfilePictureEditor from "components/Avatar/ProfilePictureEditor"
+import GameHeader from "components/Game/GameHeader"
 import {
-    Button,
     Card,
     CardBody,
     CardGroup,
@@ -24,8 +23,8 @@ import {
     ModalBody,
     Row,
 } from "reactstrap"
-import { getIsGameActive } from "../../caches/GameSlice"
-import Leaderboard from "../Leaderboard/Leaderboard"
+import { getIsGameActive } from "caches/GameSlice"
+import Leaderboard from "components/Leaderboard/Leaderboard"
 
 const NavBar = () => {
     const { logout } = useAuth0()
@@ -64,7 +63,14 @@ const NavBar = () => {
 
     return (
         <nav className="custom-navbar bg-primary fixed-top">
-            <Container fluid xs="2" sm="2" md="2" lg="2" xl="2">
+            <Container
+                className="navBarInner"
+                fluid
+                xs="2"
+                sm="2"
+                md="2"
+                lg="2"
+                xl="2">
                 <Row>
                     <Col className="nav-col">
                         <Dropdown isOpen={showDropdown} toggle={toggleDropdown}>

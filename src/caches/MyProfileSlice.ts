@@ -1,5 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { MyProfile } from "../model/Player"
+import { MyProfile } from "model/Player"
 import { RootState } from "./caches"
 
 const initialProfileState: MyProfile = {
