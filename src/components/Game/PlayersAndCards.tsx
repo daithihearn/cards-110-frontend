@@ -32,7 +32,11 @@ const PlayersAndCards = () => {
                         <PlayerCard
                             key={`playercard_${player.id}`}
                             player={player}
-                            className={`image-team${(index % 3) + 1}-filter`}
+                            className={
+                                sortedPlayers.length === 6
+                                    ? `image-team${(index % 3) + 1}-filter`
+                                    : ""
+                            }
                         />
                     ))}
                 </Row>
