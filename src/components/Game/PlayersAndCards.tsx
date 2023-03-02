@@ -28,10 +28,11 @@ const PlayersAndCards = () => {
                     md={sortedPlayers.length}
                     lg={sortedPlayers.length}
                     xl={sortedPlayers.length}>
-                    {sortedPlayers.map(player => (
+                    {sortedPlayers.map((player, index) => (
                         <PlayerCard
                             key={`playercard_${player.id}`}
                             player={player}
+                            className={`image-team${(index % 3) + 1}-filter`}
                         />
                     ))}
                 </Row>

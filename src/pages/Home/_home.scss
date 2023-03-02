@@ -90,6 +90,21 @@
     border-radius: 50%;
 }
 
+.image-team1-filter {
+    border: solid 4px red;
+    filter: saturate(2);
+}
+
+.image-team2-filter {
+    border: solid 4px yellow;
+    filter: sepia(100%);
+}
+
+.image-team3-filter {
+    border: solid 4px blue;
+    // filter: invert(100%);
+}
+
 .clickable:hover {
     cursor: pointer;
 }

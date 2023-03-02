@@ -10,8 +10,9 @@ import { Player } from "model/Player"
 
 interface PlayerRowI {
     player: Player
+    className?: string
 }
-const PlayerCard: React.FC<PlayerRowI> = ({ player }) => {
+const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
     const round = useAppSelector(getRound)
     const players = useAppSelector(getGamePlayers)
     const playerProfiles = useAppSelector(getPlayerProfiles)
@@ -48,7 +49,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player }) => {
                 <CardImg
                     alt={profile.name}
                     src={profile.picture}
-                    className="img-center avatar"
+                    className={`img-center avatar ${className}`}
                 />
                 <CardImgOverlay>
                     <CardText className="overlay-score">
