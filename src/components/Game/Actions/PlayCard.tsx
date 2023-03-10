@@ -13,7 +13,7 @@ import { RoundStatus } from "model/Round"
 
 const WaitingForYourTurn = () => (
     <Button disabled type="button" color="info">
-        <b>Waiting for your turn...</b>
+        <b>Wait for your turn...</b>
     </Button>
 )
 
