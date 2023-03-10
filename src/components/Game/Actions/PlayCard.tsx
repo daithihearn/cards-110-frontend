@@ -11,9 +11,9 @@ import { BLANK_CARD } from "model/Cards"
 import parseError from "utils/ErrorUtils"
 import { RoundStatus } from "model/Round"
 
-const WaitingForYourGo = () => (
+const WaitingForYourTurn = () => (
     <Button disabled type="button" color="info">
-        <b>Waiting for your go...</b>
+        <b>Waiting for your turn...</b>
     </Button>
 )
 
@@ -50,7 +50,7 @@ const PlayCard = () => {
         }
     }, [gameId, selectedCards])
 
-    if (!playButtonEnabled) return <WaitingForYourGo />
+    if (!playButtonEnabled) return <WaitingForYourTurn />
     return (
         <Button
             id="playCardButton"
