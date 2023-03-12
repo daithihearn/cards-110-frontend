@@ -14,7 +14,7 @@ import { SelectableCard } from "model/Cards"
 import parseError from "utils/ErrorUtils"
 
 const WaitingForSuit = () => (
-    <Button disabled type="button" color="info">
+    <Button disabled type="button" color="secondary">
         <b>Waiting for suit...</b>
     </Button>
 )

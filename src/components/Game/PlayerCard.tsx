@@ -70,8 +70,10 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
                         <CardImg
                             alt={profile.name}
                             src={`/cards/thumbnails/${
-                                isCurrentPlayer ? "yellow" : "blank_grey"
-                            }_back.png`}
+                                isCurrentPlayer
+                                    ? "yellow_back.png"
+                                    : "blank_card_outline.png"
+                            }`}
                             className={`img-center thumbnail_size`}
                         />
 
