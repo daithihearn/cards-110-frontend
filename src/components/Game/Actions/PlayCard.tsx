@@ -12,8 +12,8 @@ import parseError from "utils/ErrorUtils"
 import { RoundStatus } from "model/Round"
 
 const WaitingForYourTurn = () => (
-    <Button disabled type="button" color="info">
-        <b>Wait for your turn...</b>
+    <Button disabled type="button" color="secondary">
+        <b>Waiting for your turn...</b>
     </Button>
 )
 

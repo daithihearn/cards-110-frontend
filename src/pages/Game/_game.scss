@@ -51,8 +51,10 @@
 
 .overlay-score {
     font-weight: bolder;
-    font-size: large;
-    margin-top: 3rem;
+    font-size: 1.6em;
+    margin-top: 2.6rem;
+    mix-blend-mode: lighten;
+    color: white;
 }
 
 .overlay-dealer-chip {
