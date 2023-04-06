@@ -15,21 +15,33 @@ jobs:
 
         steps:
             - uses: actions/checkout@v3
-            - name: Update version in package.json
-              run: yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
             - name: Get version in manifest.json
-              id: manifestversion
+              id: manifest-version
               uses: notiz-dev/github-action-json-property@release
               with:
                   path: "public/manifest.json"
                   prop_path: "version"
-            - name: Update manifest.json version
-              if: ${{ steps.manifestversion.outputs.prop != github.ref_name }}
-              uses: jossef/action-set-json-field@v2
+            - name: Ensure the manifest version matches the tag version
+              if: ${{ steps.manifest-version.outputs.prop != github.ref_name }}
+              uses: actions/github-script@v3
               with:
-                  file: public/manifest.json
-                  field: version
-                  value: ${{ github.ref_name }}
+                  script: |
+                      core.setFailed('The version in the manifest must match the tag.')
+            - name: Get version in package.json
+              id: package-version
+              uses: notiz-dev/github-action-json-property@release
+              with:
+                  path: "package.json"
+                  prop_path: "version"
+            - name: Ensure the package.json version matches the tag version
+              if: ${{ steps.package-version.outputs.prop != github.ref_name }}
+              uses: actions/github-script@v3
+              with:
+                  script: |
+                      core.setFailed('The version in the package.json must match the tag.')
             - name: Set up QEMU
               uses: docker/setup-qemu-action@v2
             - name: Set up Docker Buildx
@@ -42,30 +54,3 @@ jobs:
                   password: ${{ secrets.DOCKER_PASSWORD }}
                   platforms: linux/amd64,linux/arm64/v8
                   tags: "latest, ${{ github.ref_name }}"
-
-            - name: Create PR with version changes
-              id: cpr
-              uses: peter-evans/create-pull-request@v4
-              with:
-                  token: ${{ secrets.PAT_PR }}
-                  commit-message: Update latest version (${{ github.ref_name }})
-                  title: Update latest version (${{ github.ref_name }})
-                  body: |
-                      Update latest version (${{ github.ref_name }})
-                  branch: update-version-${{ github.ref_name }}
-                  delete-branch: true
-                  base: main
-                  add-paths: |
-                      package.json
-                      public/manifest.json
-                  labels: |
-                      update
-                  assignees: |
-                      ${{ github.actor }}
-            - name: Enable Pull Request Automerge
-              if: steps.cpr.outputs.pull-request-operation == 'created'
-              uses: peter-evans/enable-pull-request-automerge@v2
-              with:
-                  token: ${{ secrets.PAT_PR }}
-                  pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-                  merge-method: squash
