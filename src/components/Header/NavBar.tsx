@@ -55,7 +55,7 @@ const NavBar = () => {
 
     const myProfile = useAppSelector(getMyProfile)
 
-    const signOut = () => logout({ returnTo: window.location.origin })
+    const signOut = () => logout()
 
     if (!myProfile) {
         return null

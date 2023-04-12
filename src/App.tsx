@@ -32,9 +32,7 @@ import Layout from "./pages/Layout/Layout"
 import ErrorPage from "./pages/Error/Error"
 
 const AUTHO_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN as string
-const AUTH0_AUDIENCE = process.env.REACT_APP_AUTH0_AUDIENCE as string
 const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID as string
-const AUTH0_SCOPE = process.env.REACT_APP_AUTH0_SCOPE as string
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -53,10 +51,7 @@ const App = () => {
             <SnackbarProvider maxSnack={3}>
                 <Auth0Provider
                     domain={AUTHO_DOMAIN}
-                    audience={AUTH0_AUDIENCE}
                     clientId={AUTH0_CLIENT_ID}
-                    redirectUri={window.location.origin}
-                    scope={AUTH0_SCOPE}
                     useRefreshTokens={true}>
                     <MyProfileSync />
                     <RouterProvider router={router} />

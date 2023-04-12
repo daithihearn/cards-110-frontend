@@ -6,12 +6,25 @@ import DefaultHeader from "components/Header/Header"
 import { useEffect } from "react"
 import Loading from "components/icons/Loading"
 
+const AUTH0_AUDIENCE = process.env.REACT_APP_AUTH0_AUDIENCE as string
+const AUTH0_SCOPE = process.env.REACT_APP_AUTH0_SCOPE as string
+
 const Layout = () => {
     const accessToken = useAppSelector(getAccessToken)
     const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()
 
     useEffect(() => {
-        if (!isLoading && !isAuthenticated) loginWithRedirect()
+        console.log(
+            `DAITHI: isLoading: ${isLoading} isAuthenticated: ${isAuthenticated}`,
+        )
+        if (!isLoading && !isAuthenticated)
+            loginWithRedirect({
+                authorizationParams: {
+                    audience: AUTH0_AUDIENCE,
+                    redirect_uri: window.location.origin,
+                    scope: AUTH0_SCOPE,
+                },
+            })
     }, [isLoading, isAuthenticated])
 
     return (
