@@ -15,6 +15,7 @@
 
 .navBarInner {
     max-width: 800px;
+    min-height: 45px;
 }
 
 .overflow-hidden {
@@ -75,6 +76,14 @@
         }
     }
 }
+
+.player-avatar {
+    // vertical-align: middle;
+    width: 75px;
+    height: 75px;
+    border-radius: 25%;
+}
+
 
 .avatar {
     vertical-align: middle;

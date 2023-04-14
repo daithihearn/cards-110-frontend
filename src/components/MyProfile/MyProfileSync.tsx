@@ -20,7 +20,6 @@ const MyProfileSync: React.FC = () => {
     }, [error])
 
     const updateProfile = async (name: string, picture: string) => {
-        console.log(`DAITHI: Attempting to update profile: ${name}`)
         const accessToken = await getAccessTokenSilently({
             authorizationParams: {
                 audience: AUTH0_AUDIENCE,
@@ -28,8 +27,6 @@ const MyProfileSync: React.FC = () => {
                 scope: AUTH0_SCOPE,
             },
         })
-
-        console.log(`DAITHI: Got access token: ${accessToken}`)
 
         dispatch(
             ProfileService.updateProfile(
@@ -47,7 +44,6 @@ const MyProfileSync: React.FC = () => {
     }
 
     useEffect(() => {
-        console.log(`DAITHI: isAuthenticated: ${isAuthenticated} user: ${user}`)
         if (isAuthenticated && user && user.name && user.picture) {
             updateProfile(user.name, user.picture)
         }

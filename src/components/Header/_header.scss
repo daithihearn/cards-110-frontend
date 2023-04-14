@@ -1,5 +1,6 @@
 .custom-navbar {
     padding: 5px;
+    min-height: 55px;
 }
 
 .nav-container {
@@ -11,8 +12,17 @@
     margin-left: 15px;
 }
 
+.nav-menu-button {
+    padding-top: 7px;
+}
+
+.custom-dropdown {
+    min-height: 45px;
+}
+
 .nav-col {
     margin: auto;
+    min-height: 45px;
 }
 
 .linknavbar {

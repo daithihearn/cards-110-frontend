@@ -14,9 +14,6 @@ const Layout = () => {
     const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0()
 
     useEffect(() => {
-        console.log(
-            `DAITHI: isLoading: ${isLoading} isAuthenticated: ${isAuthenticated}`,
-        )
         if (!isLoading && !isAuthenticated)
             loginWithRedirect({
                 authorizationParams: {

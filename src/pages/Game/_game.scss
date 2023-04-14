@@ -49,12 +49,21 @@
     margin-top: 5rem;
 }
 
-.overlay-score {
+.player-score {
     font-weight: bolder;
-    font-size: 1.6em;
-    margin-top: 2.6rem;
-    mix-blend-mode: lighten;
+    font-size: 1.5em;
     color: white;
+}
+
+.score-text {
+    width: 1.7em;
+    display: inline-block;
+    border-radius: 25%;
+}
+
+.player-score-container {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
 }
 
 .overlay-dealer-chip {
@@ -170,10 +179,6 @@
         padding-right: 0;
     }
 
-    .overlay-score {
-        margin-top: 0.8em;
-    }
-
     .overlay-chip {
         margin-top: 1rem;
     }
@@ -186,6 +191,5 @@
         vertical-align: middle;
         width: 50px;
         height: 50px;
-        border-radius: 50%;
     }
 }
