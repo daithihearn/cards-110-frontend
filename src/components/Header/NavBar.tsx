@@ -25,6 +25,7 @@ import {
 } from "reactstrap"
 import { getIsGameActive } from "caches/GameSlice"
 import Leaderboard from "components/Leaderboard/Leaderboard"
+import MenuButton from "assets/icons/Menu.svg"
 
 const NavBar = () => {
     const { logout } = useAuth0()
@@ -73,12 +74,15 @@ const NavBar = () => {
                 xl="2">
                 <Row>
                     <Col className="nav-col">
-                        <Dropdown isOpen={showDropdown} toggle={toggleDropdown}>
+                        <Dropdown
+                            isOpen={showDropdown}
+                            toggle={toggleDropdown}
+                            className="custom-dropdown"
+                            direction="down">
                             <DropdownToggle data-toggle="dropdown" tag="span">
                                 <img
-                                    alt={myProfile.name}
-                                    src={myProfile.picture}
-                                    className="avatar clickable"
+                                    src={MenuButton}
+                                    className="nav-menu-button clickable"
                                     onClick={() => setShowDropdown(true)}
                                 />
                             </DropdownToggle>
