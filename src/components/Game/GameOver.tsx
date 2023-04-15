@@ -1,6 +1,7 @@
 import { Card, CardBody, CardGroup, Container, CardHeader } from "reactstrap"
 
 import Leaderboard from "components/Leaderboard/Leaderboard"
+import Confetti from "react-confetti"
 
 const GameOver = () => {
     return (
@@ -10,6 +11,12 @@ const GameOver = () => {
                     Game Over
                 </CardHeader>
                 <CardBody>
+                    <Confetti
+                        colors={["#e6ee9c", "#f44336", "#2196f3"]}
+                        numberOfPieces={200}
+                        recycle={false}
+                        run={true}
+                    />
                     <Leaderboard />
                 </CardBody>
             </Card>
