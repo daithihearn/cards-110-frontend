@@ -61,16 +61,16 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
     )
 
     const scoreClassName = useMemo(() => {
-        if (player.score < 30) {
+        if (player.score < -30) {
             return "bg-dark text-light"
-        } else if (player.score < 30) {
+        } else if (player.score < 0) {
             return "bg-secondary text-light"
-        } else if (player.score <= 65) {
+        } else if (player.score <= 75) {
             return "bg-primary text-light"
         } else if (player.score <= 90) {
-            return "bg-warning text-dark"
+            return "bg-warning text-light"
         } else if (player.score <= 105) {
-            return "bg-danger text-dark"
+            return "bg-danger text-light"
         } else {
             return "bg-success text-light"
         }
@@ -90,10 +90,9 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
                     className={`img-center player-avatar ${className}`}
                 />
                 <CardSubtitle className="player-score-container">
-                    <CardText className="player-score">
-                        <div className={`score-text ${scoreClassName}`}>
-                            {player.score}
-                        </div>
+                    <CardText
+                        className={`player-score score-text ${scoreClassName}`}>
+                        {player.score}
                     </CardText>
                 </CardSubtitle>
             </Card>
