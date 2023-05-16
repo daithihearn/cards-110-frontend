@@ -10,6 +10,7 @@ const initialState: GameState = {
     isMyGo: false,
     iamGoer: false,
     iamDealer: false,
+    iamAdmin: false,
     cards: [],
     status: GameStatus.NONE,
     players: [],
@@ -94,6 +95,7 @@ export const getMaxCall = createSelector(getGame, game => game.maxCall || 0)
 export const getIsMyGo = createSelector(getGame, game => game.isMyGo)
 export const getIamGoer = createSelector(getGame, game => game.iamGoer)
 export const getIamDealer = createSelector(getGame, game => game.iamDealer)
+export const getIamAdmin = createSelector(getGame, game => game.iamAdmin)
 export const getIHavePlayed = createSelector(getGame, game => {
     const myPosition = game.players.findIndex(p => p.id === game.me?.id)
     const currentPlayerPosition = game.players.findIndex(

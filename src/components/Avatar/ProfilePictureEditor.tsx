@@ -3,16 +3,18 @@ import React, { useCallback, useRef, useState } from "react"
 import heic2any from "heic2any"
 import { useSnackbar } from "notistack"
 import {
-    Col,
-    Modal,
-    ModalBody,
-    ModalFooter,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
     Button,
-    FormGroup,
-    FormText,
+    FormControl,
+    FormHelperText,
     Input,
-    ButtonGroup,
-} from "reactstrap"
+    InputLabel,
+    Slider,
+    Grid,
+} from "@mui/material"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { getMyProfile } from "caches/MyProfileSlice"
 import ProfileService from "services/ProfileService"
@@ -83,9 +85,10 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
     }
 
     return (
-        <Modal fade toggle={callback} isOpen={show}>
-            <ModalBody>
-                <FormGroup row>
+        <Dialog onClose={callback} open={show}>
+            <DialogTitle>Edit Profile Picture</DialogTitle>
+            <DialogContent>
+                <FormControl fullWidth>
                     {selectedImage && (
                         <AvatarEditor
                             ref={setEditorRef}
@@ -98,52 +101,51 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
                             rotate={0}
                         />
                     )}
-                </FormGroup>
-                <FormGroup row>
-                    <Col sm={10}>
-                        <Input
-                            type="file"
-                            accept="image/*,.heic"
-                            name="newAvatar"
-                            id="newAvatar"
-                            onChange={handleNewAvatarSelection}
-                            multiple={false}
-                        />
-                        <FormText color="muted">
-                            Please choose your new avatar
-                        </FormText>
-                    </Col>
-                </FormGroup>
-                <FormGroup row>
-                    <Col sm={10}>
-                        <Input
-                            name="scale"
-                            type="range"
-                            onChange={handleScale}
-                            min="1"
-                            max="2"
-                            step="0.01"
-                            defaultValue="1.2"
-                        />
-                    </Col>
-                </FormGroup>
-            </ModalBody>
-
-            <ModalFooter>
-                <ButtonGroup size="lg">
-                    <Button color="secondary" onClick={callback}>
-                        Cancel
-                    </Button>
-                    <Button
-                        color="primary"
-                        disabled={!selectedImage}
-                        type="button"
-                        onClick={handleSave}>
-                        Save
-                    </Button>
-                </ButtonGroup>
-            </ModalFooter>
-        </Modal>
+                </FormControl>
+                <FormControl fullWidth>
+                    <InputLabel htmlFor="newAvatar">New Avatar</InputLabel>
+                    <Input
+                        type="file"
+                        // accept="image/*,.heic"
+                        name="newAvatar"
+                        id="newAvatar"
+                        onChange={handleNewAvatarSelection}
+                        // multiple={false}
+                    />
+                    <FormHelperText>
+                        Please choose your new avatar
+                    </FormHelperText>
+                </FormControl>
+                <FormControl fullWidth>
+                    <Grid container spacing={2}>
+                        <Grid item xs>
+                            <Slider
+                                name="scale"
+                                onChange={(_, value) =>
+                                    updateScale(value as number)
+                                }
+                                min={1}
+                                max={2}
+                                step={0.01}
+                                defaultValue={1.2}
+                            />
+                        </Grid>
+                    </Grid>
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={callback} color="secondary">
+                    Cancel
+                </Button>
+                <Button
+                    disabled={!selectedImage}
+                    type="button"
+                    onClick={handleSave}
+                    color="primary">
+                    Save
+                </Button>
+            </DialogActions>
+        </Dialog>
     )
 }
 

@@ -1,4 +1,11 @@
-import { Card, CardHeader, CardBody, CardGroup, Input, Label } from "reactstrap"
+import {
+    Card as MuiCard,
+    CardContent,
+    CardHeader,
+    Grid,
+    Switch,
+    FormControlLabel,
+} from "@mui/material"
 import { useCallback, useEffect, useState } from "react"
 import { useAppSelector } from "caches/hooks"
 import { getMyProfile } from "caches/MyProfileSlice"
@@ -20,32 +27,33 @@ const GameStats = () => {
     )
 
     return (
-        <CardGroup>
-            <Card className="p-6 data-card">
-                <CardHeader tag="h2">Stats </CardHeader>
-                <CardBody>
+        <Grid container>
+            <MuiCard className="p-6 data-card">
+                <CardHeader title="Stats" />
+                <CardContent>
                     {myProfile.isAdmin ? (
                         <PlayerSwitcher onChange={setPlayer} />
                     ) : null}
-                </CardBody>
-                <CardBody>
+                </CardContent>
+                <CardContent>
                     {player ? (
                         <WinPercentageGraph
                             player={player}
                             last3Months={last3Months}
                         />
                     ) : null}
-                </CardBody>
-                <Label>
-                    <Input
-                        checked={last3Months}
-                        type="checkbox"
-                        onChange={threeMonthsCheckboxChanged}
-                    />
-                    Last 3 months
-                </Label>
-            </Card>
-        </CardGroup>
+                </CardContent>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={last3Months}
+                            onChange={threeMonthsCheckboxChanged}
+                        />
+                    }
+                    label="Last 3 months"
+                />
+            </MuiCard>
+        </Grid>
     )
 }
 

@@ -1,33 +1,35 @@
 import React, { useCallback, useState } from "react"
 
 import GameService from "services/GameService"
-import DataTable, { TableColumn } from "react-data-table-component"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 
 import {
     Button,
     ButtonGroup,
-    Form,
-    FormGroup,
-    Input,
     Card,
-    CardBody,
-    CardGroup,
+    CardContent,
     CardHeader,
-    Label,
-} from "reactstrap"
-
+    FormControl,
+    Grid,
+    InputLabel,
+    OutlinedInput,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    useTheme,
+} from "@mui/material"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { PlayerProfile } from "model/Player"
 import { useSnackbar } from "notistack"
-import { customStyles } from "components/Tables/CustomStyles"
 import parseError from "utils/ErrorUtils"
-import moment from "moment"
 import { FormatName } from "utils/FormattingUtils"
 import WinPercentageGraph from "components/GameStats/WinPercentageGraph"
-import { Divider } from "@mui/material"
 
 const StartNewGame = () => {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
     const { enqueueSnackbar } = useSnackbar()
 
@@ -39,10 +41,16 @@ const StartNewGame = () => {
     )
 
     const togglePlayer = useCallback(
-        (rows: { selectedRows: React.SetStateAction<PlayerProfile[]> }) => {
-            updateSelectedPlayers(rows.selectedRows)
+        (player: PlayerProfile) => {
+            if (selectedPlayers.includes(player)) {
+                updateSelectedPlayers(
+                    selectedPlayers.filter(p => p.id !== player.id),
+                )
+            } else {
+                updateSelectedPlayers([...selectedPlayers, player])
+            }
         },
-        [],
+        [selectedPlayers],
     )
 
     const startGame = useCallback(
@@ -87,112 +95,124 @@ const StartNewGame = () => {
         [],
     )
 
-    const columns: TableColumn<PlayerProfile>[] = [
-        {
-            name: "Player",
-            selector: row => row.name,
-            cell: (row: PlayerProfile) => (
-                <div>
-                    <img
-                        alt="Image Preview"
-                        src={row.picture}
-                        className="avatar-large"
-                    />
-                    <Divider />
-                    <span>
-                        <b>{FormatName(row.name)}</b>
-                    </span>
-                </div>
-            ),
-            format: row => FormatName(row.name),
-            sortable: true,
-        },
-        {
-            name: "Last 3 months",
-            cell: (pp: PlayerProfile) => (
-                <WinPercentageGraph
-                    player={pp}
-                    last3Months={true}
-                    width={120}
-                    height={120}
-                    showLegend={false}
-                />
-            ),
-            center: true,
-        },
-        {
-            name: "All Time",
-            cell: (pp: PlayerProfile) => (
-                <WinPercentageGraph
-                    player={pp}
-                    last3Months={false}
-                    width={150}
-                    height={150}
-                    showLegend={false}
-                />
-            ),
-            center: true,
-        },
-        {
-            name: "Last Access",
-            id: "lastAccess",
-            selector: row => row.lastAccess,
-            format: row => moment(row.lastAccess).format("lll"),
-            sortable: true,
-            omit: true,
-        },
-    ]
-
     return (
-        <CardGroup>
-            <Card className="data-card">
-                <CardHeader tag="h2">Start a new game</CardHeader>
-                <CardBody>
-                    <FormGroup>
-                        <Form onSubmit={startGame}>
-                            <FormGroup>
-                                <Input
-                                    className="name"
-                                    id="newGameName"
-                                    name="newGameName"
-                                    placeholder="Give the game a name"
-                                    autoComplete="off"
-                                    onChange={handleNameChange}
-                                    value={newGameName}
-                                    required
-                                />
-                            </FormGroup>
-                            <ButtonGroup>
-                                <Button
-                                    size="lg"
-                                    color="primary"
-                                    type="submit"
-                                    onClick={startGame}
-                                    disabled={
-                                        selectedPlayers.length < 2 ||
-                                        (!newGameName && newGameName === "")
-                                    }>
-                                    Start Game
-                                </Button>
-                            </ButtonGroup>
-                        </Form>
-                        <DataTable
-                            noHeader
-                            pagination
-                            theme="solarized"
-                            data={allPlayers}
-                            columns={columns}
-                            highlightOnHover
-                            selectableRows
-                            customStyles={customStyles}
-                            onSelectedRowsChange={togglePlayer}
-                            defaultSortFieldId="lastAccess"
-                            defaultSortAsc={false}
-                        />
-                    </FormGroup>
-                </CardBody>
-            </Card>
-        </CardGroup>
+        <Grid container>
+            <Grid item xs={12}>
+                <Card>
+                    <CardHeader title="Start a new game" />
+                    <CardContent>
+                        <FormControl fullWidth>
+                            <form onSubmit={startGame}>
+                                <Grid container>
+                                    <Grid item xs={6}>
+                                        <FormControl variant="outlined">
+                                            <InputLabel htmlFor="newGameName">
+                                                Game Name
+                                            </InputLabel>
+                                            <OutlinedInput
+                                                id="newGameName"
+                                                name="newGameName"
+                                                placeholder="Give the game a name"
+                                                autoComplete="off"
+                                                onChange={handleNameChange}
+                                                value={newGameName}
+                                                required
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ButtonGroup>
+                                            <Button
+                                                size="large"
+                                                variant="contained"
+                                                color="primary"
+                                                type="submit"
+                                                onClick={startGame}
+                                                disabled={
+                                                    selectedPlayers.length <
+                                                        2 ||
+                                                    (!newGameName &&
+                                                        newGameName === "")
+                                                }>
+                                                Start Game
+                                            </Button>
+                                        </ButtonGroup>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                            <TableContainer>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Player</TableCell>
+                                            <TableCell>Last 3 months</TableCell>
+                                            <TableCell>All Time</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {allPlayers.map(player => (
+                                            <TableRow
+                                                key={player.id}
+                                                onClick={() =>
+                                                    togglePlayer(player)
+                                                }
+                                                selected={selectedPlayers.includes(
+                                                    player,
+                                                )}
+                                                sx={{
+                                                    cursor: "pointer",
+                                                    "&.Mui-selected, &.Mui-selected:hover":
+                                                        {
+                                                            backgroundColor:
+                                                                theme.palette
+                                                                    .action
+                                                                    .selected,
+                                                        },
+                                                }}>
+                                                <TableCell>
+                                                    <div>
+                                                        <img
+                                                            alt="Image Preview"
+                                                            src={player.picture}
+                                                            className="avatar-large"
+                                                        />
+                                                        <span>
+                                                            <b>
+                                                                {FormatName(
+                                                                    player.name,
+                                                                )}
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <WinPercentageGraph
+                                                        player={player}
+                                                        last3Months={true}
+                                                        width={120}
+                                                        height={120}
+                                                        showLegend={false}
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <WinPercentageGraph
+                                                        player={player}
+                                                        last3Months={false}
+                                                        width={150}
+                                                        height={150}
+                                                        showLegend={false}
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </FormControl>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
     )
 }
 

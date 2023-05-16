@@ -1,7 +1,3 @@
-.body {
-    font-family: $fontFamily;
-}
-
 .card {
     --cui-card-bg: ;
     border: 0;
@@ -29,24 +25,12 @@
     background-image: url("/assets/img/dummy.png");
 }
 
-.gameContainer {
-    border-style: solid;
-    border-width: 5px;
-    border-radius: 10px;
-    padding: 2px;
-}
-
-// .carpet {
-//   background-image: url("/assets/img/carpet2.jpg");
-// }
-
-.wood {
-    background-image: url("/assets/img/wood.jpg");
-    background-color: brown;
-}
-
 .overlay-chip {
     margin-top: 5rem;
+}
+
+.overlay-dealer-chip {
+    margin-top: 2rem;
 }
 
 .player-score {
@@ -66,8 +50,13 @@
     padding-bottom: 0.25em;
 }
 
-.overlay-dealer-chip {
-    margin-top: 2rem;
+.no-shadow {
+    box-shadow: none !important;
+}
+
+.thumbnail_chips {
+    max-width: 70px;
+    max-height: 70px;
 }
 
 .player-column {
@@ -98,18 +87,38 @@
     padding-right: 0.2rem;
 }
 
-.cardAreaHeader {
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
+.image-team1-filter {
+    border: solid 4px red;
+    filter: saturate(2);
 }
 
-.cardAreaHeaderContainer {
-    color: rgb(0, 0, 0);
-    background-color: #ced2d8;
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
+.image-team2-filter {
+    border: solid 4px yellow;
+    filter: sepia(100%);
+}
+
+.image-team3-filter {
+    border: solid 4px blue;
+    // filter: invert(100%);
+}
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+.thumbnail_size {
+    max-width: 100px;
+    max-height: 153px;
+}
+
+.thumbnail_size_small {
+    max-width: 70px;
+    max-height: 100px;
+}
+
+.thumbnail_size_extra_small {
+    max-width: 45px;
+    max-height: 45px;
 }
 
 .leaderboard-button {
@@ -132,8 +141,7 @@
 }
 
 .buttonArea {
-    min-height: 84px;
-    text-align: center;
+    min-height: 75px;
 }
 
 .gameModalBody {

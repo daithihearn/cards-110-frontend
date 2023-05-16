@@ -1,4 +1,4 @@
-import { ButtonGroup, CardBody } from "reactstrap"
+import { ButtonGroup as MuiButtonGroup, CardContent } from "@mui/material"
 import {
     getIsRoundBuying,
     getIsRoundCalled,
@@ -18,14 +18,14 @@ const ActionsWrapper = () => {
     const isCalled = useAppSelector(getIsRoundCalled)
 
     return (
-        <CardBody className="buttonArea">
-            <ButtonGroup size="lg">
+        <CardContent className="buttonArea">
+            <MuiButtonGroup size="large" variant="contained">
                 {isCalling && <Calling />}
                 {isBuying && <Buying />}
                 {isCalled && <SelectSuit />}
                 {isPlaying && <PlayCard />}
-            </ButtonGroup>
-        </CardBody>
+            </MuiButtonGroup>
+        </CardContent>
     )
 }
 

@@ -1,23 +1,21 @@
 import { useCallback, useMemo, useState } from "react"
 import {
-    Col,
-    CardImgOverlay,
-    CardText,
-    CardImg,
-    Card,
-    CardSubtitle,
-    Modal,
-    ModalBody,
-    CardGroup,
-    CardHeader,
-    CardBody,
-} from "reactstrap"
+    Grid,
+    CardMedia,
+    Typography,
+    Card as MuiCard,
+    CardContent,
+    Dialog,
+    DialogContent,
+    Stack,
+    Box,
+} from "@mui/material"
+import { styled } from "@mui/system"
 import { getGamePlayers, getRound } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { BLANK_CARD } from "model/Cards"
 import { PlayedCard } from "model/Game"
-
 import { Player } from "model/Player"
 import Leaderboard from "components/Leaderboard/Leaderboard"
 
@@ -25,6 +23,15 @@ interface PlayerRowI {
     player: Player
     className?: string
 }
+
+const Card = styled(MuiCard)({
+    background: "transparent",
+})
+
+const CardMediaClickable = styled(CardMedia)({
+    cursor: "pointer",
+})
+
 const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
     const round = useAppSelector(getRound)
     const players = useAppSelector(getGamePlayers)
@@ -79,120 +86,148 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
     if (!profile) return null
 
     return (
-        <Col key={`playercard_col_${player.id}`} className="player-column">
-            <Card
-                className="card-transparent clickable"
-                onClick={toggleLeaderboardModal}>
-                <CardImg
-                    alt={profile.name}
-                    src={profile.picture}
-                    top={true}
+        <Grid
+            item
+            key={`playercard_col_${player.id}`}
+            className="player-column">
+            <Card className="no-shadow">
+                <CardMediaClickable
+                    image={profile.picture}
+                    onClick={toggleLeaderboardModal}
                     className={`img-center player-avatar ${className}`}
                 />
-                <CardSubtitle className="player-score-container">
-                    <CardText
+                <CardContent className="player-score-container">
+                    <Typography
+                        component="span"
                         className={`player-score score-text ${scoreClassName}`}>
                         {player.score}
-                    </CardText>
-                </CardSubtitle>
+                    </Typography>
+                </CardContent>
             </Card>
 
-            <Card className="card-transparent">
+            <Card className="no-shadow">
                 {playedCard ? (
-                    <CardImg
+                    <CardMedia
+                        component="img"
                         alt={profile.name}
-                        src={`/cards/thumbnails/${playedCard.card}.png`}
+                        image={`/cards/thumbnails/${playedCard.card}.png`}
                         className="img-center thumbnail_size"
                     />
                 ) : (
-                    <>
-                        <CardImg
-                            alt={profile.name}
-                            src={`/cards/thumbnails/${
-                                isCurrentPlayer
-                                    ? "yellow_back.png"
-                                    : "blank_card_outline.png"
-                            }`}
-                            className={`img-center thumbnail_size`}
-                        />
+                    <Card>
+                        <Stack position="relative">
+                            <CardMedia
+                                component="img"
+                                alt={profile.name}
+                                image={`/cards/thumbnails/${
+                                    isCurrentPlayer
+                                        ? "yellow_back.png"
+                                        : "blank_card_outline.png"
+                                }`}
+                                className={`img-center thumbnail_size`}
+                            />
 
-                        {isDealer ? (
-                            <CardImgOverlay>
-                                <CardImg
-                                    alt="Dealer Chip"
-                                    src={"/cards/originals/DEALER.png"}
-                                    className="thumbnail_chips overlay-dealer-chip"
-                                />
-                            </CardImgOverlay>
-                        ) : null}
+                            {isDealer && (
+                                <Box
+                                    position="absolute"
+                                    top={0}
+                                    left={0}
+                                    width={"100%"}>
+                                    <CardMedia
+                                        component="img"
+                                        alt="Dealer Chip"
+                                        image={"/cards/originals/DEALER.png"}
+                                        className="img-center thumbnail_chips overlay-dealer-chip"
+                                    />
+                                </Box>
+                            )}
 
-                        {round && !round.suit ? (
-                            <CardImgOverlay>
-                                {player.call === 10 ? (
-                                    <CardImg
-                                        alt="Ten Chip"
-                                        src={"/cards/originals/call_10.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 15 ? (
-                                    <CardImg
-                                        alt="15 Chip"
-                                        src={"/cards/originals/call_15.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 20 ? (
-                                    <CardImg
-                                        alt="20 Chip"
-                                        src={"/cards/originals/call_20.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 25 ? (
-                                    <CardImg
-                                        alt="25 Chip"
-                                        src={"/cards/originals/call_25.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 30 && players.length === 2 ? (
-                                    <CardImg
-                                        alt="30 Chip"
-                                        src={"/cards/originals/call_30.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 30 && players.length > 2 ? (
-                                    <CardImg
-                                        alt="Jink Chip"
-                                        src={"/cards/originals/call_jink.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                            </CardImgOverlay>
-                        ) : null}
-                    </>
+                            {round && !round.suit && (
+                                <Box
+                                    position="absolute"
+                                    top={0}
+                                    left={0}
+                                    width={"100%"}>
+                                    {player.call === 10 && (
+                                        <CardMedia
+                                            component="img"
+                                            alt="Ten Chip"
+                                            image={
+                                                "/cards/originals/call_10.png"
+                                            }
+                                            className="img-center thumbnail_chips overlay-chip"
+                                        />
+                                    )}
+                                    {player.call === 15 && (
+                                        <CardMedia
+                                            component="img"
+                                            alt="15 Chip"
+                                            image={
+                                                "/cards/originals/call_15.png"
+                                            }
+                                            className="img-center thumbnail_chips overlay-chip"
+                                        />
+                                    )}
+                                    {player.call === 20 && (
+                                        <CardMedia
+                                            component="img"
+                                            alt="20 Chip"
+                                            image={
+                                                "/cards/originals/call_20.png"
+                                            }
+                                            className="img-center thumbnail_chips overlay-chip"
+                                        />
+                                    )}
+                                    {player.call === 25 && (
+                                        <CardMedia
+                                            component="img"
+                                            alt="25 Chip"
+                                            image={
+                                                "/cards/originals/call_25.png"
+                                            }
+                                            className="img-center thumbnail_chips overlay-chip"
+                                        />
+                                    )}
+                                    {player.call === 30 &&
+                                        players.length === 2 && (
+                                            <CardMedia
+                                                component="img"
+                                                alt="30 Chip"
+                                                image={
+                                                    "/cards/originals/call_30.png"
+                                                }
+                                                className="img-center thumbnail_chips overlay-chip"
+                                            />
+                                        )}
+                                    {player.call === 30 &&
+                                        players.length > 2 && (
+                                            <CardMedia
+                                                component="img"
+                                                alt="Jink Chip"
+                                                image={
+                                                    "/cards/originals/call_jink.png"
+                                                }
+                                                className="img-center thumbnail_chips overlay-chip"
+                                            />
+                                        )}
+                                </Box>
+                            )}
+                        </Stack>
+                    </Card>
                 )}
             </Card>
 
-            <Modal
-                fade={true}
-                size="lg"
-                toggle={toggleLeaderboardModal}
-                isOpen={modalLeaderboard}>
-                <ModalBody className="gameModalBody">
-                    <CardGroup>
-                        <Card className="data-card">
-                            <CardHeader tag="h2">Leaderboard</CardHeader>
-                            <CardBody>
-                                <Leaderboard />
-                            </CardBody>
-                        </Card>
-                    </CardGroup>
-                </ModalBody>
-            </Modal>
-        </Col>
+            <Dialog
+                onClose={toggleLeaderboardModal}
+                open={modalLeaderboard}
+                maxWidth="xl">
+                <DialogContent>
+                    <Grid container>
+                        <Leaderboard />
+                    </Grid>
+                </DialogContent>
+            </Dialog>
+        </Grid>
     )
 }
 

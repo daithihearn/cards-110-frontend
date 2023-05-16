@@ -1,15 +1,14 @@
 import React, { useCallback, useMemo } from "react"
 import {
-    Modal,
-    ModalBody,
-    ModalHeader,
+    Dialog,
+    DialogTitle,
+    DialogContent,
     Button,
     ButtonGroup,
-    CardImg,
-    CardBody,
-    CardGroup,
-    Card as CardComponent,
-} from "reactstrap"
+    Card,
+    CardMedia,
+    CardContent,
+} from "@mui/material"
 import { getGameId } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
@@ -43,54 +42,50 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
         if (!gameId) throw Error("GameId not set")
         continueCallback(gameId, selectedCards, suit)
     }, [gameId, selectedCards])
+
     return (
-        <Modal
-            fade={true}
-            size="lg"
-            toggle={() => cancelCallback()}
-            isOpen={modalVisible}>
-            <ModalHeader>
-                <CardImg
+        <Dialog onClose={() => cancelCallback()} open={modalVisible}>
+            <DialogTitle>
+                <CardMedia
+                    component="img"
                     alt="Suit"
-                    src={`/cards/originals/${suit}_ICON.svg`}
+                    image={`/cards/originals/${suit}_ICON.svg`}
                     className="thumbnail_size_extra_small left-padding"
                 />
                 Are you sure you want to throw these cards away?
-            </ModalHeader>
-            <ModalBody className="called-modal">
-                <CardGroup className="gameModalCardGroup">
-                    <CardComponent className="p-6">
-                        <CardBody className="cardArea">
-                            {cardsToBeThrown.map(card => (
-                                <img
-                                    key={`deleteCardModal_${card.name}`}
-                                    alt={card.name}
-                                    src={`/cards/thumbnails/${card.name}.png`}
-                                    className="thumbnail_size"
-                                />
-                            ))}
-                        </CardBody>
+            </DialogTitle>
+            <DialogContent className="called-modal">
+                <Card className="gameModalCardGroup">
+                    <CardContent className="cardArea">
+                        {cardsToBeThrown.map(card => (
+                            <img
+                                key={`deleteCardModal_${card.name}`}
+                                alt={card.name}
+                                src={`/cards/thumbnails/${card.name}.png`}
+                                className="thumbnail_size"
+                            />
+                        ))}
+                    </CardContent>
 
-                        <CardBody className="buttonArea">
-                            <ButtonGroup size="lg">
-                                <Button
-                                    type="button"
-                                    color="primary"
-                                    onClick={() => cancelCallback()}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="button"
-                                    color="warning"
-                                    onClick={callContinue}>
-                                    Throw Cards
-                                </Button>
-                            </ButtonGroup>
-                        </CardBody>
-                    </CardComponent>
-                </CardGroup>
-            </ModalBody>
-        </Modal>
+                    <CardContent className="buttonArea">
+                        <ButtonGroup size="large">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => cancelCallback()}>
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="warning"
+                                onClick={callContinue}>
+                                Throw Cards
+                            </Button>
+                        </ButtonGroup>
+                    </CardContent>
+                </Card>
+            </DialogContent>
+        </Dialog>
     )
 }
 
