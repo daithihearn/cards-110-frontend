@@ -1,5 +1,3 @@
-import { Button } from "reactstrap"
-
 import GameService from "services/GameService"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
@@ -14,6 +12,7 @@ import {
 import { useCallback, useMemo } from "react"
 import { useSnackbar } from "notistack"
 import parseError from "utils/ErrorUtils"
+import { Button } from "@mui/material"
 
 const Calling = () => {
     const dispatch = useAppDispatch()
@@ -114,7 +113,7 @@ const Calling = () => {
             <Button
                 disabled={!buttonsEnabled}
                 type="button"
-                color="danger"
+                color="error"
                 onClick={() => call(30)}>
                 {canCallJink ? "Jink" : "30"}
             </Button>

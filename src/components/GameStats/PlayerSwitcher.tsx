@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-} from "reactstrap"
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Avatar,
+} from "@mui/material"
 import { useAppSelector } from "caches/hooks"
 import { getMyProfile } from "caches/MyProfileSlice"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
@@ -18,13 +20,16 @@ interface Props {
 const PlayerSwitcher: React.FC<Props> = ({ onChange }) => {
     const myProfile = useAppSelector(getMyProfile)
     const players = useAppSelector(getPlayerProfiles)
-    const [showDropdown, setShowDropdown] = useState(false)
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [currentPlayer, setCurrentPlayer] = useState<PlayerProfile>()
 
-    const toggleDropdown = useCallback(
-        () => setShowDropdown(!showDropdown),
-        [showDropdown],
-    )
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
 
     const sortedPlayers = useMemo(
         () =>
@@ -47,29 +52,45 @@ const PlayerSwitcher: React.FC<Props> = ({ onChange }) => {
     }, [currentPlayer])
 
     return (
-        <Dropdown isOpen={showDropdown} toggle={toggleDropdown}>
-            <DropdownToggle data-toggle="dropdown" tag="span">
-                <img
+        <>
+            <IconButton
+                edge="end"
+                color="inherit"
+                aria-haspopup="true"
+                onClick={handleClick}>
+                <Avatar
                     alt={currentPlayer ? currentPlayer.name : ""}
                     src={currentPlayer ? currentPlayer.picture : ""}
-                    className="avatar clickable"
-                    onClick={() => setShowDropdown(true)}
+                    className="clickable"
                 />
-            </DropdownToggle>
-            <DropdownMenu
-                container="body"
-                style={{ maxHeight: "20em", overflow: "scroll" }}>
+            </IconButton>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                PaperProps={{
+                    style: {
+                        maxHeight: "20em",
+                        overflow: "scroll",
+                    },
+                }}>
                 {sortedPlayers.map(p => {
                     return (
-                        <DropdownItem
+                        <MenuItem
                             key={p.id}
-                            onClick={() => setCurrentPlayer(p)}>
-                            {FormatName(p.name)}
-                        </DropdownItem>
+                            onClick={() => {
+                                setCurrentPlayer(p)
+                                handleClose()
+                            }}>
+                            <ListItemIcon>
+                                <Avatar src={p.picture} />
+                            </ListItemIcon>
+                            <ListItemText primary={FormatName(p.name)} />
+                        </MenuItem>
                     )
                 })}
-            </DropdownMenu>
-        </Dropdown>
+            </Menu>
+        </>
     )
 }
 

@@ -1,12 +1,16 @@
 import React, { useCallback, useMemo } from "react"
-import DataTable, { TableColumn } from "react-data-table-component"
-import TrophyImage from "assets/icons/trophy.png"
-import { getGame } from "caches/GameSlice"
+import VictoryIcon from "@mui/icons-material/EmojiEventsTwoTone"
+import { getGame, getIsGameActive } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
-import { GameStatus } from "model/Game"
 import { Player } from "model/Player"
-import { customStyles } from "components/Tables/CustomStyles"
+import {
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListItemSecondaryAction,
+} from "@mui/material"
 
 interface LeaderboardItem {
     previousCard?: string
@@ -20,6 +24,7 @@ interface LeaderboardItem {
 
 const SinglesLeaderboard = () => {
     const game = useAppSelector(getGame)
+    const isGameActive = useAppSelector(getIsGameActive)
     const playerProfiles = useAppSelector(getPlayerProfiles)
 
     const previousHand = useMemo(() => {
@@ -28,8 +33,6 @@ const SinglesLeaderboard = () => {
                 game.round.completedHands.length - 1
             ]
     }, [game])
-
-    const gameOver = useMemo(() => game.status === GameStatus.FINISHED, [game])
 
     const getProfile = useCallback(
         (player: Player) =>
@@ -59,60 +62,8 @@ const SinglesLeaderboard = () => {
                 winner: player.winner,
             })
         })
-        return leaderboardData
+        return leaderboardData.sort((a, b) => b.score - a.score)
     }, [playerProfiles, game, getProfile, previousHand])
-
-    const columns: TableColumn<LeaderboardItem>[] = useMemo(
-        () => [
-            {
-                cell: row => (
-                    <img alt={row.name} src={row.picture} className="avatar" />
-                ),
-            },
-            {
-                cell: row => (
-                    <img
-                        alt={row.previousCard}
-                        src={"/cards/thumbnails/" + row.previousCard + ".png"}
-                        className="thumbnail_size_small cardNotSelected"
-                    />
-                ),
-                center: true,
-                omit: gameOver || !previousHand,
-            },
-            {
-                name: "Score",
-                selector: row => row.score,
-                sortable: true,
-                center: true,
-            },
-            {
-                name: "Rings",
-                selector: row => row.rings,
-                sortable: true,
-                center: true,
-            },
-            {
-                name: "Bought",
-                selector: row => row.cardsBought,
-                sortable: true,
-                center: true,
-                omit: gameOver,
-            },
-            {
-                cell: row => (
-                    <div>
-                        {row.winner ? (
-                            <img src={TrophyImage} width="50px" height="50px" />
-                        ) : null}
-                    </div>
-                ),
-                center: true,
-                omit: !gameOver,
-            },
-        ],
-        [gameOver, previousHand],
-    )
 
     if (
         !game ||
@@ -125,16 +76,37 @@ const SinglesLeaderboard = () => {
 
     return (
         <React.Fragment>
-            <DataTable
-                noHeader
-                theme="solarized"
-                data={leaderboardData}
-                columns={columns}
-                highlightOnHover
-                customStyles={customStyles}
-                defaultSortFieldId={3}
-                defaultSortAsc={false}
-            />
+            <List sx={{ width: "500px" }}>
+                {leaderboardData.map((item, index) => (
+                    <ListItem key={index}>
+                        <ListItemIcon>
+                            <img
+                                alt={item.name}
+                                src={item.picture}
+                                className="avatar-large"
+                            />
+                        </ListItemIcon>
+
+                        <ListItemText
+                            primary={`Score: ${item.score}`}
+                            secondary={`Rings: ${item.rings} Bought: ${item.cardsBought}`}
+                            sx={{ textAlign: "center", fontWeight: "bold" }}
+                        />
+
+                        <ListItemSecondaryAction>
+                            {item.winner ? (
+                                <VictoryIcon />
+                            ) : isGameActive && item.previousCard ? (
+                                <img
+                                    alt={item.previousCard}
+                                    src={`/cards/thumbnails/${item.previousCard}.png`}
+                                    className="thumbnail_size_small"
+                                />
+                            ) : null}
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                ))}
+            </List>
         </React.Fragment>
     )
 }

@@ -1,5 +1,3 @@
-import { Button } from "reactstrap"
-
 import { useCallback, useState } from "react"
 
 import GameService from "services/GameService"
@@ -12,9 +10,10 @@ import { removeAllFromHand } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 import { SelectableCard } from "model/Cards"
 import parseError from "utils/ErrorUtils"
+import { Button } from "@mui/material"
 
 const WaitingForSuit = () => (
-    <Button disabled type="button" color="secondary">
+    <Button variant="contained" disableRipple color="secondary">
         <b>Waiting for suit...</b>
     </Button>
 )

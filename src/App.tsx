@@ -30,6 +30,13 @@ import Home from "./pages/Home/Home"
 import Game from "./pages/Game/Game"
 import Layout from "./pages/Layout/Layout"
 import ErrorPage from "./pages/Error/Error"
+import { lightTheme, darkTheme } from "Themes"
+import {
+    createTheme,
+    CssBaseline,
+    ThemeProvider,
+    useMediaQuery,
+} from "@mui/material"
 
 const AUTHO_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN as string
 const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID as string
@@ -46,18 +53,31 @@ const router = createBrowserRouter(
 )
 
 const App = () => {
+    const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
+
+    const theme = React.useMemo(
+        () =>
+            createTheme({
+                ...(prefersDarkMode ? darkTheme : lightTheme),
+            }),
+        [prefersDarkMode],
+    )
+
     return (
-        <Provider store={store}>
-            <SnackbarProvider maxSnack={3}>
-                <Auth0Provider
-                    domain={AUTHO_DOMAIN}
-                    clientId={AUTH0_CLIENT_ID}
-                    useRefreshTokens={true}>
-                    <MyProfileSync />
-                    <RouterProvider router={router} />
-                </Auth0Provider>
-            </SnackbarProvider>
-        </Provider>
+        <ThemeProvider theme={theme}>
+            <Provider store={store}>
+                <SnackbarProvider maxSnack={3}>
+                    <Auth0Provider
+                        domain={AUTHO_DOMAIN}
+                        clientId={AUTH0_CLIENT_ID}
+                        useRefreshTokens={true}>
+                        <CssBaseline />
+                        <MyProfileSync />
+                        <RouterProvider router={router} />
+                    </Auth0Provider>
+                </SnackbarProvider>
+            </Provider>
+        </ThemeProvider>
     )
 }
 export default App

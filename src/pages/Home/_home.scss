@@ -1,23 +1,3 @@
-.body {
-    font-family: $fontFamily;
-}
-.app_body {
-    width: auto;
-    flex: 1;
-    position: relative;
-    font-family: $fontFamily;
-}
-
-.data-card {
-    background-color: $white;
-    opacity: 0.95;
-}
-
-.navBarInner {
-    max-width: 800px;
-    min-height: 45px;
-}
-
 .overflow-hidden {
     overflow: hidden;
 }
@@ -32,49 +12,7 @@
 }
 
 .game_container {
-    font-size: 16px;
-    line-height: 24px;
-    padding: 100px 20px 100px 20px;
-
-    &_headerText {
-        height: 40px;
-        width: 92px;
-        color: #000000;
-        font-size: $fontSizeH2;
-        line-height: 40px;
-        font-weight: $fontWeightBold;
-        font-family: $fontFamily;
-        margin: 0 auto 24px auto;
-    }
-
-    &_subtext {
-        min-height: 44px;
-        max-width: 293px;
-        color: #0f0f0f;
-        font-family: $fontFamily;
-        font-size: $fontSizeBody;
-        line-height: 22px;
-        text-align: center;
-        margin: 0 auto 34px auto;
-    }
-
-    &_text {
-        height: auto;
-        max-width: 304px;
-        color: $black;
-        font-family: $fontFamily;
-        font-size: 16px;
-        line-height: 20px;
-        text-align: center;
-        margin: 40px auto 20px auto;
-
-        &_link {
-            color: $blue;
-            font-weight: $fontWeightBold;
-            font-family: $fontFamily;
-            cursor: pointer;
-        }
-    }
+    padding: 10px 10px 10px 10px;
 }
 
 .player-avatar {
@@ -99,244 +37,8 @@
     border-radius: 50%;
 }
 
-.image-team1-filter {
-    border: solid 4px red;
-    filter: saturate(2);
-}
-
-.image-team2-filter {
-    border: solid 4px yellow;
-    filter: sepia(100%);
-}
-
-.image-team3-filter {
-    border: solid 4px blue;
-    // filter: invert(100%);
-}
-
-.clickable:hover {
-    cursor: pointer;
-}
-
-.thumbnail_size {
-    max-width: 100px;
-    max-height: 153px;
-}
-
-.thumbnail_size_small {
-    max-width: 70px;
-    max-height: 100px;
-}
-
-.thumbnail_size_extra_small {
-    max-width: 45px;
-    max-height: 45px;
-}
-
-.thumbnail_chips {
-    max-width: 70px;
-    max-height: 70px;
-}
-
-.background_white {
-    border-radius: 5px;
-    background-color: white;
-}
-
 .transparent {
     opacity: 0.6;
-}
-
-.diplay_image_size {
-    max-width: 512px;
-    max-height: 512px;
-}
-
-.dropdown-menu-quizzes {
-    // position: absolute;
-    /* top: 100%; */
-    /* left: 0; */
-    z-index: 1000;
-    /* display: none; */
-    // float: left;
-    min-width: 10rem;
-    padding: 0 0;
-    margin: 0.125rem 0 0;
-    font-size: 0.875rem;
-    color: #23282c;
-    text-align: left;
-    list-style: none;
-    background-color: white;
-    background-clip: padding-box;
-    border: 1px solid #c8ced3;
-    border-radius: 0.25rem;
-}
-
-.home-tile_wrap {
-    max-width: 1140px;
-    overflow: overlay;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px 40px 0 40px;
-    font-size: $fontSizeH2;
-    font-family: $fontFamily;
-    color: $blackShade2;
-    font-weight: $fontWeightBlack;
-    line-height: 62px;
-    pointer-events: none;
-
-    &_sub {
-        font-size: $fontSizeBody;
-        line-height: 22px;
-        font-weight: $fontWeightRegular;
-        font-family: $fontFamily;
-        pointer-events: none;
-    }
-}
-
-.tile_wrap {
-    max-width: 1140px;
-    overflow: overlay;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 40px 0 40px;
-}
-
-.card-product_Stats {
-    margin: 35px 0 10px 0;
-    overflow: hidden;
-    min-height: 340px;
-    background: white;
-    display: flex;
-    align-items: center;
-    border-radius: 12px;
-    box-shadow: 1px 4px 11px 2px rgba(0, 0, 0, 0.06);
-
-    .rwd-table {
-        min-width: 300px;
-        max-width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .TableBody {
-        border: 1px solid $greyshade4;
-    }
-
-    .rwd-table tr:first-child {
-        background: $white;
-        color: #808080;
-    }
-
-    .rwd-table th {
-        display: none;
-    }
-
-    .rwd-table td {
-        display: block;
-    }
-
-    .rwd-table td:first-child {
-        margin-top: 0.5em;
-    }
-
-    .rwd-table td:last-child {
-        margin-bottom: 0.5em;
-    }
-
-    .rwd-table td:before {
-        content: attr(data-th) ": ";
-        font-weight: $fontWeightBold;
-        width: 120px;
-        display: inline-block;
-        color: $blackShade2;
-    }
-
-    .rwd-table th,
-    .rwd-table td {
-        text-align: left;
-        border-right: 1px solid $greyshade4;
-    }
-    .rwd-table th:last-child,
-    .rwd-table td:last-child {
-        border-right: none;
-    }
-
-    .rwd-table {
-        color: #333;
-        overflow-y: scroll;
-    }
-
-    .rwd-table tr {
-        border-color: #bfbfbf;
-    }
-
-    .rwd-table th,
-    .rwd-table td {
-        padding: 0.5em 1em;
-    }
-    @media screen and (max-width: 800px) {
-        .rwd-table tr:nth-child(2) {
-            border-top: 1px solid $greyshade4 !important ;
-        }
-
-        .rwd-table tr {
-            border-right: none;
-            border-bottom: 1px solid $greyshade4;
-        }
-    }
-    @media screen and (min-width: 800px) {
-        .game_wrap {
-            max-width: 790px;
-        }
-        .rwd-table tr:hover:not(:first-child) {
-            background-color: #d8e7f3;
-        }
-        .rwd-table td:before {
-            display: none;
-        }
-        .rwd-table th,
-        .rwd-table td {
-            display: table-cell;
-            padding: 0.25em 0.5em;
-        }
-        .rwd-table th:first-child,
-        .rwd-table td:first-child {
-            padding-left: 0;
-        }
-
-        .rwd-table th,
-        .rwd-table td {
-            padding: 1em !important;
-        }
-    }
-
-    &_textContent {
-        margin: 0px 20px 20px 80px;
-    }
-
-    &_Content {
-        font-size: $fontSizeH1;
-        line-height: 68px;
-        color: #000000;
-        font-weight: $fontWeightBold;
-        font-family: $fontFamily;
-        margin-top: 10px;
-        margin-bottom: 15px;
-        text-align: left;
-        max-width: 600px;
-        pointer-events: none;
-    }
-
-    &_subContent {
-        font-size: $fontSizeBody;
-        color: black;
-        font-weight: 300;
-        font-family: $fontFamily;
-        margin-top: 14px;
-        margin-bottom: 28px;
-        text-align: left;
-        pointer-events: none;
-    }
 }
 
 .diplay_image_size {
@@ -385,25 +87,6 @@
 
     .tile_wrap {
         padding: 0 20px 0 20px;
-    }
-
-    .card-product_Stats {
-        margin: 35px 0;
-        height: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
-        flex-direction: column-reverse;
-
-        &_textContent {
-            margin: 0px 30px 10px 30px;
-        }
-
-        &_Content {
-            margin-top: 28px;
-            font-size: 30px;
-        }
     }
 }
 
@@ -486,11 +169,6 @@
         max-width: 460px;
     }
 
-    .card-product_StatsHome {
-        &_Content {
-            font-size: 38px !important ;
-        }
-    }
 }
 
 @media only screen and (max-width: 420px) {
@@ -503,11 +181,6 @@
         max-width: 320px;
     }
 
-    .card-product_StatsHome {
-        &_Content {
-            font-size: 38px !important ;
-        }
-    }
 }
 
 @media only screen and (max-width: 385px) {

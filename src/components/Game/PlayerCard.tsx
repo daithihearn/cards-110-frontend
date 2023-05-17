@@ -1,33 +1,162 @@
-import { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
-    Col,
-    CardImgOverlay,
-    CardText,
-    CardImg,
-    Card,
-    CardSubtitle,
-    Modal,
-    ModalBody,
-    CardGroup,
-    CardHeader,
-    CardBody,
-} from "reactstrap"
+    Grid,
+    CardMedia,
+    Typography,
+    Card as MuiCard,
+    CardContent,
+    Dialog,
+    DialogContent,
+    Stack,
+    Box,
+    useTheme,
+} from "@mui/material"
+import { styled } from "@mui/system"
 import { getGamePlayers, getRound } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { BLANK_CARD } from "model/Cards"
 import { PlayedCard } from "model/Game"
-
 import { Player } from "model/Player"
 import Leaderboard from "components/Leaderboard/Leaderboard"
+import { Suit } from "model/Suit"
 
 interface PlayerRowI {
     player: Player
     className?: string
 }
-const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
+
+const Card = styled(MuiCard)({
+    background: "transparent",
+})
+
+const BlankCard: React.FC<{ name: string }> = ({ name }) => {
+    const theme = useTheme()
+
+    return (
+        <CardMedia
+            component="img"
+            alt={name}
+            image={
+                theme.palette.mode === "dark"
+                    ? "/cards/thumbnails/blank_card_outline_light.png"
+                    : "/cards/thumbnails/blank_card_outline_dark.png"
+            }
+            className="img-center thumbnail_size"
+        />
+    )
+}
+
+enum ChipType {
+    Dealer = "DEALER.png",
+    Call10 = "call_10.png",
+    Call15 = "call_15.png",
+    Call20 = "call_20.png",
+    Call25 = "call_25.png",
+    CallJink = "call_jink.png",
+    Clubs = "CLUBS_ICON.svg",
+    Diamonds = "DIAMONDS_ICON.svg",
+    Hearts = "HEARTS_ICON.svg",
+    Spades = "SPADES_ICON.svg",
+}
+
+const SuitChip: React.FC<{ player: Player }> = ({ player }) => {
     const round = useAppSelector(getRound)
-    const players = useAppSelector(getGamePlayers)
+
+    const isGoer: boolean = useMemo(
+        () => !!round && round.goerId === player.id,
+        [round, player],
+    )
+
+    const suitChip = useMemo(() => {
+        if (!round || !round.suit) return undefined
+        switch (round.suit) {
+            case Suit.CLUBS:
+                return ChipType.Clubs
+            case Suit.DIAMONDS:
+                return ChipType.Diamonds
+            case Suit.HEARTS:
+                return ChipType.Hearts
+            case Suit.SPADES:
+                return ChipType.Spades
+            default:
+                return undefined
+        }
+    }, [round])
+
+    if (!isGoer || !suitChip) return null
+    return (
+        <Box position="absolute" top={0} left={0} width={"100%"}>
+            <CardMedia
+                component="img"
+                alt="Suit Chip"
+                image={`/cards/originals/${suitChip}`}
+                className="img-center thumbnail-suit overlay-suit-chip"
+            />
+        </Box>
+    )
+}
+
+const CallChip: React.FC<{
+    call: number
+}> = ({ call }) => {
+    const round = useAppSelector(getRound)
+
+    const callChip = useMemo(() => {
+        if (!round || round.suit) return undefined
+        switch (call) {
+            case 10:
+                return ChipType.Call10
+            case 15:
+                return ChipType.Call15
+            case 20:
+                return ChipType.Call20
+            case 25:
+                return ChipType.Call25
+            case 30:
+                return ChipType.CallJink
+            default:
+                return undefined
+        }
+    }, [round, call])
+
+    if (!callChip) return null
+    return (
+        <Box position="absolute" top={0} left={0} width={"100%"}>
+            <CardMedia
+                component="img"
+                alt="Call Chip"
+                image={`/cards/thumbnails/${callChip}`}
+                className="img-center thumbnail-chips overlay-chip"
+            />
+        </Box>
+    )
+}
+
+const DealerChip: React.FC<{ player: Player }> = ({ player }) => {
+    const round = useAppSelector(getRound)
+
+    const isDealer: boolean = useMemo(
+        () => !!round && !round.suit && round.dealerId === player.id,
+        [round, player],
+    )
+
+    if (!isDealer) return null
+    return (
+        <Box position="absolute" top={0} left={0} width={"100%"}>
+            <CardMedia
+                component="img"
+                alt="Dealer Chip"
+                image={`/cards/thumbnails/${ChipType.Dealer}`}
+                className="img-center thumbnail-chips overlay-dealer-chip"
+            />
+        </Box>
+    )
+}
+
+const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
+    const theme = useTheme()
+    const round = useAppSelector(getRound)
     const playerProfiles = useAppSelector(getPlayerProfiles)
     const [modalLeaderboard, updateModalLeaderboard] = useState(false)
 
@@ -55,11 +184,6 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
         [round, player],
     )
 
-    const isDealer: boolean = useMemo(
-        () => !!round && !round.suit && round.dealerId === player.id,
-        [round, player],
-    )
-
     const scoreClassName = useMemo(() => {
         if (player.score < -30) {
             return "bg-dark text-light"
@@ -79,120 +203,62 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
     if (!profile) return null
 
     return (
-        <Col key={`playercard_col_${player.id}`} className="player-column">
-            <Card
-                className="card-transparent clickable"
-                onClick={toggleLeaderboardModal}>
-                <CardImg
-                    alt={profile.name}
-                    src={profile.picture}
-                    top={true}
-                    className={`img-center player-avatar ${className}`}
+        <Grid
+            item
+            key={`playercard_col_${player.id}`}
+            className="player-column">
+            <Card className="no-shadow">
+                <CardMedia
+                    image={profile.picture}
+                    onClick={toggleLeaderboardModal}
+                    className={`img-center player-avatar ${className}  ${
+                        isCurrentPlayer
+                            ? "highlight-player-" + theme.palette.mode
+                            : "dull-player"
+                    }`}
+                    sx={{ cursor: "pointer" }}
                 />
-                <CardSubtitle className="player-score-container">
-                    <CardText
-                        className={`player-score score-text ${scoreClassName}`}>
+                <CardContent className="player-score-container">
+                    <Typography
+                        variant="h3"
+                        component="h3"
+                        className={`score-text ${scoreClassName}`}>
                         {player.score}
-                    </CardText>
-                </CardSubtitle>
+                    </Typography>
+                </CardContent>
             </Card>
 
-            <Card className="card-transparent">
+            <Card className="no-shadow">
                 {playedCard ? (
-                    <CardImg
+                    <CardMedia
+                        component="img"
                         alt={profile.name}
-                        src={`/cards/thumbnails/${playedCard.card}.png`}
+                        image={`/cards/thumbnails/${playedCard.card}.png`}
                         className="img-center thumbnail_size"
                     />
                 ) : (
-                    <>
-                        <CardImg
-                            alt={profile.name}
-                            src={`/cards/thumbnails/${
-                                isCurrentPlayer
-                                    ? "yellow_back.png"
-                                    : "blank_card_outline.png"
-                            }`}
-                            className={`img-center thumbnail_size`}
-                        />
-
-                        {isDealer ? (
-                            <CardImgOverlay>
-                                <CardImg
-                                    alt="Dealer Chip"
-                                    src={"/cards/originals/DEALER.png"}
-                                    className="thumbnail_chips overlay-dealer-chip"
-                                />
-                            </CardImgOverlay>
-                        ) : null}
-
-                        {round && !round.suit ? (
-                            <CardImgOverlay>
-                                {player.call === 10 ? (
-                                    <CardImg
-                                        alt="Ten Chip"
-                                        src={"/cards/originals/call_10.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 15 ? (
-                                    <CardImg
-                                        alt="15 Chip"
-                                        src={"/cards/originals/call_15.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 20 ? (
-                                    <CardImg
-                                        alt="20 Chip"
-                                        src={"/cards/originals/call_20.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 25 ? (
-                                    <CardImg
-                                        alt="25 Chip"
-                                        src={"/cards/originals/call_25.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 30 && players.length === 2 ? (
-                                    <CardImg
-                                        alt="30 Chip"
-                                        src={"/cards/originals/call_30.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                                {player.call === 30 && players.length > 2 ? (
-                                    <CardImg
-                                        alt="Jink Chip"
-                                        src={"/cards/originals/call_jink.png"}
-                                        className="thumbnail_chips overlay-chip"
-                                    />
-                                ) : null}
-                            </CardImgOverlay>
-                        ) : null}
-                    </>
+                    <Card>
+                        <Stack position="relative">
+                            <BlankCard name={profile.name} />
+                            <DealerChip player={player} />
+                            <CallChip call={player.call} />
+                            <SuitChip player={player} />
+                        </Stack>
+                    </Card>
                 )}
             </Card>
 
-            <Modal
-                fade={true}
-                size="lg"
-                toggle={toggleLeaderboardModal}
-                isOpen={modalLeaderboard}>
-                <ModalBody className="gameModalBody">
-                    <CardGroup>
-                        <Card className="data-card">
-                            <CardHeader tag="h2">Leaderboard</CardHeader>
-                            <CardBody>
-                                <Leaderboard />
-                            </CardBody>
-                        </Card>
-                    </CardGroup>
-                </ModalBody>
-            </Modal>
-        </Col>
+            <Dialog
+                onClose={toggleLeaderboardModal}
+                open={modalLeaderboard}
+                maxWidth="xl">
+                <DialogContent>
+                    <Grid container>
+                        <Leaderboard />
+                    </Grid>
+                </DialogContent>
+            </Dialog>
+        </Grid>
     )
 }
 

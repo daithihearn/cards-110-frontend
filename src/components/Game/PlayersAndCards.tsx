@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Row, CardBody, Container } from "reactstrap"
+import { Grid, CardContent, Container } from "@mui/material"
 import { getGamePlayers } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { Player } from "model/Player"
@@ -20,28 +20,24 @@ const PlayersAndCards = () => {
     )
 
     return (
-        <CardBody className="cardArea">
+        <CardContent>
             <Container>
-                <Row
-                    xs={sortedPlayers.length}
-                    sm={sortedPlayers.length}
-                    md={sortedPlayers.length}
-                    lg={sortedPlayers.length}
-                    xl={sortedPlayers.length}>
+                <Grid container spacing={2}>
                     {sortedPlayers.map((player, index) => (
-                        <PlayerCard
-                            key={`playercard_${player.id}`}
-                            player={player}
-                            className={
-                                sortedPlayers.length === 6
-                                    ? `image-team${(index % 3) + 1}-filter`
-                                    : ""
-                            }
-                        />
+                        <Grid item key={`playercard_${player.id}`} xs>
+                            <PlayerCard
+                                player={player}
+                                className={
+                                    sortedPlayers.length === 6
+                                        ? `image-team${(index % 3) + 1}-filter`
+                                        : ""
+                                }
+                            />
+                        </Grid>
                     ))}
-                </Row>
+                </Grid>
             </Container>
-        </CardBody>
+        </CardContent>
     )
 }
 

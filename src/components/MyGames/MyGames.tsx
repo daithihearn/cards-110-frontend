@@ -1,82 +1,51 @@
-import React, { useCallback, useState } from "react"
+import React, { useMemo } from "react"
 
-import RemoveImage from "assets/icons/remove.png"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
-import GameService from "services/GameService"
-
-import DataTable, { TableColumn } from "react-data-table-component"
-import TrophyImage from "assets/icons/trophy.png"
+import PlayIcon from "@mui/icons-material/PlayCircleFilled"
+import VisibilityIcon from "@mui/icons-material/Visibility"
+import VictoryIcon from "@mui/icons-material/EmojiEventsTwoTone"
+import FailureIcon from "@mui/icons-material/MoneyOffTwoTone"
 
 import {
-    Modal,
-    ModalBody,
-    ModalHeader,
-    ModalFooter,
-    Button,
     Card,
-    CardBody,
-    CardGroup,
+    CardContent,
     CardHeader,
-} from "reactstrap"
+    Grid,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemSecondaryAction,
+    ListItemText,
+} from "@mui/material"
+
 import moment from "moment"
-import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { useAppSelector } from "caches/hooks"
 import { getMyGames } from "caches/MyGamesSlice"
 import { getMyProfile } from "caches/MyProfileSlice"
-import { useSnackbar } from "notistack"
 import { Game, GameStatus } from "model/Game"
-import { customStyles } from "components/Tables/CustomStyles"
-import parseError from "utils/ErrorUtils"
+import { Player } from "model/Player"
+
+const sortByDate = (a: Game, b: Game) => {
+    return moment(b.timestamp).diff(moment(a.timestamp))
+}
+// Filters out the dummy player and returns the number of players in the game
+const getNumberOfPlayers = (players: Player[]) => {
+    return players.filter(player => player.id !== "dummy").length
+}
 
 const MyGames = () => {
-    const dispatch = useAppDispatch()
-    const { enqueueSnackbar } = useSnackbar()
+    const navigateTo = useNavigate()
 
     const myGames = useAppSelector(getMyGames)
     const myProfile = useAppSelector(getMyProfile)
 
-    const [modalDeleteGameOpen, updateModalDeleteGameOpen] = useState(false)
-    const [deleteGameId, updateDeleteGameId] = useState("")
+    const last10Games = useMemo(() => {
+        return [...myGames].sort(sortByDate).slice(0, 7)
+    }, [myGames])
 
-    const deleteGame = () => {
-        dispatch(GameService.deleteGame(deleteGameId))
-            .then(() => {
-                enqueueSnackbar("Game deleted")
-                handleCloseDeleteGameModal()
-            })
-            .catch((e: Error) =>
-                enqueueSnackbar(parseError(e), { variant: "error" }),
-            )
-    }
-
-    const showDeleteGameModal = (id: string) => {
-        updateModalDeleteGameOpen(true)
-        updateDeleteGameId(id)
-    }
-
-    const handleCloseDeleteGameModal = useCallback(() => {
-        updateModalDeleteGameOpen(false)
-        updateDeleteGameId("")
-    }, [updateDeleteGameId, updateModalDeleteGameOpen])
-
-    const parsePlayButtonLabel = (game: Game, playerId: string) => {
-        if (game.status === GameStatus.ACTIVE) {
-            if (isInGame(game, playerId)) {
-                return "Play"
-            }
-            return "Spectate"
-        }
-        return "Result"
-    }
-
-    const parsePlayButtonColour = (game: Game, playerId: string) => {
-        if (game.status === GameStatus.ACTIVE) {
-            if (isInGame(game, playerId)) {
-                return "success"
-            }
-            return "primary"
-        }
-        return "secondary"
+    const isGameActive = (game: Game) => {
+        return game.status === GameStatus.ACTIVE
     }
 
     const isWinner = (game: Game, playerId: string) => {
@@ -85,105 +54,63 @@ const MyGames = () => {
         return !!player && player.winner
     }
 
-    const isInGame = (game: Game, playerId: string) => {
-        return game.players.some(e => e.id === playerId)
+    const isLoser = (game: Game, playerId: string) => {
+        if (game.status === GameStatus.ACTIVE) return false
+        const player = game.players.find(e => e.id === playerId)
+
+        return !!player && !player.winner
     }
 
-    const columns: TableColumn<Game>[] = [
-        {
-            cell: row => (
-                <Link to={`/game/${row.id}`}>
-                    <Button
-                        type="button"
-                        color={parsePlayButtonColour(row, myProfile.id!)}>
-                        {parsePlayButtonLabel(row, myProfile.id!)}
-                    </Button>
-                </Link>
-            ),
-            center: true,
-        },
-        { name: "Name", selector: row => row.name, sortable: true },
-        {
-            name: "Date",
-            selector: row => row.timestamp,
-            format: row => moment(row.timestamp).format("llll"),
-            sortable: true,
-        },
-        {
-            cell: row => (
-                <div>
-                    {isWinner(row, myProfile.id!) ? (
-                        <img src={TrophyImage} width="25px" height="25px" />
-                    ) : null}
-                </div>
-            ),
-            center: true,
-        },
-
-        {
-            cell: row => (
-                <Button
-                    disabled={
-                        row.adminId !== myProfile.id ||
-                        row.status !== GameStatus.ACTIVE
-                    }
-                    type="button"
-                    color="link"
-                    onClick={() => showDeleteGameModal(row.id)}>
-                    <img
-                        alt="Remove"
-                        src={RemoveImage}
-                        width="20px"
-                        height="20px"
-                    />
-                </Button>
-            ),
-            center: true,
-            omit: !myProfile.isAdmin,
-        },
-    ]
-
     return (
-        <CardGroup>
-            <Card className="p-6 data-card">
-                <CardHeader tag="h2">Games</CardHeader>
-                <CardBody>
-                    <DataTable
-                        noHeader
-                        pagination
-                        theme="solarized"
-                        data={myGames}
-                        columns={columns}
-                        customStyles={customStyles}
-                        defaultSortFieldId={3}
-                        defaultSortAsc={false}
-                        highlightOnHover
-                    />
-                </CardBody>
-            </Card>
+        <Grid container>
+            <Grid item xs={12}>
+                <Card>
+                    <CardHeader title="Games" />
+                    <CardContent>
+                        <List>
+                            {last10Games.map(row => (
+                                <ListItem key={row.id}>
+                                    <ListItemIcon
+                                        onClick={() =>
+                                            navigateTo(`/game/${row.id}`)
+                                        }
+                                        sx={{
+                                            cursor: "pointer",
+                                        }}>
+                                        {isGameActive(row) ? (
+                                            <PlayIcon />
+                                        ) : (
+                                            <VisibilityIcon />
+                                        )}
+                                    </ListItemIcon>
 
-            <Modal
-                fade
-                toggle={handleCloseDeleteGameModal}
-                isOpen={modalDeleteGameOpen}>
-                <ModalHeader>You are about to Delete a game</ModalHeader>
+                                    <ListItemText
+                                        primary={`${moment(
+                                            row.timestamp,
+                                        ).format("ll")} - ${row.name}`}
+                                        secondary={`${getNumberOfPlayers(
+                                            row.players,
+                                        )} players`}
+                                        sx={{
+                                            textAlign: "center",
+                                        }}
+                                    />
 
-                <ModalBody>
-                    Are you sure you want to delete this game?
-                </ModalBody>
-
-                <ModalFooter>
-                    <Button
-                        color="secondary"
-                        onClick={handleCloseDeleteGameModal}>
-                        No
-                    </Button>
-                    <Button color="primary" onClick={deleteGame}>
-                        Yes
-                    </Button>
-                </ModalFooter>
-            </Modal>
-        </CardGroup>
+                                    <ListItemSecondaryAction>
+                                        {isWinner(row, myProfile.id!) && (
+                                            <VictoryIcon />
+                                        )}
+                                        {isLoser(row, myProfile.id!) && (
+                                            <FailureIcon />
+                                        )}
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
     )
 }
 

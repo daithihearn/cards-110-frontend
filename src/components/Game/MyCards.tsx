@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react"
-import { CardImg, CardBody } from "reactstrap"
 import {
     DragDropContext,
     Draggable,
@@ -7,7 +6,6 @@ import {
     DropResult,
 } from "react-beautiful-dnd"
 import { BLANK_CARD, SelectableCard } from "model/Cards"
-
 import { RoundStatus } from "model/Round"
 import { getIamGoer, getIsRoundCalled, getRound } from "caches/GameSlice"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
@@ -23,6 +21,7 @@ import {
     toggleAutoPlay,
     clearAutoPlay,
 } from "caches/AutoPlaySlice"
+import { CardContent, CardMedia } from "@mui/material"
 
 const EMPTY_HAND = [
     { ...BLANK_CARD, selected: false },
@@ -122,7 +121,7 @@ const MyCards: React.FC = () => {
 
             if (cardsSelectable && card.name !== BLANK_CARD.name) {
                 if (card.name === autoPlayCard) {
-                    classes += " cardAutoPlayed"
+                    classes += " auto-played"
                 } else if (!card.selected) {
                     classes += " cardNotSelected"
                 }
@@ -135,12 +134,12 @@ const MyCards: React.FC = () => {
 
     return (
         <div>
-            <CardBody className="cardArea">
+            <CardContent className="cardArea">
                 <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="myCards" direction="horizontal">
                         {provided => (
                             <div
-                                className="characters myCards"
+                                className="characters my-cards cards-background"
                                 style={{ display: "inline-flex" }}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}>
@@ -163,7 +162,8 @@ const MyCards: React.FC = () => {
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}>
-                                                    <CardImg
+                                                    <CardMedia
+                                                        component="img"
                                                         alt={card.name}
                                                         onClick={event =>
                                                             handleSelectCard(
@@ -171,7 +171,7 @@ const MyCards: React.FC = () => {
                                                                 event,
                                                             )
                                                         }
-                                                        src={`/cards/thumbnails/${card.name}.png`}
+                                                        image={`/cards/thumbnails/${card.name}.png`}
                                                         className={getStyleForCard(
                                                             card,
                                                         )}
@@ -186,14 +186,14 @@ const MyCards: React.FC = () => {
                         )}
                     </Droppable>
                 </DragDropContext>
-            </CardBody>
+            </CardContent>
 
-            <CardBody className="cardArea">
+            <CardContent className="cardArea">
                 <DragDropContext onDragEnd={handleOnDragEndDummy}>
                     <Droppable droppableId="dummy" direction="horizontal">
                         {provided => (
                             <div
-                                className="characters myCards dummy"
+                                className="characters my-cards dummy"
                                 style={{ display: "inline-flex" }}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}>
@@ -219,7 +219,8 @@ const MyCards: React.FC = () => {
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}>
-                                                    <CardImg
+                                                    <CardMedia
+                                                        component="img"
                                                         alt={card.name}
                                                         onClick={event =>
                                                             handleSelectCard(
@@ -227,7 +228,7 @@ const MyCards: React.FC = () => {
                                                                 event,
                                                             )
                                                         }
-                                                        src={`/cards/thumbnails/${card.name}.png`}
+                                                        image={`/cards/thumbnails/${card.name}.png`}
                                                         className={getStyleForCard(
                                                             card,
                                                         )}
@@ -242,7 +243,7 @@ const MyCards: React.FC = () => {
                         )}
                     </Droppable>
                 </DragDropContext>
-            </CardBody>
+            </CardContent>
         </div>
     )
 }

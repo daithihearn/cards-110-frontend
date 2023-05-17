@@ -32,6 +32,7 @@ export interface GameState {
     isMyGo: boolean
     iamGoer: boolean
     iamDealer: boolean
+    iamAdmin: boolean
     cards: string[]
     status: GameStatus
     round?: Round
