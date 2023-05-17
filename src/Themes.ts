@@ -14,9 +14,8 @@ export const darkTheme: ThemeOptions = {
         MuiCssBaseline: {
             styleOverrides: {
                 ".carpet": {
-                    backgroundImage:
-                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23e9ffd0' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E\")",
-                    backgroundColor: "#519305",
+                    background:
+                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='100%25' width='100%25'%3E%3Cdefs%3E%3Cpattern id='doodad' width='37' height='37' viewBox='0 0 40 40' patternUnits='userSpaceOnUse' patternTransform='rotate(60)'%3E%3Crect width='100%25' height='100%25' fill='rgba(34, 84, 61,1)'/%3E%3Ccircle cx='20' cy='20' r='1' fill='%23f6e05e'/%3E%3Ccircle cx='30' cy='20' r='1' fill='%23d69e2e'/%3E%3Ccircle cx='20' cy='30' r='1' fill='%23d69e2e'/%3E%3Ccircle cx='10' cy='20' r='1' fill='%23d69e2e'/%3E%3Ccircle cx='20' cy='10' r='1' fill='%23d69e2e'/%3E%3Ccircle cx='30' cy='20' r='1' fill='%23d69e2e'/%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23doodad)' height='200%25' width='200%25'/%3E%3C/svg%3E \")",
                     position: "fixed",
                     width: "100%",
                     height: "100%",
@@ -109,9 +108,8 @@ export const lightTheme: ThemeOptions = {
         MuiCssBaseline: {
             styleOverrides: {
                 ".carpet": {
-                    backgroundImage:
-                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23007900' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E\")",
-                    backgroundColor: "#e9ffd0",
+                    background:
+                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='100%25' width='100%25'%3E%3Cdefs%3E%3Cpattern id='doodad' width='37' height='37' viewBox='0 0 40 40' patternUnits='userSpaceOnUse' patternTransform='rotate(60)'%3E%3Crect width='100%25' height='100%25' fill='rgba(178, 245, 234,1)'/%3E%3Ccircle cx='20' cy='20' r='1' fill='rgba(45, 55, 72,1)'/%3E%3Ccircle cx='30' cy='20' r='1' fill='rgba(34, 84, 61,1)'/%3E%3Ccircle cx='20' cy='30' r='1' fill='rgba(34, 84, 61,1)'/%3E%3Ccircle cx='10' cy='20' r='1' fill='rgba(34, 84, 61,1)'/%3E%3Ccircle cx='20' cy='10' r='1' fill='rgba(34, 84, 61,1)'/%3E%3Ccircle cx='30' cy='20' r='1' fill='rgba(34, 84, 61,1)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23doodad)' height='200%25' width='200%25'/%3E%3C/svg%3E \")",
                     position: "fixed",
                     width: "100%",
                     height: "100%",
