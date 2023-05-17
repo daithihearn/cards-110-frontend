@@ -220,8 +220,9 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
                 />
                 <CardContent className="player-score-container">
                     <Typography
-                        component="span"
-                        className={`player-score score-text ${scoreClassName}`}>
+                        variant="h3"
+                        component="h3"
+                        className={`score-text ${scoreClassName}`}>
                         {player.score}
                     </Typography>
                 </CardContent>
