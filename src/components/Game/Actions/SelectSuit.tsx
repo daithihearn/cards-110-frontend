@@ -13,7 +13,7 @@ import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
 
 const WaitingForSuit = () => (
-    <Button disabled type="button" color="secondary">
+    <Button variant="contained" disableRipple color="secondary">
         <b>Waiting for suit...</b>
     </Button>
 )

@@ -11,7 +11,7 @@ import { RoundStatus } from "model/Round"
 import { Button } from "@mui/material"
 
 const WaitingForYourTurn = () => (
-    <Button disabled type="button" color="secondary">
+    <Button variant="contained" disableRipple color="secondary">
         <b>Waiting for your turn...</b>
     </Button>
 )

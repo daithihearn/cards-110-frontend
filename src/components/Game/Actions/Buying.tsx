@@ -22,7 +22,7 @@ import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
 
 const WaitingForRoundToStart = () => (
-    <Button disabled type="button" color="info">
+    <Button variant="contained" disableRipple color="info">
         <b>Waiting for round to start...</b>
     </Button>
 )
