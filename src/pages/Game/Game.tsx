@@ -48,7 +48,7 @@ const Game = () => {
     }, [])
 
     return (
-        <div className="app carpet">
+        <div className="app">
             <div className="game_wrap">
                 <div className="game_container">
                     {isGameActive ? <GameWrapper /> : <GameOver />}

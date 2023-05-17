@@ -11,6 +11,25 @@ export const darkTheme: ThemeOptions = {
                 },
             },
         },
+        MuiCssBaseline: {
+            styleOverrides: {
+                ".carpet": {
+                    backgroundImage:
+                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23e9ffd0' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E\")",
+                    backgroundColor: "#519305",
+                    position: "fixed",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "overlay",
+                },
+                ".dummy": {
+                    backgroundImage: "url('/assets/img/dummy-light.png')",
+                },
+                ".cards-background": {
+                    backgroundImage: "url('/assets/img/mycards-light.png')",
+                },
+            },
+        },
     },
     palette: {
         mode: "dark",
@@ -84,6 +103,25 @@ export const lightTheme: ThemeOptions = {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                },
+            },
+        },
+        MuiCssBaseline: {
+            styleOverrides: {
+                ".carpet": {
+                    backgroundImage:
+                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23007900' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E\")",
+                    backgroundColor: "#e9ffd0",
+                    position: "fixed",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "overlay",
+                },
+                ".dummy": {
+                    backgroundImage: "url('/assets/img/dummy-dark.png')",
+                },
+                ".cards-background": {
+                    backgroundImage: "url('/assets/img/mycards-dark.png')",
                 },
             },
         },

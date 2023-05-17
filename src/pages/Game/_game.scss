@@ -8,25 +8,36 @@
     filter: brightness(70%);
 }
 
-.cardAutoPlayed {
+.auto-played {
     filter: drop-shadow(16px 16px 20px red);
 }
 
-.myCards {
+.highlight-player-light {
+    filter: drop-shadow(16px 16px 20px black);
+}
+
+.highlight-player-dark {
+    filter: drop-shadow(16px 16px 20px white);
+}
+
+.dull-player {
+    filter: grayscale(25%);
+    opacity: 0.7;
+}
+
+.my-cards {
     border-style: solid;
     border-width: 5px;
     border-radius: 10px;
     padding: 2px;
-    background-image: url("/assets/img/mycards.png");
     background-size: contain;
 }
-
-.dummy {
-    background-image: url("/assets/img/dummy.png");
-}
-
 .overlay-chip {
     margin-top: 5rem;
+}
+
+.overlay-suit-chip {
+    margin-top: 3rem;
 }
 
 .overlay-dealer-chip {
@@ -54,9 +65,14 @@
     box-shadow: none !important;
 }
 
-.thumbnail_chips {
+.thumbnail-chips {
     max-width: 70px;
     max-height: 70px;
+}
+
+.thumbnail-suit {
+    max-width: 45px;
+    max-height: 60px;
 }
 
 .player-column {
@@ -89,17 +105,14 @@
 
 .image-team1-filter {
     border: solid 4px red;
-    filter: saturate(2);
 }
 
 .image-team2-filter {
     border: solid 4px yellow;
-    filter: sepia(100%);
 }
 
 .image-team3-filter {
     border: solid 4px blue;
-    // filter: invert(100%);
 }
 
 .clickable:hover {
@@ -172,12 +185,6 @@
     }
 }
 
-@media (max-width: 768px) {
-    .overlay-chip {
-        margin-top: 5rem;
-    }
-}
-
 @media (max-width: 420px) {
     .card-img-overlay {
         padding-left: 0;
@@ -189,6 +196,10 @@
 
     .overlay-chip {
         margin-top: 1rem;
+    }
+
+    .overlay-suit-chip {
+        margin-top: 0.5rem;
     }
 
     .overlay-dealer-chip {

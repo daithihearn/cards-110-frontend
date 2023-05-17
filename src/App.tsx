@@ -30,9 +30,13 @@ import Home from "./pages/Home/Home"
 import Game from "./pages/Game/Game"
 import Layout from "./pages/Layout/Layout"
 import ErrorPage from "./pages/Error/Error"
-import { ThemeProvider } from "@emotion/react"
 import { lightTheme, darkTheme } from "Themes"
-import { createTheme, CssBaseline, useMediaQuery } from "@mui/material"
+import {
+    createTheme,
+    CssBaseline,
+    ThemeProvider,
+    useMediaQuery,
+} from "@mui/material"
 
 const AUTHO_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN as string
 const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID as string

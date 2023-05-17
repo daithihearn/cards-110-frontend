@@ -121,7 +121,7 @@ const MyCards: React.FC = () => {
 
             if (cardsSelectable && card.name !== BLANK_CARD.name) {
                 if (card.name === autoPlayCard) {
-                    classes += " cardAutoPlayed"
+                    classes += " auto-played"
                 } else if (!card.selected) {
                     classes += " cardNotSelected"
                 }
@@ -139,7 +139,7 @@ const MyCards: React.FC = () => {
                     <Droppable droppableId="myCards" direction="horizontal">
                         {provided => (
                             <div
-                                className="characters myCards"
+                                className="characters my-cards cards-background"
                                 style={{ display: "inline-flex" }}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}>
@@ -193,7 +193,7 @@ const MyCards: React.FC = () => {
                     <Droppable droppableId="dummy" direction="horizontal">
                         {provided => (
                             <div
-                                className="characters myCards dummy"
+                                className="characters my-cards dummy"
                                 style={{ display: "inline-flex" }}
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}>

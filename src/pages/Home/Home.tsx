@@ -36,7 +36,7 @@ const Home = () => {
     }, [])
 
     return (
-        <div className="app carpet">
+        <div className="app">
             <div className="game_wrap">
                 <div className="game_container">
                     {!myProfile.isPlayer && !myProfile.isAdmin ? (
