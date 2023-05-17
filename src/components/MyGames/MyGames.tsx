@@ -55,6 +55,7 @@ const MyGames = () => {
     }
 
     const isLoser = (game: Game, playerId: string) => {
+        if (game.status === GameStatus.ACTIVE) return false
         const player = game.players.find(e => e.id === playerId)
 
         return !!player && !player.winner
