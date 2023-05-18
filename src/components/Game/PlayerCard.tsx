@@ -203,10 +203,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
     if (!profile) return null
 
     return (
-        <Grid
-            item
-            key={`playercard_col_${player.id}`}
-            className="player-column">
+        <Grid item key={`playercard_col_${player.id}`} xs={12}>
             <Card className="no-shadow">
                 <CardMedia
                     image={profile.picture}

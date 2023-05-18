@@ -10,6 +10,7 @@ import {
     ListItemIcon,
     ListItemText,
     ListItemSecondaryAction,
+    Box,
 } from "@mui/material"
 
 interface LeaderboardItem {
@@ -75,8 +76,8 @@ const SinglesLeaderboard = () => {
     }
 
     return (
-        <React.Fragment>
-            <List sx={{ width: "500px" }}>
+        <Box>
+            <List>
                 {leaderboardData.map((item, index) => (
                     <ListItem key={index}>
                         <ListItemIcon>
@@ -90,7 +91,7 @@ const SinglesLeaderboard = () => {
                         <ListItemText
                             primary={`Score: ${item.score}`}
                             secondary={`Rings: ${item.rings} Bought: ${item.cardsBought}`}
-                            sx={{ textAlign: "center", fontWeight: "bold" }}
+                            sx={{ textAlign: "center", width: "100px" }}
                         />
 
                         <ListItemSecondaryAction>
@@ -107,7 +108,7 @@ const SinglesLeaderboard = () => {
                     </ListItem>
                 ))}
             </List>
-        </React.Fragment>
+        </Box>
     )
 }
 

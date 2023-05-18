@@ -19,24 +19,44 @@ const PlayersAndCards = () => {
         [players],
     )
 
+    // Calculate xs based on number of players
+    // 2 players: xs=6
+    // 3 players: xs=4
+    // 4 players: xs=3
+    // 5 players: xs=2
+    // 6 players: xs=2
+    const xs = useMemo(() => {
+        switch (sortedPlayers.length) {
+            case 2:
+                return 6
+            case 3:
+                return 4
+            case 4:
+                return 3
+            case 5:
+            case 6:
+                return 2
+            default:
+                return 12
+        }
+    }, [sortedPlayers.length])
+
     return (
         <CardContent>
-            <Container>
-                <Grid container spacing={2}>
-                    {sortedPlayers.map((player, index) => (
-                        <Grid item key={`playercard_${player.id}`} xs>
-                            <PlayerCard
-                                player={player}
-                                className={
-                                    sortedPlayers.length === 6
-                                        ? `image-team${(index % 3) + 1}-filter`
-                                        : ""
-                                }
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
-            </Container>
+            <Grid container>
+                {sortedPlayers.map((player, index) => (
+                    <Grid item key={`playercard_${player.id}`} xs={xs}>
+                        <PlayerCard
+                            player={player}
+                            className={
+                                sortedPlayers.length === 6
+                                    ? `image-team${(index % 3) + 1}-filter`
+                                    : ""
+                            }
+                        />
+                    </Grid>
+                ))}
+            </Grid>
         </CardContent>
     )
 }

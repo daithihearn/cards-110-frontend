@@ -67,7 +67,7 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
                         ))}
                     </CardContent>
 
-                    <CardContent className="buttonArea">
+                    <CardContent className="button-area">
                         <ButtonGroup size="large">
                             <Button
                                 variant="contained"
