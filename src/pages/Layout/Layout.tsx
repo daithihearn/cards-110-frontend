@@ -26,12 +26,10 @@ const Layout = () => {
     }, [isLoading, isAuthenticated])
 
     return (
-        <Box
-            component="div"
-            className="main_content carpet no-horizontal-scroll">
-            <span className="app" style={{ overflowX: "hidden" }}>
+        <Box component="div" className="main_content carpet">
+            <span className="app">
                 <div className="app_body">
-                    <main className="main">
+                    <main className="main" style={{ overflowX: "hidden" }}>
                         {isAuthenticated && accessToken ? (
                             <>
                                 <DefaultHeader />

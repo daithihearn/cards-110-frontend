@@ -37,8 +37,8 @@ const Home = () => {
 
     return (
         <div className="app">
-            <div className="game_wrap">
-                <div className="game_container">
+            <div className="game-wrap">
+                <div className="game-container">
                     {!myProfile.isPlayer && !myProfile.isAdmin ? (
                         <Grid container>
                             <Grid item xs={12}>

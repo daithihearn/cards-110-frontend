@@ -49,8 +49,8 @@ const Game = () => {
 
     return (
         <div className="app">
-            <div className="game_wrap">
-                <div className="game_container">
+            <div className="game-wrap">
+                <div className="game-container">
                     {isGameActive ? <GameWrapper /> : <GameOver />}
                 </div>
             </div>

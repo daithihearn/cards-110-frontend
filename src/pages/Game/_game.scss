@@ -142,10 +142,6 @@
     min-height: 90px;
 }
 
-.button-area {
-    min-height: 75px;
-}
-
 .gameModalBody {
     padding: 0;
 }
@@ -176,6 +172,11 @@
 }
 
 @media (max-width: 420px) {
+
+    .button-area {
+        padding: 0 !important;
+    }
+
     .score-text {
         width: 2em;
         display: inline-block;
