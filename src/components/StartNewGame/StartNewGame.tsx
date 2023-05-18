@@ -189,8 +189,8 @@ const StartNewGame = () => {
                                                     <WinPercentageGraph
                                                         player={player}
                                                         last3Months={true}
-                                                        width={120}
-                                                        height={120}
+                                                        width={80}
+                                                        height={80}
                                                         showLegend={false}
                                                     />
                                                 </TableCell>
@@ -198,8 +198,8 @@ const StartNewGame = () => {
                                                     <WinPercentageGraph
                                                         player={player}
                                                         last3Months={false}
-                                                        width={150}
-                                                        height={150}
+                                                        width={80}
+                                                        height={80}
                                                         showLegend={false}
                                                     />
                                                 </TableCell>
