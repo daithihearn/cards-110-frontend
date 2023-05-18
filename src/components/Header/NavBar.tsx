@@ -62,10 +62,12 @@ const NavBar = () => {
 
     const showDeleteGameModal = () => {
         updateModalDeleteGameOpen(true)
+        handleClose()
     }
 
     const handleCloseDeleteGameModal = useCallback(() => {
         updateModalDeleteGameOpen(false)
+        handleClose()
     }, [updateModalDeleteGameOpen])
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -76,15 +78,15 @@ const NavBar = () => {
         setAnchorEl(null)
     }
 
-    const toggleLeaderboardModal = useCallback(
-        () => updateModalLeaderboard(!modalLeaderboard),
-        [modalLeaderboard],
-    )
+    const toggleLeaderboardModal = useCallback(() => {
+        updateModalLeaderboard(!modalLeaderboard)
+        handleClose()
+    }, [modalLeaderboard])
 
-    const toggleEditAvatar = useCallback(
-        () => setShowEditAvatar(!showEditAvatar),
-        [showEditAvatar],
-    )
+    const toggleEditAvatar = useCallback(() => {
+        setShowEditAvatar(!showEditAvatar)
+        handleClose()
+    }, [showEditAvatar])
 
     const navigateHome = () => navigate("/")
 

@@ -11,7 +11,6 @@ import {
     FormControl,
     FormHelperText,
     Input,
-    InputLabel,
     Slider,
     Grid,
 } from "@mui/material"
@@ -38,14 +37,6 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
     )
 
     const myProfile = useAppSelector(getMyProfile)
-
-    const handleScale = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            const newScale = parseFloat(e.target.value)
-            updateScale(newScale)
-        },
-        [],
-    )
 
     const handleSave = useCallback(
         (event: React.SyntheticEvent<HTMLButtonElement>) => {
@@ -103,7 +94,6 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
                     )}
                 </FormControl>
                 <FormControl fullWidth>
-                    <InputLabel htmlFor="newAvatar">New Avatar</InputLabel>
                     <Input
                         type="file"
                         // accept="image/*,.heic"
@@ -141,7 +131,7 @@ const ProfilePictureEditor: React.FC<InputsI> = ({ show, callback }) => {
                     disabled={!selectedImage}
                     type="button"
                     onClick={handleSave}
-                    color="primary">
+                    color="secondary">
                     Save
                 </Button>
             </DialogActions>
