@@ -69,11 +69,6 @@
     max-height: 60px;
 }
 
-.player-column {
-    padding-left: 0;
-    padding-right: 0;
-}
-
 .card-transparent {
     background-color: transparent;
 }
@@ -147,7 +142,7 @@
     min-height: 90px;
 }
 
-.buttonArea {
+.button-area {
     min-height: 75px;
 }
 
@@ -174,12 +169,18 @@
 }
 
 @media (min-width: 576px) {
+
     .modal-dialog {
         max-width: 540px;
     }
 }
 
 @media (max-width: 420px) {
+    .score-text {
+        width: 2em;
+        display: inline-block;
+    }
+
     .card-img-overlay {
         padding-left: 0;
         top: 1rem;

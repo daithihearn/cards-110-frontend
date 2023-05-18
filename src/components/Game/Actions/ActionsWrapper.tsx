@@ -18,7 +18,7 @@ const ActionsWrapper = () => {
     const isCalled = useAppSelector(getIsRoundCalled)
 
     return (
-        <CardContent className="buttonArea">
+        <CardContent className="button-area">
             <MuiButtonGroup size="large" variant="contained">
                 {isCalling && <Calling />}
                 {isBuying && <Buying />}
