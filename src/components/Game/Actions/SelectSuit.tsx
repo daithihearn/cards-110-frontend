@@ -13,7 +13,7 @@ import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
 
 const WaitingForSuit = () => (
-    <Button variant="contained" disableRipple color="secondary">
+    <Button variant="contained" disableRipple color="primary">
         <b>Waiting for suit...</b>
     </Button>
 )
@@ -98,42 +98,42 @@ const SelectSuit = () => {
         <>
             <Button
                 type="button"
-                color="secondary"
+                color="primary"
                 onClick={() => selectFromDummy(Suit.HEARTS)}>
                 <img
                     alt="Hearts"
                     src={"/cards/originals/HEARTS_ICON.svg"}
-                    className="thumbnail_size_extra_small "
+                    className="thumbnail-size-extra-small "
                 />
             </Button>
             <Button
                 type="button"
-                color="secondary"
+                color="primary"
                 onClick={() => selectFromDummy(Suit.DIAMONDS)}>
                 <img
                     alt="Hearts"
                     src={"/cards/originals/DIAMONDS_ICON.svg"}
-                    className="thumbnail_size_extra_small "
+                    className="thumbnail-size-extra-small "
                 />
             </Button>
             <Button
                 type="button"
-                color="secondary"
+                color="primary"
                 onClick={() => selectFromDummy(Suit.SPADES)}>
                 <img
                     alt="Hearts"
                     src={"/cards/originals/SPADES_ICON.svg"}
-                    className="thumbnail_size_extra_small "
+                    className="thumbnail-size-extra-small "
                 />
             </Button>
             <Button
                 type="button"
-                color="secondary"
+                color="primary"
                 onClick={() => selectFromDummy(Suit.CLUBS)}>
                 <img
                     alt="Hearts"
                     src={"/cards/originals/CLUBS_ICON.svg"}
-                    className="thumbnail_size_extra_small "
+                    className="thumbnail-size-extra-small "
                 />
             </Button>
 

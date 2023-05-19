@@ -87,7 +87,7 @@ const Calling = () => {
                 <Button
                     disabled={!buttonsEnabled}
                     type="button"
-                    color="warning"
+                    color="primary"
                     onClick={() => call(15)}>
                     15
                 </Button>
@@ -96,7 +96,7 @@ const Calling = () => {
                 <Button
                     disabled={!buttonsEnabled}
                     type="button"
-                    color="warning"
+                    color="primary"
                     onClick={() => call(20)}>
                     20
                 </Button>
@@ -105,7 +105,7 @@ const Calling = () => {
                 <Button
                     disabled={!buttonsEnabled}
                     type="button"
-                    color="warning"
+                    color="primary"
                     onClick={() => call(25)}>
                     25
                 </Button>
@@ -113,7 +113,7 @@ const Calling = () => {
             <Button
                 disabled={!buttonsEnabled}
                 type="button"
-                color="error"
+                color="warning"
                 onClick={() => call(30)}>
                 {canCallJink ? "Jink" : "30"}
             </Button>

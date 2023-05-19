@@ -21,7 +21,7 @@ import {
     toggleAutoPlay,
     clearAutoPlay,
 } from "caches/AutoPlaySlice"
-import { CardContent, CardMedia } from "@mui/material"
+import { CardContent, CardMedia, useTheme } from "@mui/material"
 
 const EMPTY_HAND = [
     { ...BLANK_CARD, selected: false },
@@ -32,6 +32,7 @@ const EMPTY_HAND = [
 ]
 
 const MyCards: React.FC = () => {
+    const theme = useTheme()
     const dispatch = useAppDispatch()
     const round = useAppSelector(getRound)
     const isRoundCalled = useAppSelector(getIsRoundCalled)
@@ -117,11 +118,11 @@ const MyCards: React.FC = () => {
 
     const getStyleForCard = useCallback(
         (card: SelectableCard) => {
-            let classes = "thumbnail_size"
+            let classes = "thumbnail-size"
 
             if (cardsSelectable && card.name !== BLANK_CARD.name) {
                 if (card.name === autoPlayCard) {
-                    classes += " auto-played"
+                    classes += " auto-played-" + theme.palette.mode
                 } else if (!card.selected) {
                     classes += " cardNotSelected"
                 }
@@ -129,12 +130,12 @@ const MyCards: React.FC = () => {
 
             return classes
         },
-        [cardsSelectable, autoPlayCard],
+        [cardsSelectable, autoPlayCard, theme],
     )
 
     return (
         <div>
-            <CardContent className="cardArea">
+            <CardContent className="card-area card-root">
                 <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="myCards" direction="horizontal">
                         {provided => (
@@ -188,7 +189,7 @@ const MyCards: React.FC = () => {
                 </DragDropContext>
             </CardContent>
 
-            <CardContent className="cardArea">
+            <CardContent className="card-area card-root">
                 <DragDropContext onDragEnd={handleOnDragEndDummy}>
                     <Droppable droppableId="dummy" direction="horizontal">
                         {provided => (

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import {
     Grid,
     CardMedia,
@@ -12,7 +12,7 @@ import {
     useTheme,
 } from "@mui/material"
 import { styled } from "@mui/system"
-import { getGamePlayers, getRound } from "caches/GameSlice"
+import { getRound } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { BLANK_CARD } from "model/Cards"
@@ -20,6 +20,7 @@ import { PlayedCard } from "model/Game"
 import { Player } from "model/Player"
 import Leaderboard from "components/Leaderboard/Leaderboard"
 import { Suit } from "model/Suit"
+import { RoundStatus } from "model/Round"
 
 interface PlayerRowI {
     player: Player
@@ -42,7 +43,7 @@ const BlankCard: React.FC<{ name: string }> = ({ name }) => {
                     ? "/cards/thumbnails/blank_card_outline_light.png"
                     : "/cards/thumbnails/blank_card_outline_dark.png"
             }
-            className="img-center thumbnail_size"
+            className="img-center thumbnail-size"
         />
     )
 }
@@ -60,13 +61,8 @@ enum ChipType {
     Spades = "SPADES_ICON.svg",
 }
 
-const SuitChip: React.FC<{ player: Player }> = ({ player }) => {
+const SuitChip: React.FC<{ isGoer: boolean }> = ({ isGoer }) => {
     const round = useAppSelector(getRound)
-
-    const isGoer: boolean = useMemo(
-        () => !!round && round.goerId === player.id,
-        [round, player],
-    )
 
     const suitChip = useMemo(() => {
         if (!round || !round.suit) return undefined
@@ -99,11 +95,13 @@ const SuitChip: React.FC<{ player: Player }> = ({ player }) => {
 
 const CallChip: React.FC<{
     call: number
-}> = ({ call }) => {
+    isGoer: boolean
+}> = ({ call, isGoer }) => {
     const round = useAppSelector(getRound)
 
     const callChip = useMemo(() => {
-        if (!round || round.suit) return undefined
+        if (!round || (round.status === RoundStatus.PLAYING && !isGoer))
+            return undefined
         switch (call) {
             case 10:
                 return ChipType.Call10
@@ -170,6 +168,11 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
         [playerProfiles],
     )
 
+    const isGoer: boolean = useMemo(
+        () => !!round && round.goerId === player.id,
+        [round, player],
+    )
+
     const playedCard = useMemo<PlayedCard | undefined>(() => {
         if (round) {
             return round.currentHand.playedCards.find(
@@ -203,15 +206,19 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
     if (!profile) return null
 
     return (
-        <Grid item key={`playercard_col_${player.id}`} xs={12}>
+        <Grid
+            item
+            key={`playercard_col_${player.id}`}
+            xs={12}
+            className={
+                isCurrentPlayer ? "highlight-player-" + theme.palette.mode : ""
+            }>
             <Card className="no-shadow">
                 <CardMedia
                     image={profile.picture}
                     onClick={toggleLeaderboardModal}
-                    className={`img-center player-avatar ${className}  ${
-                        isCurrentPlayer
-                            ? "highlight-player-" + theme.palette.mode
-                            : "dull-player"
+                    className={`img-center player-avatar ${className} ${
+                        !isCurrentPlayer && "dull-player"
                     }`}
                     sx={{ cursor: "pointer" }}
                 />
@@ -231,15 +238,15 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
                         component="img"
                         alt={profile.name}
                         image={`/cards/thumbnails/${playedCard.card}.png`}
-                        className="img-center thumbnail_size"
+                        className="img-center thumbnail-size"
                     />
                 ) : (
                     <Card>
                         <Stack position="relative">
                             <BlankCard name={profile.name} />
                             <DealerChip player={player} />
-                            <CallChip call={player.call} />
-                            <SuitChip player={player} />
+                            <CallChip call={player.call} isGoer={isGoer} />
+                            <SuitChip isGoer={isGoer} />
                         </Stack>
                     </Card>
                 )}

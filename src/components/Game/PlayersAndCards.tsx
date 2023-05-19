@@ -42,8 +42,8 @@ const PlayersAndCards = () => {
     }, [sortedPlayers.length])
 
     return (
-        <CardContent>
-            <Grid container>
+        <CardContent className="card-root">
+            <Grid container justifyContent="space-between">
                 {sortedPlayers.map((player, index) => (
                     <Grid item key={`playercard_${player.id}`} xs={xs}>
                         <PlayerCard

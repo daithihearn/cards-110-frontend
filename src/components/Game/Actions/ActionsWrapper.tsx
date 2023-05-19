@@ -19,7 +19,10 @@ const ActionsWrapper = () => {
 
     return (
         <CardContent className="button-area">
-            <MuiButtonGroup size="medium" variant="contained">
+            <MuiButtonGroup
+                size="large"
+                variant="contained"
+                sx={{ maxWidth: "100%" }}>
                 {isCalling && <Calling />}
                 {isBuying && <Buying />}
                 {isCalled && <SelectSuit />}

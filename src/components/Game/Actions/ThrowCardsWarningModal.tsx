@@ -50,25 +50,25 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
                     component="img"
                     alt="Suit"
                     image={`/cards/originals/${suit}_ICON.svg`}
-                    className="thumbnail_size_extra_small left-padding"
+                    className="thumbnail-size-extra-small left-padding"
                 />
                 Are you sure you want to throw these cards away?
             </DialogTitle>
             <DialogContent className="called-modal">
                 <Card className="gameModalCardGroup">
-                    <CardContent className="cardArea">
+                    <CardContent className="card-area">
                         {cardsToBeThrown.map(card => (
                             <img
                                 key={`deleteCardModal_${card.name}`}
                                 alt={card.name}
                                 src={`/cards/thumbnails/${card.name}.png`}
-                                className="thumbnail_size"
+                                className="thumbnail-size"
                             />
                         ))}
                     </CardContent>
 
                     <CardContent className="button-area">
-                        <ButtonGroup size="medium">
+                        <ButtonGroup size="large">
                             <Button
                                 variant="contained"
                                 color="primary"

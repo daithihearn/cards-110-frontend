@@ -4,14 +4,7 @@ import { getGame, getIsGameActive } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { Player } from "model/Player"
-import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    ListItemSecondaryAction,
-    Box,
-} from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 
 interface LeaderboardItem {
     previousCard?: string
@@ -77,37 +70,40 @@ const SinglesLeaderboard = () => {
 
     return (
         <Box>
-            <List>
-                {leaderboardData.map((item, index) => (
-                    <ListItem key={index}>
-                        <ListItemIcon>
-                            <img
-                                alt={item.name}
-                                src={item.picture}
-                                className="avatar-large"
-                            />
-                        </ListItemIcon>
-
-                        <ListItemText
-                            primary={`Score: ${item.score}`}
-                            secondary={`Rings: ${item.rings} Bought: ${item.cardsBought}`}
-                            sx={{ textAlign: "center", width: "100px" }}
+            {leaderboardData.map((item, index) => (
+                <Grid container alignItems="center" key={item.name}>
+                    <Grid item xs={4} sx={{ textAlign: "left" }}>
+                        <img
+                            alt={item.name}
+                            src={item.picture}
+                            className="avatar"
                         />
+                    </Grid>
 
-                        <ListItemSecondaryAction>
-                            {item.winner ? (
-                                <VictoryIcon />
-                            ) : isGameActive && item.previousCard ? (
-                                <img
-                                    alt={item.previousCard}
-                                    src={`/cards/thumbnails/${item.previousCard}.png`}
-                                    className="thumbnail_size_small"
-                                />
-                            ) : null}
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                ))}
-            </List>
+                    <Grid item xs={4}>
+                        <Typography sx={{ textAlign: "center" }}>
+                            Score({item.score}) Rings({item.rings})
+                        </Typography>
+
+                        {isGameActive && (
+                            <Typography sx={{ textAlign: "center" }}>
+                                Cards Bought({item.cardsBought})
+                            </Typography>
+                        )}
+                    </Grid>
+
+                    <Grid item xs={4} sx={{ textAlign: "right" }}>
+                        {item.winner ? <VictoryIcon /> : null}
+                        {isGameActive && item.previousCard ? (
+                            <img
+                                alt={item.previousCard}
+                                src={`/cards/thumbnails/${item.previousCard}.png`}
+                                className="thumbnail-size-small"
+                            />
+                        ) : null}
+                    </Grid>
+                </Grid>
+            ))}
         </Box>
     )
 }
