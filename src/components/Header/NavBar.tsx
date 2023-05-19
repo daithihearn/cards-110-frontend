@@ -50,6 +50,9 @@ const NavBar = () => {
         if (!gameId) {
             return
         }
+        handleClose()
+        handleCloseDeleteGameModal()
+
         dispatch(GameService.deleteGame(gameId))
             .then(() => {
                 enqueueSnackbar("Game deleted")
@@ -178,7 +181,7 @@ const NavBar = () => {
                         onClick={handleCloseDeleteGameModal}>
                         No
                     </Button>
-                    <Button color="primary" onClick={deleteGame}>
+                    <Button color="secondary" onClick={deleteGame}>
                         Yes
                     </Button>
                 </DialogActions>
