@@ -8,20 +8,24 @@
     filter: brightness(70%);
 }
 
-.auto-played {
-    filter: drop-shadow(16px 16px 20px red);
+.auto-played-light {
+    filter: drop-shadow(5px 5px 5px rgb(255, 61, 61));
 }
 
-.highlight-player-light {
-    filter: drop-shadow(16px 16px 20px black);
+.auto-played-dark {
+    filter: drop-shadow(5px 5px 5px rgb(249, 255, 125));
 }
 
 .highlight-player-dark {
-    filter: drop-shadow(16px 16px 20px white);
+    filter: drop-shadow(5px 5px 5px rgb(249, 255, 125)) brightness(100%) contrast(100%);
+}
+
+.highlight-player-light {
+    filter: drop-shadow(5px 5px 5px rgb(255, 61, 61)) brightness(100%) contrast(100%);
 }
 
 .dull-player {
-    filter: grayscale(25%);
+    filter: grayscale(25%) brightness(75%) contrast(75%);
     opacity: 0.7;
 }
 
@@ -37,11 +41,11 @@
 }
 
 .overlay-suit-chip {
-    margin-top: 3rem;
+    margin-top: 1.5rem;
 }
 
 .overlay-dealer-chip {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 }
 
 .score-text {
@@ -79,7 +83,7 @@
     margin-right: auto;
 }
 
-.cardArea {
+.card-area {
     padding: 0.5rem;
     font-weight: bold;
     text-align: center;
@@ -108,17 +112,17 @@
     cursor: pointer;
 }
 
-.thumbnail_size {
+.thumbnail-size {
     max-width: 100px;
     max-height: 153px;
 }
 
-.thumbnail_size_small {
+.thumbnail-size-small {
     max-width: 70px;
     max-height: 100px;
 }
 
-.thumbnail_size_extra_small {
+.thumbnail-size-extra-small {
     max-width: 45px;
     max-height: 45px;
 }
@@ -173,8 +177,13 @@
 
 @media (max-width: 420px) {
 
+    .player-score-container {
+        padding: 10px 0px 10px 0px !important;
+        
+    }
+
     .button-area {
-        padding: 0 !important;
+        padding: 10px 0px 10px 0px !important;
     }
 
     .score-text {
@@ -188,23 +197,5 @@
         padding-top: 0;
         padding-bottom: 0;
         padding-right: 0;
-    }
-
-    .overlay-chip {
-        margin-top: 1rem;
-    }
-
-    .overlay-suit-chip {
-        margin-top: 0.5rem;
-    }
-
-    .overlay-dealer-chip {
-        margin-top: 0.5rem;
-    }
-
-    .avatar {
-        vertical-align: middle;
-        width: 50px;
-        height: 50px;
     }
 }

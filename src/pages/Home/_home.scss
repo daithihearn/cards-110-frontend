@@ -177,6 +177,18 @@
 
 @media only screen and (max-width: 420px) {
 
+     .card-root {
+         padding: 10px 0px 10px 0px !important;
+     }
+
+    .player-avatar {
+        // vertical-align: middle;
+        width: 55px;
+        height: 55px;
+        border-radius: 25%;
+    }
+    
+
     .game-wrap {
         min-width: 390px;
         max-width: 410px;

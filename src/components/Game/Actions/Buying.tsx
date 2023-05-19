@@ -22,7 +22,7 @@ import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
 
 const WaitingForRoundToStart = () => (
-    <Button variant="contained" disableRipple color="info">
+    <Button variant="contained" disableRipple color="primary">
         <b>Waiting for round to start...</b>
     </Button>
 )
@@ -77,16 +77,21 @@ const Buying = () => {
     if (iHavePlayed) return <WaitingForRoundToStart />
     return (
         <>
-            <Button
-                type="button"
-                onClick={toggleReadyToBuy}
-                color={isMyGo || !readyToBuy ? "primary" : "secondary"}>
-                <b>
-                    {isMyGo || !readyToBuy
-                        ? "Keep Cards"
-                        : "Waiting to buy cards..."}
-                </b>
-            </Button>
+            {isMyGo || !readyToBuy ? (
+                <Button
+                    type="button"
+                    onClick={toggleReadyToBuy}
+                    color="primary">
+                    <b>Keep Cards</b>
+                </Button>
+            ) : (
+                <Button
+                    type="button"
+                    onClick={toggleReadyToBuy}
+                    color="primary">
+                    <b>Waiting to buy cards...</b>
+                </Button>
+            )}
 
             <ThrowCardsWarningModal
                 modalVisible={deleteCardsDialog}

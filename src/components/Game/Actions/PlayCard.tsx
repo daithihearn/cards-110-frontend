@@ -12,7 +12,7 @@ import { Button } from "@mui/material"
 
 const WaitingForYourTurn = () => (
     <Button variant="contained" disableRipple color="secondary">
-        <b>Waiting for your turn...</b>
+        <b>Wait for your turn...</b>
     </Button>
 )
 
