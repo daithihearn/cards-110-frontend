@@ -70,8 +70,12 @@ const SinglesLeaderboard = () => {
 
     return (
         <Box>
-            {leaderboardData.map((item, index) => (
-                <Grid container alignItems="center" key={item.name}>
+            {leaderboardData.map(item => (
+                <Grid
+                    container
+                    alignItems="center"
+                    key={item.name}
+                    sx={{ minWidth: "300px" }}>
                     <Grid item xs={4} sx={{ textAlign: "left" }}>
                         <img
                             alt={item.name}
@@ -82,12 +86,16 @@ const SinglesLeaderboard = () => {
 
                     <Grid item xs={4}>
                         <Typography sx={{ textAlign: "center" }}>
-                            Score({item.score}) Rings({item.rings})
+                            Score({item.score})
+                        </Typography>
+
+                        <Typography sx={{ textAlign: "center" }}>
+                            Rings({item.rings})
                         </Typography>
 
                         {isGameActive && (
                             <Typography sx={{ textAlign: "center" }}>
-                                Cards Bought({item.cardsBought})
+                                Bought({item.cardsBought})
                             </Typography>
                         )}
                     </Grid>

@@ -12,6 +12,9 @@ import {
     Avatar,
     ListItemText,
     ListItemSecondaryAction,
+    Box,
+    Grid,
+    Typography,
 } from "@mui/material"
 
 interface LeaderBoardPlayer {
@@ -104,36 +107,54 @@ const DoublesLeaderboard = () => {
     }
 
     return (
-        <React.Fragment>
-            <List>
-                {leaderboardData.map((item, index) => (
-                    <ListItem key={index}>
-                        <ListItemIcon>
-                            <img
-                                alt={item.player1.name}
-                                src={item.player1.picture}
-                                className="avatar-large"
-                            />
-                        </ListItemIcon>
-                        <ListItemIcon>
-                            <img
-                                alt={item.player2.name}
-                                src={item.player2.picture}
-                                className="avatar-large"
-                            />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={`Score: ${item.score}, Rings: ${item.rings}`}
-                            sx={{ textAlign: "center", fontWeight: "bold" }}
+        <Box>
+            {leaderboardData.map((item, index) => (
+                <Grid
+                    container
+                    alignItems="center"
+                    key={item.teamId}
+                    sx={{ minWidth: "300px" }}>
+                    <Grid item xs={3} sx={{ textAlign: "center" }}>
+                        <img
+                            alt={item.player1.name}
+                            src={item.player1.picture}
+                            className="avatar"
                         />
+                        {isGameActive && item.player1.cardsBought && (
+                            <Typography sx={{ textAlign: "center" }}>
+                                Bought({item.player1.cardsBought})
+                            </Typography>
+                        )}
+                    </Grid>
+                    <Grid item xs={3} sx={{ textAlign: "center" }}>
+                        <img
+                            alt={item.player2.name}
+                            src={item.player2.picture}
+                            className="avatar"
+                        />
+                        {isGameActive && item.player2.cardsBought && (
+                            <Typography sx={{ textAlign: "center" }}>
+                                Bought({item.player2.cardsBought})
+                            </Typography>
+                        )}
+                    </Grid>
 
-                        <ListItemSecondaryAction>
-                            {item.winner && <VictoryIcon />}
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                ))}
-            </List>
-        </React.Fragment>
+                    <Grid item xs={3}>
+                        <Typography sx={{ textAlign: "center" }}>
+                            Score({item.score})
+                        </Typography>
+
+                        <Typography sx={{ textAlign: "center" }}>
+                            Rings({item.rings})
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ textAlign: "right" }}>
+                        {item.winner ? <VictoryIcon /> : null}
+                    </Grid>
+                </Grid>
+            ))}
+        </Box>
     )
 }
 
