@@ -42,7 +42,6 @@ const StartNewGame = () => {
 
     const orderedPlayers = useMemo(() => {
         if (!allPlayers || allPlayers.length < 1) return []
-        console.log(JSON.stringify(allPlayers))
         // Sort by last lastAccess which is a string timestamp in the form 1970-01-01T00:00:00
         return [...allPlayers].sort((a, b) => {
             const aDate = new Date(a.lastAccess)
