@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 
 import GameService from "services/GameService"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
@@ -39,6 +39,16 @@ const StartNewGame = () => {
     const [selectedPlayers, updateSelectedPlayers] = useState<PlayerProfile[]>(
         [],
     )
+
+    const orderedPlayers = useMemo(() => {
+        if (!allPlayers || allPlayers.length < 1) return []
+        // Sort by last lastAccess which is a string timestamp in the form 1970-01-01T00:00:00
+        return [...allPlayers].sort((a, b) => {
+            const aDate = new Date(a.lastAccess)
+            const bDate = new Date(b.lastAccess)
+            return bDate.getTime() - aDate.getTime()
+        })
+    }, [allPlayers])
 
     const togglePlayer = useCallback(
         (player: PlayerProfile) => {
@@ -150,7 +160,7 @@ const StartNewGame = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {allPlayers.map(player => (
+                                        {orderedPlayers.map(player => (
                                             <TableRow
                                                 key={player.id}
                                                 onClick={() =>
@@ -176,13 +186,6 @@ const StartNewGame = () => {
                                                             src={player.picture}
                                                             className="avatar-large"
                                                         />
-                                                        <span>
-                                                            <b>
-                                                                {FormatName(
-                                                                    player.name,
-                                                                )}
-                                                            </b>
-                                                        </span>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
