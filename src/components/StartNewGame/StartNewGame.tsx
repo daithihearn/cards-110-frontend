@@ -88,7 +88,7 @@ const StartNewGame = () => {
             }
 
             const payload = {
-                players: selectedPlayers.map(p => p.id!),
+                players: selectedPlayers.map(p => p.id),
                 name: newGameName,
             }
 
@@ -189,11 +189,34 @@ const StartNewGame = () => {
                                                 }}>
                                                 <TableCell>
                                                     <div>
-                                                        <img
-                                                            alt="Image Preview"
-                                                            src={player.picture}
-                                                            className="avatar-large"
-                                                        />
+                                                        <Grid container>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                sx={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                }}>
+                                                                <img
+                                                                    alt="Image Preview"
+                                                                    src={
+                                                                        player.picture
+                                                                    }
+                                                                    className="avatar-large"
+                                                                />
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                sx={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                }}>
+                                                                {FormatName(
+                                                                    player.name,
+                                                                )}
+                                                            </Grid>
+                                                        </Grid>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
