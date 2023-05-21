@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo, useRef } from "react"
 import {
     DragDropContext,
     Draggable,
@@ -13,6 +13,7 @@ import {
     clearSelectedCards,
     getMyCards,
     replaceMyCards,
+    selectCard,
     toggleSelect,
     toggleUniqueSelect,
 } from "caches/MyCardsSlice"
@@ -31,6 +32,14 @@ const EMPTY_HAND = [
     { ...BLANK_CARD, selected: false },
 ]
 
+const usePrevious = (value: any) => {
+    const ref = useRef()
+    useEffect(() => {
+        ref.current = value
+    })
+    return ref.current
+}
+
 const MyCards: React.FC = () => {
     const theme = useTheme()
     const dispatch = useAppDispatch()
@@ -39,6 +48,28 @@ const MyCards: React.FC = () => {
     const myCards = useAppSelector(getMyCards)
     const autoPlayCard = useAppSelector(getAutoPlayCard)
     const iamGoer = useAppSelector(getIamGoer)
+    const prevRoundStatus = usePrevious(round?.status)
+
+    useEffect(() => {
+        if (
+            round?.status === RoundStatus.BUYING &&
+            prevRoundStatus !== RoundStatus.BUYING &&
+            !iamGoer &&
+            round.suit
+        ) {
+            // Auto select all cards of a specific suit when the round status is BUYING
+
+            const cardsOfSuit = myCards.filter(
+                card =>
+                    card.suit === round.suit ||
+                    card.name === "JOKER" ||
+                    card.name === "ACE_HEARTS",
+            )
+            cardsOfSuit.forEach(card => {
+                dispatch(selectCard(card))
+            })
+        }
+    }, [round, myCards, prevRoundStatus, iamGoer])
 
     const cardsSelectable = useMemo(
         () =>

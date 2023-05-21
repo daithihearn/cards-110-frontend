@@ -43,11 +43,19 @@ const StartNewGame = () => {
     const orderedPlayers = useMemo(() => {
         if (!allPlayers || allPlayers.length < 1) return []
         // Sort by last lastAccess which is a string timestamp in the form 1970-01-01T00:00:00
-        return [...allPlayers].sort((a, b) => {
-            const aDate = new Date(a.lastAccess)
-            const bDate = new Date(b.lastAccess)
-            return bDate.getTime() - aDate.getTime()
-        })
+        return [...allPlayers]
+            .filter(p => {
+                // Filter out players that have not played in the last 3 months
+                const lastAccess = new Date(p.lastAccess)
+                const threeMonthsAgo = new Date()
+                threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3)
+                return lastAccess.getTime() > threeMonthsAgo.getTime()
+            })
+            .sort((a, b) => {
+                const aDate = new Date(a.lastAccess)
+                const bDate = new Date(b.lastAccess)
+                return bDate.getTime() - aDate.getTime()
+            })
     }, [allPlayers])
 
     const togglePlayer = useCallback(
@@ -80,7 +88,7 @@ const StartNewGame = () => {
             }
 
             const payload = {
-                players: selectedPlayers.map(p => p.id!),
+                players: selectedPlayers.map(p => p.id),
                 name: newGameName,
             }
 
@@ -181,11 +189,34 @@ const StartNewGame = () => {
                                                 }}>
                                                 <TableCell>
                                                     <div>
-                                                        <img
-                                                            alt="Image Preview"
-                                                            src={player.picture}
-                                                            className="avatar-large"
-                                                        />
+                                                        <Grid container>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                sx={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                }}>
+                                                                <img
+                                                                    alt="Image Preview"
+                                                                    src={
+                                                                        player.picture
+                                                                    }
+                                                                    className="avatar-large"
+                                                                />
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                sx={{
+                                                                    textAlign:
+                                                                        "center",
+                                                                }}>
+                                                                {FormatName(
+                                                                    player.name,
+                                                                )}
+                                                            </Grid>
+                                                        </Grid>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
