@@ -22,8 +22,7 @@ import {
     toggleAutoPlay,
     clearAutoPlay,
 } from "caches/AutoPlaySlice"
-import { Card, CardContent, CardMedia, useTheme } from "@mui/material"
-import { CARDS } from "model/Cards"
+import { CardContent, CardMedia, useTheme } from "@mui/material"
 
 const EMPTY_HAND = [
     { ...BLANK_CARD, selected: false },
