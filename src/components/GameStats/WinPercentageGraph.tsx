@@ -5,6 +5,7 @@ import "chart.js/auto"
 import { ChartOptions } from "chart.js"
 import { useAppDispatch } from "caches/hooks"
 import StatsService from "services/StatsService"
+import { useTheme } from "@mui/material"
 
 interface Props {
     player: PlayerProfile
@@ -22,6 +23,7 @@ const WinPercentageGraph: React.FC<Props> = ({
     showLegend = true,
 }) => {
     const dispatch = useAppDispatch()
+    const theme = useTheme()
     const [stats, setStats] = useState<PlayerGameStats[]>([])
 
     useEffect(() => {
@@ -65,13 +67,17 @@ const WinPercentageGraph: React.FC<Props> = ({
                         100
                     ).toFixed(1)}% win rate`,
                     position: "bottom",
+                    color: theme.palette.text.primary,
                 },
                 legend: {
                     display: showLegend,
+                    labels: {
+                        color: theme.palette.text.primary,
+                    },
                 },
             },
         }
-    }, [wins, filteredStats])
+    }, [wins, filteredStats, theme])
 
     return (
         <>
