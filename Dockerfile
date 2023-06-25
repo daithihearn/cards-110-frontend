@@ -1,5 +1,5 @@
 # build
-FROM node:14 AS builder
+FROM node:16 AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ COPY ./tsconfig.json tsconfig.json
 RUN yarn build
 
 # deployment
-FROM nginx:1.19-alpine AS deployment
+FROM nginx:1.25-alpine AS deployment
 
 COPY --from=builder /app/build /usr/share/nginx/html
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
