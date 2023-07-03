@@ -4,6 +4,7 @@ import { GameState, GameStatus, PlayedCard } from "model/Game"
 import { Player } from "model/Player"
 import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
+import { get } from "http"
 
 const initialState: GameState = {
     iamSpectator: true,
@@ -45,6 +46,10 @@ export const {
 
 export const getGame = (state: RootState) => state.game
 export const getGamePlayers = createSelector(getGame, game => game.players)
+export const getNumPlayers = createSelector(
+    getGamePlayers,
+    players => players.length,
+)
 export const getMe = createSelector(getGame, game => game.me)
 
 export const getRound = createSelector(getGame, game => game.round)

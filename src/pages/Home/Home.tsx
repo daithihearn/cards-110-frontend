@@ -12,11 +12,18 @@ import GameService from "services/GameService"
 import { useSnackbar } from "notistack"
 import StatsService from "services/StatsService"
 import parseError from "utils/ErrorUtils"
+import SettingsService from "services/SettingsService"
 
 const Home = () => {
     const dispatch = useAppDispatch()
     const myProfile = useAppSelector(getMyProfile)
     const { enqueueSnackbar } = useSnackbar()
+
+    const getSettings = async () => {
+        await dispatch(SettingsService.getSettings()).catch((e: Error) =>
+            enqueueSnackbar(parseError(e), { variant: "error" }),
+        )
+    }
 
     const fetchData = async () => {
         if (myProfile.isAdmin)
@@ -34,6 +41,10 @@ const Home = () => {
     useEffect(() => {
         fetchData()
     }, [])
+
+    useEffect(() => {
+        getSettings()
+    })
 
     return (
         <div className="app">

@@ -14,12 +14,12 @@ import { useAppSelector } from "caches/hooks"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
 import { SelectableCard } from "model/Cards"
 import { Suit } from "model/Suit"
-import { removeAllFromHand } from "utils/GameUtils"
+import { getTrumpCards, removeAllFromHand } from "utils/GameUtils"
 
 interface ModalOpts {
     modalVisible: boolean
     cancelCallback: () => void
-    continueCallback: (id: string, sel: SelectableCard[], suit?: Suit) => void
+    continueCallback: (sel: SelectableCard[], suit?: Suit) => void
     suit: Suit
 }
 
@@ -29,19 +29,17 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
     continueCallback,
     suit,
 }) => {
-    const gameId = useAppSelector(getGameId)
     const myCards = useAppSelector(getMyCardsWithoutBlanks)
     const selectedCards = useAppSelector(getSelectedCards)
 
     const cardsToBeThrown = useMemo(
-        () => removeAllFromHand(selectedCards, myCards),
+        () => getTrumpCards(removeAllFromHand(selectedCards, myCards), suit),
         [myCards, selectedCards],
     )
 
     const callContinue = useCallback(() => {
-        if (!gameId) throw Error("GameId not set")
-        continueCallback(gameId, selectedCards, suit)
-    }, [gameId, selectedCards])
+        continueCallback(selectedCards, suit)
+    }, [selectedCards])
 
     return (
         <Dialog onClose={() => cancelCallback()} open={modalVisible}>

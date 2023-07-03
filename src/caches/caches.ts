@@ -13,6 +13,7 @@ import { myGamesSlice } from "./MyGamesSlice"
 import { myCardsSlice } from "./MyCardsSlice"
 import { autoPlaySlice } from "./AutoPlaySlice"
 import { playerProfilesSlice } from "./PlayerProfilesSlice"
+import { settingsSlice } from "./SettingsSlice"
 
 const combinedReducer = combineReducers({
     myProfile: myProfileSlice.reducer,
@@ -21,6 +22,7 @@ const combinedReducer = combineReducers({
     playerProfiles: playerProfilesSlice.reducer,
     myCards: myCardsSlice.reducer,
     autoPlay: autoPlaySlice.reducer,
+    settings: settingsSlice.reducer,
 })
 
 export type RootState = ReturnType<typeof combinedReducer>

@@ -10,16 +10,18 @@ import {
 } from "caches/MyCardsSlice"
 import {
     getGameId,
+    getNumPlayers,
     getIamGoer,
     getIHavePlayed,
     getIsMyGo,
     getSuit,
 } from "caches/GameSlice"
-import { riskOfMistakeBuyingCards } from "utils/GameUtils"
+import { pickBestCards, riskOfMistakeBuyingCards } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 import { SelectableCard } from "model/Cards"
 import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
+import { getSettings } from "caches/SettingsSlice"
 
 const WaitingForRoundToStart = () => (
     <Button variant="contained" disableRipple color="primary">
@@ -30,6 +32,7 @@ const WaitingForRoundToStart = () => (
 const Buying = () => {
     const dispatch = useAppDispatch()
     const { enqueueSnackbar } = useSnackbar()
+    const settings = useAppSelector(getSettings)
     const gameId = useAppSelector(getGameId)
     const suit = useAppSelector(getSuit)
     const myCards = useAppSelector(getMyCardsWithoutBlanks)
@@ -46,14 +49,19 @@ const Buying = () => {
         setReadyToBuy(!readyToBuy)
     }, [readyToBuy])
 
-    const buyCards = (id: string, sel: SelectableCard[]) => {
-        dispatch(GameService.buyCards(id, sel)).catch(e =>
-            enqueueSnackbar(parseError(e), { variant: "error" }),
-        )
-    }
+    const buyCards = useCallback(
+        (sel: SelectableCard[]) => {
+            if (!gameId) return
+            dispatch(GameService.buyCards(gameId, sel)).catch((e: Error) =>
+                enqueueSnackbar(parseError(e), { variant: "error" }),
+            )
+        },
+        [gameId],
+    )
 
     const hideCancelDeleteCardsDialog = useCallback(() => {
         updateDeleteCardsDialog(false)
+        setReadyToBuy(false)
     }, [])
 
     useEffect(() => {
@@ -64,34 +72,24 @@ const Buying = () => {
     }, [iamGoer])
 
     useEffect(() => {
-        if (isMyGo && readyToBuy) {
-            if (!gameId) throw Error("No game id set")
-
-            if (riskOfMistakeBuyingCards(suit!, selectedCards, myCards)) {
-                setReadyToBuy(false)
+        if (!isMyGo || !suit) return
+        if (readyToBuy) {
+            if (riskOfMistakeBuyingCards(suit, selectedCards, myCards)) {
                 updateDeleteCardsDialog(true)
-            } else buyCards(gameId, selectedCards)
+            } else buyCards(selectedCards)
         }
-    }, [gameId, suit, selectedCards, myCards, isMyGo, readyToBuy])
+    }, [iamGoer, suit, selectedCards, myCards, isMyGo, readyToBuy])
 
-    if (iHavePlayed) return <WaitingForRoundToStart />
+    if (iHavePlayed || settings.autoBuyCards) return <WaitingForRoundToStart />
     return (
         <>
-            {isMyGo || !readyToBuy ? (
-                <Button
-                    type="button"
-                    onClick={toggleReadyToBuy}
-                    color="primary">
-                    <b>Keep Cards</b>
-                </Button>
-            ) : (
-                <Button
-                    type="button"
-                    onClick={toggleReadyToBuy}
-                    color="primary">
-                    <b>Waiting to buy cards...</b>
-                </Button>
-            )}
+            <Button type="button" onClick={toggleReadyToBuy} color="primary">
+                <b>
+                    {isMyGo || !readyToBuy
+                        ? "Keep Cards"
+                        : "Waiting to buy cards..."}
+                </b>
+            </Button>
 
             <ThrowCardsWarningModal
                 modalVisible={deleteCardsDialog}

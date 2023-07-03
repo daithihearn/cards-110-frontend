@@ -7,13 +7,19 @@ import {
 } from "react-beautiful-dnd"
 import { BLANK_CARD, SelectableCard } from "model/Cards"
 import { RoundStatus } from "model/Round"
-import { getIamGoer, getIsRoundCalled, getRound } from "caches/GameSlice"
+import {
+    getGameId,
+    getIamGoer,
+    getIsRoundCalled,
+    getRound,
+    getNumPlayers,
+} from "caches/GameSlice"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     clearSelectedCards,
     getMyCards,
     replaceMyCards,
-    selectCard,
+    selectCards,
     toggleSelect,
     toggleUniqueSelect,
 } from "caches/MyCardsSlice"
@@ -23,6 +29,7 @@ import {
     clearAutoPlay,
 } from "caches/AutoPlaySlice"
 import { CardContent, CardMedia, useTheme } from "@mui/material"
+import { pickBestCards } from "utils/GameUtils"
 
 const EMPTY_HAND = [
     { ...BLANK_CARD, selected: false },
@@ -44,6 +51,8 @@ const MyCards: React.FC = () => {
     const theme = useTheme()
     const dispatch = useAppDispatch()
     const round = useAppSelector(getRound)
+    const gameId = useAppSelector(getGameId)
+    const numPlayers = useAppSelector(getNumPlayers)
     const isRoundCalled = useAppSelector(getIsRoundCalled)
     const myCards = useAppSelector(getMyCards)
     const autoPlayCard = useAppSelector(getAutoPlayCard)
@@ -58,18 +67,11 @@ const MyCards: React.FC = () => {
             round.suit
         ) {
             // Auto select all cards of a specific suit when the round status is BUYING
+            const bestCards = pickBestCards(myCards, round.suit, numPlayers)
 
-            const cardsOfSuit = myCards.filter(
-                card =>
-                    card.suit === round.suit ||
-                    card.name === "JOKER" ||
-                    card.name === "ACE_HEARTS",
-            )
-            cardsOfSuit.forEach(card => {
-                dispatch(selectCard(card))
-            })
+            dispatch(selectCards(bestCards))
         }
-    }, [round, myCards, prevRoundStatus, iamGoer])
+    }, [round, numPlayers, gameId, myCards, prevRoundStatus, iamGoer])
 
     const cardsSelectable = useMemo(
         () =>

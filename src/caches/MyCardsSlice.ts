@@ -37,6 +37,12 @@ export const myCardsSlice = createSlice({
                 if (c.name === action.payload.name) c.selected = true
             })
         },
+        selectCards: (state, action: PayloadAction<SelectableCard[]>) => {
+            state.cards.forEach(c => {
+                if (action.payload.some(a => a.name === c.name))
+                    c.selected = true
+            })
+        },
         toggleSelect: (state, action: PayloadAction<SelectableCard>) =>
             state.cards.forEach(c => {
                 if (c.name === action.payload.name) c.selected = !c.selected
@@ -67,6 +73,7 @@ export const {
     clearSelectedCards,
     selectAll,
     selectCard,
+    selectCards,
     toggleSelect,
     toggleUniqueSelect,
     clearMyCards,
