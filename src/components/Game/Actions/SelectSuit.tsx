@@ -58,16 +58,17 @@ const SelectSuit = () => {
         [gameId, selectedCards],
     )
 
-    const selectFromDummyCallback = (
-        id: string,
-        sel: SelectableCard[],
-        suit?: Suit,
-    ) => {
-        if (!suit) throw Error("Must provide a suit")
-        dispatch(GameService.chooseFromDummy(id, sel, suit)).catch((e: Error) =>
-            enqueueSnackbar(parseError(e), { variant: "error" }),
-        )
-    }
+    const selectFromDummyCallback = useCallback(
+        (sel: SelectableCard[], suit?: Suit) => {
+            if (!gameId) throw Error("Must be in a game")
+            if (!suit) throw Error("Must provide a suit")
+            dispatch(GameService.chooseFromDummy(gameId, sel, suit)).catch(
+                (e: Error) =>
+                    enqueueSnackbar(parseError(e), { variant: "error" }),
+            )
+        },
+        [gameId],
+    )
 
     const hideCancelSelectFromDummyDialog = useCallback(() => {
         setSelectedSuit(undefined)

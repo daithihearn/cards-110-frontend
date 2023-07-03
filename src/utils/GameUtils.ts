@@ -36,7 +36,7 @@ export const padMyHand = (cards: SelectableCard[]): SelectableCard[] => {
     return paddedCards
 }
 
-export const processOrderedCardsAfterGameUpdate = (
+export const processOrderedCardsAfterGameUpdate = <T extends Card>(
     currentCards: SelectableCard[],
     updatedCardNames: string[],
 ): SelectableCard[] => {
@@ -78,10 +78,10 @@ export const processOrderedCardsAfterGameUpdate = (
     }
 }
 
-export const riskOfMistakeBuyingCards = (
+export const riskOfMistakeBuyingCards = <T extends Card>(
     suit: Suit,
-    selectedCards: Card[],
-    myCards: Card[],
+    selectedCards: T[],
+    myCards: T[],
 ) => {
     const deletingCards = removeAllFromHand(selectedCards, myCards)
 
@@ -98,9 +98,9 @@ export const riskOfMistakeBuyingCards = (
     return false
 }
 
-export const removeAllFromHand = (
-    cardsToRemove: Card[],
-    originalHand: Card[],
+export const removeAllFromHand = <T extends Card>(
+    cardsToRemove: T[],
+    originalHand: T[],
 ) => {
     let newHand = [...originalHand]
     const ctr = [...cardsToRemove]
@@ -110,7 +110,10 @@ export const removeAllFromHand = (
     return newHand
 }
 
-export const removeCard = (cardToRemove: Card, orginalHand: Card[]) => {
+export const removeCard = <T extends Card>(
+    cardToRemove: T,
+    orginalHand: T[],
+) => {
     const newHand = [...orginalHand] // make a separate copy of the array
     const index = newHand.indexOf(cardToRemove)
     if (index !== -1) {
@@ -169,3 +172,37 @@ export const getWorstCard = (cards: string[], suit: Suit) => {
         return myCardsRich[0]
     }
 }
+
+export const pickBestCards = <T extends Card>(
+    cards: T[],
+    suit: Suit,
+    numPlayers: number,
+): T[] => {
+    // If number of players not in range 2-5 then throw an error
+    if (numPlayers < 2 || numPlayers > 5) {
+        throw new Error("Number of players must be between 2 and 5")
+    }
+    const minCardsRequired = Math.max(0, numPlayers - 3)
+    const bestCards = getTrumpCards(cards, suit)
+
+    while (bestCards.length < minCardsRequired) {
+        // Find the card with the highest cold value that isn't already in the best cards
+        const remainingCards = cards.filter(
+            c => !bestCards.some(bc => bc.name === c.name),
+        )
+        if (remainingCards.length === 0) break
+        bestCards.push(
+            remainingCards.sort((a, b) => b.coldValue - a.coldValue)[0],
+        )
+    }
+
+    return bestCards
+}
+
+export const getTrumpCards = <T extends Card>(cards: T[], suit: Suit): T[] =>
+    cards.filter(
+        card =>
+            card.suit === suit ||
+            card.name === "JOKER" ||
+            card.name === "ACE_HEARTS",
+    )
