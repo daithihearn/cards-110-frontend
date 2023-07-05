@@ -105,7 +105,7 @@ const NavBar = () => {
                                 edge="start"
                                 color="inherit"
                                 onClick={navigateHome}>
-                                <HomeButton />
+                                <HomeButton fontSize="large" />
                             </IconButton>
                         </Grid>
 
@@ -115,7 +115,7 @@ const NavBar = () => {
                                     edge="end"
                                     color="inherit"
                                     onClick={handleClick}>
-                                    <MenuButton />
+                                    <MenuButton fontSize="large" />
                                 </IconButton>
                                 <Menu
                                     anchorEl={anchorEl}

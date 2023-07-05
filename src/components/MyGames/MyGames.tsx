@@ -78,9 +78,15 @@ const MyGames = () => {
                                             cursor: "pointer",
                                         }}>
                                         {isGameActive(row) ? (
-                                            <PlayIcon />
+                                            <PlayIcon
+                                                fontSize="large"
+                                                aria-label="Play Game"
+                                            />
                                         ) : (
-                                            <VisibilityIcon />
+                                            <VisibilityIcon
+                                                fontSize="large"
+                                                aria-label="View Game"
+                                            />
                                         )}
                                     </ListItemIcon>
 
@@ -98,10 +104,10 @@ const MyGames = () => {
 
                                     <ListItemSecondaryAction>
                                         {isWinner(row, myProfile.id!) && (
-                                            <VictoryIcon />
+                                            <VictoryIcon fontSize="large" />
                                         )}
                                         {isLoser(row, myProfile.id!) && (
-                                            <FailureIcon />
+                                            <FailureIcon fontSize="large" />
                                         )}
                                     </ListItemSecondaryAction>
                                 </ListItem>
