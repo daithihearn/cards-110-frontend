@@ -5,7 +5,6 @@ import { useAuth0 } from "@auth0/auth0-react"
 
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 
-import ProfilePictureEditor from "components/Avatar/ProfilePictureEditor"
 import {
     AppBar,
     Box,
@@ -30,6 +29,7 @@ import HomeButton from "@mui/icons-material/Home"
 import GameService from "services/GameService"
 import { useSnackbar } from "notistack"
 import parseError from "utils/ErrorUtils"
+import Settings from "components/Settings/Settings"
 
 const NavBar = () => {
     const { logout } = useAuth0()
@@ -42,7 +42,7 @@ const NavBar = () => {
     const isGameActive = useAppSelector(getIsGameActive)
     const gameId = useAppSelector(state => state.game.id)
     const iamAdmin = useAppSelector(getIamAdmin)
-    const [showEditAvatar, setShowEditAvatar] = useState(false)
+    const [showSettings, setShowSettings] = useState(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [modalLeaderboard, updateModalLeaderboard] = useState(false)
 
@@ -86,10 +86,10 @@ const NavBar = () => {
         handleClose()
     }, [modalLeaderboard])
 
-    const toggleEditAvatar = useCallback(() => {
-        setShowEditAvatar(!showEditAvatar)
+    const toggleSettings = useCallback(() => {
+        setShowSettings(!showSettings)
         handleClose()
-    }, [showEditAvatar])
+    }, [showSettings])
 
     const navigateHome = () => navigate("/")
 
@@ -121,8 +121,8 @@ const NavBar = () => {
                                     anchorEl={anchorEl}
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}>
-                                    <MenuItem onClick={toggleEditAvatar}>
-                                        Change Avatar
+                                    <MenuItem onClick={toggleSettings}>
+                                        Settings
                                     </MenuItem>
                                     {isGameActive && (
                                         <MenuItem
@@ -146,10 +146,7 @@ const NavBar = () => {
             </AppBar>
             <Toolbar />
 
-            <ProfilePictureEditor
-                show={showEditAvatar}
-                callback={toggleEditAvatar}
-            />
+            <Settings show={showSettings} callback={toggleSettings} />
 
             <Dialog
                 fullScreen={false}
