@@ -10,6 +10,7 @@ import {
     Stack,
     Box,
     useTheme,
+    CardHeader,
 } from "@mui/material"
 import { styled } from "@mui/system"
 import { getRound } from "caches/GameSlice"
@@ -21,6 +22,7 @@ import { Player } from "model/Player"
 import Leaderboard from "components/Leaderboard/Leaderboard"
 import { Suit } from "model/Suit"
 import { RoundStatus } from "model/Round"
+import { FormatName } from "utils/FormattingUtils"
 
 interface PlayerRowI {
     player: Player
@@ -214,6 +216,15 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
                 isCurrentPlayer ? "highlight-player-" + theme.palette.mode : ""
             }>
             <Card className="no-shadow">
+                <CardContent className="player-name-container">
+                    <Typography
+                        variant="h4"
+                        component="h4"
+                        className="score-text bg-dark text-light">
+                        {FormatName(profile.name, 7)}
+                    </Typography>
+                </CardContent>
+
                 <CardMedia
                     image={profile.picture}
                     onClick={toggleLeaderboardModal}
