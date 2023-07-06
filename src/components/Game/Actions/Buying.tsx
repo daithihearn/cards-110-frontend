@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react"
 
 import GameService from "services/GameService"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { useSnackbar } from "notistack"
 import {
     getMyCardsWithoutBlanks,
     getSelectedCards,
@@ -19,7 +18,6 @@ import {
 import { pickBestCards, riskOfMistakeBuyingCards } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 import { SelectableCard } from "model/Cards"
-import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
 import { getSettings } from "caches/SettingsSlice"
 
@@ -31,8 +29,8 @@ const WaitingForRoundToStart = () => (
 
 const Buying = () => {
     const dispatch = useAppDispatch()
-    const { enqueueSnackbar } = useSnackbar()
     const settings = useAppSelector(getSettings)
+    const numPlayers = useAppSelector(getNumPlayers)
     const gameId = useAppSelector(getGameId)
     const suit = useAppSelector(getSuit)
     const myCards = useAppSelector(getMyCardsWithoutBlanks)
@@ -52,9 +50,7 @@ const Buying = () => {
     const buyCards = useCallback(
         (sel: SelectableCard[]) => {
             if (!gameId) return
-            dispatch(GameService.buyCards(gameId, sel)).catch((e: Error) =>
-                enqueueSnackbar(parseError(e), { variant: "error" }),
-            )
+            dispatch(GameService.buyCards(gameId, sel)).catch(console.error)
         },
         [gameId],
     )
@@ -72,15 +68,35 @@ const Buying = () => {
     }, [iamGoer])
 
     useEffect(() => {
+        // 1. If it is not my go then do nothing
         if (!isMyGo || !suit) return
-        if (readyToBuy) {
+        // 2. If I am the goer and it is my go then keep all cards
+        else if (iamGoer) {
+            buyCards(myCards)
+        }
+        // 3. If I am not the goer and it is my go and I have enabled auto buy cards then keep best cards
+        else if (!iamGoer && settings.autoBuyCards) {
+            buyCards(pickBestCards(myCards, suit, numPlayers))
+        }
+        // 4. If I am not the goer and it is my go and I am ready to buy then keep selected cards
+        else if (!iamGoer && readyToBuy) {
             if (riskOfMistakeBuyingCards(suit, selectedCards, myCards)) {
                 updateDeleteCardsDialog(true)
             } else buyCards(selectedCards)
         }
-    }, [iamGoer, suit, selectedCards, myCards, isMyGo, readyToBuy])
+    }, [
+        settings,
+        iamGoer,
+        suit,
+        selectedCards,
+        myCards,
+        isMyGo,
+        numPlayers,
+        readyToBuy,
+    ])
 
-    if (iHavePlayed || settings.autoBuyCards) return <WaitingForRoundToStart />
+    if (iHavePlayed || settings.autoBuyCards || iamGoer)
+        return <WaitingForRoundToStart />
     return (
         <>
             <Button type="button" onClick={toggleReadyToBuy} color="primary">

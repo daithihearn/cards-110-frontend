@@ -1,38 +1,27 @@
-import { useCallback, useEffect } from "react"
+import { useEffect } from "react"
 import GameService from "services/GameService"
 
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     getCards,
     getGameId,
-    getIamGoer,
     getIsInBunker,
     getIsMyGo,
-    getNumPlayers,
     getRound,
-    getSuit,
 } from "caches/GameSlice"
 import { RoundStatus } from "model/Round"
 import { getAutoPlayCard } from "caches/AutoPlaySlice"
-import { bestCardLead, getWorstCard, pickBestCards } from "utils/GameUtils"
+import { bestCardLead, getWorstCard } from "utils/GameUtils"
 import { useSnackbar } from "notistack"
 import parseError from "utils/ErrorUtils"
-import { getSettings } from "caches/SettingsSlice"
-import { SelectableCard } from "model/Cards"
-import { getMyCardsWithoutBlanks } from "caches/MyCardsSlice"
 
 const AutoActionManager = () => {
     const dispatch = useAppDispatch()
     const { enqueueSnackbar } = useSnackbar()
 
-    const settings = useAppSelector(getSettings)
-    const numPlayers = useAppSelector(getNumPlayers)
-    const suit = useAppSelector(getSuit)
-    const myCards = useAppSelector(getMyCardsWithoutBlanks)
     const gameId = useAppSelector(getGameId)
     const round = useAppSelector(getRound)
     const cards = useAppSelector(getCards)
-    const iamGoer = useAppSelector(getIamGoer)
 
     const autoPlayCard = useAppSelector(getAutoPlayCard)
 
@@ -45,16 +34,6 @@ const AutoActionManager = () => {
                 variant: "error",
             })
         })
-
-    const buyCards = useCallback(
-        (sel: SelectableCard[]) => {
-            if (!gameId) return
-            dispatch(GameService.buyCards(gameId, sel)).catch((e: Error) =>
-                enqueueSnackbar(parseError(e), { variant: "error" }),
-            )
-        },
-        [gameId],
-    )
 
     const call = (id: string, callAmount: number) =>
         dispatch(GameService.call(id, callAmount)).catch(console.error)
@@ -80,19 +59,6 @@ const AutoActionManager = () => {
             }
         }
     }, [gameId, round, isMyGo, cards, autoPlayCard])
-
-    // Auto buy cards
-    useEffect(() => {
-        if (
-            settings.autoBuyCards &&
-            suit &&
-            isMyGo &&
-            round?.status === RoundStatus.BUYING &&
-            !iamGoer
-        ) {
-            buyCards(pickBestCards(myCards, suit, numPlayers))
-        }
-    }, [settings, isMyGo, iamGoer, round, myCards, suit, numPlayers])
 
     return null
 }
