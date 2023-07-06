@@ -101,7 +101,7 @@ const SinglesLeaderboard = () => {
                     </Grid>
 
                     <Grid item xs={4} sx={{ textAlign: "right" }}>
-                        {item.winner ? <VictoryIcon /> : null}
+                        {item.winner ? <VictoryIcon fontSize="large" /> : null}
                         {isGameActive && item.previousCard ? (
                             <img
                                 alt={item.previousCard}

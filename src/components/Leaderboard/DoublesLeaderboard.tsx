@@ -150,7 +150,7 @@ const DoublesLeaderboard = () => {
                     </Grid>
 
                     <Grid item xs={3} sx={{ textAlign: "right" }}>
-                        {item.winner ? <VictoryIcon /> : null}
+                        {item.winner ? <VictoryIcon fontSize="large" /> : null}
                     </Grid>
                 </Grid>
             ))}
