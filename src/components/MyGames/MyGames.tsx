@@ -17,6 +17,7 @@ import {
     ListItemIcon,
     ListItemSecondaryAction,
     ListItemText,
+    Typography,
 } from "@mui/material"
 
 import moment from "moment"
@@ -65,7 +66,9 @@ const MyGames = () => {
         <Grid container>
             <Grid item xs={12}>
                 <Card>
-                    <CardHeader title="Games" />
+                    <CardHeader
+                        title={<Typography variant="h2">Games</Typography>}
+                    />
                     <CardContent>
                         <List>
                             {last10Games.map(row => (

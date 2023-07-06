@@ -19,6 +19,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    Typography,
     useTheme,
 } from "@mui/material"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
@@ -117,7 +118,13 @@ const StartNewGame = () => {
         <Grid container>
             <Grid item xs={12}>
                 <Card>
-                    <CardHeader title="Start a new game" />
+                    <CardHeader
+                        title={
+                            <Typography variant="h2">
+                                Start a new game
+                            </Typography>
+                        }
+                    />
                     <CardContent>
                         <FormControl fullWidth>
                             <form onSubmit={startGame}>

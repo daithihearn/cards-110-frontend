@@ -5,6 +5,7 @@ import {
     Grid,
     Switch,
     FormControlLabel,
+    Typography,
 } from "@mui/material"
 import { useCallback, useEffect, useState } from "react"
 import { useAppSelector } from "caches/hooks"
@@ -29,7 +30,9 @@ const GameStats = () => {
     return (
         <Grid container>
             <MuiCard className="p-6 data-card">
-                <CardHeader title="Stats" />
+                <CardHeader
+                    title={<Typography variant="h2">Stats</Typography>}
+                />
                 <CardContent>
                     {myProfile.isAdmin ? (
                         <PlayerSwitcher onChange={setPlayer} />

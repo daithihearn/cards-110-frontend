@@ -13,6 +13,7 @@ import { useSnackbar } from "notistack"
 import StatsService from "services/StatsService"
 import parseError from "utils/ErrorUtils"
 import SettingsService from "services/SettingsService"
+import { Spa } from "@mui/icons-material"
 
 const Home = () => {
     const dispatch = useAppDispatch()
@@ -61,10 +62,11 @@ const Home = () => {
                     ) : (
                         <div>
                             {myProfile.isPlayer ? (
-                                <Grid container>
+                                <Grid container sx={{ marginBottom: "10px" }}>
                                     <MyGames />
                                 </Grid>
                             ) : null}
+
                             {myProfile.isPlayer && !myProfile.isAdmin ? (
                                 <Grid container>
                                     <GameStats />

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid } from "@mui/material"
+import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material"
 
 import Leaderboard from "components/Leaderboard/Leaderboard"
 import Confetti from "react-confetti"
@@ -8,7 +8,9 @@ const GameOver = () => {
         <Grid container justifyContent="center">
             <Grid item>
                 <Card>
-                    <CardHeader title="Game Over" />
+                    <CardHeader
+                        title={<Typography variant="h2">Game Over</Typography>}
+                    />
                     <CardContent>
                         <Leaderboard />
                     </CardContent>
