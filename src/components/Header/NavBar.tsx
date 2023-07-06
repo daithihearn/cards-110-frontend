@@ -21,6 +21,7 @@ import {
     Menu,
     MenuItem,
     Toolbar,
+    Typography,
 } from "@mui/material"
 import { getIsGameActive, getIamAdmin } from "caches/GameSlice"
 import Leaderboard from "components/Leaderboard/Leaderboard"
@@ -156,7 +157,13 @@ const NavBar = () => {
                 onClose={toggleLeaderboardModal}>
                 <DialogContent>
                     <Card>
-                        <CardHeader title="Leaderboard" />
+                        <CardHeader
+                            title={
+                                <Typography variant="h2">
+                                    Leaderboard
+                                </Typography>
+                            }
+                        />
                         <CardContent>
                             <Leaderboard />
                         </CardContent>
