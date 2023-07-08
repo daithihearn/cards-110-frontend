@@ -3,7 +3,7 @@ import { RootState } from "./caches"
 import { PlayerSettings } from "model/PlayerSettings"
 
 const initialState: PlayerSettings = {
-    autoBuyCards: false,
+    autoBuyCards: true,
 }
 
 export const settingsSlice = createSlice({
