@@ -46,9 +46,7 @@ const PlayCard = () => {
     const playCard = useCallback(
         (card: string) =>
             dispatch(GameService.playCard(gameId!, card)).catch(e => {
-                enqueueSnackbar(parseError(e), {
-                    variant: "error",
-                })
+                console.error(parseError(e))
             }),
         [gameId],
     )
