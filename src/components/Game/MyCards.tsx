@@ -24,10 +24,10 @@ import {
     toggleUniqueSelect,
 } from "caches/MyCardsSlice"
 import {
-    getAutoPlayCard,
-    toggleAutoPlay,
+    getCardToPlay,
+    togglePlayCard,
     clearAutoPlay,
-} from "caches/AutoPlaySlice"
+} from "caches/PlayCardSlice"
 import { CardContent, CardMedia, useTheme } from "@mui/material"
 import { pickBestCards } from "utils/GameUtils"
 
@@ -55,7 +55,7 @@ const MyCards: React.FC = () => {
     const numPlayers = useAppSelector(getNumPlayers)
     const isRoundCalled = useAppSelector(getIsRoundCalled)
     const myCards = useAppSelector(getMyCards)
-    const autoPlayCard = useAppSelector(getAutoPlayCard)
+    const autoPlayCard = useAppSelector(getCardToPlay)
     const iamGoer = useAppSelector(getIamGoer)
     const prevRoundStatus = usePrevious(round?.status)
 
@@ -104,7 +104,7 @@ const MyCards: React.FC = () => {
                     dispatch(clearAutoPlay())
                     dispatch(clearSelectedCards())
                 } else if (event.detail === 2) {
-                    dispatch(toggleAutoPlay(card))
+                    dispatch(togglePlayCard(card))
                 } else {
                     dispatch(toggleUniqueSelect(card))
                     dispatch(clearAutoPlay())

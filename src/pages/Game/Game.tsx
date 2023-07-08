@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { useSnackbar } from "notistack"
 import { getIamSpectator, getIsGameActive, resetGame } from "caches/GameSlice"
-import { clearAutoPlay } from "caches/AutoPlaySlice"
+import { clearAutoPlay } from "caches/PlayCardSlice"
 import { clearMyCards } from "caches/MyCardsSlice"
 import parseError from "utils/ErrorUtils"
 
