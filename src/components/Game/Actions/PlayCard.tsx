@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 
 import GameService from "services/GameService"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { useSnackbar } from "notistack"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
 import { getGameId, getIsMyGo, getRound } from "caches/GameSlice"
 import { BLANK_CARD } from "model/Cards"
@@ -21,7 +20,6 @@ const WaitingForYourTurn = () => (
 const PlayCard = () => {
     const dispatch = useAppDispatch()
     const round = useAppSelector(getRound)
-    const { enqueueSnackbar } = useSnackbar()
     const [autoPlay, setAutoPlay] = useState(false)
     const gameId = useAppSelector(getGameId)
     const myCards = useAppSelector(getMyCardsWithoutBlanks)
@@ -82,7 +80,19 @@ const PlayCard = () => {
                 <b>Disable Auto Play</b>
             </Button>
         )
-    } else if (!playButtonEnabled) return <WaitingForYourTurn />
+    } else if (!playButtonEnabled)
+        return (
+            <>
+                <WaitingForYourTurn />
+                <Button
+                    id="autoPlayCardButton"
+                    type="button"
+                    onClick={togglePlayCard}
+                    color="warning">
+                    <b>Enable Auto Play</b>
+                </Button>
+            </>
+        )
     return (
         <>
             <Button
