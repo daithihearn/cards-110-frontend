@@ -8,16 +8,16 @@ export interface AutoPlayState {
 
 const initialState: AutoPlayState = {}
 
-export const autoPlaySlice = createSlice({
-    name: "autoPlay",
+export const playCardSlice = createSlice({
+    name: "playCard",
     initialState: initialState,
     reducers: {
-        updateAutoPlay: (_, action: PayloadAction<Card>) => {
+        updateCardToPlay: (_, action: PayloadAction<Card>) => {
             return {
                 card: action.payload.name,
             }
         },
-        toggleAutoPlay: (state, action: PayloadAction<Card>) => {
+        togglePlayCard: (state, action: PayloadAction<Card>) => {
             if (state.card === action.payload.name) return initialState
             return {
                 card: action.payload.name,
@@ -27,7 +27,7 @@ export const autoPlaySlice = createSlice({
     },
 })
 
-export const { updateAutoPlay, toggleAutoPlay, clearAutoPlay } =
-    autoPlaySlice.actions
+export const { updateCardToPlay, togglePlayCard, clearAutoPlay } =
+    playCardSlice.actions
 
-export const getAutoPlayCard = (state: RootState) => state.autoPlay.card
+export const getCardToPlay = (state: RootState) => state.playCard.card

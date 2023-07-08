@@ -16,7 +16,7 @@ import { GameState } from "model/Game"
 import { Actions, BuyCardsEvent } from "model/Events"
 import { useSnackbar } from "notistack"
 import { clearSelectedCards, updateMyCards } from "caches/MyCardsSlice"
-import { clearAutoPlay } from "caches/AutoPlaySlice"
+import { clearAutoPlay } from "caches/PlayCardSlice"
 
 import shuffleAudioFile from "assets/sounds/shuffle.ogg"
 import playCardAudioFile from "assets/sounds/play_card.ogg"

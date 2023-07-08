@@ -14,7 +14,7 @@ import {
     removeCard,
     updateMyCards,
 } from "caches/MyCardsSlice"
-import { clearAutoPlay } from "caches/AutoPlaySlice"
+import { clearAutoPlay } from "caches/PlayCardSlice"
 
 const getGame =
     (gameId: string): AppThunk<Promise<Game>> =>

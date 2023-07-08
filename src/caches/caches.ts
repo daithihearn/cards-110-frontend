@@ -11,7 +11,7 @@ import { myProfileSlice } from "./MyProfileSlice"
 import { gameSlice } from "./GameSlice"
 import { myGamesSlice } from "./MyGamesSlice"
 import { myCardsSlice } from "./MyCardsSlice"
-import { autoPlaySlice } from "./AutoPlaySlice"
+import { playCardSlice } from "./PlayCardSlice"
 import { playerProfilesSlice } from "./PlayerProfilesSlice"
 import { settingsSlice } from "./SettingsSlice"
 
@@ -21,7 +21,7 @@ const combinedReducer = combineReducers({
     myGames: myGamesSlice.reducer,
     playerProfiles: playerProfilesSlice.reducer,
     myCards: myCardsSlice.reducer,
-    autoPlay: autoPlaySlice.reducer,
+    playCard: playCardSlice.reducer,
     settings: settingsSlice.reducer,
 })
 

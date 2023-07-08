@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import GameService from "services/GameService"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
@@ -9,6 +9,8 @@ import { BLANK_CARD } from "model/Cards"
 import parseError from "utils/ErrorUtils"
 import { RoundStatus } from "model/Round"
 import { Button } from "@mui/material"
+import { getCardToPlay, updateCardToPlay } from "caches/PlayCardSlice"
+import { bestCardLead, getBestCard, getWorstCard } from "utils/GameUtils"
 
 const WaitingForYourTurn = () => (
     <Button variant="contained" disableRipple color="secondary">
@@ -20,10 +22,14 @@ const PlayCard = () => {
     const dispatch = useAppDispatch()
     const round = useAppSelector(getRound)
     const { enqueueSnackbar } = useSnackbar()
+    const [autoPlay, setAutoPlay] = useState(false)
     const gameId = useAppSelector(getGameId)
     const myCards = useAppSelector(getMyCardsWithoutBlanks)
     const isMyGo = useAppSelector(getIsMyGo)
     const selectedCards = useAppSelector(getSelectedCards)
+    const cardToPlay = useAppSelector(getCardToPlay)
+
+    const togglePlayCard = useCallback(() => setAutoPlay(!autoPlay), [autoPlay])
 
     const playButtonEnabled = useMemo(
         () =>
@@ -37,27 +43,67 @@ const PlayCard = () => {
         [isMyGo, round, myCards],
     )
 
-    const playCard = useCallback(() => {
-        if (selectedCards.length !== 1) {
-            enqueueSnackbar("Please select exactly one card to play", {
-                variant: "warning",
-            })
-        } else {
-            dispatch(
-                GameService.playCard(gameId!, selectedCards[0].name),
-            ).catch(e => enqueueSnackbar(parseError(e), { variant: "error" }))
+    const playCard = useCallback(
+        (card: string) =>
+            dispatch(GameService.playCard(gameId!, card)).catch(e => {
+                enqueueSnackbar(parseError(e), {
+                    variant: "error",
+                })
+            }),
+        [gameId],
+    )
+
+    const selectCardToPlay = useCallback(() => {
+        if (selectedCards.length === 1)
+            dispatch(updateCardToPlay(selectedCards[0]))
+    }, [selectedCards])
+
+    // 1. Play card when you've pre-selected a card
+    // 2. If auto play is enabled, play best card
+    // 3. Play worst card if best card lead out
+    useEffect(() => {
+        if (round && round.suit && isMyGo) {
+            if (cardToPlay) playCard(cardToPlay)
+            else if (autoPlay) {
+                const bestCard = getBestCard(myCards, round.suit)
+                playCard(bestCard.name)
+            } else if (bestCardLead(round)) {
+                const worstCard = getWorstCard(myCards, round.suit)
+                playCard(worstCard.name)
+            }
         }
-    }, [gameId, selectedCards])
+    }, [playCard, autoPlay, round, isMyGo, myCards, cardToPlay])
 
     if (!playButtonEnabled) return <WaitingForYourTurn />
+    if (autoPlay) {
+        return (
+            <Button
+                id="autoPlayCardButton"
+                type="button"
+                onClick={togglePlayCard}
+                color="error">
+                <b>Disable Auto Play</b>
+            </Button>
+        )
+    }
     return (
-        <Button
-            id="playCardButton"
-            type="button"
-            onClick={playCard}
-            color="primary">
-            <b>Play Card</b>
-        </Button>
+        <>
+            <Button
+                id="playCardButton"
+                type="button"
+                onClick={selectCardToPlay}
+                color="primary">
+                <b>Play Card</b>
+            </Button>
+
+            <Button
+                id="autoPlayCardButton"
+                type="button"
+                onClick={togglePlayCard}
+                color="warning">
+                <b>Enable Auto Play</b>
+            </Button>
+        </>
     )
 }
 

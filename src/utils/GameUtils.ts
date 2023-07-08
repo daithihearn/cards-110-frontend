@@ -147,8 +147,10 @@ export const bestCardLead = (round: Round) => {
     return round.currentHand.leadOut === trumpCards[0].name
 }
 
-export const getWorstCard = (cards: string[], suit: Suit) => {
-    const myCardsRich = CARDS.filter(card => cards.some(c => c === card.name))
+export const getWorstCard = (cards: SelectableCard[], suit: Suit) => {
+    const myCardsRich = CARDS.filter(card =>
+        cards.some(c => c.name === card.name),
+    )
     const myTrumpCards = myCardsRich.filter(
         card => card.suit === suit || card.suit === Suit.WILD,
     )
@@ -161,13 +163,25 @@ export const getWorstCard = (cards: string[], suit: Suit) => {
         // Sort ascending by cold value
         myCardsRich.sort((a, b) => a.coldValue - b.coldValue)
 
-        // if we can't find a cold card that is clearly the worst card then do nothing
-        if (
-            myCardsRich.length > 1 &&
-            myCardsRich[0].coldValue === myCardsRich[1].coldValue
-        ) {
-            return
-        }
+        return myCardsRich[0]
+    }
+}
+
+export const getBestCard = (cards: SelectableCard[], suit: Suit) => {
+    const myCardsRich = CARDS.filter(card =>
+        cards.some(c => c.name === card.name),
+    )
+    const myTrumpCards = myCardsRich.filter(
+        card => card.suit === suit || card.suit === Suit.WILD,
+    )
+
+    if (myTrumpCards.length > 0) {
+        // Sort descending by value
+        myTrumpCards.sort((a, b) => b.value - a.value)
+        return myTrumpCards[0]
+    } else {
+        // Sort descending by cold value
+        myCardsRich.sort((a, b) => b.coldValue - a.coldValue)
 
         return myCardsRich[0]
     }
