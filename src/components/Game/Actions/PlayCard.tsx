@@ -62,7 +62,7 @@ const PlayCard = () => {
     // 2. If auto play is enabled, play best card
     // 3. Play worst card if best card lead out
     useEffect(() => {
-        if (round && round.suit && isMyGo) {
+        if (round?.suit && isMyGo) {
             if (cardToPlay) playCard(cardToPlay)
             else if (autoPlay) {
                 const bestCard = getBestCard(myCards, round.suit)
@@ -74,7 +74,6 @@ const PlayCard = () => {
         }
     }, [playCard, autoPlay, round, isMyGo, myCards, cardToPlay])
 
-    if (!playButtonEnabled) return <WaitingForYourTurn />
     if (autoPlay) {
         return (
             <Button
@@ -85,7 +84,7 @@ const PlayCard = () => {
                 <b>Disable Auto Play</b>
             </Button>
         )
-    }
+    } else if (!playButtonEnabled) return <WaitingForYourTurn />
     return (
         <>
             <Button
