@@ -42,7 +42,7 @@ const PlayCard = () => {
     )
 
     const AutoPlayDropdown = () => (
-        <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+        <FormControl variant="filled" sx={{ minWidth: 90 }}>
             <InputLabel id="autoplay-select-label">Autoplay</InputLabel>
             <Select
                 labelId="autoplay-select-label"
@@ -68,16 +68,6 @@ const PlayCard = () => {
         </FormControl>
     )
 
-    const PlayCardButton = () => (
-        <Button
-            id="playCardButton"
-            type="button"
-            onClick={selectCardToPlay}
-            color="warning">
-            <b>Play</b>
-        </Button>
-    )
-
     const playButtonEnabled = useMemo(
         () =>
             isMyGo &&
@@ -88,6 +78,17 @@ const PlayCard = () => {
                 5,
 
         [isMyGo, round, myCards],
+    )
+
+    const PlayCardButton = () => (
+        <Button
+            id="playCardButton"
+            type="button"
+            disabled={!playButtonEnabled}
+            onClick={selectCardToPlay}
+            color="warning">
+            <b>Play Card</b>
+        </Button>
     )
 
     const playCard = useCallback(
@@ -121,7 +122,7 @@ const PlayCard = () => {
 
     return (
         <ButtonGroup disableElevation variant="contained" size="large">
-            {playButtonEnabled && <PlayCardButton />}
+            <PlayCardButton />
             <AutoPlayDropdown />
         </ButtonGroup>
     )
