@@ -9,7 +9,6 @@ import {
     CardMedia,
     CardContent,
 } from "@mui/material"
-import { getGameId } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
 import { SelectableCard } from "model/Cards"
