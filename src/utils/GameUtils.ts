@@ -83,9 +83,32 @@ export const riskOfMistakeBuyingCards = <T extends Card>(
     selectedCards: T[],
     myCards: T[],
 ) => {
+    // If you have selected 5 trumps then return false
+    if (areAllTrumpCards(selectedCards, suit)) {
+        return false
+    }
+
     const deletingCards = removeAllFromHand(selectedCards, myCards)
 
-    for (const element of deletingCards) {
+    return containsATrumpCard(deletingCards, suit)
+}
+
+export const areAllTrumpCards = <T extends Card>(cards: T[], suit: Suit) => {
+    for (const element of cards) {
+        if (
+            element.name !== "JOKER" &&
+            element.name !== "ACE_HEARTS" &&
+            element.suit !== suit
+        ) {
+            return false
+        }
+    }
+
+    return true
+}
+
+export const containsATrumpCard = <T extends Card>(cards: T[], suit: Suit) => {
+    for (const element of cards) {
         if (
             element.name === "JOKER" ||
             element.name === "ACE_HEARTS" ||
