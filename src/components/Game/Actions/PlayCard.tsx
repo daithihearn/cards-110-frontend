@@ -110,10 +110,10 @@ const PlayCard = () => {
     useEffect(() => {
         if (round?.suit && isMyGo) {
             if (cardToPlay) playCard(cardToPlay)
-            else if (autoPlay === "best" || bestCardLead(round)) {
+            else if (autoPlay === "worst" || bestCardLead(round)) {
                 const worstCard = getWorstCard(myCards, round.suit)
                 playCard(worstCard.name)
-            } else if (autoPlay === "worst") {
+            } else if (autoPlay === "best") {
                 const bestCard = getBestCard(myCards, round.suit)
                 playCard(bestCard.name)
             }
