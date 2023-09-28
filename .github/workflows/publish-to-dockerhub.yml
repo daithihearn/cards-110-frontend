@@ -30,7 +30,7 @@ jobs:
                   path: "public/manifest.json"
                   prop_path: "version"
             - name: Ensure the manifest version matches the tag version
-              if: ${{ steps.manifest-version.outputs.prop != github.ref_name }}
+              if: ${{ steps.manifest-version.outputs.prop != github.event.release.tag_name }}
               uses: actions/github-script@v3
               with:
                   script: |
@@ -42,7 +42,7 @@ jobs:
                   path: "package.json"
                   prop_path: "version"
             - name: Ensure the package.json version matches the tag version
-              if: ${{ steps.package-version.outputs.prop != github.ref_name }}
+              if: ${{ steps.package-version.outputs.prop != github.event.release.tag_name }}
               uses: actions/github-script@v3
               with:
                   script: |
@@ -53,4 +53,4 @@ jobs:
               uses: docker/setup-buildx-action@v2
             - name: Build and publish Docker image
               run: |
-                  docker buildx build --platform linux/amd64,linux/arm64/v8 -t daithihearn/cards-110-frontend:latest -t daithihearn/cards-110-frontend:${{ github.ref_name }} --push .
+                  docker buildx build --platform linux/amd64,linux/arm64/v8 -t daithihearn/cards-110-frontend:latest -t daithihearn/cards-110-frontend:${{ github.event.release.tag_name }} --push .
