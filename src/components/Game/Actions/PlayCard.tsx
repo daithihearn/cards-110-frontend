@@ -112,10 +112,12 @@ const PlayCard = () => {
             if (cardToPlay) playCard(cardToPlay)
             else if (autoPlay === "worst" || bestCardLead(round)) {
                 const worstCard = getWorstCard(myCards, round.suit)
-                playCard(worstCard.name)
+                if (worstCard)
+                    playCard(worstCard.name)
             } else if (autoPlay === "best") {
                 const bestCard = getBestCard(myCards, round.suit)
-                playCard(bestCard.name)
+                if (bestCard)
+                    playCard(bestCard.name)
             }
         }
     }, [playCard, autoPlay, round, isMyGo, myCards, cardToPlay])
