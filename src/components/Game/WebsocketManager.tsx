@@ -24,6 +24,7 @@ import callAudioFile from "assets/sounds/call.ogg"
 import passAudioFile from "assets/sounds/pass.ogg"
 import AutoActionManager from "./AutoActionManager"
 import { Round } from "model/Round"
+import { CardName } from "model/Cards"
 
 const shuffleAudio = new Audio(shuffleAudioFile)
 const playCardAudio = new Audio(playCardAudioFile)
@@ -95,7 +96,7 @@ const WebsocketHandler = () => {
         [playerProfiles],
     )
 
-    const reloadCards = (cards: string[], clearSelected = false) => {
+    const reloadCards = (cards: CardName[], clearSelected = false) => {
         if (clearSelected) {
             dispatch(clearSelectedCards())
             dispatch(clearAutoPlay())

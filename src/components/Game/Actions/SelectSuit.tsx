@@ -8,7 +8,7 @@ import { useSnackbar } from "notistack"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
 import { removeAllFromHand } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
-import { SelectableCard } from "model/Cards"
+import { CardName, SelectableCard } from "model/Cards"
 import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
 
@@ -81,8 +81,8 @@ const SelectSuit = () => {
 
             for (const element of deletingCards) {
                 if (
-                    element.name === "JOKER" ||
-                    element.name === "ACE_HEARTS" ||
+                    element.name === CardName.JOKER ||
+                    element.name === CardName.ACE_HEARTS ||
                     element.suit === suit
                 ) {
                     return true

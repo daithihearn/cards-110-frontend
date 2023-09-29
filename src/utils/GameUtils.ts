@@ -1,4 +1,4 @@
-import { CARDS, BLANK_CARD, Card, SelectableCard } from "model/Cards"
+import { CARDS, EMPTY, Card, SelectableCard, CardName } from "model/Cards"
 import { Round } from "model/Round"
 import { Suit } from "model/Suit"
 
@@ -10,8 +10,8 @@ export const compareCards = (
         return false
     }
 
-    const arr1 = [...hand1].filter(ca => ca.name !== BLANK_CARD.name).sort()
-    const arr2 = [...hand2].filter(ca => ca.name !== BLANK_CARD.name).sort()
+    const arr1 = [...hand1].filter(ca => ca.name !== CardName.EMPTY).sort()
+    const arr2 = [...hand2].filter(ca => ca.name !== CardName.EMPTY).sort()
 
     if (arr1.length !== arr2.length) {
         return false
@@ -30,7 +30,7 @@ export const padMyHand = (cards: SelectableCard[]): SelectableCard[] => {
     const paddedCards = [...cards]
 
     for (let i = 0; i < 5 - cards.length; i++) {
-        paddedCards.push({ ...BLANK_CARD, selected: false })
+        paddedCards.push({ ...EMPTY, selected: false })
     }
 
     return paddedCards
@@ -38,11 +38,11 @@ export const padMyHand = (cards: SelectableCard[]): SelectableCard[] => {
 
 export const processOrderedCardsAfterGameUpdate = <T extends Card>(
     currentCards: SelectableCard[],
-    updatedCardNames: string[],
+    updatedCardNames: CardName[],
 ): SelectableCard[] => {
     // Remove blanks
     const currentCardsNoBlanks = currentCards.filter(
-        c => c.name !== BLANK_CARD.name,
+        c => c.name !== CardName.EMPTY,
     )
 
     // Find the delta between the existing cards and the updated cards we got from the api
@@ -63,15 +63,14 @@ export const processOrderedCardsAfterGameUpdate = <T extends Card>(
     ) {
         const updatedCurrentCards = [...currentCards]
         const idx = updatedCurrentCards.findIndex(c => c.name === delta[0].name)
-        updatedCurrentCards[idx] = { ...BLANK_CARD, selected: false }
+        updatedCurrentCards[idx] = { ...EMPTY, selected: false }
 
         return padMyHand(updatedCurrentCards)
 
         // 3. Else send back a fresh hand constructed from the API data
     } else {
         const updatedCards = updatedCardNames.map<SelectableCard>(name => {
-            const card = CARDS.find(c => c.name === name)!
-            return { ...card, selected: false }
+            return { ...CARDS[name], selected: false }
         })
 
         return padMyHand(updatedCards)
@@ -96,8 +95,8 @@ export const riskOfMistakeBuyingCards = <T extends Card>(
 export const areAllTrumpCards = <T extends Card>(cards: T[], suit: Suit) => {
     for (const element of cards) {
         if (
-            element.name !== "JOKER" &&
-            element.name !== "ACE_HEARTS" &&
+            element.name !== CardName.JOKER &&
+            element.name !== CardName.ACE_HEARTS &&
             element.suit !== suit
         ) {
             return false
@@ -110,8 +109,8 @@ export const areAllTrumpCards = <T extends Card>(cards: T[], suit: Suit) => {
 export const containsATrumpCard = <T extends Card>(cards: T[], suit: Suit) => {
     for (const element of cards) {
         if (
-            element.name === "JOKER" ||
-            element.name === "ACE_HEARTS" ||
+            element.name === CardName.JOKER ||
+            element.name === CardName.ACE_HEARTS ||
             element.suit === suit
         ) {
             return true
@@ -147,18 +146,18 @@ export const removeCard = <T extends Card>(
 }
 
 export const bestCardLead = (round: Round) => {
-    let trumpCards = CARDS.filter(
+    let trumpCards = Object.values(CARDS).filter(
         c => c.suit === round.suit || c.suit === Suit.WILD,
     )
 
     // Remove played trump cards
     round.completedHands.forEach(hand => {
         hand.playedCards.forEach(p => {
-            const card = CARDS.find(c => c.name === p.card)
+            const card = CARDS[p.card]
             if (
                 (card && card.suit === round.suit) ||
-                p.card === "JOKER" ||
-                p.card === "ACE_HEARTS"
+                p.card === CardName.JOKER ||
+                p.card === CardName.ACE_HEARTS
             )
                 trumpCards = trumpCards.filter(c => p.card !== c.name)
         })
@@ -171,10 +170,7 @@ export const bestCardLead = (round: Round) => {
 }
 
 export const getWorstCard = (cards: SelectableCard[], suit: Suit) => {
-    const myCardsRich = CARDS.filter(card =>
-        cards.some(c => c.name === card.name),
-    )
-    const myTrumpCards = myCardsRich.filter(
+    const myTrumpCards = cards.filter(
         card => card.suit === suit || card.suit === Suit.WILD,
     )
 
@@ -184,17 +180,14 @@ export const getWorstCard = (cards: SelectableCard[], suit: Suit) => {
         return myTrumpCards[0]
     } else {
         // Sort ascending by cold value
-        myCardsRich.sort((a, b) => a.coldValue - b.coldValue)
+        cards.sort((a, b) => a.coldValue - b.coldValue)
 
-        return myCardsRich[0]
+        return cards[0]
     }
 }
 
 export const getBestCard = (cards: SelectableCard[], suit: Suit) => {
-    const myCardsRich = CARDS.filter(card =>
-        cards.some(c => c.name === card.name),
-    )
-    const myTrumpCards = myCardsRich.filter(
+    const myTrumpCards = cards.filter(
         card => card.suit === suit || card.suit === Suit.WILD,
     )
 
@@ -204,9 +197,9 @@ export const getBestCard = (cards: SelectableCard[], suit: Suit) => {
         return myTrumpCards[0]
     } else {
         // Sort descending by cold value
-        myCardsRich.sort((a, b) => b.coldValue - a.coldValue)
+        cards.sort((a, b) => b.coldValue - a.coldValue)
 
-        return myCardsRich[0]
+        return cards[0]
     }
 }
 
@@ -229,7 +222,7 @@ export const pickBestCards = <T extends Card>(
         )
         if (remainingCards.length === 0) break
         bestCards.push(
-            remainingCards.sort((a, b) => b.coldValue - a.coldValue)[0],
+            remainingCards.toSorted((a, b) => b.coldValue - a.coldValue)[0],
         )
     }
 
@@ -240,6 +233,6 @@ export const getTrumpCards = <T extends Card>(cards: T[], suit: Suit): T[] =>
     cards.filter(
         card =>
             card.suit === suit ||
-            card.name === "JOKER" ||
-            card.name === "ACE_HEARTS",
+            card.name === CardName.JOKER ||
+            card.name === CardName.ACE_HEARTS,
     )

@@ -5,7 +5,7 @@ import {
     Droppable,
     DropResult,
 } from "react-beautiful-dnd"
-import { BLANK_CARD, SelectableCard } from "model/Cards"
+import { EMPTY, SelectableCard } from "model/Cards"
 import { RoundStatus } from "model/Round"
 import {
     getGameId,
@@ -32,11 +32,11 @@ import { CardContent, CardMedia, useTheme } from "@mui/material"
 import { pickBestCards } from "utils/GameUtils"
 
 const EMPTY_HAND = [
-    { ...BLANK_CARD, selected: false },
-    { ...BLANK_CARD, selected: false },
-    { ...BLANK_CARD, selected: false },
-    { ...BLANK_CARD, selected: false },
-    { ...BLANK_CARD, selected: false },
+    { ...EMPTY, selected: false },
+    { ...EMPTY, selected: false },
+    { ...EMPTY, selected: false },
+    { ...EMPTY, selected: false },
+    { ...EMPTY, selected: false },
 ]
 
 const usePrevious = (value: any) => {
@@ -94,7 +94,7 @@ const MyCards: React.FC = () => {
             card: SelectableCard,
             event: React.MouseEvent<HTMLImageElement, MouseEvent>,
         ) => {
-            if (!cardsSelectable || card.name === BLANK_CARD.name) {
+            if (!cardsSelectable || card.name === EMPTY.name) {
                 return
             }
 
@@ -153,7 +153,7 @@ const MyCards: React.FC = () => {
         (card: SelectableCard) => {
             let classes = "thumbnail-size"
 
-            if (cardsSelectable && card.name !== BLANK_CARD.name) {
+            if (cardsSelectable && card.name !== EMPTY.name) {
                 if (card.name === autoPlayCard) {
                     classes += " auto-played-" + theme.palette.mode
                 } else if (!card.selected) {
@@ -179,9 +179,7 @@ const MyCards: React.FC = () => {
                                 ref={provided.innerRef}>
                                 {myCards.slice(0, 5).map((card, index) => {
                                     const draggableId = `${card.name}${
-                                        card.name === BLANK_CARD.name
-                                            ? index
-                                            : ""
+                                        card.name === EMPTY.name ? index : ""
                                     }`
                                     return (
                                         <Draggable
@@ -189,7 +187,7 @@ const MyCards: React.FC = () => {
                                             draggableId={draggableId}
                                             index={index}
                                             isDragDisabled={
-                                                card.name === BLANK_CARD.name
+                                                card.name === EMPTY.name
                                             }>
                                             {provided => (
                                                 <div
@@ -236,9 +234,7 @@ const MyCards: React.FC = () => {
                                     : EMPTY_HAND
                                 ).map((card, index) => {
                                     const draggableId = `${card.name}${
-                                        card.name === BLANK_CARD.name
-                                            ? index
-                                            : ""
+                                        card.name === EMPTY.name ? index : ""
                                     }`
                                     return (
                                         <Draggable
@@ -246,7 +242,7 @@ const MyCards: React.FC = () => {
                                             draggableId={draggableId}
                                             index={index}
                                             isDragDisabled={
-                                                card.name === BLANK_CARD.name
+                                                card.name === EMPTY.name
                                             }>
                                             {provided => (
                                                 <div

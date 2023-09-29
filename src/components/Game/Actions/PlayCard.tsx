@@ -4,7 +4,6 @@ import GameService from "services/GameService"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
 import { getGameId, getIsMyGo, getRound } from "caches/GameSlice"
-import { BLANK_CARD } from "model/Cards"
 import parseError from "utils/ErrorUtils"
 import { RoundStatus } from "model/Round"
 import {
@@ -19,6 +18,7 @@ import {
 } from "@mui/material"
 import { getCardToPlay, updateCardToPlay } from "caches/PlayCardSlice"
 import { bestCardLead, getBestCard, getWorstCard } from "utils/GameUtils"
+import { CardName } from "model/Cards"
 
 type AutoPlayState = "off" | "best" | "worst"
 
@@ -74,7 +74,7 @@ const PlayCard = () => {
             round &&
             round.status === RoundStatus.PLAYING &&
             round.completedHands.length +
-                myCards.filter(c => c.name !== BLANK_CARD.name).length ===
+                myCards.filter(c => c.name !== CardName.EMPTY).length ===
                 5,
 
         [isMyGo, round, myCards],
@@ -112,12 +112,10 @@ const PlayCard = () => {
             if (cardToPlay) playCard(cardToPlay)
             else if (autoPlay === "worst" || bestCardLead(round)) {
                 const worstCard = getWorstCard(myCards, round.suit)
-                if (worstCard)
-                    playCard(worstCard.name)
+                if (worstCard) playCard(worstCard.name)
             } else if (autoPlay === "best") {
                 const bestCard = getBestCard(myCards, round.suit)
-                if (bestCard)
-                    playCard(bestCard.name)
+                if (bestCard) playCard(bestCard.name)
             }
         }
     }, [playCard, autoPlay, round, isMyGo, myCards, cardToPlay])

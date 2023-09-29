@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Grid, CardContent, Container } from "@mui/material"
+import { Grid, CardContent } from "@mui/material"
 import { getGamePlayers } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { Player } from "model/Player"
