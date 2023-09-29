@@ -1,7 +1,64 @@
 import { Suit } from "./Suit"
 
+export enum CardName {
+    EMPTY = "EMPTY",
+    TWO_HEARTS = "TWO_HEARTS",
+    THREE_HEARTS = "THREE_HEARTS",
+    FOUR_HEARTS = "FOUR_HEARTS",
+    SIX_HEARTS = "SIX_HEARTS",
+    SEVEN_HEARTS = "SEVEN_HEARTS",
+    EIGHT_HEARTS = "EIGHT_HEARTS",
+    NINE_HEARTS = "NINE_HEARTS",
+    TEN_HEARTS = "TEN_HEARTS",
+    QUEEN_HEARTS = "QUEEN_HEARTS",
+    KING_HEARTS = "KING_HEARTS",
+    ACE_HEARTS = "ACE_HEARTS",
+    JACK_HEARTS = "JACK_HEARTS",
+    FIVE_HEARTS = "FIVE_HEARTS",
+    TWO_DIAMONDS = "TWO_DIAMONDS",
+    THREE_DIAMONDS = "THREE_DIAMONDS",
+    FOUR_DIAMONDS = "FOUR_DIAMONDS",
+    SIX_DIAMONDS = "SIX_DIAMONDS",
+    SEVEN_DIAMONDS = "SEVEN_DIAMONDS",
+    EIGHT_DIAMONDS = "EIGHT_DIAMONDS",
+    NINE_DIAMONDS = "NINE_DIAMONDS",
+    TEN_DIAMONDS = "TEN_DIAMONDS",
+    QUEEN_DIAMONDS = "QUEEN_DIAMONDS",
+    KING_DIAMONDS = "KING_DIAMONDS",
+    ACE_DIAMONDS = "ACE_DIAMONDS",
+    JACK_DIAMONDS = "JACK_DIAMONDS",
+    FIVE_DIAMONDS = "FIVE_DIAMONDS",
+    TEN_CLUBS = "TEN_CLUBS",
+    NINE_CLUBS = "NINE_CLUBS",
+    EIGHT_CLUBS = "EIGHT_CLUBS",
+    SEVEN_CLUBS = "SEVEN_CLUBS",
+    SIX_CLUBS = "SIX_CLUBS",
+    FOUR_CLUBS = "FOUR_CLUBS",
+    THREE_CLUBS = "THREE_CLUBS",
+    TWO_CLUBS = "TWO_CLUBS",
+    QUEEN_CLUBS = "QUEEN_CLUBS",
+    KING_CLUBS = "KING_CLUBS",
+    ACE_CLUBS = "ACE_CLUBS",
+    JACK_CLUBS = "JACK_CLUBS",
+    FIVE_CLUBS = "FIVE_CLUBS",
+    TEN_SPADES = "TEN_SPADES",
+    NINE_SPADES = "NINE_SPADES",
+    EIGHT_SPADES = "EIGHT_SPADES",
+    SEVEN_SPADES = "SEVEN_SPADES",
+    SIX_SPADES = "SIX_SPADES",
+    FOUR_SPADES = "FOUR_SPADES",
+    THREE_SPADES = "THREE_SPADES",
+    TWO_SPADES = "TWO_SPADES",
+    QUEEN_SPADES = "QUEEN_SPADES",
+    KING_SPADES = "KING_SPADES",
+    ACE_SPADES = "ACE_SPADES",
+    JACK_SPADES = "JACK_SPADES",
+    FIVE_SPADES = "FIVE_SPADES",
+    JOKER = "JOKER",
+}
+
 export interface Card {
-    name: string
+    name: CardName
     value: number
     coldValue: number
     suit: Suit
@@ -12,391 +69,385 @@ export interface SelectableCard extends Card {
     selected: boolean
 }
 
-export const BLANK_CARD: Card = {
-    name: "blank_card",
-    value: 0,
-    coldValue: 0,
-    suit: Suit.EMPTY,
-    renegable: false,
-}
-
-export const CARDS: Card[] = [
-    {
-        name: "EMPTY",
+export const CARDS: Record<CardName, Card> = {
+    [CardName.EMPTY]: {
+        name: CardName.EMPTY,
         value: 0,
         coldValue: 0,
         suit: Suit.EMPTY,
         renegable: false,
     },
-    {
-        name: "TWO_HEARTS",
+    [CardName.TWO_HEARTS]: {
+        name: CardName.TWO_HEARTS,
         value: 101,
         coldValue: 2,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "THREE_HEARTS",
+    [CardName.THREE_HEARTS]: {
+        name: CardName.THREE_HEARTS,
         value: 102,
         coldValue: 3,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "FOUR_HEARTS",
+    [CardName.FOUR_HEARTS]: {
+        name: CardName.FOUR_HEARTS,
         value: 103,
         coldValue: 4,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "SIX_HEARTS",
+    [CardName.SIX_HEARTS]: {
+        name: CardName.SIX_HEARTS,
         value: 104,
         coldValue: 6,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "SEVEN_HEARTS",
+    [CardName.SEVEN_HEARTS]: {
+        name: CardName.SEVEN_HEARTS,
         value: 105,
         coldValue: 7,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "EIGHT_HEARTS",
+    [CardName.EIGHT_HEARTS]: {
+        name: CardName.EIGHT_HEARTS,
         value: 106,
         coldValue: 8,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "NINE_HEARTS",
+    [CardName.NINE_HEARTS]: {
+        name: CardName.NINE_HEARTS,
         value: 107,
         coldValue: 9,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "TEN_HEARTS",
+    [CardName.TEN_HEARTS]: {
+        name: CardName.TEN_HEARTS,
         value: 108,
         coldValue: 10,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "QUEEN_HEARTS",
+    [CardName.QUEEN_HEARTS]: {
+        name: CardName.QUEEN_HEARTS,
         value: 109,
         coldValue: 12,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "KING_HEARTS",
+    [CardName.KING_HEARTS]: {
+        name: CardName.KING_HEARTS,
         value: 110,
         coldValue: 13,
         suit: Suit.HEARTS,
         renegable: false,
     },
-    {
-        name: "ACE_HEARTS",
+    [CardName.ACE_HEARTS]: {
+        name: CardName.ACE_HEARTS,
         value: 112,
         coldValue: 0,
         suit: Suit.WILD,
         renegable: true,
     },
-    {
-        name: "JACK_HEARTS",
+    [CardName.JACK_HEARTS]: {
+        name: CardName.JACK_HEARTS,
         value: 114,
         coldValue: 11,
         suit: Suit.HEARTS,
         renegable: true,
     },
-    {
-        name: "FIVE_HEARTS",
+    [CardName.FIVE_HEARTS]: {
+        name: CardName.FIVE_HEARTS,
         value: 115,
         coldValue: 5,
         suit: Suit.HEARTS,
         renegable: true,
     },
-    {
-        name: "TWO_DIAMONDS",
+    [CardName.TWO_DIAMONDS]: {
+        name: CardName.TWO_DIAMONDS,
         value: 101,
         coldValue: 2,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "THREE_DIAMONDS",
+    [CardName.THREE_DIAMONDS]: {
+        name: CardName.THREE_DIAMONDS,
         value: 102,
         coldValue: 3,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "FOUR_DIAMONDS",
+    [CardName.FOUR_DIAMONDS]: {
+        name: CardName.FOUR_DIAMONDS,
         value: 103,
         coldValue: 4,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "SIX_DIAMONDS",
+    [CardName.SIX_DIAMONDS]: {
+        name: CardName.SIX_DIAMONDS,
         value: 104,
         coldValue: 6,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "SEVEN_DIAMONDS",
+    [CardName.SEVEN_DIAMONDS]: {
+        name: CardName.SEVEN_DIAMONDS,
         value: 105,
         coldValue: 7,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "EIGHT_DIAMONDS",
+    [CardName.EIGHT_DIAMONDS]: {
+        name: CardName.EIGHT_DIAMONDS,
         value: 106,
         coldValue: 8,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "NINE_DIAMONDS",
+    [CardName.NINE_DIAMONDS]: {
+        name: CardName.NINE_DIAMONDS,
         value: 107,
         coldValue: 9,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "TEN_DIAMONDS",
+    [CardName.TEN_DIAMONDS]: {
+        name: CardName.TEN_DIAMONDS,
         value: 108,
         coldValue: 10,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "QUEEN_DIAMONDS",
+    [CardName.QUEEN_DIAMONDS]: {
+        name: CardName.QUEEN_DIAMONDS,
         value: 109,
         coldValue: 12,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "KING_DIAMONDS",
+    [CardName.KING_DIAMONDS]: {
+        name: CardName.KING_DIAMONDS,
         value: 110,
         coldValue: 13,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "ACE_DIAMONDS",
+    [CardName.ACE_DIAMONDS]: {
+        name: CardName.ACE_DIAMONDS,
         value: 111,
         coldValue: 1,
         suit: Suit.DIAMONDS,
         renegable: false,
     },
-    {
-        name: "JACK_DIAMONDS",
+    [CardName.JACK_DIAMONDS]: {
+        name: CardName.JACK_DIAMONDS,
         value: 114,
         coldValue: 11,
         suit: Suit.DIAMONDS,
         renegable: true,
     },
-    {
-        name: "FIVE_DIAMONDS",
+    [CardName.FIVE_DIAMONDS]: {
+        name: CardName.FIVE_DIAMONDS,
         value: 115,
         coldValue: 5,
         suit: Suit.DIAMONDS,
         renegable: true,
     },
-    {
-        name: "TEN_CLUBS",
+    [CardName.TEN_CLUBS]: {
+        name: CardName.TEN_CLUBS,
         value: 101,
         coldValue: 1,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "NINE_CLUBS",
+    [CardName.NINE_CLUBS]: {
+        name: CardName.NINE_CLUBS,
         value: 102,
         coldValue: 2,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "EIGHT_CLUBS",
+    [CardName.EIGHT_CLUBS]: {
+        name: CardName.EIGHT_CLUBS,
         value: 103,
         coldValue: 3,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "SEVEN_CLUBS",
+    [CardName.SEVEN_CLUBS]: {
+        name: CardName.SEVEN_CLUBS,
         value: 104,
         coldValue: 4,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "SIX_CLUBS",
+    [CardName.SIX_CLUBS]: {
+        name: CardName.SIX_CLUBS,
         value: 105,
         coldValue: 5,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "FOUR_CLUBS",
+    [CardName.FOUR_CLUBS]: {
+        name: CardName.FOUR_CLUBS,
         value: 106,
         coldValue: 7,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "THREE_CLUBS",
+    [CardName.THREE_CLUBS]: {
+        name: CardName.THREE_CLUBS,
         value: 107,
         coldValue: 8,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "TWO_CLUBS",
+    [CardName.TWO_CLUBS]: {
+        name: CardName.TWO_CLUBS,
         value: 108,
         coldValue: 9,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "QUEEN_CLUBS",
+    [CardName.QUEEN_CLUBS]: {
+        name: CardName.QUEEN_CLUBS,
         value: 109,
         coldValue: 12,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "KING_CLUBS",
+    [CardName.KING_CLUBS]: {
+        name: CardName.KING_CLUBS,
         value: 110,
         coldValue: 13,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "ACE_CLUBS",
+    [CardName.ACE_CLUBS]: {
+        name: CardName.ACE_CLUBS,
         value: 111,
         coldValue: 10,
         suit: Suit.CLUBS,
         renegable: false,
     },
-    {
-        name: "JACK_CLUBS",
+    [CardName.JACK_CLUBS]: {
+        name: CardName.JACK_CLUBS,
         value: 114,
         coldValue: 11,
         suit: Suit.CLUBS,
         renegable: true,
     },
-    {
-        name: "FIVE_CLUBS",
+    [CardName.FIVE_CLUBS]: {
+        name: CardName.FIVE_CLUBS,
         value: 115,
         coldValue: 6,
         suit: Suit.CLUBS,
         renegable: true,
     },
-    {
-        name: "TEN_SPADES",
+    [CardName.TEN_SPADES]: {
+        name: CardName.TEN_SPADES,
         value: 101,
         coldValue: 1,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "NINE_SPADES",
+    [CardName.NINE_SPADES]: {
+        name: CardName.NINE_SPADES,
         value: 102,
         coldValue: 2,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "EIGHT_SPADES",
+    [CardName.EIGHT_SPADES]: {
+        name: CardName.EIGHT_SPADES,
         value: 103,
         coldValue: 3,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "SEVEN_SPADES",
+    [CardName.SEVEN_SPADES]: {
+        name: CardName.SEVEN_SPADES,
         value: 104,
         coldValue: 4,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "SIX_SPADES",
+    [CardName.SIX_SPADES]: {
+        name: CardName.SIX_SPADES,
         value: 105,
         coldValue: 5,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "FOUR_SPADES",
+    [CardName.FOUR_SPADES]: {
+        name: CardName.FOUR_SPADES,
         value: 106,
         coldValue: 7,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "THREE_SPADES",
+    [CardName.THREE_SPADES]: {
+        name: CardName.THREE_SPADES,
         value: 107,
         coldValue: 8,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "TWO_SPADES",
+    [CardName.TWO_SPADES]: {
+        name: CardName.TWO_SPADES,
         value: 108,
         coldValue: 9,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "QUEEN_SPADES",
+    [CardName.QUEEN_SPADES]: {
+        name: CardName.QUEEN_SPADES,
         value: 109,
         coldValue: 12,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "KING_SPADES",
+    [CardName.KING_SPADES]: {
+        name: CardName.KING_SPADES,
         value: 110,
         coldValue: 13,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "ACE_SPADES",
+    [CardName.ACE_SPADES]: {
+        name: CardName.ACE_SPADES,
         value: 111,
         coldValue: 10,
         suit: Suit.SPADES,
         renegable: false,
     },
-    {
-        name: "JACK_SPADES",
+    [CardName.JACK_SPADES]: {
+        name: CardName.JACK_SPADES,
         value: 114,
         coldValue: 11,
         suit: Suit.SPADES,
         renegable: true,
     },
-    {
-        name: "FIVE_SPADES",
+    [CardName.FIVE_SPADES]: {
+        name: CardName.FIVE_SPADES,
         value: 115,
         coldValue: 6,
         suit: Suit.SPADES,
         renegable: true,
     },
-    {
-        name: "JOKER",
+    [CardName.JOKER]: {
+        name: CardName.JOKER,
         value: 113,
         coldValue: 0,
         suit: Suit.WILD,
         renegable: true,
     },
-]
+}
+
+export const EMPTY: Card = CARDS[CardName.EMPTY]

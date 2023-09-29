@@ -10,19 +10,18 @@ import {
     Stack,
     Box,
     useTheme,
-    CardHeader,
 } from "@mui/material"
 import { styled } from "@mui/system"
 import { getRound } from "caches/GameSlice"
 import { useAppSelector } from "caches/hooks"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
-import { BLANK_CARD } from "model/Cards"
 import { PlayedCard } from "model/Game"
 import { Player } from "model/Player"
 import Leaderboard from "components/Leaderboard/Leaderboard"
 import { Suit } from "model/Suit"
 import { RoundStatus } from "model/Round"
 import { FormatName } from "utils/FormattingUtils"
+import { CardName } from "model/Cards"
 
 interface PlayerRowI {
     player: Player
@@ -67,7 +66,7 @@ const SuitChip: React.FC<{ isGoer: boolean }> = ({ isGoer }) => {
     const round = useAppSelector(getRound)
 
     const suitChip = useMemo(() => {
-        if (!round || !round.suit) return undefined
+        if (!round?.suit) return undefined
         switch (round.suit) {
             case Suit.CLUBS:
                 return ChipType.Clubs
@@ -181,7 +180,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
                 c => c.playerId === player.id,
             )
         }
-        return { card: BLANK_CARD.name, playerId: player.id }
+        return { card: CardName.EMPTY, playerId: player.id }
     }, [round, player])
 
     const isCurrentPlayer: boolean = useMemo(

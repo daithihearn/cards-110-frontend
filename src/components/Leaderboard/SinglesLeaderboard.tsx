@@ -5,9 +5,10 @@ import { useAppSelector } from "caches/hooks"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { Player } from "model/Player"
 import { Box, Grid, Typography } from "@mui/material"
+import { CardName } from "model/Cards"
 
 interface LeaderboardItem {
-    previousCard?: string
+    previousCard?: CardName
     score: number
     rings: number
     winner: boolean
@@ -59,12 +60,7 @@ const SinglesLeaderboard = () => {
         return leaderboardData.sort((a, b) => b.score - a.score)
     }, [playerProfiles, game, getProfile, previousHand])
 
-    if (
-        !game ||
-        !game.status ||
-        !playerProfiles ||
-        playerProfiles.length === 0
-    ) {
+    if (!game?.status || !playerProfiles || playerProfiles.length === 0) {
         return null
     }
 

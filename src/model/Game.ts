@@ -1,3 +1,4 @@
+import { CardName } from "./Cards"
 import { Player } from "./Player"
 import { Round } from "./Round"
 
@@ -23,7 +24,7 @@ export interface Game {
 
 export interface PlayedCard {
     playerId: string
-    card: string
+    card: CardName
 }
 
 export interface GameState {
@@ -33,7 +34,7 @@ export interface GameState {
     iamGoer: boolean
     iamDealer: boolean
     iamAdmin: boolean
-    cards: string[]
+    cards: CardName[]
     status: GameStatus
     round?: Round
     maxCall?: number

@@ -37,7 +37,7 @@ const Calling = () => {
     )
 
     const buttonsEnabled = useMemo(
-        () => round && round.currentHand && cards.length > 0 && isMyGo,
+        () => round?.currentHand && cards.length > 0 && isMyGo,
         [round, cards, isMyGo],
     )
 

@@ -1,5 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { BLANK_CARD, SelectableCard } from "model/Cards"
+import { CardName, EMPTY, SelectableCard } from "model/Cards"
 import { processOrderedCardsAfterGameUpdate } from "utils/GameUtils"
 import { RootState } from "./caches"
 
@@ -15,7 +15,7 @@ export const myCardsSlice = createSlice({
     name: "myCards",
     initialState: initialState,
     reducers: {
-        updateMyCards: (state, action: PayloadAction<string[]>) => {
+        updateMyCards: (state, action: PayloadAction<CardName[]>) => {
             return {
                 cards: processOrderedCardsAfterGameUpdate(
                     state.cards,
@@ -30,7 +30,7 @@ export const myCardsSlice = createSlice({
         },
         removeCard: (state, action: PayloadAction<string>) => {
             const idx = state.cards.findIndex(c => c.name === action.payload)
-            if (idx > 0) state.cards[idx] = { ...BLANK_CARD, selected: false }
+            if (idx > 0) state.cards[idx] = { ...EMPTY, selected: false }
         },
         selectCard: (state, action: PayloadAction<SelectableCard>) => {
             state.cards.forEach(c => {
@@ -54,7 +54,7 @@ export const myCardsSlice = createSlice({
             }),
         selectAll: state => {
             state.cards.forEach(c => {
-                if (c.name !== BLANK_CARD.name) c.selected = true
+                if (c.name !== EMPTY.name) c.selected = true
             })
         },
         clearSelectedCards: state => {
@@ -82,7 +82,7 @@ export const {
 export const getMyCards = (state: RootState) => state.myCards.cards
 
 export const getMyCardsWithoutBlanks = createSelector(getMyCards, cards =>
-    cards.filter(c => c.name !== BLANK_CARD.name),
+    cards.filter(c => c.name !== EMPTY.name),
 )
 
 export const getSelectedCards = createSelector(getMyCards, cards =>

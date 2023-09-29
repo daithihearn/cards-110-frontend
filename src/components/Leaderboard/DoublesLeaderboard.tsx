@@ -5,17 +5,7 @@ import { getGamePlayers, getIsGameActive, getRound } from "caches/GameSlice"
 import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { compareScore, compareTeamIds } from "utils/PlayerUtils"
 import { Player } from "model/Player"
-import {
-    List,
-    ListItem,
-    ListItemIcon,
-    Avatar,
-    ListItemText,
-    ListItemSecondaryAction,
-    Box,
-    Grid,
-    Typography,
-} from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 
 interface LeaderBoardPlayer {
     cardsBought?: number
