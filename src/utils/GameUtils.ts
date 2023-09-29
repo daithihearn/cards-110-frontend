@@ -169,38 +169,63 @@ export const bestCardLead = (round: Round) => {
     return round.currentHand.leadOut === trumpCards[0].name
 }
 
-export const getWorstCard = (cards: SelectableCard[], suit: Suit) => {
-    const myTrumpCards = cards.filter(
-        card => card.suit === suit || card.suit === Suit.WILD,
-    )
+export const getWorstCard = (cards: Card[], round: Round) => {
+    if (cards.length === 0) return undefined
 
-    if (myTrumpCards.length > 0) {
-        // Sort ascending by value
-        myTrumpCards.sort((a, b) => a.value - b.value)
-        return myTrumpCards[0]
-    } else {
-        // Sort ascending by cold value
-        cards.sort((a, b) => a.coldValue - b.coldValue)
+    // Check if must follow suit
+    const leadOut = round.currentHand?.leadOut
+    let suitLead = leadOut ? CARDS[leadOut as CardName]?.suit : undefined
 
-        return cards[0]
+    if (suitLead === Suit.WILD) {
+        suitLead = round.suit
     }
+
+    if (suitLead) {
+        const myCards = cards.filter(card => card.suit === suitLead)
+        if (myCards.length > 0) {
+            // Sort ascending by value
+            myCards.sort((a, b) => a.value - b.value)
+            return myCards[0]
+        }
+    }
+
+    // Sort ascending by value
+    cards.sort((a, b) => a.value - b.value)
+
+    return cards[0]
 }
 
-export const getBestCard = (cards: SelectableCard[], suit: Suit) => {
+export const getBestCard = (cards: Card[], round: Round) => {
+    if (cards.length === 0) return undefined
+
+    // Check for trump cards
     const myTrumpCards = cards.filter(
-        card => card.suit === suit || card.suit === Suit.WILD,
+        card => card.suit === round.suit || card.suit === Suit.WILD,
     )
 
     if (myTrumpCards.length > 0) {
         // Sort descending by value
         myTrumpCards.sort((a, b) => b.value - a.value)
         return myTrumpCards[0]
-    } else {
-        // Sort descending by cold value
-        cards.sort((a, b) => b.coldValue - a.coldValue)
-
-        return cards[0]
     }
+
+    // Check if have any cold cards
+    const leadOut = round.currentHand?.leadOut
+    const suitLead = leadOut ? CARDS[leadOut as CardName]?.suit : undefined
+
+    if (suitLead && suitLead !== Suit.WILD && suitLead !== round.suit) {
+        const myColdCards = cards.filter(card => card.suit === suitLead)
+        if (myColdCards.length > 0) {
+            // Sort descending by cold value
+            myColdCards.sort((a, b) => b.coldValue - a.coldValue)
+            return myColdCards[0]
+        }
+    }
+
+    // Sort descending by cold value
+    cards.sort((a, b) => b.coldValue - a.coldValue)
+
+    return cards[0]
 }
 
 export const pickBestCards = <T extends Card>(

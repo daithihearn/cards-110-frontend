@@ -92,10 +92,12 @@ const PlayCard = () => {
     )
 
     const playCard = useCallback(
-        (card: string) =>
+        (card: CardName) => {
+            console.debug(`Playing card ${card}`)
             dispatch(GameService.playCard(gameId!, card)).catch(e => {
                 console.error(parseError(e))
-            }),
+            })
+        },
         [gameId],
     )
 
@@ -111,10 +113,10 @@ const PlayCard = () => {
         if (round?.suit && isMyGo) {
             if (cardToPlay) playCard(cardToPlay)
             else if (autoPlay === "worst" || bestCardLead(round)) {
-                const worstCard = getWorstCard(myCards, round.suit)
+                const worstCard = getWorstCard(myCards, round)
                 if (worstCard) playCard(worstCard.name)
             } else if (autoPlay === "best") {
-                const bestCard = getBestCard(myCards, round.suit)
+                const bestCard = getBestCard(myCards, round)
                 if (bestCard) playCard(bestCard.name)
             }
         }
