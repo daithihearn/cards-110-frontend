@@ -5,20 +5,20 @@ import {
     DialogContent,
     Button,
     ButtonGroup,
-    Card,
+    Card as MuiCard,
     CardMedia,
     CardContent,
 } from "@mui/material"
 import { useAppSelector } from "caches/hooks"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
-import { SelectableCard } from "model/Cards"
+import { Card } from "model/Cards"
 import { Suit } from "model/Suit"
 import { getTrumpCards, removeAllFromHand } from "utils/GameUtils"
 
 interface ModalOpts {
     modalVisible: boolean
     cancelCallback: () => void
-    continueCallback: (sel: SelectableCard[], suit?: Suit) => void
+    continueCallback: (sel: Card[], suit?: Suit) => void
     suit: Suit
 }
 
@@ -52,7 +52,7 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
                 Are you sure you want to throw these cards away?
             </DialogTitle>
             <DialogContent className="called-modal">
-                <Card className="gameModalCardGroup">
+                <MuiCard className="gameModalCardGroup">
                     <CardContent className="card-area">
                         {cardsToBeThrown.map(card => (
                             <img
@@ -80,7 +80,7 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
                             </Button>
                         </ButtonGroup>
                     </CardContent>
-                </Card>
+                </MuiCard>
             </DialogContent>
         </Dialog>
     )

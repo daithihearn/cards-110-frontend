@@ -1,10 +1,10 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { CardName, EMPTY, SelectableCard } from "model/Cards"
+import { CardName, EMPTY, Card } from "model/Cards"
 import { processOrderedCardsAfterGameUpdate } from "utils/GameUtils"
 import { RootState } from "./caches"
 
 export interface MyCardsState {
-    cards: SelectableCard[]
+    cards: Card[]
 }
 
 const initialState: MyCardsState = {
@@ -23,7 +23,7 @@ export const myCardsSlice = createSlice({
                 ),
             }
         },
-        replaceMyCards: (_, action: PayloadAction<SelectableCard[]>) => {
+        replaceMyCards: (_, action: PayloadAction<Card[]>) => {
             return {
                 cards: action.payload,
             }
@@ -32,22 +32,22 @@ export const myCardsSlice = createSlice({
             const idx = state.cards.findIndex(c => c.name === action.payload)
             if (idx > 0) state.cards[idx] = { ...EMPTY, selected: false }
         },
-        selectCard: (state, action: PayloadAction<SelectableCard>) => {
+        selectCard: (state, action: PayloadAction<Card>) => {
             state.cards.forEach(c => {
                 if (c.name === action.payload.name) c.selected = true
             })
         },
-        selectCards: (state, action: PayloadAction<SelectableCard[]>) => {
+        selectCards: (state, action: PayloadAction<Card[]>) => {
             state.cards.forEach(c => {
                 if (action.payload.some(a => a.name === c.name))
                     c.selected = true
             })
         },
-        toggleSelect: (state, action: PayloadAction<SelectableCard>) =>
+        toggleSelect: (state, action: PayloadAction<Card>) =>
             state.cards.forEach(c => {
                 if (c.name === action.payload.name) c.selected = !c.selected
             }),
-        toggleUniqueSelect: (state, action: PayloadAction<SelectableCard>) =>
+        toggleUniqueSelect: (state, action: PayloadAction<Card>) =>
             state.cards.forEach(c => {
                 if (c.name === action.payload.name) c.selected = !c.selected
                 else c.selected = false

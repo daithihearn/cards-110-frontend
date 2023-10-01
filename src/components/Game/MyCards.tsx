@@ -5,7 +5,7 @@ import {
     Droppable,
     DropResult,
 } from "react-beautiful-dnd"
-import { EMPTY, SelectableCard } from "model/Cards"
+import { EMPTY, Card } from "model/Cards"
 import { RoundStatus } from "model/Round"
 import {
     getGameId,
@@ -90,10 +90,7 @@ const MyCards: React.FC = () => {
     )
 
     const handleSelectCard = useCallback(
-        (
-            card: SelectableCard,
-            event: React.MouseEvent<HTMLImageElement, MouseEvent>,
-        ) => {
+        (card: Card, event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
             if (!cardsSelectable || card.name === EMPTY.name) {
                 return
             }
@@ -150,7 +147,7 @@ const MyCards: React.FC = () => {
     )
 
     const getStyleForCard = useCallback(
-        (card: SelectableCard) => {
+        (card: Card) => {
             let classes = "thumbnail-size"
 
             if (cardsSelectable && card.name !== EMPTY.name) {

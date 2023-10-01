@@ -8,7 +8,7 @@ import { useSnackbar } from "notistack"
 import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
 import { removeAllFromHand } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
-import { CardName, SelectableCard } from "model/Cards"
+import { CardName, Card } from "model/Cards"
 import parseError from "utils/ErrorUtils"
 import { Button } from "@mui/material"
 
@@ -59,7 +59,7 @@ const SelectSuit = () => {
     )
 
     const selectFromDummyCallback = useCallback(
-        (sel: SelectableCard[], suit?: Suit) => {
+        (sel: Card[], suit?: Suit) => {
             if (!gameId) throw Error("Must be in a game")
             if (!suit) throw Error("Must provide a suit")
             dispatch(GameService.chooseFromDummy(gameId, sel, suit)).catch(
