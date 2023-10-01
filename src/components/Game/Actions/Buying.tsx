@@ -17,7 +17,7 @@ import {
 } from "caches/GameSlice"
 import { pickBestCards, riskOfMistakeBuyingCards } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
-import { SelectableCard } from "model/Cards"
+import { Card } from "model/Cards"
 import { Button } from "@mui/material"
 import { getSettings } from "caches/SettingsSlice"
 
@@ -48,7 +48,7 @@ const Buying = () => {
     }, [readyToBuy])
 
     const buyCards = useCallback(
-        (sel: SelectableCard[]) => {
+        (sel: Card[]) => {
             if (!gameId) return
             dispatch(GameService.buyCards(gameId, sel)).catch(console.error)
         },

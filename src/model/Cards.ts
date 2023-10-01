@@ -63,9 +63,6 @@ export interface Card {
     coldValue: number
     suit: Suit
     renegable: boolean
-}
-
-export interface SelectableCard extends Card {
     selected: boolean
 }
 
@@ -76,6 +73,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 0,
         suit: Suit.EMPTY,
         renegable: false,
+        selected: false,
     },
     [CardName.TWO_HEARTS]: {
         name: CardName.TWO_HEARTS,
@@ -83,6 +81,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 2,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.THREE_HEARTS]: {
         name: CardName.THREE_HEARTS,
@@ -90,6 +89,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 3,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.FOUR_HEARTS]: {
         name: CardName.FOUR_HEARTS,
@@ -97,6 +97,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 4,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.SIX_HEARTS]: {
         name: CardName.SIX_HEARTS,
@@ -104,6 +105,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 6,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.SEVEN_HEARTS]: {
         name: CardName.SEVEN_HEARTS,
@@ -111,6 +113,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 7,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.EIGHT_HEARTS]: {
         name: CardName.EIGHT_HEARTS,
@@ -118,6 +121,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 8,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.NINE_HEARTS]: {
         name: CardName.NINE_HEARTS,
@@ -125,6 +129,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 9,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.TEN_HEARTS]: {
         name: CardName.TEN_HEARTS,
@@ -132,6 +137,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 10,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.QUEEN_HEARTS]: {
         name: CardName.QUEEN_HEARTS,
@@ -139,6 +145,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 12,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.KING_HEARTS]: {
         name: CardName.KING_HEARTS,
@@ -146,6 +153,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 13,
         suit: Suit.HEARTS,
         renegable: false,
+        selected: false,
     },
     [CardName.ACE_HEARTS]: {
         name: CardName.ACE_HEARTS,
@@ -153,6 +161,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 0,
         suit: Suit.WILD,
         renegable: true,
+        selected: false,
     },
     [CardName.JACK_HEARTS]: {
         name: CardName.JACK_HEARTS,
@@ -160,6 +169,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 11,
         suit: Suit.HEARTS,
         renegable: true,
+        selected: false,
     },
     [CardName.FIVE_HEARTS]: {
         name: CardName.FIVE_HEARTS,
@@ -167,6 +177,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 5,
         suit: Suit.HEARTS,
         renegable: true,
+        selected: false,
     },
     [CardName.TWO_DIAMONDS]: {
         name: CardName.TWO_DIAMONDS,
@@ -174,6 +185,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 2,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.THREE_DIAMONDS]: {
         name: CardName.THREE_DIAMONDS,
@@ -181,6 +193,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 3,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.FOUR_DIAMONDS]: {
         name: CardName.FOUR_DIAMONDS,
@@ -188,6 +201,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 4,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.SIX_DIAMONDS]: {
         name: CardName.SIX_DIAMONDS,
@@ -195,6 +209,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 6,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.SEVEN_DIAMONDS]: {
         name: CardName.SEVEN_DIAMONDS,
@@ -202,6 +217,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 7,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.EIGHT_DIAMONDS]: {
         name: CardName.EIGHT_DIAMONDS,
@@ -209,6 +225,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 8,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.NINE_DIAMONDS]: {
         name: CardName.NINE_DIAMONDS,
@@ -216,6 +233,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 9,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.TEN_DIAMONDS]: {
         name: CardName.TEN_DIAMONDS,
@@ -223,6 +241,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 10,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.QUEEN_DIAMONDS]: {
         name: CardName.QUEEN_DIAMONDS,
@@ -230,6 +249,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 12,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.KING_DIAMONDS]: {
         name: CardName.KING_DIAMONDS,
@@ -237,6 +257,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 13,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.ACE_DIAMONDS]: {
         name: CardName.ACE_DIAMONDS,
@@ -244,6 +265,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 1,
         suit: Suit.DIAMONDS,
         renegable: false,
+        selected: false,
     },
     [CardName.JACK_DIAMONDS]: {
         name: CardName.JACK_DIAMONDS,
@@ -251,6 +273,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 11,
         suit: Suit.DIAMONDS,
         renegable: true,
+        selected: false,
     },
     [CardName.FIVE_DIAMONDS]: {
         name: CardName.FIVE_DIAMONDS,
@@ -258,6 +281,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 5,
         suit: Suit.DIAMONDS,
         renegable: true,
+        selected: false,
     },
     [CardName.TEN_CLUBS]: {
         name: CardName.TEN_CLUBS,
@@ -265,6 +289,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 1,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.NINE_CLUBS]: {
         name: CardName.NINE_CLUBS,
@@ -272,6 +297,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 2,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.EIGHT_CLUBS]: {
         name: CardName.EIGHT_CLUBS,
@@ -279,6 +305,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 3,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.SEVEN_CLUBS]: {
         name: CardName.SEVEN_CLUBS,
@@ -286,6 +313,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 4,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.SIX_CLUBS]: {
         name: CardName.SIX_CLUBS,
@@ -293,6 +321,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 5,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.FOUR_CLUBS]: {
         name: CardName.FOUR_CLUBS,
@@ -300,6 +329,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 7,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.THREE_CLUBS]: {
         name: CardName.THREE_CLUBS,
@@ -307,6 +337,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 8,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.TWO_CLUBS]: {
         name: CardName.TWO_CLUBS,
@@ -314,6 +345,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 9,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.QUEEN_CLUBS]: {
         name: CardName.QUEEN_CLUBS,
@@ -321,6 +353,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 12,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.KING_CLUBS]: {
         name: CardName.KING_CLUBS,
@@ -328,6 +361,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 13,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.ACE_CLUBS]: {
         name: CardName.ACE_CLUBS,
@@ -335,6 +369,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 10,
         suit: Suit.CLUBS,
         renegable: false,
+        selected: false,
     },
     [CardName.JACK_CLUBS]: {
         name: CardName.JACK_CLUBS,
@@ -342,6 +377,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 11,
         suit: Suit.CLUBS,
         renegable: true,
+        selected: false,
     },
     [CardName.FIVE_CLUBS]: {
         name: CardName.FIVE_CLUBS,
@@ -349,6 +385,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 6,
         suit: Suit.CLUBS,
         renegable: true,
+        selected: false,
     },
     [CardName.TEN_SPADES]: {
         name: CardName.TEN_SPADES,
@@ -356,6 +393,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 1,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.NINE_SPADES]: {
         name: CardName.NINE_SPADES,
@@ -363,6 +401,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 2,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.EIGHT_SPADES]: {
         name: CardName.EIGHT_SPADES,
@@ -370,6 +409,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 3,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.SEVEN_SPADES]: {
         name: CardName.SEVEN_SPADES,
@@ -377,6 +417,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 4,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.SIX_SPADES]: {
         name: CardName.SIX_SPADES,
@@ -384,6 +425,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 5,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.FOUR_SPADES]: {
         name: CardName.FOUR_SPADES,
@@ -391,6 +433,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 7,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.THREE_SPADES]: {
         name: CardName.THREE_SPADES,
@@ -398,6 +441,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 8,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.TWO_SPADES]: {
         name: CardName.TWO_SPADES,
@@ -405,6 +449,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 9,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.QUEEN_SPADES]: {
         name: CardName.QUEEN_SPADES,
@@ -412,6 +457,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 12,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.KING_SPADES]: {
         name: CardName.KING_SPADES,
@@ -419,6 +465,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 13,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.ACE_SPADES]: {
         name: CardName.ACE_SPADES,
@@ -426,6 +473,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 10,
         suit: Suit.SPADES,
         renegable: false,
+        selected: false,
     },
     [CardName.JACK_SPADES]: {
         name: CardName.JACK_SPADES,
@@ -433,6 +481,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 11,
         suit: Suit.SPADES,
         renegable: true,
+        selected: false,
     },
     [CardName.FIVE_SPADES]: {
         name: CardName.FIVE_SPADES,
@@ -440,6 +489,7 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 6,
         suit: Suit.SPADES,
         renegable: true,
+        selected: false,
     },
     [CardName.JOKER]: {
         name: CardName.JOKER,
@@ -447,7 +497,8 @@ export const CARDS: Record<CardName, Card> = {
         coldValue: 0,
         suit: Suit.WILD,
         renegable: true,
+        selected: false,
     },
 }
 
-export const EMPTY: Card = CARDS[CardName.EMPTY]
+export const EMPTY: Card = CARDS.EMPTY

@@ -1,6 +1,9 @@
-import { CARDS, EMPTY, Card, SelectableCard, CardName } from "model/Cards"
+import { CARDS, EMPTY, Card, CardName } from "model/Cards"
 import { Round } from "model/Round"
 import { Suit } from "model/Suit"
+
+export const removeEmptyCards = (cards: Card[]): Card[] =>
+    [...cards].filter(c => c.name !== CardName.EMPTY)
 
 export const compareCards = (
     hand1: Card[] | undefined,
@@ -10,15 +13,18 @@ export const compareCards = (
         return false
     }
 
-    const arr1 = [...hand1].filter(ca => ca.name !== CardName.EMPTY).sort()
-    const arr2 = [...hand2].filter(ca => ca.name !== CardName.EMPTY).sort()
+    let h1 = removeEmptyCards(hand1)
+    let h2 = removeEmptyCards(hand2)
 
-    if (arr1.length !== arr2.length) {
+    if (h1.length !== h2.length) {
         return false
     }
 
-    for (let i = 0; i < arr1.length; i++) {
-        if (arr1[i].name !== arr2[i].name) {
+    h1 = h1.sort((a, b) => a.name.localeCompare(b.name))
+    h2 = h2.sort((a, b) => a.name.localeCompare(b.name))
+
+    for (let i = 0; i < h1.length; i++) {
+        if (h1[i].name !== h2[i].name) {
             return false
         }
     }
@@ -26,7 +32,7 @@ export const compareCards = (
     return true
 }
 
-export const padMyHand = (cards: SelectableCard[]): SelectableCard[] => {
+export const padMyHand = (cards: Card[]): Card[] => {
     const paddedCards = [...cards]
 
     for (let i = 0; i < 5 - cards.length; i++) {
@@ -36,10 +42,10 @@ export const padMyHand = (cards: SelectableCard[]): SelectableCard[] => {
     return paddedCards
 }
 
-export const processOrderedCardsAfterGameUpdate = <T extends Card>(
-    currentCards: SelectableCard[],
+export const processOrderedCardsAfterGameUpdate = (
+    currentCards: Card[],
     updatedCardNames: CardName[],
-): SelectableCard[] => {
+): Card[] => {
     // Remove blanks
     const currentCardsNoBlanks = currentCards.filter(
         c => c.name !== CardName.EMPTY,
@@ -63,13 +69,13 @@ export const processOrderedCardsAfterGameUpdate = <T extends Card>(
     ) {
         const updatedCurrentCards = [...currentCards]
         const idx = updatedCurrentCards.findIndex(c => c.name === delta[0].name)
-        updatedCurrentCards[idx] = { ...EMPTY, selected: false }
+        updatedCurrentCards[idx] = { ...EMPTY }
 
         return padMyHand(updatedCurrentCards)
-
-        // 3. Else send back a fresh hand constructed from the API data
-    } else {
-        const updatedCards = updatedCardNames.map<SelectableCard>(name => {
+    }
+    // 3. Else send back a fresh hand constructed from the API data
+    else {
+        const updatedCards = updatedCardNames.map<Card>(name => {
             return { ...CARDS[name], selected: false }
         })
 
@@ -77,22 +83,7 @@ export const processOrderedCardsAfterGameUpdate = <T extends Card>(
     }
 }
 
-export const riskOfMistakeBuyingCards = <T extends Card>(
-    suit: Suit,
-    selectedCards: T[],
-    myCards: T[],
-) => {
-    // If you have selected 5 trumps then return false
-    if (areAllTrumpCards(selectedCards, suit)) {
-        return false
-    }
-
-    const deletingCards = removeAllFromHand(selectedCards, myCards)
-
-    return containsATrumpCard(deletingCards, suit)
-}
-
-export const areAllTrumpCards = <T extends Card>(cards: T[], suit: Suit) => {
+export const areAllTrumpCards = (cards: Card[], suit: Suit) => {
     for (const element of cards) {
         if (
             element.name !== CardName.JOKER &&
@@ -106,7 +97,7 @@ export const areAllTrumpCards = <T extends Card>(cards: T[], suit: Suit) => {
     return true
 }
 
-export const containsATrumpCard = <T extends Card>(cards: T[], suit: Suit) => {
+export const containsATrumpCard = (cards: Card[], suit: Suit) => {
     for (const element of cards) {
         if (
             element.name === CardName.JOKER ||
@@ -120,9 +111,19 @@ export const containsATrumpCard = <T extends Card>(cards: T[], suit: Suit) => {
     return false
 }
 
-export const removeAllFromHand = <T extends Card>(
-    cardsToRemove: T[],
-    originalHand: T[],
+export const removeCard = (cardToRemove: Card, orginalHand: Card[]) => {
+    const newHand = [...orginalHand] // make a separate copy of the array
+    const index = newHand.findIndex(c => c.name === cardToRemove.name)
+    if (index !== -1) {
+        newHand.splice(index, 1)
+    }
+
+    return newHand
+}
+
+export const removeAllFromHand = (
+    cardsToRemove: Card[],
+    originalHand: Card[],
 ) => {
     let newHand = [...originalHand]
     const ctr = [...cardsToRemove]
@@ -132,23 +133,32 @@ export const removeAllFromHand = <T extends Card>(
     return newHand
 }
 
-export const removeCard = <T extends Card>(
-    cardToRemove: T,
-    orginalHand: T[],
+export const riskOfMistakeBuyingCards = (
+    suit: Suit,
+    selectedCards: Card[],
+    myCards: Card[],
 ) => {
-    const newHand = [...orginalHand] // make a separate copy of the array
-    const index = newHand.indexOf(cardToRemove)
-    if (index !== -1) {
-        newHand.splice(index, 1)
+    // If you have selected 5 trumps then return false
+    if (selectedCards.length === 5 && areAllTrumpCards(selectedCards, suit)) {
+        return false
     }
 
-    return newHand
+    const deletingCards = removeAllFromHand(selectedCards, myCards)
+
+    return containsATrumpCard(deletingCards, suit)
 }
 
-export const bestCardLead = (round: Round) => {
-    let trumpCards = Object.values(CARDS).filter(
-        c => c.suit === round.suit || c.suit === Suit.WILD,
+export const getTrumpCards = (cards: Card[], suit: Suit): Card[] =>
+    cards.filter(
+        card =>
+            card.suit === suit ||
+            card.name === CardName.JOKER ||
+            card.name === CardName.ACE_HEARTS,
     )
+
+export const bestCardLead = (round: Round) => {
+    if (!round.suit) return false
+    let trumpCards = getTrumpCards(Object.values(CARDS), round.suit)
 
     // Remove played trump cards
     round.completedHands.forEach(hand => {
@@ -228,11 +238,11 @@ export const getBestCard = (cards: Card[], round: Round) => {
     return cards[0]
 }
 
-export const pickBestCards = <T extends Card>(
-    cards: T[],
+export const pickBestCards = (
+    cards: Card[],
     suit: Suit,
     numPlayers: number,
-): T[] => {
+): Card[] => {
     // If number of players not in range 2-5 then throw an error
     if (numPlayers < 2 || numPlayers > 5) {
         throw new Error("Number of players must be between 2 and 5")
@@ -253,11 +263,3 @@ export const pickBestCards = <T extends Card>(
 
     return bestCards
 }
-
-export const getTrumpCards = <T extends Card>(cards: T[], suit: Suit): T[] =>
-    cards.filter(
-        card =>
-            card.suit === suit ||
-            card.name === CardName.JOKER ||
-            card.name === CardName.ACE_HEARTS,
-    )
