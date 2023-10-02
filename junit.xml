@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="74" failures="0" errors="0" time="2.341">
+  <testsuite name="GameUtils" errors="0" failures="0" skipped="0" timestamp="2023-10-02T21:11:05" time="2.248" tests="74">
+    <testcase classname="GameUtils removeEmptyCards empty hand" name="GameUtils removeEmptyCards empty hand" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards full hand" name="GameUtils removeEmptyCards full hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with empty card at end" name="GameUtils removeEmptyCards hand with empty card at end" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with empty card at beginning" name="GameUtils removeEmptyCards hand with empty card at beginning" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with empty card in middle" name="GameUtils removeEmptyCards hand with empty card in middle" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards" name="GameUtils removeEmptyCards hand with multiple empty cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards at beginning" name="GameUtils removeEmptyCards hand with multiple empty cards at beginning" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards at end" name="GameUtils removeEmptyCards hand with multiple empty cards at end" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards in middle" name="GameUtils removeEmptyCards hand with multiple empty cards in middle" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeEmptyCards hand with only empty cards" name="GameUtils removeEmptyCards hand with only empty cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils compareCards 2 empty hands should return true" name="GameUtils compareCards 2 empty hands should return true" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils compareCards equal hands" name="GameUtils compareCards equal hands" time="0.006">
+    </testcase>
+    <testcase classname="GameUtils compareCards different hands" name="GameUtils compareCards different hands" time="0">
+    </testcase>
+    <testcase classname="GameUtils compareCards equal hands with different order" name="GameUtils compareCards equal hands with different order" time="0">
+    </testcase>
+    <testcase classname="GameUtils padMyHand empty hand" name="GameUtils padMyHand empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils padMyHand full hand" name="GameUtils padMyHand full hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils padMyHand partial hand" name="GameUtils padMyHand partial hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate same cards" name="GameUtils processOrderedCardsAfterGameUpdate same cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate same cards with different order" name="GameUtils processOrderedCardsAfterGameUpdate same cards with different order" time="0">
+    </testcase>
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate First card removed" name="GameUtils processOrderedCardsAfterGameUpdate First card removed" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate Last card removed" name="GameUtils processOrderedCardsAfterGameUpdate Last card removed" time="0">
+    </testcase>
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate Middle card removed" name="GameUtils processOrderedCardsAfterGameUpdate Middle card removed" time="0">
+    </testcase>
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate any other configuration 1" name="GameUtils processOrderedCardsAfterGameUpdate any other configuration 1" time="0">
+    </testcase>
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate any other configuration 2" name="GameUtils processOrderedCardsAfterGameUpdate any other configuration 2" time="0">
+    </testcase>
+    <testcase classname="GameUtils areAllTrumpCards empty hand" name="GameUtils areAllTrumpCards empty hand" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils areAllTrumpCards all trump cards" name="GameUtils areAllTrumpCards all trump cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils areAllTrumpCards not all trump cards" name="GameUtils areAllTrumpCards not all trump cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils containsATrumpCard empty hand" name="GameUtils containsATrumpCard empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils containsATrumpCard has a trump card" name="GameUtils containsATrumpCard has a trump card" time="0">
+    </testcase>
+    <testcase classname="GameUtils containsATrumpCard doesn&apos;t have a trump card" name="GameUtils containsATrumpCard doesn&apos;t have a trump card" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeCard empty hand" name="GameUtils removeCard empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeCard remove first card" name="GameUtils removeCard remove first card" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils removeCard remove last card" name="GameUtils removeCard remove last card" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeCard remove middle card" name="GameUtils removeCard remove middle card" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeAllFromHand empty hand" name="GameUtils removeAllFromHand empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeAllFromHand remove first card" name="GameUtils removeAllFromHand remove first card" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeAllFromHand remove last card" name="GameUtils removeAllFromHand remove last card" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeAllFromHand remove middle card" name="GameUtils removeAllFromHand remove middle card" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeAllFromHand remove multiple cards" name="GameUtils removeAllFromHand remove multiple cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils removeAllFromHand remove multiple cards in different order" name="GameUtils removeAllFromHand remove multiple cards in different order" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils removeAllFromHand remove all cards" name="GameUtils removeAllFromHand remove all cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils riskOfMistakeBuyingCards none selected" name="GameUtils riskOfMistakeBuyingCards none selected" time="0">
+    </testcase>
+    <testcase classname="GameUtils riskOfMistakeBuyingCards no trump cards" name="GameUtils riskOfMistakeBuyingCards no trump cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils riskOfMistakeBuyingCards select all cards" name="GameUtils riskOfMistakeBuyingCards select all cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils riskOfMistakeBuyingCards select all trumps" name="GameUtils riskOfMistakeBuyingCards select all trumps" time="0">
+    </testcase>
+    <testcase classname="GameUtils riskOfMistakeBuyingCards don&apos;t select all trumps" name="GameUtils riskOfMistakeBuyingCards don&apos;t select all trumps" time="0">
+    </testcase>
+    <testcase classname="GameUtils getTrumpCards empty hand" name="GameUtils getTrumpCards empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils getTrumpCards all trump cards" name="GameUtils getTrumpCards all trump cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils getTrumpCards no trump cards" name="GameUtils getTrumpCards no trump cards" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils getTrumpCards all trump cards with joker and ace of hearts" name="GameUtils getTrumpCards all trump cards with joker and ace of hearts" time="0">
+    </testcase>
+    <testcase classname="GameUtils getTrumpCards some trump cards" name="GameUtils getTrumpCards some trump cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils bestCardLead no suit" name="GameUtils bestCardLead no suit" time="0">
+    </testcase>
+    <testcase classname="GameUtils bestCardLead best card lead" name="GameUtils bestCardLead best card lead" time="0">
+    </testcase>
+    <testcase classname="GameUtils bestCardLead best card not lead" name="GameUtils bestCardLead best card not lead" time="0">
+    </testcase>
+    <testcase classname="GameUtils getBestCard empty hand" name="GameUtils getBestCard empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils getBestCard trump card" name="GameUtils getBestCard trump card" time="0">
+    </testcase>
+    <testcase classname="GameUtils getBestCard follow cold card" name="GameUtils getBestCard follow cold card" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard empty hand" name="GameUtils getWorstCard empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard trump card" name="GameUtils getWorstCard trump card" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard follow cold card" name="GameUtils getWorstCard follow cold card" time="0">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep less than 2 players. Should throw an error" name="GameUtils calculateMinCardsToKeep less than 2 players. Should throw an error" time="0.023">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep more than 6 players. Should throw an error" name="GameUtils calculateMinCardsToKeep more than 6 players. Should throw an error" time="0">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep 2 players" name="GameUtils calculateMinCardsToKeep 2 players" time="0">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep 3 players" name="GameUtils calculateMinCardsToKeep 3 players" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep 4 players" name="GameUtils calculateMinCardsToKeep 4 players" time="0">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep 5 players" name="GameUtils calculateMinCardsToKeep 5 players" time="0">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep 6 players" name="GameUtils calculateMinCardsToKeep 6 players" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards empty hand" name="GameUtils pickBestCards empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards all trumps" name="GameUtils pickBestCards all trumps" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards Must keep 2" name="GameUtils pickBestCards Must keep 2" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards Must keep 1" name="GameUtils pickBestCards Must keep 1" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards Must keep 0" name="GameUtils pickBestCards Must keep 0" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards Wild cards one" name="GameUtils pickBestCards Wild cards one" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards Wild cards 2" name="GameUtils pickBestCards Wild cards 2" time="0">
+    </testcase>
+  </testsuite>
+</testsuites>

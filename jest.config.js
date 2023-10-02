@@ -7,6 +7,8 @@ module.exports = {
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
     testMatch: ["**/*.(spec|test).(ts|tsx|js|jsx)"],
     maxWorkers: 2,
-    workerIdleMemoryLimit: "1GB",
     reporters: ["default", "jest-junit"],
+    moduleNameMapper: {
+        "^model/(.*)$": "<rootDir>/src/model/$1",
+    },
 }
