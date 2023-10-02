@@ -238,27 +238,44 @@ export const getBestCard = (cards: Card[], round: Round) => {
     return cards[0]
 }
 
+/**
+ * Calculate the minimum number of cards that you must keep in your hand
+ * @param numPlayers
+ * @returns
+ */
+export const calculateMinCardsToKeep = (numPlayers: number): number => {
+    switch (numPlayers) {
+        case 2:
+            return 0
+        case 3:
+            return 0
+        case 4:
+            return 1
+        case 5:
+            return 2
+        case 6:
+            return 2
+        default:
+            throw new Error("Number of players must be between 2 and 6")
+    }
+}
+
 export const pickBestCards = (
     cards: Card[],
     suit: Suit,
     numPlayers: number,
 ): Card[] => {
-    // If number of players not in range 2-5 then throw an error
-    if (numPlayers < 2 || numPlayers > 5) {
-        throw new Error("Number of players must be between 2 and 5")
-    }
-    const minCardsRequired = Math.max(0, numPlayers - 3)
+    const minCardsToKeep = calculateMinCardsToKeep(numPlayers)
     const bestCards = getTrumpCards(cards, suit)
 
-    while (bestCards.length < minCardsRequired) {
+    while (bestCards.length < minCardsToKeep) {
         // Find the card with the highest cold value that isn't already in the best cards
-        const remainingCards = cards.filter(
-            c => !bestCards.some(bc => bc.name === c.name),
-        )
+        const remainingCards = cards
+            .filter(c => !bestCards.some(bc => bc.name === c.name))
+            .sort((a, b) => b.coldValue - a.coldValue)
         if (remainingCards.length === 0) break
-        bestCards.push(
-            remainingCards.toSorted((a, b) => b.coldValue - a.coldValue)[0],
-        )
+
+        bestCards.push(remainingCards[0])
     }
 
     return bestCards

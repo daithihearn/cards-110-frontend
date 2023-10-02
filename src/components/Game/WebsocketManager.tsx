@@ -109,17 +109,18 @@ const WebsocketHandler = () => {
         game: GameState,
         previousRound: Round,
     ) => {
+        dispatch(updateMyCards(game.cards))
+
         // Disable actions by setting isMyGo to false
         dispatch(disableActions())
 
-        // Show the last card of the last roung being played
+        // Show the last card of the last round being played
         playCardSound()
         dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
         await new Promise(r => setTimeout(r, 4000))
 
         // Finally update the game with the latest state
         dispatch(updateGame(game))
-        dispatch(updateMyCards(game.cards))
     }
 
     // On round completion we need to display the last round to the user

@@ -186,6 +186,7 @@ const playCard =
             null,
             getDefaultConfig(accessToken),
         )
+
         dispatch(removeCard(card))
         dispatch(clearAutoPlay())
     }
