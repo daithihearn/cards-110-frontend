@@ -2,6 +2,7 @@ import { Suit } from "model/Suit"
 import {
     areAllTrumpCards,
     bestCardLead,
+    calculateMinCardsToKeep,
     compareCards,
     containsATrumpCard,
     getBestCard,
@@ -476,6 +477,34 @@ describe("GameUtils", () => {
         })
     })
 
+    describe("calculateMinCardsToKeep", () => {
+        it("less than 2 players. Should throw an error", () => {
+            expect(() => {
+                calculateMinCardsToKeep(1)
+            }).toThrow()
+        })
+        it("more than 6 players. Should throw an error", () => {
+            expect(() => {
+                calculateMinCardsToKeep(7)
+            }).toThrow()
+        })
+        it("2 players", () => {
+            expect(calculateMinCardsToKeep(2)).toBe(0)
+        })
+        it("3 players", () => {
+            expect(calculateMinCardsToKeep(3)).toBe(0)
+        })
+        it("4 players", () => {
+            expect(calculateMinCardsToKeep(4)).toBe(1)
+        })
+        it("5 players", () => {
+            expect(calculateMinCardsToKeep(5)).toBe(2)
+        })
+        it("6 players", () => {
+            expect(calculateMinCardsToKeep(6)).toBe(2)
+        })
+    })
+
     describe("pickBestCards", () => {
         it("empty hand", () => {
             expect(pickBestCards([], Suit.CLUBS, 4)).toStrictEqual([])
@@ -485,11 +514,34 @@ describe("GameUtils", () => {
                 HAND1,
             )
         })
-        // it("Must keep 2", () => {
-        //     expect(pickBestCards([...HAND1], Suit.DIAMONDS, 5)).toStrictEqual([
-        //         CARDS.FIVE_HEARTS,
-        //         CARDS.SIX_HEARTS,
-        //     ])
-        // })
+        it("Must keep 2", () => {
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 6)).toStrictEqual([
+                CARDS.SIX_HEARTS,
+                CARDS.FIVE_HEARTS,
+            ])
+        })
+        it("Must keep 1", () => {
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 4)).toStrictEqual([
+                CARDS.SIX_HEARTS,
+            ])
+        })
+        it("Must keep 0", () => {
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 2)).toStrictEqual(
+                [],
+            )
+        })
+        it("Wild cards one", () => {
+            expect(pickBestCards([...HAND4], Suit.HEARTS, 4)).toStrictEqual([
+                CARDS.TWO_HEARTS,
+                CARDS.JOKER,
+                CARDS.ACE_HEARTS,
+            ])
+        })
+        it("Wild cards 2", () => {
+            expect(pickBestCards([...HAND4], Suit.SPADES, 2)).toStrictEqual([
+                CARDS.JOKER,
+                CARDS.ACE_HEARTS,
+            ])
+        })
     })
 })
