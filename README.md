@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=daithihearn_cards-110-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=daithihearn_cards-110-frontend)
+
 # cards-110-frontend
 
 The frontend for the [Cards 110 application](https://github.com/daithihearn/cards-110)
