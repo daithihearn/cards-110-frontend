@@ -184,7 +184,7 @@ export const getWorstCard = (cards: Card[], round: Round) => {
 
     // Check if must follow suit
     const leadOut = round.currentHand?.leadOut
-    let suitLead = leadOut ? CARDS[leadOut as CardName]?.suit : undefined
+    let suitLead = leadOut ? CARDS[leadOut]?.suit : undefined
 
     if (suitLead === Suit.WILD) {
         suitLead = round.suit
@@ -221,7 +221,7 @@ export const getBestCard = (cards: Card[], round: Round) => {
 
     // Check if have any cold cards
     const leadOut = round.currentHand?.leadOut
-    const suitLead = leadOut ? CARDS[leadOut as CardName]?.suit : undefined
+    const suitLead = leadOut ? CARDS[leadOut]?.suit : undefined
 
     if (suitLead && suitLead !== Suit.WILD && suitLead !== round.suit) {
         const myColdCards = cards.filter(card => card.suit === suitLead)
