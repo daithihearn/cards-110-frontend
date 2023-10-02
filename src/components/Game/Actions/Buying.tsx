@@ -107,12 +107,14 @@ const Buying = () => {
                 </b>
             </Button>
 
-            <ThrowCardsWarningModal
-                modalVisible={deleteCardsDialog}
-                cancelCallback={hideCancelDeleteCardsDialog}
-                continueCallback={buyCards}
-                suit={suit!}
-            />
+            {suit && (
+                <ThrowCardsWarningModal
+                    modalVisible={deleteCardsDialog}
+                    cancelCallback={hideCancelDeleteCardsDialog}
+                    continueCallback={buyCards}
+                    suit={suit}
+                />
+            )}
         </>
     )
 }

@@ -18,5 +18,8 @@
         "baseUrl": "src"
     },
     "include": ["src"],
-    "exclude": ["build", "node_modules"]
+    "exclude": ["build", "node_modules"],
+    "typeAcquisition": {
+        "include": ["jest"]
+    }
 }

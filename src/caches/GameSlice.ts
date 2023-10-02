@@ -4,7 +4,6 @@ import { GameState, GameStatus, PlayedCard } from "model/Game"
 import { Player } from "model/Player"
 import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
-import { get } from "http"
 
 const initialState: GameState = {
     iamSpectator: true,

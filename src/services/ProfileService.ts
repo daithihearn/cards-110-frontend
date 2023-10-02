@@ -38,7 +38,7 @@ const updateProfile =
         accessToken?: string,
     ): AppThunk<Promise<void>> =>
     async (dispatch, getState) => {
-        const token = accessToken || getAccessToken(getState())
+        const token = accessToken ?? getAccessToken(getState())
         if (!token) throw Error("No access token found")
 
         const response = await axios.put<ProfileResponse>(
