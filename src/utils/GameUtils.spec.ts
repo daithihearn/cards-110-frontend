@@ -3,9 +3,11 @@ import {
     areAllTrumpCards,
     bestCardLead,
     calculateMinCardsToKeep,
+    canRenege,
     compareCards,
     containsATrumpCard,
     getBestCard,
+    getColdCards,
     getTrumpCards,
     getWorstCard,
     padMyHand,
@@ -48,14 +50,44 @@ const ROUND_BEST_LEAD: Round = {
     dealerId: "",
     status: RoundStatus.PLAYING,
     dealerSeeingCall: false,
-    completedHands: [],
+    completedHands: [
+        {
+            leadOut: CardName.FIVE_DIAMONDS,
+            timestamp: "",
+            currentPlayerId: "",
+            playedCards: [{ card: CardName.ACE_HEARTS, playerId: "blah" }],
+        },
+    ],
+}
+
+const ROUND_WILD_LEAD: Round = {
+    suit: Suit.HEARTS,
+    currentHand: {
+        leadOut: CardName.JOKER,
+        timestamp: "",
+        currentPlayerId: "",
+        playedCards: [],
+    },
+    timestamp: "",
+    number: 0,
+    dealerId: "",
+    status: RoundStatus.PLAYING,
+    dealerSeeingCall: false,
+    completedHands: [
+        {
+            leadOut: CardName.FIVE_DIAMONDS,
+            timestamp: "",
+            currentPlayerId: "",
+            playedCards: [{ card: CardName.ACE_HEARTS, playerId: "blah" }],
+        },
+    ],
 }
 
 const HAND1: Card[] = [
     { ...CARDS.TWO_HEARTS, selected: true },
     CARDS.THREE_HEARTS,
     CARDS.FOUR_HEARTS,
-    CARDS.FIVE_HEARTS,
+    CARDS.JACK_HEARTS,
     CARDS.SIX_HEARTS,
 ]
 
@@ -75,6 +107,13 @@ const HAND4: Card[] = [
     CARDS.THREE_CLUBS,
     CARDS.ACE_HEARTS,
     CARDS.TWO_DIAMONDS,
+]
+
+const HAND_RENEG: Card[] = [
+    CARDS.THREE_DIAMONDS,
+    CARDS.TWO_CLUBS,
+    CARDS.THREE_CLUBS,
+    CARDS.FIVE_HEARTS,
 ]
 
 describe("GameUtils", () => {
@@ -138,6 +177,12 @@ describe("GameUtils", () => {
     describe("compareCards", () => {
         it("2 empty hands should return true", () => {
             expect(compareCards([], [])).toBe(true)
+        })
+
+        it("different length hands", () => {
+            expect(compareCards([...HAND1], [...HAND1, CARDS.ACE_CLUBS])).toBe(
+                false,
+            )
         })
 
         it("equal hands", () => {
@@ -339,7 +384,7 @@ describe("GameUtils", () => {
                 ),
             ).toStrictEqual([
                 CARDS.THREE_HEARTS,
-                CARDS.FIVE_HEARTS,
+                CARDS.JACK_HEARTS,
                 CARDS.SIX_HEARTS,
             ])
         })
@@ -352,7 +397,7 @@ describe("GameUtils", () => {
                 ),
             ).toStrictEqual([
                 CARDS.THREE_HEARTS,
-                CARDS.FIVE_HEARTS,
+                CARDS.JACK_HEARTS,
                 CARDS.SIX_HEARTS,
             ])
         })
@@ -428,6 +473,34 @@ describe("GameUtils", () => {
         })
     })
 
+    describe("getColdCards", () => {
+        it("empty hand", () => {
+            expect(getColdCards([], Suit.HEARTS)).toStrictEqual([])
+        })
+
+        it("all cold cards", () => {
+            expect(getColdCards([...HAND1], Suit.HEARTS)).toStrictEqual([])
+        })
+
+        it("no cold cards", () => {
+            expect(getColdCards([...HAND3], Suit.HEARTS)).toStrictEqual(HAND3)
+        })
+
+        it("all cold cards with joker and ace of hearts", () => {
+            expect(getColdCards([...HAND4], Suit.HEARTS)).toStrictEqual([
+                CARDS.THREE_CLUBS,
+                CARDS.TWO_DIAMONDS,
+            ])
+        })
+
+        it("some cold cards", () => {
+            expect(getColdCards([...HAND3], Suit.SPADES)).toStrictEqual([
+                CARDS.THREE_DIAMONDS,
+                CARDS.TWO_CLUBS,
+            ])
+        })
+    })
+
     describe("bestCardLead", () => {
         it("no suit", () => {
             expect(bestCardLead({ ...ROUND, suit: undefined })).toBe(false)
@@ -446,11 +519,11 @@ describe("GameUtils", () => {
 
     describe("getBestCard", () => {
         it("empty hand", () => {
-            expect(getBestCard([], ROUND)).toBe(undefined)
+            expect(() => getBestCard([], ROUND)).toThrow()
         })
         it("trump card", () => {
-            expect(getBestCard([...HAND1], ROUND)).toStrictEqual(
-                CARDS.FIVE_HEARTS,
+            expect(getBestCard([...HAND1], ROUND_BEST_LEAD)).toStrictEqual(
+                CARDS.JACK_HEARTS,
             )
         })
         it("follow cold card", () => {
@@ -460,20 +533,98 @@ describe("GameUtils", () => {
         })
     })
 
-    describe("getWorstCard", () => {
-        it("empty hand", () => {
-            expect(getBestCard([], ROUND)).toBe(undefined)
+    describe("canRenege", () => {
+        it("not a trump card", () => {
+            expect(() =>
+                canRenege(CARDS.TWO_CLUBS, CARDS.TWO_HEARTS, Suit.HEARTS),
+            ).toThrow()
         })
-        it("trump card", () => {
-            expect(getWorstCard([...HAND1], ROUND)).toStrictEqual({
-                ...CARDS.TWO_HEARTS,
-                selected: true,
-            })
+        it("not a trump card", () => {
+            expect(() =>
+                canRenege(CARDS.TWO_HEARTS, CARDS.TWO_CLUBS, Suit.HEARTS),
+            ).toThrow()
         })
-        it("follow cold card", () => {
-            expect(getWorstCard([...HAND3], ROUND)).toStrictEqual(
-                CARDS.TWO_CLUBS,
+        it("not a renegable card", () => {
+            expect(
+                canRenege(CARDS.THREE_HEARTS, CARDS.TWO_HEARTS, Suit.HEARTS),
+            ).toBe(false)
+        })
+        it("renegable card", () => {
+            expect(
+                canRenege(CARDS.ACE_HEARTS, CARDS.TWO_HEARTS, Suit.HEARTS),
+            ).toBe(true)
+        })
+        it("renegable card", () => {
+            expect(canRenege(CARDS.JOKER, CARDS.TWO_HEARTS, Suit.HEARTS)).toBe(
+                true,
             )
+        })
+        it("renegable card", () => {
+            expect(
+                canRenege(CARDS.JACK_HEARTS, CARDS.TWO_HEARTS, Suit.HEARTS),
+            ).toBe(true)
+        })
+        it("renegable card", () => {
+            expect(
+                canRenege(CARDS.FIVE_HEARTS, CARDS.TWO_HEARTS, Suit.HEARTS),
+            ).toBe(true)
+        })
+        it("renegable card lower than card lead out", () => {
+            expect(canRenege(CARDS.ACE_HEARTS, CARDS.JOKER, Suit.HEARTS)).toBe(
+                false,
+            )
+        })
+        it("renegable card lower than card lead out", () => {
+            expect(
+                canRenege(CARDS.ACE_HEARTS, CARDS.JACK_HEARTS, Suit.HEARTS),
+            ).toBe(false)
+        })
+        it("renegable card lower than card lead out", () => {
+            expect(
+                canRenege(CARDS.ACE_HEARTS, CARDS.FIVE_HEARTS, Suit.HEARTS),
+            ).toBe(false)
+        })
+        it("renegable card lower than card lead out", () => {
+            expect(canRenege(CARDS.JOKER, CARDS.JACK_HEARTS, Suit.HEARTS)).toBe(
+                false,
+            )
+        })
+        it("renegable card lower than card lead out", () => {
+            expect(canRenege(CARDS.JOKER, CARDS.FIVE_HEARTS, Suit.HEARTS)).toBe(
+                false,
+            )
+        })
+        it("renegable card lower than card lead out", () => {
+            expect(
+                canRenege(CARDS.JACK_HEARTS, CARDS.FIVE_HEARTS, Suit.HEARTS),
+            ).toBe(false)
+        })
+    })
+
+    describe("getWorstCard", () => {
+        // it("empty hand", () => {
+        //     expect(() => getBestCard([], ROUND)).toThrow()
+        // })
+        // it("trump card", () => {
+        //     expect(getWorstCard([...HAND1], ROUND)).toStrictEqual({
+        //         ...CARDS.TWO_HEARTS,
+        //         selected: true,
+        //     })
+        // })
+        // it("follow cold card", () => {
+        //     expect(getWorstCard([...HAND3], ROUND)).toStrictEqual(
+        //         CARDS.TWO_CLUBS,
+        //     )
+        // })
+        // it("wild cards lead", () => {
+        //     expect(getWorstCard([...HAND4], ROUND_WILD_LEAD)).toStrictEqual(
+        //         CARDS.TWO_HEARTS,
+        //     )
+        // })
+        it("Can reneg five", () => {
+            expect(
+                getWorstCard([...HAND_RENEG], ROUND_WILD_LEAD),
+            ).toStrictEqual(CARDS.THREE_DIAMONDS)
         })
     })
 
@@ -495,10 +646,10 @@ describe("GameUtils", () => {
             expect(calculateMinCardsToKeep(3)).toBe(0)
         })
         it("4 players", () => {
-            expect(calculateMinCardsToKeep(4)).toBe(1)
+            expect(calculateMinCardsToKeep(4)).toBe(0)
         })
         it("5 players", () => {
-            expect(calculateMinCardsToKeep(5)).toBe(2)
+            expect(calculateMinCardsToKeep(5)).toBe(1)
         })
         it("6 players", () => {
             expect(calculateMinCardsToKeep(6)).toBe(2)
@@ -516,14 +667,24 @@ describe("GameUtils", () => {
         })
         it("Must keep 2", () => {
             expect(pickBestCards([...HAND1], Suit.DIAMONDS, 6)).toStrictEqual([
+                CARDS.JACK_HEARTS,
                 CARDS.SIX_HEARTS,
-                CARDS.FIVE_HEARTS,
             ])
         })
         it("Must keep 1", () => {
-            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 4)).toStrictEqual([
-                CARDS.SIX_HEARTS,
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 5)).toStrictEqual([
+                CARDS.JACK_HEARTS,
             ])
+        })
+        it("Must keep 0", () => {
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 4)).toStrictEqual(
+                [],
+            )
+        })
+        it("Must keep 0", () => {
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 3)).toStrictEqual(
+                [],
+            )
         })
         it("Must keep 0", () => {
             expect(pickBestCards([...HAND1], Suit.DIAMONDS, 2)).toStrictEqual(

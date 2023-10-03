@@ -5,14 +5,7 @@ import { Suit } from "model/Suit"
 export const removeEmptyCards = (cards: Card[]): Card[] =>
     [...cards].filter(c => c.name !== CardName.EMPTY)
 
-export const compareCards = (
-    hand1: Card[] | undefined,
-    hand2: Card[] | undefined,
-) => {
-    if (!Array.isArray(hand1) || !Array.isArray(hand2)) {
-        return false
-    }
-
+export const compareCards = (hand1: Card[], hand2: Card[]) => {
     let h1 = removeEmptyCards(hand1)
     let h2 = removeEmptyCards(hand2)
 
@@ -149,12 +142,10 @@ export const riskOfMistakeBuyingCards = (
 }
 
 export const getTrumpCards = (cards: Card[], suit: Suit): Card[] =>
-    cards.filter(
-        card =>
-            card.suit === suit ||
-            card.name === CardName.JOKER ||
-            card.name === CardName.ACE_HEARTS,
-    )
+    cards.filter(card => card.suit === suit || card.suit === Suit.WILD)
+
+export const getColdCards = (cards: Card[], suit: Suit): Card[] =>
+    cards.filter(card => card.suit !== suit && card.suit !== Suit.WILD)
 
 export const bestCardLead = (round: Round) => {
     if (!round.suit) return false
@@ -179,15 +170,63 @@ export const bestCardLead = (round: Round) => {
     return round.currentHand.leadOut === trumpCards[0].name
 }
 
+export const canRenege = (myCard: Card, cardLead: Card, suit: Suit) => {
+    // If the card lead isn't a trump card then throw an error
+    if (cardLead.suit !== suit && cardLead.suit !== Suit.WILD) {
+        throw new Error("Card lead must be a trump card")
+    }
+
+    // If my card isn't a trump card then throw an error
+    if (myCard.suit !== suit && myCard.suit !== Suit.WILD) {
+        throw new Error("My card must be a trump card")
+    }
+
+    // If my card has a value greater than 112 and greater than the card lead then you can renege
+    return myCard.value >= 112 && myCard.value > cardLead.value
+}
+
 export const getWorstCard = (cards: Card[], round: Round) => {
-    if (cards.length === 0) return undefined
+    if (cards.length === 0) throw new Error("No cards to choose from")
 
     // Check if must follow suit
+    const roundSuit = round.suit
+    if (!roundSuit) throw new Error("Round suit cannot be undefined")
     const leadOut = round.currentHand?.leadOut
     let suitLead = leadOut ? CARDS[leadOut]?.suit : undefined
+    if (suitLead === Suit.WILD) suitLead = roundSuit
 
-    if (suitLead === Suit.WILD) {
-        suitLead = round.suit
+    const myTrumpCards = getTrumpCards(cards, roundSuit).sort(
+        (a, b) => a.value - b.value,
+    )
+    const myColdCards = getColdCards(cards, roundSuit).sort(
+        (a, b) => a.coldValue - b.coldValue,
+    )
+
+    // If no card lead play the worst card
+    if (!leadOut) {
+        // If we have cold cards then play the worst one
+        if (myColdCards.length > 0) {
+            return myColdCards[0]
+        }
+        // Otherwise play the worst trump card
+        else if (myTrumpCards.length > 0) {
+            return myTrumpCards[0]
+        } else throw new Error("No cards to choose from")
+    }
+
+    // Handle when suit lead is the trump suit
+    if (suitLead === roundSuit) {
+        // Get trump cards that aren't renegable
+        const notRenegableTrumpCards = myTrumpCards.filter(
+            c => !canRenege(c, CARDS[leadOut], roundSuit),
+        )
+        if (notRenegableTrumpCards.length > 0) {
+            return notRenegableTrumpCards[0]
+        } else if (myColdCards.length > 0) {
+            return myColdCards[0]
+        } else if (myTrumpCards.length > 0) {
+            return myTrumpCards[0]
+        } else throw new Error("No cards to choose from")
     }
 
     if (suitLead) {
@@ -206,7 +245,7 @@ export const getWorstCard = (cards: Card[], round: Round) => {
 }
 
 export const getBestCard = (cards: Card[], round: Round) => {
-    if (cards.length === 0) return undefined
+    if (cards.length === 0) throw new Error("No cards to choose from")
 
     // Check for trump cards
     const myTrumpCards = cards.filter(
@@ -246,13 +285,11 @@ export const getBestCard = (cards: Card[], round: Round) => {
 export const calculateMinCardsToKeep = (numPlayers: number): number => {
     switch (numPlayers) {
         case 2:
-            return 0
         case 3:
-            return 0
         case 4:
-            return 1
+            return 0
         case 5:
-            return 2
+            return 1
         case 6:
             return 2
         default:
