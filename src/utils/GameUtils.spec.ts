@@ -495,10 +495,10 @@ describe("GameUtils", () => {
             expect(calculateMinCardsToKeep(3)).toBe(0)
         })
         it("4 players", () => {
-            expect(calculateMinCardsToKeep(4)).toBe(1)
+            expect(calculateMinCardsToKeep(4)).toBe(0)
         })
         it("5 players", () => {
-            expect(calculateMinCardsToKeep(5)).toBe(2)
+            expect(calculateMinCardsToKeep(5)).toBe(1)
         })
         it("6 players", () => {
             expect(calculateMinCardsToKeep(6)).toBe(2)
@@ -521,9 +521,19 @@ describe("GameUtils", () => {
             ])
         })
         it("Must keep 1", () => {
-            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 4)).toStrictEqual([
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 5)).toStrictEqual([
                 CARDS.SIX_HEARTS,
             ])
+        })
+        it("Must keep 0", () => {
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 4)).toStrictEqual(
+                [],
+            )
+        })
+        it("Must keep 0", () => {
+            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 3)).toStrictEqual(
+                [],
+            )
         })
         it("Must keep 0", () => {
             expect(pickBestCards([...HAND1], Suit.DIAMONDS, 2)).toStrictEqual(

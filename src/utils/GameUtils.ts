@@ -246,13 +246,11 @@ export const getBestCard = (cards: Card[], round: Round) => {
 export const calculateMinCardsToKeep = (numPlayers: number): number => {
     switch (numPlayers) {
         case 2:
-            return 0
         case 3:
-            return 0
         case 4:
-            return 1
+            return 0
         case 5:
-            return 2
+            return 1
         case 6:
             return 2
         default:
