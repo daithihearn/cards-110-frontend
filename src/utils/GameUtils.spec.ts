@@ -63,7 +63,29 @@ const ROUND_BEST_LEAD: Round = {
 const ROUND_WILD_LEAD: Round = {
     suit: Suit.HEARTS,
     currentHand: {
-        leadOut: CardName.JOKER,
+        leadOut: CardName.ACE_HEARTS,
+        timestamp: "",
+        currentPlayerId: "",
+        playedCards: [],
+    },
+    timestamp: "",
+    number: 0,
+    dealerId: "",
+    status: RoundStatus.PLAYING,
+    dealerSeeingCall: false,
+    completedHands: [
+        {
+            leadOut: CardName.FIVE_DIAMONDS,
+            timestamp: "",
+            currentPlayerId: "",
+            playedCards: [{ card: CardName.SIX_SPADES, playerId: "blah" }],
+        },
+    ],
+}
+
+const ROUND_NOTHING_LEAD: Round = {
+    suit: Suit.HEARTS,
+    currentHand: {
         timestamp: "",
         currentPlayerId: "",
         playedCards: [],
@@ -531,6 +553,9 @@ describe("GameUtils", () => {
                 CARDS.TWO_CLUBS,
             )
         })
+        it("only one card left", () => {
+            expect(getBestCard([CARDS.JOKER], ROUND)).toStrictEqual(CARDS.JOKER)
+        })
     })
 
     describe("canRenege", () => {
@@ -602,29 +627,50 @@ describe("GameUtils", () => {
     })
 
     describe("getWorstCard", () => {
-        // it("empty hand", () => {
-        //     expect(() => getBestCard([], ROUND)).toThrow()
-        // })
-        // it("trump card", () => {
-        //     expect(getWorstCard([...HAND1], ROUND)).toStrictEqual({
-        //         ...CARDS.TWO_HEARTS,
-        //         selected: true,
-        //     })
-        // })
-        // it("follow cold card", () => {
-        //     expect(getWorstCard([...HAND3], ROUND)).toStrictEqual(
-        //         CARDS.TWO_CLUBS,
-        //     )
-        // })
-        // it("wild cards lead", () => {
-        //     expect(getWorstCard([...HAND4], ROUND_WILD_LEAD)).toStrictEqual(
-        //         CARDS.TWO_HEARTS,
-        //     )
-        // })
+        it("empty hand", () => {
+            expect(() => getWorstCard([], ROUND)).toThrow()
+        })
+        it("no card lead - cold card", () => {
+            expect(getWorstCard([...HAND3], ROUND_NOTHING_LEAD)).toStrictEqual(
+                CARDS.THREE_DIAMONDS,
+            )
+        })
+        it("no card lead - trump card", () => {
+            expect(getWorstCard([...HAND1], ROUND_NOTHING_LEAD)).toStrictEqual({
+                ...CARDS.TWO_HEARTS,
+                selected: true,
+            })
+        })
+        it("trump card lead - follow trump", () => {
+            expect(getWorstCard([...HAND1], ROUND_BEST_LEAD)).toStrictEqual({
+                ...CARDS.TWO_HEARTS,
+                selected: true,
+            })
+        })
+        it("trump card lead - follow cold", () => {
+            expect(getWorstCard([...HAND3], ROUND_BEST_LEAD)).toStrictEqual(
+                CARDS.THREE_DIAMONDS,
+            )
+        })
+        it("follow cold card", () => {
+            expect(getWorstCard([...HAND3], ROUND)).toStrictEqual(
+                CARDS.TWO_CLUBS,
+            )
+        })
+        it("wild cards lead", () => {
+            expect(getWorstCard([...HAND4], ROUND_WILD_LEAD)).toStrictEqual(
+                CARDS.TWO_HEARTS,
+            )
+        })
         it("Can reneg five", () => {
             expect(
                 getWorstCard([...HAND_RENEG], ROUND_WILD_LEAD),
             ).toStrictEqual(CARDS.THREE_DIAMONDS)
+        })
+        it("Can reneg - but it's the only card left", () => {
+            expect(getWorstCard([CARDS.JOKER], ROUND_WILD_LEAD)).toStrictEqual(
+                CARDS.JOKER,
+            )
         })
     })
 
