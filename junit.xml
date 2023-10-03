@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="74" failures="0" errors="0" time="2.341">
-  <testsuite name="GameUtils" errors="0" failures="0" skipped="0" timestamp="2023-10-02T21:11:05" time="2.248" tests="74">
+<testsuites name="jest tests" tests="102" failures="0" errors="0" time="2.234">
+  <testsuite name="GameUtils" errors="0" failures="0" skipped="0" timestamp="2023-10-03T22:04:52" time="2.164" tests="102">
     <testcase classname="GameUtils removeEmptyCards empty hand" name="GameUtils removeEmptyCards empty hand" time="0.001">
     </testcase>
     <testcase classname="GameUtils removeEmptyCards full hand" name="GameUtils removeEmptyCards full hand" time="0">
     </testcase>
-    <testcase classname="GameUtils removeEmptyCards hand with empty card at end" name="GameUtils removeEmptyCards hand with empty card at end" time="0.001">
+    <testcase classname="GameUtils removeEmptyCards hand with empty card at end" name="GameUtils removeEmptyCards hand with empty card at end" time="0">
     </testcase>
     <testcase classname="GameUtils removeEmptyCards hand with empty card at beginning" name="GameUtils removeEmptyCards hand with empty card at beginning" time="0">
     </testcase>
@@ -13,15 +13,17 @@
     </testcase>
     <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards" name="GameUtils removeEmptyCards hand with multiple empty cards" time="0">
     </testcase>
-    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards at beginning" name="GameUtils removeEmptyCards hand with multiple empty cards at beginning" time="0.001">
+    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards at beginning" name="GameUtils removeEmptyCards hand with multiple empty cards at beginning" time="0">
     </testcase>
     <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards at end" name="GameUtils removeEmptyCards hand with multiple empty cards at end" time="0">
     </testcase>
-    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards in middle" name="GameUtils removeEmptyCards hand with multiple empty cards in middle" time="0">
+    <testcase classname="GameUtils removeEmptyCards hand with multiple empty cards in middle" name="GameUtils removeEmptyCards hand with multiple empty cards in middle" time="0.001">
     </testcase>
     <testcase classname="GameUtils removeEmptyCards hand with only empty cards" name="GameUtils removeEmptyCards hand with only empty cards" time="0">
     </testcase>
-    <testcase classname="GameUtils compareCards 2 empty hands should return true" name="GameUtils compareCards 2 empty hands should return true" time="0.001">
+    <testcase classname="GameUtils compareCards 2 empty hands should return true" name="GameUtils compareCards 2 empty hands should return true" time="0">
+    </testcase>
+    <testcase classname="GameUtils compareCards different length hands" name="GameUtils compareCards different length hands" time="0">
     </testcase>
     <testcase classname="GameUtils compareCards equal hands" name="GameUtils compareCards equal hands" time="0.006">
     </testcase>
@@ -35,27 +37,27 @@
     </testcase>
     <testcase classname="GameUtils padMyHand partial hand" name="GameUtils padMyHand partial hand" time="0">
     </testcase>
-    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate same cards" name="GameUtils processOrderedCardsAfterGameUpdate same cards" time="0">
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate same cards" name="GameUtils processOrderedCardsAfterGameUpdate same cards" time="0.001">
     </testcase>
     <testcase classname="GameUtils processOrderedCardsAfterGameUpdate same cards with different order" name="GameUtils processOrderedCardsAfterGameUpdate same cards with different order" time="0">
     </testcase>
-    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate First card removed" name="GameUtils processOrderedCardsAfterGameUpdate First card removed" time="0.001">
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate First card removed" name="GameUtils processOrderedCardsAfterGameUpdate First card removed" time="0">
     </testcase>
     <testcase classname="GameUtils processOrderedCardsAfterGameUpdate Last card removed" name="GameUtils processOrderedCardsAfterGameUpdate Last card removed" time="0">
     </testcase>
     <testcase classname="GameUtils processOrderedCardsAfterGameUpdate Middle card removed" name="GameUtils processOrderedCardsAfterGameUpdate Middle card removed" time="0">
     </testcase>
-    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate any other configuration 1" name="GameUtils processOrderedCardsAfterGameUpdate any other configuration 1" time="0">
+    <testcase classname="GameUtils processOrderedCardsAfterGameUpdate any other configuration 1" name="GameUtils processOrderedCardsAfterGameUpdate any other configuration 1" time="0.001">
     </testcase>
     <testcase classname="GameUtils processOrderedCardsAfterGameUpdate any other configuration 2" name="GameUtils processOrderedCardsAfterGameUpdate any other configuration 2" time="0">
     </testcase>
-    <testcase classname="GameUtils areAllTrumpCards empty hand" name="GameUtils areAllTrumpCards empty hand" time="0.001">
+    <testcase classname="GameUtils areAllTrumpCards empty hand" name="GameUtils areAllTrumpCards empty hand" time="0">
     </testcase>
     <testcase classname="GameUtils areAllTrumpCards all trump cards" name="GameUtils areAllTrumpCards all trump cards" time="0">
     </testcase>
     <testcase classname="GameUtils areAllTrumpCards not all trump cards" name="GameUtils areAllTrumpCards not all trump cards" time="0">
     </testcase>
-    <testcase classname="GameUtils containsATrumpCard empty hand" name="GameUtils containsATrumpCard empty hand" time="0">
+    <testcase classname="GameUtils containsATrumpCard empty hand" name="GameUtils containsATrumpCard empty hand" time="0.001">
     </testcase>
     <testcase classname="GameUtils containsATrumpCard has a trump card" name="GameUtils containsATrumpCard has a trump card" time="0">
     </testcase>
@@ -63,13 +65,13 @@
     </testcase>
     <testcase classname="GameUtils removeCard empty hand" name="GameUtils removeCard empty hand" time="0">
     </testcase>
-    <testcase classname="GameUtils removeCard remove first card" name="GameUtils removeCard remove first card" time="0.001">
+    <testcase classname="GameUtils removeCard remove first card" name="GameUtils removeCard remove first card" time="0">
     </testcase>
     <testcase classname="GameUtils removeCard remove last card" name="GameUtils removeCard remove last card" time="0">
     </testcase>
     <testcase classname="GameUtils removeCard remove middle card" name="GameUtils removeCard remove middle card" time="0">
     </testcase>
-    <testcase classname="GameUtils removeAllFromHand empty hand" name="GameUtils removeAllFromHand empty hand" time="0">
+    <testcase classname="GameUtils removeAllFromHand empty hand" name="GameUtils removeAllFromHand empty hand" time="0.001">
     </testcase>
     <testcase classname="GameUtils removeAllFromHand remove first card" name="GameUtils removeAllFromHand remove first card" time="0">
     </testcase>
@@ -79,7 +81,7 @@
     </testcase>
     <testcase classname="GameUtils removeAllFromHand remove multiple cards" name="GameUtils removeAllFromHand remove multiple cards" time="0">
     </testcase>
-    <testcase classname="GameUtils removeAllFromHand remove multiple cards in different order" name="GameUtils removeAllFromHand remove multiple cards in different order" time="0.001">
+    <testcase classname="GameUtils removeAllFromHand remove multiple cards in different order" name="GameUtils removeAllFromHand remove multiple cards in different order" time="0">
     </testcase>
     <testcase classname="GameUtils removeAllFromHand remove all cards" name="GameUtils removeAllFromHand remove all cards" time="0">
     </testcase>
@@ -97,11 +99,21 @@
     </testcase>
     <testcase classname="GameUtils getTrumpCards all trump cards" name="GameUtils getTrumpCards all trump cards" time="0">
     </testcase>
-    <testcase classname="GameUtils getTrumpCards no trump cards" name="GameUtils getTrumpCards no trump cards" time="0.001">
+    <testcase classname="GameUtils getTrumpCards no trump cards" name="GameUtils getTrumpCards no trump cards" time="0">
     </testcase>
     <testcase classname="GameUtils getTrumpCards all trump cards with joker and ace of hearts" name="GameUtils getTrumpCards all trump cards with joker and ace of hearts" time="0">
     </testcase>
     <testcase classname="GameUtils getTrumpCards some trump cards" name="GameUtils getTrumpCards some trump cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils getColdCards empty hand" name="GameUtils getColdCards empty hand" time="0">
+    </testcase>
+    <testcase classname="GameUtils getColdCards all cold cards" name="GameUtils getColdCards all cold cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils getColdCards no cold cards" name="GameUtils getColdCards no cold cards" time="0">
+    </testcase>
+    <testcase classname="GameUtils getColdCards all cold cards with joker and ace of hearts" name="GameUtils getColdCards all cold cards with joker and ace of hearts" time="0">
+    </testcase>
+    <testcase classname="GameUtils getColdCards some cold cards" name="GameUtils getColdCards some cold cards" time="0">
     </testcase>
     <testcase classname="GameUtils bestCardLead no suit" name="GameUtils bestCardLead no suit" time="0">
     </testcase>
@@ -109,25 +121,65 @@
     </testcase>
     <testcase classname="GameUtils bestCardLead best card not lead" name="GameUtils bestCardLead best card not lead" time="0">
     </testcase>
-    <testcase classname="GameUtils getBestCard empty hand" name="GameUtils getBestCard empty hand" time="0">
+    <testcase classname="GameUtils getBestCard empty hand" name="GameUtils getBestCard empty hand" time="0.025">
     </testcase>
     <testcase classname="GameUtils getBestCard trump card" name="GameUtils getBestCard trump card" time="0">
     </testcase>
     <testcase classname="GameUtils getBestCard follow cold card" name="GameUtils getBestCard follow cold card" time="0">
     </testcase>
-    <testcase classname="GameUtils getWorstCard empty hand" name="GameUtils getWorstCard empty hand" time="0">
+    <testcase classname="GameUtils getBestCard only one card left" name="GameUtils getBestCard only one card left" time="0">
     </testcase>
-    <testcase classname="GameUtils getWorstCard trump card" name="GameUtils getWorstCard trump card" time="0">
+    <testcase classname="GameUtils canRenege not a trump card" name="GameUtils canRenege not a trump card" time="0.003">
+    </testcase>
+    <testcase classname="GameUtils canRenege not a trump card" name="GameUtils canRenege not a trump card" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege not a renegable card" name="GameUtils canRenege not a renegable card" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card" name="GameUtils canRenege renegable card" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card" name="GameUtils canRenege renegable card" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card" name="GameUtils canRenege renegable card" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card" name="GameUtils canRenege renegable card" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card lower than card lead out" name="GameUtils canRenege renegable card lower than card lead out" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card lower than card lead out" name="GameUtils canRenege renegable card lower than card lead out" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card lower than card lead out" name="GameUtils canRenege renegable card lower than card lead out" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card lower than card lead out" name="GameUtils canRenege renegable card lower than card lead out" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card lower than card lead out" name="GameUtils canRenege renegable card lower than card lead out" time="0">
+    </testcase>
+    <testcase classname="GameUtils canRenege renegable card lower than card lead out" name="GameUtils canRenege renegable card lower than card lead out" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard empty hand" name="GameUtils getWorstCard empty hand" time="0.001">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard no card lead - cold card" name="GameUtils getWorstCard no card lead - cold card" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard no card lead - trump card" name="GameUtils getWorstCard no card lead - trump card" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard trump card lead - follow trump" name="GameUtils getWorstCard trump card lead - follow trump" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard trump card lead - follow cold" name="GameUtils getWorstCard trump card lead - follow cold" time="0">
     </testcase>
     <testcase classname="GameUtils getWorstCard follow cold card" name="GameUtils getWorstCard follow cold card" time="0">
     </testcase>
-    <testcase classname="GameUtils calculateMinCardsToKeep less than 2 players. Should throw an error" name="GameUtils calculateMinCardsToKeep less than 2 players. Should throw an error" time="0.023">
+    <testcase classname="GameUtils getWorstCard wild cards lead" name="GameUtils getWorstCard wild cards lead" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard Can reneg five" name="GameUtils getWorstCard Can reneg five" time="0">
+    </testcase>
+    <testcase classname="GameUtils getWorstCard Can reneg - but it&apos;s the only card left" name="GameUtils getWorstCard Can reneg - but it&apos;s the only card left" time="0">
+    </testcase>
+    <testcase classname="GameUtils calculateMinCardsToKeep less than 2 players. Should throw an error" name="GameUtils calculateMinCardsToKeep less than 2 players. Should throw an error" time="0">
     </testcase>
     <testcase classname="GameUtils calculateMinCardsToKeep more than 6 players. Should throw an error" name="GameUtils calculateMinCardsToKeep more than 6 players. Should throw an error" time="0">
     </testcase>
     <testcase classname="GameUtils calculateMinCardsToKeep 2 players" name="GameUtils calculateMinCardsToKeep 2 players" time="0">
     </testcase>
-    <testcase classname="GameUtils calculateMinCardsToKeep 3 players" name="GameUtils calculateMinCardsToKeep 3 players" time="0.001">
+    <testcase classname="GameUtils calculateMinCardsToKeep 3 players" name="GameUtils calculateMinCardsToKeep 3 players" time="0">
     </testcase>
     <testcase classname="GameUtils calculateMinCardsToKeep 4 players" name="GameUtils calculateMinCardsToKeep 4 players" time="0">
     </testcase>
@@ -141,7 +193,11 @@
     </testcase>
     <testcase classname="GameUtils pickBestCards Must keep 2" name="GameUtils pickBestCards Must keep 2" time="0">
     </testcase>
-    <testcase classname="GameUtils pickBestCards Must keep 1" name="GameUtils pickBestCards Must keep 1" time="0.001">
+    <testcase classname="GameUtils pickBestCards Must keep 1" name="GameUtils pickBestCards Must keep 1" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards Must keep 0" name="GameUtils pickBestCards Must keep 0" time="0">
+    </testcase>
+    <testcase classname="GameUtils pickBestCards Must keep 0" name="GameUtils pickBestCards Must keep 0" time="0">
     </testcase>
     <testcase classname="GameUtils pickBestCards Must keep 0" name="GameUtils pickBestCards Must keep 0" time="0">
     </testcase>

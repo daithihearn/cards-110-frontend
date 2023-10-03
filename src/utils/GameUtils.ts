@@ -2,6 +2,13 @@ import { CARDS, EMPTY, Card, CardName } from "model/Cards"
 import { Round } from "model/Round"
 import { Suit } from "model/Suit"
 
+// Comparison functions
+const compareByValueAsc = (a: Card, b: Card) => a.value - b.value
+const compareByValueDesc = (a: Card, b: Card) => b.value - a.value
+const compareByColdValueAsc = (a: Card, b: Card) => a.coldValue - b.coldValue
+const compareByColdValueDesc = (a: Card, b: Card) => b.coldValue - a.coldValue
+const compareByName = (a: Card, b: Card) => a.name.localeCompare(b.name)
+
 export const removeEmptyCards = (cards: Card[]): Card[] =>
     [...cards].filter(c => c.name !== CardName.EMPTY)
 
@@ -13,8 +20,8 @@ export const compareCards = (hand1: Card[], hand2: Card[]) => {
         return false
     }
 
-    h1 = h1.sort((a, b) => a.name.localeCompare(b.name))
-    h2 = h2.sort((a, b) => a.name.localeCompare(b.name))
+    h1 = h1.sort(compareByName)
+    h2 = h2.sort(compareByName)
 
     for (let i = 0; i < h1.length; i++) {
         if (h1[i].name !== h2[i].name) {
@@ -165,7 +172,7 @@ export const bestCardLead = (round: Round) => {
     })
 
     // Sort Descending
-    trumpCards.sort((a, b) => b.value - a.value)
+    trumpCards.sort(compareByValueDesc)
 
     return round.currentHand.leadOut === trumpCards[0].name
 }
@@ -187,6 +194,7 @@ export const canRenege = (myCard: Card, cardLead: Card, suit: Suit) => {
 
 export const getWorstCard = (cards: Card[], round: Round) => {
     if (cards.length === 0) throw new Error("No cards to choose from")
+    if (cards.length === 1) return cards[0]
 
     // Check if must follow suit
     const roundSuit = round.suit
@@ -195,11 +203,9 @@ export const getWorstCard = (cards: Card[], round: Round) => {
     let suitLead = leadOut ? CARDS[leadOut]?.suit : undefined
     if (suitLead === Suit.WILD) suitLead = roundSuit
 
-    const myTrumpCards = getTrumpCards(cards, roundSuit).sort(
-        (a, b) => a.value - b.value,
-    )
+    const myTrumpCards = getTrumpCards(cards, roundSuit).sort(compareByValueAsc)
     const myColdCards = getColdCards(cards, roundSuit).sort(
-        (a, b) => a.coldValue - b.coldValue,
+        compareByColdValueAsc,
     )
 
     // If no card lead play the worst card
@@ -211,11 +217,10 @@ export const getWorstCard = (cards: Card[], round: Round) => {
         // Otherwise play the worst trump card
         else if (myTrumpCards.length > 0) {
             return myTrumpCards[0]
-        } else throw new Error("No cards to choose from")
+        }
     }
-
     // Handle when suit lead is the trump suit
-    if (suitLead === roundSuit) {
+    else if (suitLead === roundSuit) {
         // Get trump cards that aren't renegable
         const notRenegableTrumpCards = myTrumpCards.filter(
             c => !canRenege(c, CARDS[leadOut], roundSuit),
@@ -226,26 +231,24 @@ export const getWorstCard = (cards: Card[], round: Round) => {
             return myColdCards[0]
         } else if (myTrumpCards.length > 0) {
             return myTrumpCards[0]
-        } else throw new Error("No cards to choose from")
+        }
     }
-
-    if (suitLead) {
+    // Handle when suit lead is not the trump suit
+    else if (suitLead) {
         const myCards = cards.filter(card => card.suit === suitLead)
         if (myCards.length > 0) {
             // Sort ascending by value
-            myCards.sort((a, b) => a.value - b.value)
+            myCards.sort(compareByValueAsc)
             return myCards[0]
         }
     }
 
-    // Sort ascending by value
-    cards.sort((a, b) => a.value - b.value)
-
-    return cards[0]
+    throw new Error("No card to play")
 }
 
 export const getBestCard = (cards: Card[], round: Round) => {
     if (cards.length === 0) throw new Error("No cards to choose from")
+    if (cards.length === 1) return cards[0]
 
     // Check for trump cards
     const myTrumpCards = cards.filter(
@@ -254,7 +257,7 @@ export const getBestCard = (cards: Card[], round: Round) => {
 
     if (myTrumpCards.length > 0) {
         // Sort descending by value
-        myTrumpCards.sort((a, b) => b.value - a.value)
+        myTrumpCards.sort(compareByValueDesc)
         return myTrumpCards[0]
     }
 
@@ -266,13 +269,13 @@ export const getBestCard = (cards: Card[], round: Round) => {
         const myColdCards = cards.filter(card => card.suit === suitLead)
         if (myColdCards.length > 0) {
             // Sort descending by cold value
-            myColdCards.sort((a, b) => b.coldValue - a.coldValue)
+            myColdCards.sort(compareByColdValueDesc)
             return myColdCards[0]
         }
     }
 
     // Sort descending by cold value
-    cards.sort((a, b) => b.coldValue - a.coldValue)
+    cards.sort(compareByColdValueDesc)
 
     return cards[0]
 }
@@ -309,7 +312,7 @@ export const pickBestCards = (
         // Find the card with the highest cold value that isn't already in the best cards
         const remainingCards = cards
             .filter(c => !bestCards.some(bc => bc.name === c.name))
-            .sort((a, b) => b.coldValue - a.coldValue)
+            .sort(compareByColdValueDesc)
         if (remainingCards.length === 0) break
 
         bestCards.push(remainingCards[0])
