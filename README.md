@@ -1,4 +1,4 @@
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=daithihearn_cards-110-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=daithihearn_cards-110-frontend)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=daithihearn_cards-110-frontend)](https://sonarcloud.io/summary/new_code?id=daithihearn_cards-110-frontend)
 
 # cards-110-frontend
 
