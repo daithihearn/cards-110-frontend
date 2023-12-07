@@ -56,7 +56,7 @@ const WinPercentageGraph: React.FC<Props> = ({
         }
     }, [wins, filteredStats])
 
-    const options: ChartOptions = useMemo(() => {
+    const options: ChartOptions<"doughnut"> = useMemo(() => {
         return {
             maintainAspectRatio: false,
             plugins: {
@@ -82,14 +82,12 @@ const WinPercentageGraph: React.FC<Props> = ({
     return (
         <>
             {filteredStats.length > 0 ? (
-                <>
-                    <Doughnut
-                        data={data}
-                        options={options}
-                        width={width}
-                        height={height}
-                    />
-                </>
+                <Doughnut
+                    data={data}
+                    options={options}
+                    width={width}
+                    height={height}
+                />
             ) : (
                 "No stats available currently"
             )}

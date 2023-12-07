@@ -11,7 +11,7 @@ jobs:
             contents: write
             pull-requests: write
             packages: read
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
 
         steps:
             - name: Login to Dockerhub

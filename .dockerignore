@@ -6,5 +6,4 @@ gradle
 .classpath
 .project
 *.bat
-*.sh
 yarn.lock
