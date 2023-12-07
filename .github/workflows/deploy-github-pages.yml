@@ -28,7 +28,7 @@ jobs:
 
             - name: Build and Extract Static Files
               run: |
-                  docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --build-arg REACT_APP_WEBSOCKET_URL=${{ secrets.REACT_APP_WEBSOCKET_URL }} --build-arg REACT_APP_AUTH0_DOMAIN=${{ secrets.REACT_APP_AUTH0_DOMAIN }} --build-arg REACT_APP_AUTH0_AUDIENCE=${{ secrets.REACT_APP_AUTH0_AUDIENCE }} --build-arg REACT_APP_AUTH0_CLIENT_ID=${{ secrets.REACT_APP_AUTH0_CLIENT_ID }} --build-arg REACT_APP_AUTH0_SCOPE=${{ secrets.REACT_APP_AUTH0_SCOPE }} --target builder -t react-app .
+                  docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --build-arg REACT_APP_WEBSOCKET_URL=${{ secrets.REACT_APP_WEBSOCKET_URL }} --build-arg REACT_APP_AUTH0_DOMAIN=${{ secrets.REACT_APP_AUTH0_DOMAIN }} --build-arg REACT_APP_AUTH0_AUDIENCE=${{ secrets.REACT_APP_AUTH0_AUDIENCE }} --build-arg REACT_APP_AUTH0_CLIENT_ID=${{ secrets.REACT_APP_AUTH0_CLIENT_ID }} --build-arg REACT_APP_AUTH0_SCOPE="${{ secrets.REACT_APP_AUTH0_SCOPE }}" --target builder -t react-app .
                   id=$(docker create react-app)
                   docker cp $id:/app/build ./build
                   docker rm -v $id
