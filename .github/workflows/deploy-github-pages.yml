@@ -33,6 +33,9 @@ jobs:
                   docker cp $id:/app/build ./build
                   docker rm -v $id
 
+            - name: Create CNAME File
+              run: echo '${{ secrets.CNAME }}' > ./build/CNAME
+
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v3
               with:
