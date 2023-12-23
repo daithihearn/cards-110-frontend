@@ -39,13 +39,13 @@ const NavBar = () => {
     const dispatch = useAppDispatch()
     const { enqueueSnackbar } = useSnackbar()
 
-    const [modalDeleteGameOpen, updateModalDeleteGameOpen] = useState(false)
+    const [modalDeleteGameOpen, setModalDeleteGameOpen] = useState(false)
     const isGameActive = useAppSelector(getIsGameActive)
     const gameId = useAppSelector(state => state.game.id)
     const iamAdmin = useAppSelector(getIamAdmin)
     const [showSettings, setShowSettings] = useState(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const [modalLeaderboard, updateModalLeaderboard] = useState(false)
+    const [modalLeaderboard, setModalLeaderboard] = useState(false)
 
     const deleteGame = useCallback(() => {
         if (!gameId) {
@@ -65,14 +65,14 @@ const NavBar = () => {
     }, [dispatch, enqueueSnackbar, navigate, gameId])
 
     const showDeleteGameModal = () => {
-        updateModalDeleteGameOpen(true)
+        setModalDeleteGameOpen(true)
         handleClose()
     }
 
     const handleCloseDeleteGameModal = useCallback(() => {
-        updateModalDeleteGameOpen(false)
+        setModalDeleteGameOpen(false)
         handleClose()
-    }, [updateModalDeleteGameOpen])
+    }, [setModalDeleteGameOpen])
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget)
@@ -83,7 +83,7 @@ const NavBar = () => {
     }
 
     const toggleLeaderboardModal = useCallback(() => {
-        updateModalLeaderboard(!modalLeaderboard)
+        setModalLeaderboard(!modalLeaderboard)
         handleClose()
     }, [modalLeaderboard])
 
