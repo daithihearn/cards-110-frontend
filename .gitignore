@@ -15,3 +15,5 @@ prod.env
 
 # testing
 /coverage
+.env
+.env*
