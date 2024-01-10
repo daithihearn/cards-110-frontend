@@ -57,7 +57,7 @@ const getAllPlayers =
     (): AppThunk<Promise<PlayerProfile[]>> => async (dispatch, getState) => {
         const accessToken = getAccessToken(getState())
         const response = await axios.get<PlayerProfile[]>(
-            `${process.env.REACT_APP_API_URL}/api/v1/admin/game/players/all`,
+            `${process.env.REACT_APP_API_URL}/api/v1/profile/all`,
             getDefaultConfig(accessToken),
         )
         dispatch(updatePlayerProfiles(response.data))
@@ -83,7 +83,7 @@ const put =
     async (dispatch, getState) => {
         const accessToken = getAccessToken(getState())
         const response = await axios.put<Game>(
-            `${process.env.REACT_APP_API_URL}/api/v1/admin/game`,
+            `${process.env.REACT_APP_API_URL}/api/v1/game`,
             createGame,
             getDefaultConfig(accessToken),
         )
@@ -98,7 +98,7 @@ const finish =
         const accessToken = getAccessToken(getState())
 
         await axios.put(
-            `${process.env.REACT_APP_API_URL}/api/v1/admin/game/finish?gameId=${gameId}`,
+            `${process.env.REACT_APP_API_URL}/api/v1/game/finish?gameId=${gameId}`,
             null,
             getDefaultConfig(accessToken),
         )
@@ -110,7 +110,7 @@ const cancel =
         const accessToken = getAccessToken(getState())
 
         await axios.put(
-            `${process.env.REACT_APP_API_URL}/api/v1/admin/game/cancel?gameId=${gameId}`,
+            `${process.env.REACT_APP_API_URL}/api/v1/game/cancel?gameId=${gameId}`,
             null,
             getDefaultConfig(accessToken),
         )
@@ -122,7 +122,7 @@ const deleteGame =
         const accessToken = getAccessToken(getState())
 
         await axios.delete(
-            `${process.env.REACT_APP_API_URL}/api/v1/admin/game?gameId=${gameId}`,
+            `${process.env.REACT_APP_API_URL}/api/v1/game?gameId=${gameId}`,
             getDefaultConfig(accessToken),
         )
         dispatch(removeMyGame(gameId))

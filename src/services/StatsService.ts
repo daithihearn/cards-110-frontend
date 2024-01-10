@@ -12,10 +12,8 @@ const gameStatsForPlayer =
         const url = playerId
             ? `${
                   process.env.REACT_APP_API_URL
-              }/api/v1/admin/stats/gameStatsForPlayer?playerId=${encodeURIComponent(
-                  playerId,
-              )}`
-            : `${process.env.REACT_APP_API_URL}/api/v1/stats/gameStatsForPlayer`
+              }/api/v1/stats/${encodeURIComponent(playerId)}`
+            : `${process.env.REACT_APP_API_URL}/api/v1/stats`
 
         const response = await axios.get(url, getDefaultConfig(accessToken))
 
