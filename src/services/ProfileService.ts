@@ -7,11 +7,18 @@ import { getAccessToken, updateMyProfile } from "caches/MyProfileSlice"
 
 const hasProfile = (): AppThunk<Promise<boolean>> => async (_, getState) => {
     const accessToken = getAccessToken(getState())
-    const response = await axios.get<boolean>(
-        `${process.env.REACT_APP_API_URL}/api/v1/profile/has`,
-        getDefaultConfig(accessToken),
-    )
-    return response.data
+
+    try {
+        await axios.get<boolean>(
+            `${process.env.REACT_APP_API_URL}/api/v1/profile`,
+            getDefaultConfig(accessToken),
+        )
+        return true
+    } catch (e: any) {
+        // If the error code is 404, then the user doesn't have a profile
+        if (e.response && e.response.status === 404) return false
+        throw e
+    }
 }
 
 export interface UpdateProfilePayload {

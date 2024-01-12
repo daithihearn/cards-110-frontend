@@ -116,7 +116,9 @@ const WebsocketHandler = () => {
 
         // Show the last card of the last round being played
         playCardSound()
-        dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+        if (previousRound.currentHand.playedCards) {
+            dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+        }
         await new Promise(r => setTimeout(r, 4000))
 
         // Finally update the game with the latest state
@@ -138,12 +140,18 @@ const WebsocketHandler = () => {
             const penultimateHand = previousRound.completedHands.pop()
             if (!penultimateHand)
                 throw Error("Failed to get the penultimate round")
-            dispatch(updatePlayedCards(penultimateHand.playedCards))
+            if (penultimateHand?.playedCards) {
+                dispatch(updatePlayedCards(penultimateHand.playedCards))
+            }
             await new Promise(r => setTimeout(r, 4000))
 
             // Next show the final round being played
             playCardSound()
-            dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+            if (previousRound.currentHand.playedCards) {
+                dispatch(
+                    updatePlayedCards(previousRound.currentHand.playedCards),
+                )
+            }
             dispatch(updateMyCards([]))
             await new Promise(r => setTimeout(r, 6000))
         } else {
@@ -171,12 +179,16 @@ const WebsocketHandler = () => {
         playCardSound()
         const penultimateHand = previousRound.completedHands.pop()
         if (!penultimateHand) throw Error("Failed to get the penultimate round")
-        dispatch(updatePlayedCards(penultimateHand.playedCards))
+        if (penultimateHand?.playedCards) {
+            dispatch(updatePlayedCards(penultimateHand.playedCards))
+        }
         await new Promise(r => setTimeout(r, 4000))
 
         // Next show the final round being played
         playCardSound()
-        dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+        if (previousRound.currentHand.playedCards) {
+            dispatch(updatePlayedCards(previousRound.currentHand.playedCards))
+        }
         dispatch(updateMyCards([]))
         await new Promise(r => setTimeout(r, 6000))
 

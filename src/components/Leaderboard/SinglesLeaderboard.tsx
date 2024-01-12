@@ -49,7 +49,7 @@ const SinglesLeaderboard = () => {
                 score: player.score,
                 cardsBought: player.cardsBought || 0,
                 previousCard: previousHand
-                    ? previousHand.playedCards.find(
+                    ? previousHand?.playedCards?.find(
                           p => p.playerId === profile.id,
                       )?.card
                     : undefined,

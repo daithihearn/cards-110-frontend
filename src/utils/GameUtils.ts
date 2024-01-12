@@ -160,7 +160,7 @@ export const bestCardLead = (round: Round) => {
 
     // Remove played trump cards
     round.completedHands.forEach(hand => {
-        hand.playedCards.forEach(p => {
+        hand.playedCards?.forEach(p => {
             const card = CARDS[p.card]
             if (
                 (card && card.suit === round.suit) ||

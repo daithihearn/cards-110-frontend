@@ -43,7 +43,7 @@ const DoublesLeaderboard = () => {
         (player: Player): LeaderBoardPlayer => {
             const profile = getProfile(player)
             if (!profile) throw Error("No profile for player")
-            const previousCard = previousHand?.playedCards.find(
+            const previousCard = previousHand?.playedCards?.find(
                 c => c.playerId === player.id,
             )
             return {

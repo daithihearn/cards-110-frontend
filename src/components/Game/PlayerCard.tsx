@@ -176,7 +176,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
 
     const playedCard = useMemo<PlayedCard | undefined>(() => {
         if (round) {
-            return round.currentHand.playedCards.find(
+            return round.currentHand.playedCards?.find(
                 c => c.playerId === player.id,
             )
         }

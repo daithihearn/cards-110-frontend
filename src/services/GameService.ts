@@ -3,9 +3,9 @@ import { CreateGame, Game, GameState } from "model/Game"
 import { Suit } from "model/Suit"
 import axios from "axios"
 import { getDefaultConfig } from "utils/AxiosUtils"
-import { Player, PlayerProfile } from "model/Player"
+import { PlayerProfile } from "model/Player"
 import { AppThunk } from "caches/caches"
-import { updateGame, updatePlayers } from "caches/GameSlice"
+import { updateGame } from "caches/GameSlice"
 import { getAccessToken } from "caches/MyProfileSlice"
 import { addMyGame, removeMyGame, updateMyGames } from "caches/MyGamesSlice"
 import { updatePlayerProfiles } from "caches/PlayerProfilesSlice"
@@ -22,7 +22,7 @@ const getGame =
         const accessToken = getAccessToken(getState())
 
         const response = await axios.get<Game>(
-            `${process.env.REACT_APP_API_URL}/api/v1/game?gameId=${gameId}`,
+            `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}`,
             getDefaultConfig(accessToken),
         )
         return response.data
@@ -33,7 +33,7 @@ const refreshGameState =
     async (dispatch, getState) => {
         const accessToken = getAccessToken(getState())
         const response = await axios.get<GameState>(
-            `${process.env.REACT_APP_API_URL}/api/v1/gameState?gameId=${gameId}`,
+            `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/state`,
             getDefaultConfig(accessToken),
         )
         dispatch(updateGame(response.data))
@@ -61,20 +61,6 @@ const getAllPlayers =
             getDefaultConfig(accessToken),
         )
         dispatch(updatePlayerProfiles(response.data))
-        return response.data
-    }
-
-const getPlayersForGame =
-    (gameId: string): AppThunk<Promise<Player[]>> =>
-    async (dispatch, getState) => {
-        const accessToken = getAccessToken(getState())
-        const response = await axios.get<Player[]>(
-            `${process.env.REACT_APP_API_URL}/api/v1/game/players?gameId=${gameId}`,
-            getDefaultConfig(accessToken),
-        )
-
-        dispatch(updatePlayers(response.data))
-
         return response.data
     }
 
@@ -196,7 +182,6 @@ export default {
     refreshGameState,
     getAll,
     getAllPlayers,
-    getPlayersForGame,
     deleteGame,
     playCard,
     chooseFromDummy,
