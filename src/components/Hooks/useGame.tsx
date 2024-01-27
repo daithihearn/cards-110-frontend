@@ -17,30 +17,26 @@ export const useGame = () => {
             if (!accessToken) {
                 // Handle the case when accessToken is undefined
                 // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return []
             }
-            const res = await axios.get(
+            const res = await axios.get<Game[]>(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/all`,
                 getDefaultConfig(accessToken),
             )
             return res.data
         },
         refetchInterval: 5 * 60_000,
-        enabled: !!accessToken,
     })
 
     const createGame = useMutation({
         mutationFn: async (createGame: CreateGame) => {
-            if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+            if (accessToken) {
+                axios.put<Game>(
+                    `${process.env.REACT_APP_API_URL}/api/v1/game`,
+                    createGame,
+                    getDefaultConfig(accessToken),
+                )
             }
-            axios.put<Game>(
-                `${process.env.REACT_APP_API_URL}/api/v1/game`,
-                createGame,
-                getDefaultConfig(accessToken),
-            )
         },
         onSuccess: data =>
             queryClient.invalidateQueries({ queryKey: ["myGames"] }),

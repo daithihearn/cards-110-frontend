@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
 import useAccessToken from "auth/accessToken"
 import axios from "axios"
-import { updateGame } from "caches/GameSlice"
+import { initialGameState, updateGame } from "caches/GameSlice"
 import { updateMyCards } from "caches/MyCardsSlice"
 import { useAppDispatch } from "caches/hooks"
+import { GameState } from "model/Game"
 import { useState } from "react"
 import { getDefaultConfig } from "utils/AxiosUtils"
 
@@ -20,9 +21,9 @@ export const useGameState = (gameId: string) => {
             if (!accessToken) {
                 // Handle the case when accessToken is undefined
                 // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return initialGameState
             }
-            const res = await axios.get(
+            const res = await axios.get<GameState>(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/state?revision=${revision}`,
                 getDefaultConfig(accessToken),
             )

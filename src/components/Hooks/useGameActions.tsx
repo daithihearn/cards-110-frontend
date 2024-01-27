@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import useAccessToken from "auth/accessToken"
 import axios from "axios"
-import { updateGame } from "caches/GameSlice"
+import { initialGameState, updateGame } from "caches/GameSlice"
 import { updateMyCards } from "caches/MyCardsSlice"
 import { useAppDispatch } from "caches/hooks"
 import { Card, CardName } from "model/Cards"
+import { GameState } from "model/Game"
 import { Suit } from "model/Suit"
 import { useSnackbar } from "notistack"
 import { getDefaultConfig } from "utils/AxiosUtils"
@@ -25,11 +26,9 @@ export const useGameActions = () => {
             call: string
         }) => {
             if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return initialGameState
             }
-            const response = await axios.put(
+            const response = await axios.put<GameState>(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/call?call=${call}`,
                 null,
                 getDefaultConfig(accessToken),
@@ -53,11 +52,9 @@ export const useGameActions = () => {
             cards: CardName[]
         }) => {
             if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return initialGameState
             }
-            const response = await axios.put(
+            const response = await axios.put<GameState>(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/buy`,
                 { cards },
                 getDefaultConfig(accessToken),
@@ -83,9 +80,7 @@ export const useGameActions = () => {
             suit: Suit
         }) => {
             if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return initialGameState
             }
             const response = await axios.put(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/suit`,
@@ -114,9 +109,7 @@ export const useGameActions = () => {
             card: CardName
         }) => {
             if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return initialGameState
             }
             const response = await axios.put(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/play?card=${card}`,
@@ -135,15 +128,12 @@ export const useGameActions = () => {
 
     const deleteGame = useMutation({
         mutationFn: async ({ gameId }: { gameId: string }) => {
-            if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+            if (accessToken) {
+                axios.delete(
+                    `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}`,
+                    getDefaultConfig(accessToken),
+                )
             }
-            axios.delete(
-                `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}`,
-                getDefaultConfig(accessToken),
-            )
         },
         onSuccess: () =>
             queryClient.invalidateQueries({

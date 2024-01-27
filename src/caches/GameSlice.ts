@@ -5,7 +5,7 @@ import { Player } from "model/Player"
 import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
 
-const initialState: GameState = {
+export const initialGameState: GameState = {
     revision: -1,
     iamSpectator: true,
     isMyGo: false,
@@ -19,7 +19,7 @@ const initialState: GameState = {
 
 export const gameSlice = createSlice({
     name: "game",
-    initialState: initialState,
+    initialState: initialGameState,
     reducers: {
         updateGame: (_, action: PayloadAction<GameState>) => action.payload,
         updatePlayers: (state, action: PayloadAction<Player[]>) => {
@@ -32,7 +32,7 @@ export const gameSlice = createSlice({
         disableActions: state => {
             state.isMyGo = false
         },
-        resetGame: () => initialState,
+        resetGame: () => initialGameState,
     },
 })
 

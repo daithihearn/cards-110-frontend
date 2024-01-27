@@ -13,9 +13,9 @@ export const useStats = (playerId: string) => {
             if (!accessToken) {
                 // Handle the case when accessToken is undefined
                 // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return []
             }
-            const response = await axios.get(
+            const response = await axios.get<PlayerGameStats[]>(
                 `${
                     process.env.REACT_APP_API_URL
                 }/api/v1/stats/${encodeURIComponent(playerId)}`,

@@ -22,9 +22,14 @@ export const useProfiles = () => {
             if (!accessToken) {
                 // Handle the case when accessToken is undefined
                 // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return {
+                    id: "",
+                    name: "",
+                    picture: "",
+                    lastAccess: "",
+                }
             }
-            const res = await axios.get(
+            const res = await axios.get<PlayerProfile>(
                 `${process.env.REACT_APP_API_URL}/api/v1/profile`,
                 getDefaultConfig(accessToken),
             )
@@ -42,7 +47,7 @@ export const useProfiles = () => {
             if (!accessToken) {
                 // Handle the case when accessToken is undefined
                 // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return []
             }
             const res = await axios.get(
                 `${process.env.REACT_APP_API_URL}/api/v1/profile/all`,
@@ -58,20 +63,18 @@ export const useProfiles = () => {
     // Mutations
     const updateProfile = useMutation({
         mutationFn: async (profile: UpdateProfilePayload) => {
-            if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+            if (accessToken) {
+                await axios.put<PlayerProfile>(
+                    `${process.env.REACT_APP_API_URL}/api/v1/profile`,
+                    profile,
+                    getDefaultConfig(accessToken),
+                )
             }
-            axios.put<PlayerProfile>(
-                `${process.env.REACT_APP_API_URL}/api/v1/profile`,
-                profile,
-                getDefaultConfig(accessToken),
-            )
         },
-        onSuccess: data => {
-            queryClient.setQueryData(["myProfile", accessToken], data)
-            queryClient.setQueryData(["playerProfiles", accessToken], data)
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["myProfile", "playerProfiles"],
+            })
         },
         onError: e => enqueueSnackbar(e.message, { variant: "error" }),
     })

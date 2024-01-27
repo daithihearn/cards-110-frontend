@@ -16,11 +16,11 @@ export const useSettings = () => {
         queryKey: ["playerSettings", accessToken],
         queryFn: async () => {
             if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return {
+                    autoBuyCards: false,
+                }
             }
-            const res = await axios.get(
+            const res = await axios.get<PlayerSettings>(
                 `${process.env.REACT_APP_API_URL}/api/v1/settings`,
                 getDefaultConfig(accessToken),
             )
@@ -34,15 +34,16 @@ export const useSettings = () => {
     const updateSettings = useMutation({
         mutationFn: async (settings: PlayerSettings) => {
             if (!accessToken) {
-                // Handle the case when accessToken is undefined
-                // For example, return a default value or throw an error
-                throw new Error("Access token is not available")
+                return {
+                    autoBuyCards: false,
+                }
             }
-            axios.put<PlayerSettings>(
+            const res = await axios.put<PlayerSettings>(
                 `${process.env.REACT_APP_API_URL}/api/v1/settings`,
                 settings,
                 getDefaultConfig(accessToken),
             )
+            return res.data
         },
         onSuccess: data =>
             queryClient.setQueryData(["playerSettings", accessToken], data),

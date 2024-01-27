@@ -48,7 +48,7 @@ const StartNewGame = () => {
 
     const togglePlayer = useCallback(
         (player: PlayerProfile) => {
-            if (selectedPlayers.includes(player)) {
+            if (selectedPlayers?.includes(player)) {
                 setSelectedPlayers(
                     selectedPlayers.filter(p => p.id !== player.id),
                 )
@@ -159,7 +159,7 @@ const StartNewGame = () => {
                                                 onClick={() =>
                                                     togglePlayer(player)
                                                 }
-                                                selected={selectedPlayers.includes(
+                                                selected={selectedPlayers?.includes(
                                                     player,
                                                 )}
                                                 sx={{

@@ -93,25 +93,9 @@ const PlayCard = () => {
     )
 
     const selectCardToPlay = useCallback(() => {
-        if (selectedCards.length === 1)
-            dispatch(updateCardToPlay(selectedCards[0]))
-    }, [selectedCards])
-
-    // 1. Play card when you've pre-selected a card
-    // 2. If best card lead or lead from bottom enabled, play worst card
-    // 3. If lead from the top enabled, play best card
-    useEffect(() => {
-        if (round?.suit && gameId && isMyGo) {
-            if (cardToPlay) playCard({ gameId, card: cardToPlay })
-            else if (autoPlay === "worst" || bestCardLead(round)) {
-                const worstCard = getWorstCard(myCards, round)
-                if (worstCard) playCard({ gameId, card: worstCard.name })
-            } else if (autoPlay === "best") {
-                const bestCard = getBestCard(myCards, round)
-                if (bestCard) playCard({ gameId, card: bestCard.name })
-            }
-        }
-    }, [playCard, gameId, autoPlay, round, isMyGo, myCards, cardToPlay])
+        if (selectedCards.length === 1 && gameId)
+            playCard({ gameId, card: selectedCards[0].name })
+    }, [gameId, selectedCards])
 
     return (
         <ButtonGroup disableElevation variant="contained" size="large">
