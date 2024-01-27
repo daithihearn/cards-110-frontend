@@ -7,22 +7,14 @@ import {
     ThunkDispatch,
 } from "@reduxjs/toolkit"
 
-import { myProfileSlice } from "./MyProfileSlice"
 import { gameSlice } from "./GameSlice"
-import { myGamesSlice } from "./MyGamesSlice"
 import { myCardsSlice } from "./MyCardsSlice"
 import { playCardSlice } from "./PlayCardSlice"
-import { playerProfilesSlice } from "./PlayerProfilesSlice"
-import { settingsSlice } from "./SettingsSlice"
 
 const combinedReducer = combineReducers({
-    myProfile: myProfileSlice.reducer,
     game: gameSlice.reducer,
-    myGames: myGamesSlice.reducer,
-    playerProfiles: playerProfilesSlice.reducer,
     myCards: myCardsSlice.reducer,
     playCard: playCardSlice.reducer,
-    settings: settingsSlice.reducer,
 })
 
 export type RootState = ReturnType<typeof combinedReducer>
@@ -36,22 +28,3 @@ export const store = configureStore({
 
 export type AppStore = typeof store
 export type AppDispatch = typeof store.dispatch
-
-export type GenericThunkAction<
-    TReturnType,
-    TState,
-    TExtraThunkArg,
-    TBasicAction extends Action,
-> = (
-    dispatch: ThunkDispatch<TState, TExtraThunkArg, TBasicAction>,
-    getState: () => TState,
-    extraArgument: TExtraThunkArg,
-) => TReturnType
-
-//Use this when your Thunk is async and has a return type
-export type AppThunk<TReturnType> = GenericThunkAction<
-    TReturnType,
-    RootState,
-    unknown,
-    Action
->

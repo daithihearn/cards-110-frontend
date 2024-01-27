@@ -7,13 +7,6 @@ import {
 } from "react-beautiful-dnd"
 import { EMPTY, Card } from "model/Cards"
 import { RoundStatus } from "model/Round"
-import {
-    getGameId,
-    getIamGoer,
-    getIsRoundCalled,
-    getRound,
-    getNumPlayers,
-} from "caches/GameSlice"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     clearSelectedCards,
@@ -30,6 +23,13 @@ import {
 } from "caches/PlayCardSlice"
 import { CardContent, CardMedia, useTheme } from "@mui/material"
 import { pickBestCards } from "utils/GameUtils"
+import {
+    getGameId,
+    getIamGoer,
+    getIsRoundCalled,
+    getNumPlayers,
+    getRound,
+} from "caches/GameSlice"
 
 const EMPTY_HAND = [
     { ...EMPTY, selected: false },
@@ -47,9 +47,10 @@ const usePrevious = (value: any) => {
     return ref.current
 }
 
-const MyCards: React.FC = () => {
-    const theme = useTheme()
+const MyCards = () => {
     const dispatch = useAppDispatch()
+    const theme = useTheme()
+
     const round = useAppSelector(getRound)
     const gameId = useAppSelector(getGameId)
     const numPlayers = useAppSelector(getNumPlayers)
@@ -110,7 +111,7 @@ const MyCards: React.FC = () => {
                 dispatch(toggleSelect(card))
             }
         },
-        [round, myCards, autoPlayCard],
+        [round, autoPlayCard],
     )
 
     const handleOnDragEnd = useCallback(

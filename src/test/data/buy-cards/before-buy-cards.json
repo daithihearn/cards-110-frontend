@@ -1,0 +1,65 @@
+{
+    "id": "game1",
+    "revision": 22,
+    "status": "ACTIVE",
+    "me": {
+        "id": "player1",
+        "seatNumber": 1,
+        "call": 15,
+        "cardsBought": 0,
+        "score": 0,
+        "rings": 0,
+        "teamId": "1",
+        "winner": false
+    },
+    "iamSpectator": false,
+    "isMyGo": true,
+    "iamGoer": true,
+    "iamDealer": false,
+    "iamAdmin": true,
+    "maxCall": 15,
+    "players": [
+        {
+            "id": "player1",
+            "seatNumber": 1,
+            "call": 15,
+            "cardsBought": 0,
+            "score": 0,
+            "rings": 0,
+            "teamId": "1",
+            "winner": false
+        },
+        {
+            "id": "player2",
+            "seatNumber": 2,
+            "call": 0,
+            "cardsBought": 0,
+            "score": 25,
+            "rings": 0,
+            "teamId": "2",
+            "winner": false
+        }
+    ],
+    "round": {
+        "timestamp": "2024-01-25T11:38:38.687Z",
+        "number": 2,
+        "dealerId": "player2",
+        "goerId": "player1",
+        "suit": "CLUBS",
+        "status": "BUYING",
+        "currentHand": {
+            "timestamp": "2024-01-25T11:38:38.687Z",
+            "currentPlayerId": "player1",
+            "playedCards": []
+        },
+        "dealerSeeingCall": false,
+        "completedHands": []
+    },
+    "cards": [
+        "JACK_CLUBS",
+        "JOKER",
+        "KING_CLUBS",
+        "ACE_CLUBS",
+        "FOUR_CLUBS"
+    ]
+}

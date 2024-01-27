@@ -6,6 +6,7 @@ import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
 
 const initialState: GameState = {
+    revision: -1,
     iamSpectator: true,
     isMyGo: false,
     iamGoer: false,
@@ -65,11 +66,6 @@ export const getHasGame = createSelector(
 export const getIsGameActive = createSelector(
     getGameStatus,
     status => status === GameStatus.ACTIVE,
-)
-
-export const getIsGameFinished = createSelector(
-    getGameStatus,
-    status => status === GameStatus.FINISHED,
 )
 
 export const getRoundStatus = createSelector(getRound, round => round?.status)

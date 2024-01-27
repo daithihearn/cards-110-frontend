@@ -18,6 +18,7 @@
         "@mui/x-data-grid": "6.18.7",
         "@popperjs/core": "2.11.8",
         "@reduxjs/toolkit": "2.0.1",
+        "@tanstack/react-query": "^5.17.19",
         "@types/jest": "29.5.11",
         "@types/node": "20.10.8",
         "@types/react": "18.2.47",
@@ -54,6 +55,7 @@
     },
     "devDependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "@tanstack/eslint-plugin-query": "^5.17.20",
         "@types/crypto-js": "4.2.1",
         "@types/enzyme": "3.10.18",
         "@types/enzyme-adapter-react-16": "1.0.9",

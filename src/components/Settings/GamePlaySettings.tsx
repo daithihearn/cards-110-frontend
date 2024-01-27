@@ -1,24 +1,17 @@
 import { FormControl, FormLabel, Checkbox, Grid } from "@mui/material"
-import { getSettings } from "caches/SettingsSlice"
-import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { useSnackbar } from "notistack"
+import { useSettings } from "components/Hooks/useSettings"
+import { PlayerSettings } from "model/PlayerSettings"
 import React, { useCallback } from "react"
-import SettingsService from "services/SettingsService"
-import parseError from "utils/ErrorUtils"
 
 const GamePlaySettings: React.FC = () => {
-    const dispatch = useAppDispatch()
-    const { enqueueSnackbar } = useSnackbar()
-    const settings = useAppSelector(getSettings)
+    const { settings, updateSettings } = useSettings()
 
     const toggleAutoBuy = useCallback(async () => {
-        const updatedSettings = {
+        const updatedSettings: PlayerSettings = {
             ...settings,
-            autoBuyCards: !settings.autoBuyCards,
+            autoBuyCards: !settings?.autoBuyCards,
         }
-        await dispatch(SettingsService.updateSettings(updatedSettings)).catch(
-            (e: Error) => enqueueSnackbar(parseError(e), { variant: "error" }),
-        )
+        updateSettings(updatedSettings)
     }, [settings])
 
     return (
@@ -34,7 +27,7 @@ const GamePlaySettings: React.FC = () => {
                 <Grid item>
                     <Checkbox
                         id="autoBuyCheckbox"
-                        checked={settings.autoBuyCards}
+                        checked={settings?.autoBuyCards}
                         onChange={toggleAutoBuy}
                         sx={{
                             "&.Mui-checked": {

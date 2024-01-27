@@ -37,6 +37,7 @@ import {
     ThemeProvider,
     useMediaQuery,
 } from "@mui/material"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const AUTHO_DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN as string
 const AUTH0_CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID as string
@@ -55,6 +56,8 @@ const router = createBrowserRouter(
 const App = () => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
 
+    const queryClient = new QueryClient()
+
     const theme = React.useMemo(
         () =>
             createTheme({
@@ -64,20 +67,22 @@ const App = () => {
     )
 
     return (
-        <ThemeProvider theme={theme}>
-            <Provider store={store}>
-                <SnackbarProvider maxSnack={3}>
-                    <Auth0Provider
-                        domain={AUTHO_DOMAIN}
-                        clientId={AUTH0_CLIENT_ID}
-                        useRefreshTokens={true}>
-                        <CssBaseline />
-                        <MyProfileSync />
-                        <RouterProvider router={router} />
-                    </Auth0Provider>
-                </SnackbarProvider>
-            </Provider>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
+                <Provider store={store}>
+                    <SnackbarProvider maxSnack={3}>
+                        <Auth0Provider
+                            domain={AUTHO_DOMAIN}
+                            clientId={AUTH0_CLIENT_ID}
+                            useRefreshTokens={true}>
+                            <CssBaseline />
+                            <MyProfileSync />
+                            <RouterProvider router={router} />
+                        </Auth0Provider>
+                    </SnackbarProvider>
+                </Provider>
+            </ThemeProvider>
+        </QueryClientProvider>
     )
 }
 export default App

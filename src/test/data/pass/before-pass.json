@@ -1,0 +1,63 @@
+{
+    "id": "game1",
+    "revision": 79,
+    "status": "ACTIVE",
+    "me": {
+        "id": "player1",
+        "seatNumber": 1,
+        "call": 0,
+        "cardsBought": 0,
+        "score": 40,
+        "rings": 1,
+        "teamId": "1",
+        "winner": false
+    },
+    "iamSpectator": false,
+    "isMyGo": true,
+    "iamGoer": false,
+    "iamDealer": false,
+    "iamAdmin": true,
+    "maxCall": 0,
+    "players": [
+        {
+            "id": "player1",
+            "seatNumber": 1,
+            "call": 0,
+            "cardsBought": 0,
+            "score": 40,
+            "rings": 1,
+            "teamId": "1",
+            "winner": false
+        },
+        {
+            "id": "player2",
+            "seatNumber": 2,
+            "call": 0,
+            "cardsBought": 0,
+            "score": 5,
+            "rings": 1,
+            "teamId": "2",
+            "winner": false
+        }
+    ],
+    "round": {
+        "timestamp": "2024-01-25T12:57:48.548711+01:00",
+        "number": 6,
+        "dealerId": "player2",
+        "status": "CALLING",
+        "currentHand": {
+            "timestamp": "2024-01-25T12:57:48.548711+01:00",
+            "currentPlayerId": "player1",
+            "playedCards": []
+        },
+        "dealerSeeingCall": false,
+        "completedHands": []
+    },
+    "cards": [
+        "FOUR_HEARTS",
+        "NINE_HEARTS",
+        "THREE_DIAMONDS",
+        "SEVEN_SPADES",
+        "TEN_CLUBS"
+    ]
+}

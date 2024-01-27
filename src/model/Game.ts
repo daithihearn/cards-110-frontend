@@ -5,13 +5,12 @@ import { Round } from "./Round"
 export enum GameStatus {
     NONE = "NONE",
     ACTIVE = "ACTIVE",
-    FINISHED = "FINISHED",
     COMPLETED = "COMPLETED",
-    CANCELLED = "CANCELLED",
 }
 
 export interface Game {
     id: string
+    revision: number
     timestamp: string
     name: string
     status: GameStatus
@@ -29,6 +28,7 @@ export interface PlayedCard {
 
 export interface GameState {
     id?: string
+    revision: number
     iamSpectator: boolean
     isMyGo: boolean
     iamGoer: boolean

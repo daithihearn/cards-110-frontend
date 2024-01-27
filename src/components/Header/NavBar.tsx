@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 
 import { useAuth0 } from "@auth0/auth0-react"
 
-import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { useAppSelector } from "caches/hooks"
 
 import {
     AppBar,
@@ -27,17 +27,15 @@ import { getIsGameActive, getIamAdmin } from "caches/GameSlice"
 import Leaderboard from "components/Leaderboard/Leaderboard"
 import MenuButton from "@mui/icons-material/Menu"
 import HomeButton from "@mui/icons-material/Home"
-import GameService from "services/GameService"
-import { useSnackbar } from "notistack"
-import parseError from "utils/ErrorUtils"
 import Settings from "components/Settings/Settings"
+import useAccessToken from "auth/accessToken"
+import { useGameActions } from "components/Hooks/useGameActions"
 
 const NavBar = () => {
     const { logout } = useAuth0()
+    const { deleteGame } = useGameActions()
 
     const navigate = useNavigate()
-    const dispatch = useAppDispatch()
-    const { enqueueSnackbar } = useSnackbar()
 
     const [modalDeleteGameOpen, setModalDeleteGameOpen] = useState(false)
     const isGameActive = useAppSelector(getIsGameActive)
@@ -47,22 +45,15 @@ const NavBar = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [modalLeaderboard, setModalLeaderboard] = useState(false)
 
-    const deleteGame = useCallback(() => {
+    const deleteGameWrapper = useCallback(() => {
         if (!gameId) {
             return
         }
         handleClose()
         handleCloseDeleteGameModal()
 
-        dispatch(GameService.deleteGame(gameId))
-            .then(() => {
-                enqueueSnackbar("Game deleted")
-                navigate("/")
-            })
-            .catch((e: Error) =>
-                enqueueSnackbar(parseError(e), { variant: "error" }),
-            )
-    }, [dispatch, enqueueSnackbar, navigate, gameId])
+        deleteGame({ gameId })
+    }, [gameId, deleteGame])
 
     const showDeleteGameModal = () => {
         setModalDeleteGameOpen(true)
@@ -185,7 +176,7 @@ const NavBar = () => {
                         onClick={handleCloseDeleteGameModal}>
                         No
                     </Button>
-                    <Button color="secondary" onClick={deleteGame}>
+                    <Button color="secondary" onClick={deleteGameWrapper}>
                         Yes
                     </Button>
                 </DialogActions>

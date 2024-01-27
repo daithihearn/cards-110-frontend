@@ -1,14 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react"
-import { PlayerGameStats, PlayerProfile } from "model/Player"
+import React, { useMemo } from "react"
+import { PlayerProfile } from "model/Player"
 import { Doughnut } from "react-chartjs-2"
 import "chart.js/auto"
 import { ChartOptions } from "chart.js"
-import { useAppDispatch } from "caches/hooks"
-import StatsService from "services/StatsService"
 import { useTheme } from "@mui/material"
+import { useStats } from "components/Hooks/useStats"
 
 interface Props {
-    player: PlayerProfile
+    player?: PlayerProfile
     last3Months: boolean
     width?: number
     height?: number
@@ -22,13 +21,8 @@ const WinPercentageGraph: React.FC<Props> = ({
     height = 300,
     showLegend = true,
 }) => {
-    const dispatch = useAppDispatch()
+    const { stats } = useStats(player?.id ?? "")
     const theme = useTheme()
-    const [stats, setStats] = useState<PlayerGameStats[]>([])
-
-    useEffect(() => {
-        dispatch(StatsService.gameStatsForPlayer(player.id)).then(setStats)
-    }, [player])
 
     const filteredStats = useMemo(() => {
         const fromDate = new Date()

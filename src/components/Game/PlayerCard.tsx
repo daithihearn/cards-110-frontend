@@ -12,19 +12,18 @@ import {
     useTheme,
 } from "@mui/material"
 import { styled } from "@mui/system"
-import { getRound } from "caches/GameSlice"
-import { useAppSelector } from "caches/hooks"
-import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { PlayedCard } from "model/Game"
-import { Player } from "model/Player"
+import { Player, PlayerProfile } from "model/Player"
 import Leaderboard from "components/Leaderboard/Leaderboard"
 import { Suit } from "model/Suit"
-import { RoundStatus } from "model/Round"
 import { FormatName } from "utils/FormattingUtils"
 import { CardName } from "model/Cards"
+import { useAppSelector } from "caches/hooks"
+import { getIsRoundPlaying, getRound } from "caches/GameSlice"
 
 interface PlayerRowI {
     player: Player
+    profile: PlayerProfile
     className?: string
 }
 
@@ -98,11 +97,9 @@ const CallChip: React.FC<{
     call: number
     isGoer: boolean
 }> = ({ call, isGoer }) => {
-    const round = useAppSelector(getRound)
-
+    const isRoundPlaying = useAppSelector(getIsRoundPlaying)
     const callChip = useMemo(() => {
-        if (!round || (round.status === RoundStatus.PLAYING && !isGoer))
-            return undefined
+        if (isRoundPlaying && !isGoer) return undefined
         switch (call) {
             case 10:
                 return ChipType.Call10
@@ -117,7 +114,7 @@ const CallChip: React.FC<{
             default:
                 return undefined
         }
-    }, [round, call])
+    }, [call])
 
     if (!callChip) return null
     return (
@@ -132,12 +129,13 @@ const CallChip: React.FC<{
     )
 }
 
-const DealerChip: React.FC<{ player: Player }> = ({ player }) => {
-    const round = useAppSelector(getRound)
-
+const DealerChip: React.FC<{
+    player: Player
+    dealerId?: string
+}> = ({ player, dealerId }) => {
     const isDealer: boolean = useMemo(
-        () => !!round && !round.suit && round.dealerId === player.id,
-        [round, player],
+        () => dealerId === player.id,
+        [dealerId, player],
     )
 
     if (!isDealer) return null
@@ -153,20 +151,14 @@ const DealerChip: React.FC<{ player: Player }> = ({ player }) => {
     )
 }
 
-const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
+const PlayerCard: React.FC<PlayerRowI> = ({ player, profile, className }) => {
     const theme = useTheme()
     const round = useAppSelector(getRound)
-    const playerProfiles = useAppSelector(getPlayerProfiles)
     const [modalLeaderboard, updateModalLeaderboard] = useState(false)
 
     const toggleLeaderboardModal = useCallback(
         () => updateModalLeaderboard(!modalLeaderboard),
         [modalLeaderboard],
-    )
-
-    const profile = useMemo(
-        () => playerProfiles.find(p => p.id === player.id),
-        [playerProfiles],
     )
 
     const isGoer: boolean = useMemo(
@@ -254,7 +246,10 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, className }) => {
                     <Card>
                         <Stack position="relative">
                             <BlankCard name={profile.name} />
-                            <DealerChip player={player} />
+                            <DealerChip
+                                player={player}
+                                dealerId={round?.dealerId}
+                            />
                             <CallChip call={player.call} isGoer={isGoer} />
                             <SuitChip isGoer={isGoer} />
                         </Stack>

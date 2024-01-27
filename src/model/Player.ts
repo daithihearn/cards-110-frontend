@@ -25,12 +25,6 @@ export interface Team extends Scorable {
     player2: Player
 }
 
-export interface MyProfile extends PlayerProfile {
-    isPlayer: boolean
-    isAdmin: boolean
-    accessToken?: string
-}
-
 export interface PlayerGameStats {
     gameId: string
     timestamp: string

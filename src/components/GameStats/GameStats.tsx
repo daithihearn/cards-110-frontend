@@ -7,22 +7,15 @@ import {
     FormControlLabel,
     Typography,
 } from "@mui/material"
-import { useCallback, useEffect, useState } from "react"
-import { useAppSelector } from "caches/hooks"
-import { getMyProfile } from "caches/MyProfileSlice"
-import PlayerSwitcher from "./PlayerSwitcher"
+import { useCallback, useState } from "react"
 import WinPercentageGraph from "./WinPercentageGraph"
-import { PlayerProfile } from "model/Player"
 
 const GameStats = () => {
-    const myProfile = useAppSelector(getMyProfile)
-    const [player, setPlayer] = useState<PlayerProfile>()
-    const [last3Months, updateLast3Months] = useState(true)
+    const [last3Months, setLast3Months] = useState(true)
 
-    useEffect(() => setPlayer(myProfile), [myProfile])
     const threeMonthsCheckboxChanged = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            updateLast3Months(e.target.checked)
+            setLast3Months(e.target.checked)
         },
         [],
     )
@@ -33,18 +26,13 @@ const GameStats = () => {
                 <CardHeader
                     title={<Typography variant="h2">Stats</Typography>}
                 />
-                <CardContent>
+                {/* <CardContent>
                     {myProfile.isAdmin ? (
                         <PlayerSwitcher onChange={setPlayer} />
                     ) : null}
-                </CardContent>
+                </CardContent> */}
                 <CardContent>
-                    {player ? (
-                        <WinPercentageGraph
-                            player={player}
-                            last3Months={last3Months}
-                        />
-                    ) : null}
+                    <WinPercentageGraph last3Months={last3Months} />
                 </CardContent>
                 <FormControlLabel
                     control={

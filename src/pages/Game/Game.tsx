@@ -1,51 +1,19 @@
-import React, { useCallback, useEffect } from "react"
+import React from "react"
 import GameWrapper from "components/Game/GameWrapper"
 import GameOver from "components/Game/GameOver"
-import GameService from "services/GameService"
 
 import { withAuthenticationRequired } from "@auth0/auth0-react"
 
 import { useParams } from "react-router-dom"
 
-import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { useSnackbar } from "notistack"
-import { getIamSpectator, getIsGameActive, resetGame } from "caches/GameSlice"
-import { clearAutoPlay } from "caches/PlayCardSlice"
-import { clearMyCards } from "caches/MyCardsSlice"
-import parseError from "utils/ErrorUtils"
+import { useGameState } from "components/Hooks/useGameState"
+import { useAppSelector } from "caches/hooks"
+import { getIsGameActive } from "caches/GameSlice"
 
 const Game = () => {
-    const dispatch = useAppDispatch()
     let { id } = useParams<string>()
-    const { enqueueSnackbar } = useSnackbar()
-    const iamSpectator = useAppSelector(getIamSpectator)
+    if (id) useGameState(id)
     const isGameActive = useAppSelector(getIsGameActive)
-
-    const fetchData = useCallback(async () => {
-        if (id)
-            await dispatch(
-                GameService.refreshGameState(id, iamSpectator),
-            ).catch((e: Error) =>
-                enqueueSnackbar(parseError(e), { variant: "error" }),
-            )
-
-        await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
-            enqueueSnackbar(parseError(e), { variant: "error" }),
-        )
-    }, [id, iamSpectator])
-
-    useEffect(() => {
-        fetchData()
-    }, [id, iamSpectator])
-
-    useEffect(() => {
-        return () => {
-            console.log("Clearing game")
-            dispatch(clearMyCards())
-            dispatch(clearAutoPlay())
-            dispatch(resetGame())
-        }
-    }, [])
 
     return (
         <div className="app">

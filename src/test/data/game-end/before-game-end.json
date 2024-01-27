@@ -1,0 +1,126 @@
+{
+    "id": "game1",
+    "revision": 187,
+    "status": "ACTIVE",
+    "me": {
+        "id": "player1",
+        "seatNumber": 1,
+        "call": 15,
+        "cardsBought": 0,
+        "score": 105,
+        "rings": 2,
+        "teamId": "1",
+        "winner": false
+    },
+    "iamSpectator": false,
+    "isMyGo": false,
+    "iamGoer": true,
+    "iamDealer": false,
+    "iamAdmin": true,
+    "maxCall": 15,
+    "players": [
+        {
+            "id": "player1",
+            "seatNumber": 1,
+            "call": 15,
+            "cardsBought": 0,
+            "score": 105,
+            "rings": 2,
+            "teamId": "1",
+            "winner": false
+        },
+        {
+            "id": "player2",
+            "seatNumber": 2,
+            "call": 0,
+            "cardsBought": 0,
+            "score": 60,
+            "rings": 2,
+            "teamId": "2",
+            "winner": false
+        }
+    ],
+    "round": {
+        "timestamp": "2024-01-25T12:49:33.956Z",
+        "number": 14,
+        "dealerId": "player2",
+        "goerId": "player1",
+        "suit": "HEARTS",
+        "status": "PLAYING",
+        "currentHand": {
+            "timestamp": "2024-01-25T12:50:53.224Z",
+            "leadOut": "THREE_DIAMONDS",
+            "currentPlayerId": "player2",
+            "playedCards": [
+                {
+                    "playerId": "player1",
+                    "card": "THREE_DIAMONDS"
+                }
+            ]
+        },
+        "dealerSeeingCall": false,
+        "completedHands": [
+            {
+                "timestamp": "2024-01-25T12:49:33.956Z",
+                "leadOut": "QUEEN_HEARTS",
+                "currentPlayerId": "player1",
+                "playedCards": [
+                    {
+                        "playerId": "player2",
+                        "card": "QUEEN_HEARTS"
+                    },
+                    {
+                        "playerId": "player1",
+                        "card": "THREE_HEARTS"
+                    }
+                ]
+            },
+            {
+                "timestamp": "2024-01-25T12:50:18.778Z",
+                "leadOut": "FOUR_HEARTS",
+                "currentPlayerId": "player1",
+                "playedCards": [
+                    {
+                        "playerId": "player2",
+                        "card": "FOUR_HEARTS"
+                    },
+                    {
+                        "playerId": "player1",
+                        "card": "SIX_HEARTS"
+                    }
+                ]
+            },
+            {
+                "timestamp": "2024-01-25T12:50:33.96Z",
+                "leadOut": "FIVE_HEARTS",
+                "currentPlayerId": "player2",
+                "playedCards": [
+                    {
+                        "playerId": "player1",
+                        "card": "FIVE_HEARTS"
+                    },
+                    {
+                        "playerId": "player2",
+                        "card": "FOUR_DIAMONDS"
+                    }
+                ]
+            },
+            {
+                "timestamp": "2024-01-25T12:50:42.35Z",
+                "leadOut": "SEVEN_HEARTS",
+                "currentPlayerId": "player2",
+                "playedCards": [
+                    {
+                        "playerId": "player1",
+                        "card": "SEVEN_HEARTS"
+                    },
+                    {
+                        "playerId": "player2",
+                        "card": "SEVEN_CLUBS"
+                    }
+                ]
+            }
+        ]
+    },
+    "cards": null
+}
