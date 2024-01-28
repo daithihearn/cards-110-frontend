@@ -2,17 +2,15 @@ import { useCallback, useEffect, useState } from "react"
 
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
-    getMyCardsWithoutBlanks,
-    getSelectedCards,
-    selectAll,
-} from "caches/MyCardsSlice"
-import {
     getGameId,
     getNumPlayers,
     getIamGoer,
     getIHavePlayed,
     getIsMyGo,
     getSuit,
+    getCardsWithoutBlanks,
+    getSelectedCards,
+    selectAll,
 } from "caches/GameSlice"
 import { pickBestCards, riskOfMistakeBuyingCards } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
@@ -35,7 +33,7 @@ const Buying = () => {
     const numPlayers = useAppSelector(getNumPlayers)
     const gameId = useAppSelector(getGameId)
     const suit = useAppSelector(getSuit)
-    const myCards = useAppSelector(getMyCardsWithoutBlanks)
+    const myCards = useAppSelector(getCardsWithoutBlanks)
     const [readyToBuy, setReadyToBuy] = useState(false)
     const iHavePlayed = useAppSelector(getIHavePlayed)
     const isMyGo = useAppSelector(getIsMyGo)

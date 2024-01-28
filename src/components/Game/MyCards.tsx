@@ -9,14 +9,6 @@ import { EMPTY, Card } from "model/Cards"
 import { RoundStatus } from "model/Round"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
-    clearSelectedCards,
-    getMyCards,
-    replaceMyCards,
-    selectCards,
-    toggleSelect,
-    toggleUniqueSelect,
-} from "caches/MyCardsSlice"
-import {
     getCardToPlay,
     togglePlayCard,
     clearAutoPlay,
@@ -24,11 +16,17 @@ import {
 import { CardContent, CardMedia, useTheme } from "@mui/material"
 import { pickBestCards } from "utils/GameUtils"
 import {
+    clearSelectedCards,
+    getCardsFull,
     getGameId,
     getIamGoer,
     getIsRoundCalled,
     getNumPlayers,
     getRound,
+    replaceMyCards,
+    selectCards,
+    toggleSelect,
+    toggleUniqueSelect,
 } from "caches/GameSlice"
 
 const EMPTY_HAND = [
@@ -55,7 +53,7 @@ const MyCards = () => {
     const gameId = useAppSelector(getGameId)
     const numPlayers = useAppSelector(getNumPlayers)
     const isRoundCalled = useAppSelector(getIsRoundCalled)
-    const myCards = useAppSelector(getMyCards)
+    const myCards = useAppSelector(getCardsFull)
     const autoPlayCard = useAppSelector(getCardToPlay)
     const iamGoer = useAppSelector(getIamGoer)
     const prevRoundStatus = usePrevious(round?.status)

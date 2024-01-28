@@ -1,19 +1,15 @@
 import {
-    Action,
     AnyAction,
     combineReducers,
     configureStore,
     Reducer,
-    ThunkDispatch,
 } from "@reduxjs/toolkit"
 
 import { gameSlice } from "./GameSlice"
-import { myCardsSlice } from "./MyCardsSlice"
 import { playCardSlice } from "./PlayCardSlice"
 
 const combinedReducer = combineReducers({
     game: gameSlice.reducer,
-    myCards: myCardsSlice.reducer,
     playCard: playCardSlice.reducer,
 })
 

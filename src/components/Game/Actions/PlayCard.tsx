@@ -1,8 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
-import { getGameId, getIsMyGo, getRound } from "caches/GameSlice"
+import {
+    getCardsWithoutBlanks,
+    getGameId,
+    getIsMyGo,
+    getRound,
+    getSelectedCards,
+} from "caches/GameSlice"
 import { RoundStatus } from "model/Round"
 import {
     Button,
@@ -27,7 +32,7 @@ const PlayCard = () => {
     const { playCard } = useGameActions()
     const round = useAppSelector(getRound)
     const gameId = useAppSelector(getGameId)
-    const myCards = useAppSelector(getMyCardsWithoutBlanks)
+    const myCards = useAppSelector(getCardsWithoutBlanks)
     const isMyGo = useAppSelector(getIsMyGo)
 
     const [autoPlay, setAutoPlay] = useState<AutoPlayState>("off")

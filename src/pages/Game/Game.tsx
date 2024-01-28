@@ -8,18 +8,20 @@ import { useParams } from "react-router-dom"
 
 import { useGameState } from "components/Hooks/useGameState"
 import { useAppSelector } from "caches/hooks"
-import { getIsGameActive } from "caches/GameSlice"
+import { getIsGameActive, getIsGameCompleted } from "caches/GameSlice"
 
 const Game = () => {
     let { id } = useParams<string>()
-    if (id) useGameState(id)
+    useGameState(id)
     const isGameActive = useAppSelector(getIsGameActive)
+    const isGameCompleted = useAppSelector(getIsGameCompleted)
 
     return (
         <div className="app">
             <div className="game-wrap">
                 <div className="game-container">
-                    {isGameActive ? <GameWrapper /> : <GameOver />}
+                    {isGameActive && <GameWrapper />}
+                    {isGameCompleted && <GameOver />}
                 </div>
             </div>
         </div>

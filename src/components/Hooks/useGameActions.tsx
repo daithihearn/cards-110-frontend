@@ -2,10 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import useAccessToken from "auth/accessToken"
 import axios from "axios"
 import { initialGameState, updateGame } from "caches/GameSlice"
-import { updateMyCards } from "caches/MyCardsSlice"
 import { useAppDispatch } from "caches/hooks"
 import { Card, CardName } from "model/Cards"
-import { GameState } from "model/Game"
+import { GameStateResponse } from "model/Game"
 import { Suit } from "model/Suit"
 import { useSnackbar } from "notistack"
 import { getDefaultConfig } from "utils/AxiosUtils"
@@ -28,7 +27,7 @@ export const useGameActions = () => {
             if (!accessToken) {
                 return initialGameState
             }
-            const response = await axios.put<GameState>(
+            const response = await axios.put<GameStateResponse>(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/call?call=${call}`,
                 null,
                 getDefaultConfig(accessToken),
@@ -38,7 +37,6 @@ export const useGameActions = () => {
         onSuccess: data => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
-            dispatch(updateMyCards(data.cards))
         },
         onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
     })
@@ -54,7 +52,7 @@ export const useGameActions = () => {
             if (!accessToken) {
                 return initialGameState
             }
-            const response = await axios.put<GameState>(
+            const response = await axios.put<GameStateResponse>(
                 `${process.env.REACT_APP_API_URL}/api/v1/game/${gameId}/buy`,
                 { cards },
                 getDefaultConfig(accessToken),
@@ -64,7 +62,6 @@ export const useGameActions = () => {
         onSuccess: data => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
-            dispatch(updateMyCards(data.cards))
         },
         onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
     })
@@ -95,7 +92,6 @@ export const useGameActions = () => {
         onSuccess: data => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
-            dispatch(updateMyCards(data.cards))
         },
         onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
     })
@@ -121,7 +117,6 @@ export const useGameActions = () => {
         onSuccess: data => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
-            dispatch(updateMyCards(data.cards))
         },
         onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
     })

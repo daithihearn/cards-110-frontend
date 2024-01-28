@@ -1,4 +1,4 @@
-import { CardName } from "./Cards"
+import { Card, CardName } from "./Cards"
 import { Player } from "./Player"
 import { Round } from "./Round"
 
@@ -26,7 +26,7 @@ export interface PlayedCard {
     card: CardName
 }
 
-export interface GameState {
+export interface GameStateResponse {
     id?: string
     revision: number
     iamSpectator: boolean
@@ -40,6 +40,10 @@ export interface GameState {
     maxCall?: number
     me?: Player
     players: Player[]
+}
+
+export interface GameState extends GameStateResponse {
+    cardsFull: Card[]
 }
 
 export interface CreateGame {

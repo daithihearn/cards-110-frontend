@@ -1,9 +1,11 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { GameState, GameStatus, PlayedCard } from "model/Game"
-import { Player } from "model/Player"
+import { GameState, GameStateResponse, GameStatus } from "model/Game"
 import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
+import { processOrderedCardsAfterGameUpdate } from "utils/GameUtils"
+import { Card, EMPTY } from "model/Cards"
+import { determineEvent } from "utils/EventUtils"
 
 export const initialGameState: GameState = {
     revision: -1,
@@ -13,6 +15,7 @@ export const initialGameState: GameState = {
     iamDealer: false,
     iamAdmin: false,
     cards: [],
+    cardsFull: [],
     status: GameStatus.NONE,
     players: [],
 }
@@ -21,16 +24,53 @@ export const gameSlice = createSlice({
     name: "game",
     initialState: initialGameState,
     reducers: {
-        updateGame: (_, action: PayloadAction<GameState>) => action.payload,
-        updatePlayers: (state, action: PayloadAction<Player[]>) => {
-            state.players = action.payload
+        updateGame: (state, action: PayloadAction<GameStateResponse>) => {
+            const updatedGame: GameState = {
+                ...action.payload,
+                cardsFull: processOrderedCardsAfterGameUpdate(
+                    state.cardsFull,
+                    action.payload.cards,
+                ),
+            }
+
+            const event = determineEvent(state, updatedGame)
+
+            console.log("event", event)
+
+            return updatedGame
         },
-        updatePlayedCards: (state, action: PayloadAction<PlayedCard[]>) => {
-            if (state.round)
-                state.round.currentHand.playedCards = action.payload
+        selectCard: (state, action: PayloadAction<Card>) => {
+            state.cardsFull.forEach(c => {
+                if (c.name === action.payload.name) c.selected = true
+            })
         },
-        disableActions: state => {
-            state.isMyGo = false
+        selectCards: (state, action: PayloadAction<Card[]>) => {
+            state.cardsFull.forEach(c => {
+                if (action.payload.some(a => a.name === c.name))
+                    c.selected = true
+            })
+        },
+        toggleSelect: (state, action: PayloadAction<Card>) =>
+            state.cardsFull.forEach(c => {
+                if (c.name === action.payload.name) c.selected = !c.selected
+            }),
+        toggleUniqueSelect: (state, action: PayloadAction<Card>) =>
+            state.cardsFull.forEach(c => {
+                if (c.name === action.payload.name) c.selected = !c.selected
+                else c.selected = false
+            }),
+        selectAll: state => {
+            state.cardsFull.forEach(c => {
+                if (c.name !== EMPTY.name) c.selected = true
+            })
+        },
+        clearSelectedCards: state => {
+            state.cardsFull.forEach(c => {
+                c.selected = false
+            })
+        },
+        replaceMyCards: (state, action: PayloadAction<Card[]>) => {
+            state.cardsFull = action.payload
         },
         resetGame: () => initialGameState,
     },
@@ -38,10 +78,14 @@ export const gameSlice = createSlice({
 
 export const {
     updateGame,
-    disableActions,
-    updatePlayedCards,
-    updatePlayers,
     resetGame,
+    toggleSelect,
+    toggleUniqueSelect,
+    selectCard,
+    selectCards,
+    selectAll,
+    clearSelectedCards,
+    replaceMyCards,
 } = gameSlice.actions
 
 export const getGame = (state: RootState) => state.game
@@ -54,6 +98,14 @@ export const getMe = createSelector(getGame, game => game.me)
 
 export const getRound = createSelector(getGame, game => game.round)
 export const getCards = createSelector(getGame, game => game.cards)
+export const getCardsFull = createSelector(getGame, game => game.cardsFull)
+export const getCardsWithoutBlanks = createSelector(getCardsFull, cards =>
+    cards.filter(c => c.name !== EMPTY.name),
+)
+export const getSelectedCards = createSelector(getCardsFull, cards =>
+    cards.filter(c => c.selected),
+)
+
 export const getSuit = createSelector(getRound, round => round?.suit)
 export const getGameId = createSelector(getGame, game => game.id)
 
@@ -66,6 +118,11 @@ export const getHasGame = createSelector(
 export const getIsGameActive = createSelector(
     getGameStatus,
     status => status === GameStatus.ACTIVE,
+)
+
+export const getIsGameCompleted = createSelector(
+    getGameStatus,
+    status => status === GameStatus.COMPLETED,
 )
 
 export const getRoundStatus = createSelector(getRound, round => round?.status)
@@ -120,3 +177,5 @@ export const getIsInBunker = createSelector(
     (isMyGo, isRoundCalling, me) =>
         isMyGo && isRoundCalling && me && me?.score < -30,
 )
+
+export const getRevision = createSelector(getGame, game => game.revision)

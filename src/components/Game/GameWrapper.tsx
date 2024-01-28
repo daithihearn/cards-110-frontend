@@ -23,15 +23,13 @@ const GameWrapper = () => {
     const iamSpectator = useAppSelector(getIamSpectator)
 
     return (
-        <>
-            <GameCard>
-                <PlayersAndCards />
+        <GameCard>
+            <PlayersAndCards />
 
-                {!iamSpectator ? <AutoActionManager /> : null}
-                {!iamSpectator ? <ActionsWrapper /> : null}
-                {!iamSpectator ? <MyCards /> : null}
-            </GameCard>
-        </>
+            {!iamSpectator ? <AutoActionManager /> : null}
+            {!iamSpectator ? <ActionsWrapper /> : null}
+            {!iamSpectator ? <MyCards /> : null}
+        </GameCard>
     )
 }
 

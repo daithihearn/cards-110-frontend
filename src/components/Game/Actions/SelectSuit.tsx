@@ -2,13 +2,17 @@ import { useCallback, useState } from "react"
 
 import { Suit } from "model/Suit"
 import { useSnackbar } from "notistack"
-import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
 import { removeAllFromHand } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 import { CardName, Card } from "model/Cards"
 import { Button } from "@mui/material"
 import { useAppSelector } from "caches/hooks"
-import { getGameId, getIamGoer } from "caches/GameSlice"
+import {
+    getCardsWithoutBlanks,
+    getGameId,
+    getIamGoer,
+    getSelectedCards,
+} from "caches/GameSlice"
 import { useGameActions } from "components/Hooks/useGameActions"
 
 const WaitingForSuit = () => (
@@ -22,7 +26,7 @@ const SelectSuit = () => {
     const { selectSuit } = useGameActions()
 
     const gameId = useAppSelector(getGameId)
-    const myCards = useAppSelector(getMyCardsWithoutBlanks)
+    const myCards = useAppSelector(getCardsWithoutBlanks)
     const iamGoer = useAppSelector(getIamGoer)
 
     const [selectedSuit, setSelectedSuit] = useState<Suit>()
