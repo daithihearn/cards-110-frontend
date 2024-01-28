@@ -7,19 +7,17 @@ import {
     MenuItem,
     Avatar,
 } from "@mui/material"
-import { useAppSelector } from "caches/hooks"
-import { getMyProfile } from "caches/MyProfileSlice"
-import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { PlayerProfile } from "model/Player"
 import { FormatName } from "utils/FormattingUtils"
+import { useProfiles } from "components/Hooks/useProfiles"
 
 interface Props {
     onChange: (player: PlayerProfile) => void
 }
 
 const PlayerSwitcher: React.FC<Props> = ({ onChange }) => {
-    const myProfile = useAppSelector(getMyProfile)
-    const players = useAppSelector(getPlayerProfiles)
+    const { myProfile, allProfiles } = useProfiles()
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [currentPlayer, setCurrentPlayer] = useState<PlayerProfile>()
 
@@ -33,17 +31,17 @@ const PlayerSwitcher: React.FC<Props> = ({ onChange }) => {
 
     const sortedPlayers = useMemo(
         () =>
-            [...players].sort((a, b) => {
+            [...allProfiles].sort((a, b) => {
                 const aDate = new Date(a.lastAccess)
                 const bDate = new Date(b.lastAccess)
                 if (aDate === bDate) return 0
                 return aDate > bDate ? -1 : 1
             }),
-        [players],
+        [allProfiles],
     )
 
     useEffect(() => {
-        const me = players.find(p => p.id === myProfile.id)
+        const me = allProfiles.find(p => p.id === myProfile?.id)
         if (me) setCurrentPlayer(me)
     }, [sortedPlayers, myProfile])
 

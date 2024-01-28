@@ -1,7 +1,6 @@
 import React, { useCallback, useRef, useState } from "react"
 
 import heic2any from "heic2any"
-import { useSnackbar } from "notistack"
 import {
     Button,
     FormControl,
@@ -12,15 +11,11 @@ import {
     ButtonGroup,
     Box,
 } from "@mui/material"
-import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { getMyProfile } from "caches/MyProfileSlice"
-import ProfileService from "services/ProfileService"
 import AvatarEditor from "react-avatar-editor"
-import parseError from "utils/ErrorUtils"
+import { useProfiles } from "components/Hooks/useProfiles"
 
 const ProfilePictureEditor: React.FC = () => {
-    const dispatch = useAppDispatch()
-    const { enqueueSnackbar } = useSnackbar()
+    const { myProfile, updateProfile } = useProfiles()
 
     const [selectedImage, updateSelectedImage] = useState<File>()
     const [scale, updateScale] = useState(1.2)
@@ -35,8 +30,6 @@ const ProfilePictureEditor: React.FC = () => {
         [fileInputRef],
     )
 
-    const myProfile = useAppSelector(getMyProfile)
-
     const reset = useCallback(() => {
         updateSelectedImage(undefined)
         updateScale(1.2)
@@ -49,23 +42,15 @@ const ProfilePictureEditor: React.FC = () => {
     const handleSave = useCallback(
         (event: React.SyntheticEvent<HTMLButtonElement>) => {
             event.preventDefault()
-            if (!editorRef.current) return
+            if (!editorRef.current || !myProfile) return
             const canvasScaled = editorRef.current.getImageScaledToCanvas()
             const croppedImg = canvasScaled.toDataURL()
 
-            dispatch(
-                ProfileService.updateProfile({
-                    name: myProfile.name,
-                    picture: croppedImg,
-                    forceUpdate: true,
-                }),
-            )
-                .catch((e: Error) =>
-                    enqueueSnackbar(parseError(e), { variant: "error" }),
-                )
-                .finally(() => {
-                    reset()
-                })
+            updateProfile({
+                name: myProfile.name,
+                picture: croppedImg,
+                forceUpdate: true,
+            })
         },
         [myProfile, editorRef, fileInputRef],
     )

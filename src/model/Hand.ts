@@ -5,5 +5,5 @@ export interface Hand {
     timestamp: string
     leadOut?: CardName
     currentPlayerId: string
-    playedCards: PlayedCard[]
+    playedCards?: PlayedCard[]
 }

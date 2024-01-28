@@ -1,8 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react"
 
-import GameService from "services/GameService"
-import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
-
 import {
     Button,
     ButtonGroup,
@@ -22,43 +19,41 @@ import {
     Typography,
     useTheme,
 } from "@mui/material"
-import { useAppDispatch, useAppSelector } from "caches/hooks"
 import { PlayerProfile } from "model/Player"
 import { useSnackbar } from "notistack"
-import parseError from "utils/ErrorUtils"
 import { FormatName } from "utils/FormattingUtils"
 import WinPercentageGraph from "components/GameStats/WinPercentageGraph"
+import { useProfiles } from "components/Hooks/useProfiles"
+import { useGame } from "components/Hooks/useGame"
 
 const StartNewGame = () => {
     const theme = useTheme()
-    const dispatch = useAppDispatch()
     const { enqueueSnackbar } = useSnackbar()
+    const { allProfiles } = useProfiles()
+    const { createGame } = useGame()
 
-    const [newGameName, updateNewGameName] = useState("")
-    const allPlayers = useAppSelector(getPlayerProfiles)
+    const [newGameName, setNewGameName] = useState("")
 
-    const [selectedPlayers, updateSelectedPlayers] = useState<PlayerProfile[]>(
-        [],
-    )
+    const [selectedPlayers, setSelectedPlayers] = useState<PlayerProfile[]>([])
 
     const orderedPlayers = useMemo(() => {
-        if (!allPlayers || allPlayers.length < 1) return []
+        if (allProfiles.length < 1) return []
         // Sort by last lastAccess which is a string timestamp in the form 1970-01-01T00:00:00
-        return [...allPlayers].sort((a, b) => {
+        return [...allProfiles].sort((a, b) => {
             const aDate = new Date(a.lastAccess)
             const bDate = new Date(b.lastAccess)
             return bDate.getTime() - aDate.getTime()
         })
-    }, [allPlayers])
+    }, [allProfiles])
 
     const togglePlayer = useCallback(
         (player: PlayerProfile) => {
-            if (selectedPlayers.includes(player)) {
-                updateSelectedPlayers(
+            if (selectedPlayers?.includes(player)) {
+                setSelectedPlayers(
                     selectedPlayers.filter(p => p.id !== player.id),
                 )
             } else {
-                updateSelectedPlayers([...selectedPlayers, player])
+                setSelectedPlayers([...selectedPlayers, player])
             }
         },
         [selectedPlayers],
@@ -85,23 +80,14 @@ const StartNewGame = () => {
                 name: newGameName,
             }
 
-            dispatch(GameService.put(payload))
-                .then(() => {
-                    updateNewGameName("")
-                    enqueueSnackbar("Game started successfully", {
-                        variant: "success",
-                    })
-                })
-                .catch((e: Error) =>
-                    enqueueSnackbar(parseError(e), { variant: "error" }),
-                )
+            createGame(payload)
         },
         [selectedPlayers, newGameName],
     )
 
     const handleNameChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            updateNewGameName(e.target.value)
+            setNewGameName(e.target.value)
         },
         [],
     )
@@ -173,7 +159,7 @@ const StartNewGame = () => {
                                                 onClick={() =>
                                                     togglePlayer(player)
                                                 }
-                                                selected={selectedPlayers.includes(
+                                                selected={selectedPlayers?.includes(
                                                     player,
                                                 )}
                                                 sx={{
@@ -197,7 +183,7 @@ const StartNewGame = () => {
                                                                         "center",
                                                                 }}>
                                                                 <img
-                                                                    alt="Image Preview"
+                                                                    alt="Preview"
                                                                     src={
                                                                         player.picture
                                                                     }

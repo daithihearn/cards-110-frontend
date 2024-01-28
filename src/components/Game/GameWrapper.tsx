@@ -1,12 +1,11 @@
 import MyCards from "./MyCards"
 import PlayersAndCards from "./PlayersAndCards"
 
-import WebsocketManager from "./WebsocketManager"
-
-import { useAppSelector } from "caches/hooks"
-import { getIamSpectator } from "caches/GameSlice"
 import ActionsWrapper from "./Actions/ActionsWrapper"
 import { Card, styled } from "@mui/material"
+import AutoActionManager from "./AutoActionManager"
+import { useAppSelector } from "caches/hooks"
+import { getIamSpectator } from "caches/GameSlice"
 
 const GameCard = styled(Card)(({ theme }) => ({
     backgroundColor: "transparent",
@@ -24,16 +23,13 @@ const GameWrapper = () => {
     const iamSpectator = useAppSelector(getIamSpectator)
 
     return (
-        <>
-            <WebsocketManager />
+        <GameCard>
+            <PlayersAndCards />
 
-            <GameCard>
-                <PlayersAndCards />
-
-                {!iamSpectator ? <ActionsWrapper /> : null}
-                {!iamSpectator ? <MyCards /> : null}
-            </GameCard>
-        </>
+            {!iamSpectator ? <AutoActionManager /> : null}
+            {!iamSpectator ? <ActionsWrapper /> : null}
+            {!iamSpectator ? <MyCards /> : null}
+        </GameCard>
     )
 }
 

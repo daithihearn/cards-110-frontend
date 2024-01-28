@@ -21,11 +21,10 @@ import {
 } from "@mui/material"
 
 import moment from "moment"
-import { useAppSelector } from "caches/hooks"
-import { getMyGames } from "caches/MyGamesSlice"
-import { getMyProfile } from "caches/MyProfileSlice"
 import { Game, GameStatus } from "model/Game"
 import { Player } from "model/Player"
+import { useGame } from "components/Hooks/useGame"
+import { useProfiles } from "components/Hooks/useProfiles"
 
 const sortByDate = (a: Game, b: Game) => {
     return moment(b.timestamp).diff(moment(a.timestamp))
@@ -37,13 +36,14 @@ const getNumberOfPlayers = (players: Player[]) => {
 
 const MyGames = () => {
     const navigateTo = useNavigate()
+    const { games } = useGame()
 
-    const myGames = useAppSelector(getMyGames)
-    const myProfile = useAppSelector(getMyProfile)
+    const { myProfile } = useProfiles()
 
     const last10Games = useMemo(() => {
-        return [...myGames].sort(sortByDate).slice(0, 7)
-    }, [myGames])
+        if (!games) return []
+        return [...games].sort(sortByDate).slice(0, 7)
+    }, [games])
 
     const isGameActive = (game: Game) => {
         return game.status === GameStatus.ACTIVE
@@ -105,14 +105,16 @@ const MyGames = () => {
                                         }}
                                     />
 
-                                    <ListItemSecondaryAction>
-                                        {isWinner(row, myProfile.id!) && (
-                                            <VictoryIcon fontSize="large" />
-                                        )}
-                                        {isLoser(row, myProfile.id!) && (
-                                            <FailureIcon fontSize="large" />
-                                        )}
-                                    </ListItemSecondaryAction>
+                                    {myProfile && (
+                                        <ListItemSecondaryAction>
+                                            {isWinner(row, myProfile.id) && (
+                                                <VictoryIcon fontSize="large" />
+                                            )}
+                                            {isLoser(row, myProfile.id) && (
+                                                <FailureIcon fontSize="large" />
+                                            )}
+                                        </ListItemSecondaryAction>
+                                    )}
                                 </ListItem>
                             ))}
                         </List>

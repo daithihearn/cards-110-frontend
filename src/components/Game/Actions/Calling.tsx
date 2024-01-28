@@ -1,5 +1,3 @@
-import GameService from "services/GameService"
-import { useAppDispatch, useAppSelector } from "caches/hooks"
 import {
     getCards,
     getGameId,
@@ -9,14 +7,14 @@ import {
     getMaxCall,
     getRound,
 } from "caches/GameSlice"
-import { useCallback, useMemo } from "react"
-import { useSnackbar } from "notistack"
-import parseError from "utils/ErrorUtils"
+import { useMemo } from "react"
 import { Button } from "@mui/material"
+import { useGameActions } from "components/Hooks/useGameActions"
+import { useAppSelector } from "caches/hooks"
 
 const Calling = () => {
-    const dispatch = useAppDispatch()
-    const { enqueueSnackbar } = useSnackbar()
+    const { call } = useGameActions()
+
     const gameId = useAppSelector(getGameId)
     const cards = useAppSelector(getCards)
     const round = useAppSelector(getRound)
@@ -24,17 +22,6 @@ const Calling = () => {
     const isMyGo = useAppSelector(getIsMyGo)
     const iamDealer = useAppSelector(getIamDealer)
     const maxCall = useAppSelector(getMaxCall)
-
-    const call = useCallback(
-        (callAmount: number) => {
-            if (gameId)
-                dispatch(GameService.call(gameId, callAmount)).catch(
-                    (e: Error) =>
-                        enqueueSnackbar(parseError(e), { variant: "error" }),
-                )
-        },
-        [gameId],
-    )
 
     const buttonsEnabled = useMemo(
         () => round?.currentHand && cards.length > 0 && isMyGo,
@@ -65,13 +52,14 @@ const Calling = () => {
 
     const canCallJink = useMemo(() => players.length > 2, [players])
 
+    if (!gameId) return null
     return (
         <>
             <Button
                 disabled={!buttonsEnabled}
                 type="button"
                 color="secondary"
-                onClick={() => call(0)}>
+                onClick={() => call({ gameId, call: "0" })}>
                 Pass
             </Button>
             {canCall10 ? (
@@ -79,7 +67,7 @@ const Calling = () => {
                     disabled={!buttonsEnabled}
                     type="button"
                     color="primary"
-                    onClick={() => call(10)}>
+                    onClick={() => call({ gameId, call: "10" })}>
                     10
                 </Button>
             ) : null}
@@ -88,7 +76,7 @@ const Calling = () => {
                     disabled={!buttonsEnabled}
                     type="button"
                     color="primary"
-                    onClick={() => call(15)}>
+                    onClick={() => call({ gameId, call: "15" })}>
                     15
                 </Button>
             ) : null}
@@ -97,7 +85,7 @@ const Calling = () => {
                     disabled={!buttonsEnabled}
                     type="button"
                     color="primary"
-                    onClick={() => call(20)}>
+                    onClick={() => call({ gameId, call: "20" })}>
                     20
                 </Button>
             ) : null}
@@ -106,7 +94,7 @@ const Calling = () => {
                     disabled={!buttonsEnabled}
                     type="button"
                     color="primary"
-                    onClick={() => call(25)}>
+                    onClick={() => call({ gameId, call: "25" })}>
                     25
                 </Button>
             ) : null}
@@ -114,7 +102,7 @@ const Calling = () => {
                 disabled={!buttonsEnabled}
                 type="button"
                 color="warning"
-                onClick={() => call(30)}>
+                onClick={() => call({ gameId, call: "30" })}>
                 {canCallJink ? "Jink" : "30"}
             </Button>
         </>

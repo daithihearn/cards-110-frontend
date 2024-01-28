@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 
-import GameService from "services/GameService"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
-import {
-    getMyCardsWithoutBlanks,
-    getSelectedCards,
-    selectAll,
-} from "caches/MyCardsSlice"
 import {
     getGameId,
     getNumPlayers,
@@ -14,12 +8,16 @@ import {
     getIHavePlayed,
     getIsMyGo,
     getSuit,
+    getCardsWithoutBlanks,
+    getSelectedCards,
+    selectAll,
 } from "caches/GameSlice"
 import { pickBestCards, riskOfMistakeBuyingCards } from "utils/GameUtils"
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
-import { Card } from "model/Cards"
+import { Card, CardName } from "model/Cards"
 import { Button } from "@mui/material"
-import { getSettings } from "caches/SettingsSlice"
+import { useSettings } from "components/Hooks/useSettings"
+import { useGameActions } from "components/Hooks/useGameActions"
 
 const WaitingForRoundToStart = () => (
     <Button variant="contained" disableRipple color="primary">
@@ -29,17 +27,19 @@ const WaitingForRoundToStart = () => (
 
 const Buying = () => {
     const dispatch = useAppDispatch()
-    const settings = useAppSelector(getSettings)
+    const { buyCards } = useGameActions()
+    const { settings } = useSettings()
+
     const numPlayers = useAppSelector(getNumPlayers)
     const gameId = useAppSelector(getGameId)
     const suit = useAppSelector(getSuit)
-    const myCards = useAppSelector(getMyCardsWithoutBlanks)
+    const myCards = useAppSelector(getCardsWithoutBlanks)
     const [readyToBuy, setReadyToBuy] = useState(false)
     const iHavePlayed = useAppSelector(getIHavePlayed)
     const isMyGo = useAppSelector(getIsMyGo)
     const iamGoer = useAppSelector(getIamGoer)
 
-    const [deleteCardsDialog, updateDeleteCardsDialog] = useState(false)
+    const [deleteCardsDialog, setDeleteCardsDialog] = useState(false)
 
     const selectedCards = useAppSelector(getSelectedCards)
 
@@ -47,16 +47,19 @@ const Buying = () => {
         setReadyToBuy(!readyToBuy)
     }, [readyToBuy])
 
-    const buyCards = useCallback(
-        (sel: Card[]) => {
+    const buyCardsWrapper = useCallback(
+        (sel: CardName[] | Card[]) => {
             if (!gameId) return
-            dispatch(GameService.buyCards(gameId, sel)).catch(console.error)
+            buyCards({
+                gameId,
+                cards: sel.map(c => (typeof c === "string" ? c : c.name)),
+            })
         },
         [gameId],
     )
 
     const hideCancelDeleteCardsDialog = useCallback(() => {
-        updateDeleteCardsDialog(false)
+        setDeleteCardsDialog(false)
         setReadyToBuy(false)
     }, [])
 
@@ -69,23 +72,29 @@ const Buying = () => {
 
     useEffect(() => {
         // 1. If it is not my go then do nothing
-        if (!isMyGo || !suit) return
+        if (!isMyGo || !suit || !gameId) return
         // 2. If I am the goer and it is my go then keep all cards
         else if (iamGoer) {
-            buyCards(myCards)
+            buyCards({ gameId, cards: myCards.map(c => c.name) })
         }
         // 3. If I am not the goer and it is my go and I have enabled auto buy cards then keep best cards
-        else if (!iamGoer && settings.autoBuyCards) {
-            buyCards(pickBestCards(myCards, suit, numPlayers))
+        else if (!iamGoer && settings?.autoBuyCards) {
+            buyCards({
+                gameId,
+                cards: pickBestCards(myCards, suit, numPlayers).map(
+                    c => c.name,
+                ),
+            })
         }
         // 4. If I am not the goer and it is my go and I am ready to buy then keep selected cards
         else if (!iamGoer && readyToBuy) {
             if (riskOfMistakeBuyingCards(suit, selectedCards, myCards)) {
-                updateDeleteCardsDialog(true)
-            } else buyCards(selectedCards)
+                setDeleteCardsDialog(true)
+            } else buyCardsWrapper(selectedCards)
         }
     }, [
         settings,
+        gameId,
         iamGoer,
         suit,
         selectedCards,
@@ -95,7 +104,7 @@ const Buying = () => {
         readyToBuy,
     ])
 
-    if (iHavePlayed || settings.autoBuyCards || iamGoer)
+    if (iHavePlayed || settings?.autoBuyCards || iamGoer)
         return <WaitingForRoundToStart />
     return (
         <>
@@ -111,7 +120,7 @@ const Buying = () => {
                 <ThrowCardsWarningModal
                     modalVisible={deleteCardsDialog}
                     cancelCallback={hideCancelDeleteCardsDialog}
-                    continueCallback={buyCards}
+                    continueCallback={buyCardsWrapper}
                     suit={suit}
                 />
             )}

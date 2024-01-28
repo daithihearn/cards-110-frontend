@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 
-import GameService from "services/GameService"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { getMyCardsWithoutBlanks, getSelectedCards } from "caches/MyCardsSlice"
-import { getGameId, getIsMyGo, getRound } from "caches/GameSlice"
-import parseError from "utils/ErrorUtils"
+import {
+    getCardsWithoutBlanks,
+    getGameId,
+    getIsMyGo,
+    getRound,
+    getSelectedCards,
+} from "caches/GameSlice"
 import { RoundStatus } from "model/Round"
 import {
     Button,
@@ -18,18 +21,21 @@ import {
 } from "@mui/material"
 import { getCardToPlay, updateCardToPlay } from "caches/PlayCardSlice"
 import { bestCardLead, getBestCard, getWorstCard } from "utils/GameUtils"
-import { CardName } from "model/Cards"
+import { CARDS, CardName } from "model/Cards"
+import { useGameActions } from "components/Hooks/useGameActions"
 
 type AutoPlayState = "off" | "best" | "worst"
 
 const PlayCard = () => {
     const dispatch = useAppDispatch()
     const theme = useTheme()
+    const { playCard } = useGameActions()
     const round = useAppSelector(getRound)
-    const [autoPlay, setAutoPlay] = useState<AutoPlayState>("off")
     const gameId = useAppSelector(getGameId)
-    const myCards = useAppSelector(getMyCardsWithoutBlanks)
+    const myCards = useAppSelector(getCardsWithoutBlanks)
     const isMyGo = useAppSelector(getIsMyGo)
+
+    const [autoPlay, setAutoPlay] = useState<AutoPlayState>("off")
     const selectedCards = useAppSelector(getSelectedCards)
     const cardToPlay = useAppSelector(getCardToPlay)
 
@@ -91,36 +97,10 @@ const PlayCard = () => {
         </Button>
     )
 
-    const playCard = useCallback(
-        (card: CardName) => {
-            console.debug(`Playing card ${card}`)
-            dispatch(GameService.playCard(gameId!, card)).catch(e => {
-                console.error(parseError(e))
-            })
-        },
-        [gameId],
-    )
-
     const selectCardToPlay = useCallback(() => {
-        if (selectedCards.length === 1)
-            dispatch(updateCardToPlay(selectedCards[0]))
-    }, [selectedCards])
-
-    // 1. Play card when you've pre-selected a card
-    // 2. If best card lead or lead from bottom enabled, play worst card
-    // 3. If lead from the top enabled, play best card
-    useEffect(() => {
-        if (round?.suit && isMyGo) {
-            if (cardToPlay) playCard(cardToPlay)
-            else if (autoPlay === "worst" || bestCardLead(round)) {
-                const worstCard = getWorstCard(myCards, round)
-                if (worstCard) playCard(worstCard.name)
-            } else if (autoPlay === "best") {
-                const bestCard = getBestCard(myCards, round)
-                if (bestCard) playCard(bestCard.name)
-            }
-        }
-    }, [playCard, autoPlay, round, isMyGo, myCards, cardToPlay])
+        if (selectedCards.length === 1 && gameId)
+            playCard({ gameId, card: selectedCards[0].name })
+    }, [gameId, selectedCards])
 
     return (
         <ButtonGroup disableElevation variant="contained" size="large">

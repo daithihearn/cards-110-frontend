@@ -2,10 +2,10 @@ import React, { useCallback, useMemo } from "react"
 import VictoryIcon from "@mui/icons-material/EmojiEventsTwoTone"
 import { useAppSelector } from "caches/hooks"
 import { getGamePlayers, getIsGameActive, getRound } from "caches/GameSlice"
-import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { compareScore, compareTeamIds } from "utils/PlayerUtils"
 import { Player } from "model/Player"
 import { Box, Grid, Typography } from "@mui/material"
+import { useProfiles } from "components/Hooks/useProfiles"
 
 interface LeaderBoardPlayer {
     cardsBought?: number
@@ -26,8 +26,9 @@ interface DoublesLeaderboardItem {
 const DoublesLeaderboard = () => {
     const round = useAppSelector(getRound)
     const players = useAppSelector(getGamePlayers)
-    const playerProfiles = useAppSelector(getPlayerProfiles)
     const isGameActive = useAppSelector(getIsGameActive)
+
+    const { allProfiles } = useProfiles()
 
     const previousHand = useMemo(() => {
         if (round) return round.completedHands[round.completedHands.length - 1]
@@ -35,15 +36,15 @@ const DoublesLeaderboard = () => {
 
     const getProfile = useCallback(
         (player: Player) =>
-            playerProfiles.find(p => p.id === player.id, [playerProfiles]),
-        [playerProfiles],
+            allProfiles.find(p => p.id === player.id, [allProfiles]),
+        [allProfiles],
     )
 
     const mapToLeaderboard = useCallback(
         (player: Player): LeaderBoardPlayer => {
             const profile = getProfile(player)
             if (!profile) throw Error("No profile for player")
-            const previousCard = previousHand?.playedCards.find(
+            const previousCard = previousHand?.playedCards?.find(
                 c => c.playerId === player.id,
             )
             return {
@@ -92,7 +93,7 @@ const DoublesLeaderboard = () => {
         return items.sort(compareScore)
     }, [players])
 
-    if (!playerProfiles || playerProfiles.length === 0) {
+    if (allProfiles.length === 0) {
         return null
     }
 

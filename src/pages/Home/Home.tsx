@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 
 import { Card, CardHeader, Grid } from "@mui/material"
 import StartNewGame from "components/StartNewGame/StartNewGame"
@@ -6,51 +6,16 @@ import MyGames from "components/MyGames/MyGames"
 import GameStats from "components/GameStats/GameStats"
 import { withAuthenticationRequired } from "@auth0/auth0-react"
 
-import { useAppDispatch, useAppSelector } from "caches/hooks"
-import { getMyProfile } from "caches/MyProfileSlice"
-import GameService from "services/GameService"
-import { useSnackbar } from "notistack"
-import StatsService from "services/StatsService"
-import parseError from "utils/ErrorUtils"
-import SettingsService from "services/SettingsService"
+import useAccessToken from "auth/accessToken"
 
 const Home = () => {
-    const dispatch = useAppDispatch()
-    const myProfile = useAppSelector(getMyProfile)
-    const { enqueueSnackbar } = useSnackbar()
-
-    const getSettings = async () => {
-        await dispatch(SettingsService.getSettings()).catch((e: Error) =>
-            enqueueSnackbar(parseError(e), { variant: "error" }),
-        )
-    }
-
-    const fetchData = async () => {
-        if (myProfile.isAdmin)
-            await dispatch(GameService.getAllPlayers()).catch((e: Error) =>
-                enqueueSnackbar(parseError(e), { variant: "error" }),
-            )
-
-        await dispatch(GameService.getAll())
-
-        await dispatch(StatsService.gameStatsForPlayer()).catch((e: Error) =>
-            enqueueSnackbar(parseError(e), { variant: "error" }),
-        )
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-        getSettings()
-    })
+    const { isPlayer, isAdmin } = useAccessToken()
 
     return (
         <div className="app">
             <div className="game-wrap">
                 <div className="game-container">
-                    {!myProfile.isPlayer && !myProfile.isAdmin ? (
+                    {!isPlayer && !isAdmin ? (
                         <Grid container>
                             <Grid item xs={12}>
                                 <Card>
@@ -60,18 +25,18 @@ const Home = () => {
                         </Grid>
                     ) : (
                         <div>
-                            {myProfile.isPlayer ? (
+                            {isPlayer ? (
                                 <Grid container sx={{ marginBottom: "10px" }}>
                                     <MyGames />
                                 </Grid>
                             ) : null}
 
-                            {myProfile.isPlayer && !myProfile.isAdmin ? (
+                            {isPlayer && !isAdmin ? (
                                 <Grid container>
                                     <GameStats />
                                 </Grid>
                             ) : null}
-                            {myProfile.isAdmin ? <StartNewGame /> : null}
+                            {isAdmin ? <StartNewGame /> : null}
                         </div>
                     )}
                 </div>

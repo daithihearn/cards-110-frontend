@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from "react"
 import VictoryIcon from "@mui/icons-material/EmojiEventsTwoTone"
-import { getGame, getIsGameActive } from "caches/GameSlice"
-import { useAppSelector } from "caches/hooks"
-import { getPlayerProfiles } from "caches/PlayerProfilesSlice"
 import { Player } from "model/Player"
 import { Box, Grid, Typography } from "@mui/material"
 import { CardName } from "model/Cards"
+import { useProfiles } from "components/Hooks/useProfiles"
+import { useAppSelector } from "caches/hooks"
+import { getGamePlayers, getIsGameActive, getRound } from "caches/GameSlice"
 
 interface LeaderboardItem {
     previousCard?: CardName
@@ -18,27 +18,25 @@ interface LeaderboardItem {
 }
 
 const SinglesLeaderboard = () => {
-    const game = useAppSelector(getGame)
+    const round = useAppSelector(getRound)
+    const players = useAppSelector(getGamePlayers)
     const isGameActive = useAppSelector(getIsGameActive)
-    const playerProfiles = useAppSelector(getPlayerProfiles)
+    const { allProfiles } = useProfiles()
 
     const previousHand = useMemo(() => {
-        if (game.round)
-            return game.round.completedHands[
-                game.round.completedHands.length - 1
-            ]
-    }, [game])
+        if (round) return round.completedHands[round.completedHands.length - 1]
+    }, [round])
 
     const getProfile = useCallback(
         (player: Player) =>
-            playerProfiles.find(p => p.id === player.id, [playerProfiles]),
-        [playerProfiles],
+            allProfiles.find(p => p.id === player.id, [allProfiles]),
+        [allProfiles],
     )
 
     const leaderboardData = useMemo<LeaderboardItem[]>(() => {
         const leaderboardData: LeaderboardItem[] = []
 
-        game.players.forEach(player => {
+        players.forEach(player => {
             const profile = getProfile(player)
             if (!profile) {
                 return null
@@ -49,7 +47,7 @@ const SinglesLeaderboard = () => {
                 score: player.score,
                 cardsBought: player.cardsBought || 0,
                 previousCard: previousHand
-                    ? previousHand.playedCards.find(
+                    ? previousHand?.playedCards?.find(
                           p => p.playerId === profile.id,
                       )?.card
                     : undefined,
@@ -58,11 +56,7 @@ const SinglesLeaderboard = () => {
             })
         })
         return leaderboardData.sort((a, b) => b.score - a.score)
-    }, [playerProfiles, game, getProfile, previousHand])
-
-    if (!game?.status || !playerProfiles || playerProfiles.length === 0) {
-        return null
-    }
+    }, [allProfiles, players, getProfile, previousHand])
 
     return (
         <Box>

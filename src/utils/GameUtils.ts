@@ -53,7 +53,7 @@ export const processOrderedCardsAfterGameUpdate = (
 
     // Find the delta between the existing cards and the updated cards we got from the api
     const delta = currentCardsNoBlanks.filter(
-        x => !updatedCardNames.includes(x.name),
+        x => !updatedCardNames?.includes(x.name),
     )
 
     // 1. If cards in payload match ordered cards then don't change orderedCards
@@ -160,7 +160,7 @@ export const bestCardLead = (round: Round) => {
 
     // Remove played trump cards
     round.completedHands.forEach(hand => {
-        hand.playedCards.forEach(p => {
+        hand.playedCards?.forEach(p => {
             const card = CARDS[p.card]
             if (
                 (card && card.suit === round.suit) ||
