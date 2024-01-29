@@ -20,7 +20,7 @@ jobs:
             - name: Install dependencies
               run: yarn install --frozen-lockfile
             - name: Test and coverage
-              run: yarn jest --coverage
+              run: yarn test:coverage
             - name: Sonar Args
               id: sonar-args
               run: |
