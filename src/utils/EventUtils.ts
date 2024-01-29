@@ -1,4 +1,4 @@
-import { Actions } from "model/Events"
+import { Event } from "model/Events"
 import { GameStateResponse, GameStatus } from "model/Game"
 import { RoundStatus } from "model/Round"
 import { Player } from "model/Player"
@@ -16,7 +16,7 @@ const callsChanged = (prev: Player[], curr: Player[]): boolean => {
     return changed
 }
 
-export const isCallEvent = (
+const isCallEvent = (
     prevState: GameStateResponse,
     currState: GameStateResponse,
 ): boolean => {
@@ -28,7 +28,7 @@ export const isCallEvent = (
     )
 }
 
-export const isPassEvent = (
+const isPassEvent = (
     prevState: GameStateResponse,
     currState: GameStateResponse,
 ): boolean => {
@@ -40,42 +40,46 @@ export const isPassEvent = (
     )
 }
 
-export const isSelectSuitEvent = (prevState: GameStateResponse): boolean => {
+const isSelectSuitEvent = (prevState: GameStateResponse): boolean => {
     return prevState.round?.status === RoundStatus.CALLED
 }
 
-export const isBuyCardsEvent = (prevState: GameStateResponse): boolean => {
+const isBuyCardsEvent = (prevState: GameStateResponse): boolean => {
     return prevState.round?.status === RoundStatus.BUYING
 }
 
-export const isCardPlayedEvent = (prevState: GameStateResponse): boolean => {
+const isCardPlayedEvent = (
+    prevState: GameStateResponse,
+    currState: GameStateResponse,
+): boolean => {
     return prevState.round?.status === RoundStatus.PLAYING
 }
 
-export const isHandEndEvent = (
+const isHandEndEvent = (
     prevState: GameStateResponse,
     currState: GameStateResponse,
 ): boolean => {
     return (
         prevState.round?.status === RoundStatus.PLAYING &&
         currState.round?.status === RoundStatus.PLAYING &&
-        prevState.round?.completedHands.length !==
+        prevState.round === currState.round &&
+        prevState.round?.completedHands.length <
             currState.round?.completedHands.length
     )
 }
 
-export const isRoundEndEvent = (
+const isRoundEndEvent = (
     prevState: GameStateResponse,
     currState: GameStateResponse,
 ): boolean => {
     return (
         prevState.round?.status === RoundStatus.PLAYING &&
-        currState.round?.status === RoundStatus.PLAYING &&
-        prevState.round?.number !== currState.round?.number
+        currState.round?.status === RoundStatus.CALLING &&
+        prevState.round?.number < currState.round?.number
     )
 }
 
-export const isGameOverEvent = (
+const isGameOverEvent = (
     prevState: GameStateResponse,
     currState: GameStateResponse,
 ): boolean => {
@@ -88,30 +92,30 @@ export const isGameOverEvent = (
 export const determineEvent = (
     prevState: GameStateResponse,
     currState: GameStateResponse,
-): Actions => {
+): Event => {
     if (isCallEvent(prevState, currState)) {
-        return Actions.Call
+        return Event.Call
     }
     if (isPassEvent(prevState, currState)) {
-        return Actions.Pass
+        return Event.Pass
     }
     if (isSelectSuitEvent(prevState)) {
-        return Actions.SelectSuit
+        return Event.SelectSuit
     }
     if (isBuyCardsEvent(prevState)) {
-        return Actions.BuyCards
-    }
-    if (isRoundEndEvent(prevState, currState)) {
-        return Actions.RoundEnd
-    }
-    if (isHandEndEvent(prevState, currState)) {
-        return Actions.HandEnd
-    }
-    if (isCardPlayedEvent(prevState)) {
-        return Actions.CardPlayed
+        return Event.BuyCards
     }
     if (isGameOverEvent(prevState, currState)) {
-        return Actions.GameOver
+        return Event.GameOver
     }
-    return Actions.Unknown
+    if (isRoundEndEvent(prevState, currState)) {
+        return Event.RoundEnd
+    }
+    if (isHandEndEvent(prevState, currState)) {
+        return Event.HandEnd
+    }
+    if (isCardPlayedEvent(prevState, currState)) {
+        return Event.CardPlayed
+    }
+    return Event.Unknown
 }

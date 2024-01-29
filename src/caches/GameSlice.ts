@@ -6,6 +6,7 @@ import { RootState } from "./caches"
 import { processOrderedCardsAfterGameUpdate } from "utils/GameUtils"
 import { Card, EMPTY } from "model/Cards"
 import { determineEvent } from "utils/EventUtils"
+import { Event } from "model/Events"
 
 export const initialGameState: GameState = {
     revision: -1,
@@ -18,6 +19,7 @@ export const initialGameState: GameState = {
     cardsFull: [],
     status: GameStatus.NONE,
     players: [],
+    event: Event.Unknown,
 }
 
 export const gameSlice = createSlice({
@@ -31,11 +33,8 @@ export const gameSlice = createSlice({
                     state.cardsFull,
                     action.payload.cards,
                 ),
+                event: determineEvent(state, action.payload),
             }
-
-            const event = determineEvent(state, updatedGame)
-
-            console.log("event", event)
 
             return updatedGame
         },
@@ -179,3 +178,4 @@ export const getIsInBunker = createSelector(
 )
 
 export const getRevision = createSelector(getGame, game => game.revision)
+export const getEvent = createSelector(getGame, game => game.event)

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react"
+import React, { useCallback, useMemo } from "react"
 import {
     DragDropContext,
     Draggable,
@@ -14,17 +14,13 @@ import {
     clearAutoPlay,
 } from "caches/PlayCardSlice"
 import { CardContent, CardMedia, useTheme } from "@mui/material"
-import { pickBestCards } from "utils/GameUtils"
 import {
     clearSelectedCards,
     getCardsFull,
-    getGameId,
     getIamGoer,
     getIsRoundCalled,
-    getNumPlayers,
     getRound,
     replaceMyCards,
-    selectCards,
     toggleSelect,
     toggleUniqueSelect,
 } from "caches/GameSlice"
@@ -37,40 +33,15 @@ const EMPTY_HAND = [
     { ...EMPTY, selected: false },
 ]
 
-const usePrevious = (value: any) => {
-    const ref = useRef()
-    useEffect(() => {
-        ref.current = value
-    })
-    return ref.current
-}
-
 const MyCards = () => {
     const dispatch = useAppDispatch()
     const theme = useTheme()
 
     const round = useAppSelector(getRound)
-    const gameId = useAppSelector(getGameId)
-    const numPlayers = useAppSelector(getNumPlayers)
     const isRoundCalled = useAppSelector(getIsRoundCalled)
     const myCards = useAppSelector(getCardsFull)
     const autoPlayCard = useAppSelector(getCardToPlay)
     const iamGoer = useAppSelector(getIamGoer)
-    const prevRoundStatus = usePrevious(round?.status)
-
-    useEffect(() => {
-        if (
-            round?.status === RoundStatus.BUYING &&
-            prevRoundStatus !== RoundStatus.BUYING &&
-            !iamGoer &&
-            round.suit
-        ) {
-            // Auto select all cards of a specific suit when the round status is BUYING
-            const bestCards = pickBestCards(myCards, round.suit, numPlayers)
-
-            dispatch(selectCards(bestCards))
-        }
-    }, [round, numPlayers, gameId, myCards, prevRoundStatus, iamGoer])
 
     const cardsSelectable = useMemo(
         () =>

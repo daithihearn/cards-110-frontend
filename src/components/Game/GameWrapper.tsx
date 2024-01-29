@@ -6,6 +6,7 @@ import { Card, styled } from "@mui/material"
 import AutoActionManager from "./AutoActionManager"
 import { useAppSelector } from "caches/hooks"
 import { getIamSpectator } from "caches/GameSlice"
+import { SoundEffects } from "./Actions/SoundEffects"
 
 const GameCard = styled(Card)(({ theme }) => ({
     backgroundColor: "transparent",
@@ -24,6 +25,7 @@ const GameWrapper = () => {
 
     return (
         <GameCard>
+            <SoundEffects />
             <PlayersAndCards />
 
             {!iamSpectator ? <AutoActionManager /> : null}

@@ -1,4 +1,4 @@
-export enum Actions {
+export enum Event {
     Unknown = "Unknown",
     Call = "Call",
     Pass = "Pass",
@@ -8,9 +8,4 @@ export enum Actions {
     GameOver = "GameOver",
     RoundEnd = "RoundEnd",
     HandEnd = "HandEnd",
-}
-
-export interface BuyCardsEvent {
-    playerId: string
-    bought: number
 }

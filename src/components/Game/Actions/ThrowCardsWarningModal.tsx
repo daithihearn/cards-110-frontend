@@ -10,7 +10,6 @@ import {
     CardContent,
 } from "@mui/material"
 import { useAppSelector } from "caches/hooks"
-import { Card } from "model/Cards"
 import { Suit } from "model/Suit"
 import { getTrumpCards, removeAllFromHand } from "utils/GameUtils"
 import { getCardsWithoutBlanks, getSelectedCards } from "caches/GameSlice"
@@ -18,7 +17,7 @@ import { getCardsWithoutBlanks, getSelectedCards } from "caches/GameSlice"
 interface ModalOpts {
     modalVisible: boolean
     cancelCallback: () => void
-    continueCallback: (sel: Card[], suit?: Suit) => void
+    continueCallback: () => void
     suit: Suit
 }
 
@@ -37,7 +36,7 @@ const ThrowCardsWarningModal: React.FC<ModalOpts> = ({
     )
 
     const callContinue = useCallback(() => {
-        continueCallback(selectedCards, suit)
+        continueCallback()
     }, [selectedCards])
 
     return (

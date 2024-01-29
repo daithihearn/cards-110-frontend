@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 
-import { useGameState } from "components/Hooks/useGameState"
 import { useAppSelector } from "caches/hooks"
 import { getGameId, getIsInBunker } from "caches/GameSlice"
 import { useGameActions } from "components/Hooks/useGameActions"
