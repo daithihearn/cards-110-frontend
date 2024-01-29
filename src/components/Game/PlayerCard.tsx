@@ -154,10 +154,10 @@ const DealerChip: React.FC<{
 const PlayerCard: React.FC<PlayerRowI> = ({ player, profile, className }) => {
     const theme = useTheme()
     const round = useAppSelector(getRound)
-    const [modalLeaderboard, updateModalLeaderboard] = useState(false)
+    const [modalLeaderboard, setModalLeaderboard] = useState(false)
 
     const toggleLeaderboardModal = useCallback(
-        () => updateModalLeaderboard(!modalLeaderboard),
+        () => setModalLeaderboard(!modalLeaderboard),
         [modalLeaderboard],
     )
 

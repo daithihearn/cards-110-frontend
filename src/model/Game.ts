@@ -1,4 +1,5 @@
 import { Card, CardName } from "./Cards"
+import { Event } from "./Events"
 import { Player } from "./Player"
 import { Round } from "./Round"
 
@@ -44,6 +45,7 @@ export interface GameStateResponse {
 
 export interface GameState extends GameStateResponse {
     cardsFull: Card[]
+    event: Event
 }
 
 export interface CreateGame {

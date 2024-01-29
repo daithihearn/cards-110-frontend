@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 
-import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { useAppSelector } from "caches/hooks"
 import {
     getCardsWithoutBlanks,
     getGameId,
@@ -19,15 +19,12 @@ import {
     SelectChangeEvent,
     useTheme,
 } from "@mui/material"
-import { getCardToPlay, updateCardToPlay } from "caches/PlayCardSlice"
-import { bestCardLead, getBestCard, getWorstCard } from "utils/GameUtils"
-import { CARDS, CardName } from "model/Cards"
+import { CardName } from "model/Cards"
 import { useGameActions } from "components/Hooks/useGameActions"
 
 type AutoPlayState = "off" | "best" | "worst"
 
 const PlayCard = () => {
-    const dispatch = useAppDispatch()
     const theme = useTheme()
     const { playCard } = useGameActions()
     const round = useAppSelector(getRound)
@@ -37,7 +34,6 @@ const PlayCard = () => {
 
     const [autoPlay, setAutoPlay] = useState<AutoPlayState>("off")
     const selectedCards = useAppSelector(getSelectedCards)
-    const cardToPlay = useAppSelector(getCardToPlay)
 
     const handleAutoPlayChange = useCallback(
         (event: SelectChangeEvent<AutoPlayState>) => {

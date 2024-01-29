@@ -59,15 +59,12 @@ const SelectSuit = () => {
         [gameId, selectedCards],
     )
 
-    const selectFromDummyCallback = useCallback(
-        (sel: Card[], suit?: Suit) => {
-            if (!gameId) return
-            if (!suit) throw Error("Must provide a suit")
+    const selectFromDummyCallback = useCallback(() => {
+        if (!gameId) return
+        if (!selectedSuit) throw Error("Must provide a suit")
 
-            selectSuit({ gameId, cards: sel, suit })
-        },
-        [gameId],
-    )
+        selectSuit({ gameId, cards: selectedCards, suit: selectedSuit })
+    }, [gameId, selectedCards, selectedSuit])
 
     const hideCancelSelectFromDummyDialog = useCallback(() => {
         setSelectedSuit(undefined)

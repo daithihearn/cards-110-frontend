@@ -1,52 +1,52 @@
 {
-    "id": "game1",
-    "revision": 0,
+    "id": "6456926",
+    "revision": 52,
     "status": "ACTIVE",
     "me": {
         "id": "player1",
-        "seatNumber": 1,
-        "call": 0,
+        "seatNumber": 2,
+        "call": 20,
         "cardsBought": 0,
-        "score": 0,
+        "score": 20,
         "rings": 0,
-        "teamId": "1",
+        "teamId": "2",
         "winner": false
     },
     "iamSpectator": false,
     "isMyGo": false,
     "iamGoer": false,
-    "iamDealer": true,
+    "iamDealer": false,
     "iamAdmin": true,
-    "maxCall": 0,
+    "maxCall": 20,
     "players": [
         {
-            "id": "player1",
+            "id": "player2",
             "seatNumber": 1,
-            "call": 0,
+            "call": 15,
             "cardsBought": 0,
-            "score": 0,
-            "rings": 0,
+            "score": 25,
+            "rings": 1,
             "teamId": "1",
             "winner": false
         },
         {
-            "id": "player2",
+            "id": "player1",
             "seatNumber": 2,
-            "call": 0,
+            "call": 20,
             "cardsBought": 0,
-            "score": 0,
+            "score": 20,
             "rings": 0,
             "teamId": "2",
             "winner": false
         }
     ],
     "round": {
-        "timestamp": "2024-01-25T09:25:58.651Z",
-        "number": 1,
-        "dealerId": "player1",
+        "timestamp": "2024-01-29T20:15:49.509Z",
+        "number": 4,
+        "dealerId": "player2",
         "status": "CALLING",
         "currentHand": {
-            "timestamp": "2024-01-25T09:25:58.651Z",
+            "timestamp": "2024-01-29T20:15:49.509Z",
             "currentPlayerId": "player2",
             "playedCards": []
         },
@@ -54,10 +54,10 @@
         "completedHands": []
     },
     "cards": [
-        "QUEEN_HEARTS",
+        "JACK_CLUBS",
+        "KING_CLUBS",
         "SIX_DIAMONDS",
-        "TEN_CLUBS",
-        "FIVE_DIAMONDS",
-        "TWO_SPADES"
+        "TWO_HEARTS",
+        "SIX_SPADES"
     ]
 }
