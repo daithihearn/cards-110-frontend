@@ -12,7 +12,14 @@ import {
 } from "test/data/select-suit/select-suit"
 import { AfterBuy, BeforeBuy } from "test/data/buy-cards/buy-cards"
 import { AfterRoundEnd, BeforeRoundEnd } from "test/data/round-end/round-end"
-import { AfterHandEnd, BeforeHandEnd } from "test/data/hand-end/hand-end"
+import {
+    AfterHandEnd,
+    AfterHandEnd2,
+    AfterHandEnd3,
+    BeforeHandEnd,
+    BeforeHandEnd2,
+    BeforeHandEnd3,
+} from "test/data/hand-end/hand-end"
 import { AfterGameEnd, BeforeGameEnd } from "test/data/game-end/game-end"
 
 describe("determineEvent", () => {
@@ -40,7 +47,7 @@ describe("determineEvent", () => {
         expect(result).toBe(Event.BuyCards)
     })
 
-    it.only("Valid round end event", () => {
+    it("Valid round end event", () => {
         const result = determineEvent(BeforeRoundEnd, AfterRoundEnd)
 
         expect(result).toBe(Event.RoundEnd)
@@ -48,6 +55,18 @@ describe("determineEvent", () => {
 
     it("Valid hand end event", () => {
         const result = determineEvent(BeforeHandEnd, AfterHandEnd)
+
+        expect(result).toBe(Event.HandEnd)
+    })
+
+    it("Valid hand end event 2", () => {
+        const result = determineEvent(BeforeHandEnd2, AfterHandEnd2)
+
+        expect(result).toBe(Event.HandEnd)
+    })
+
+    it("Valid hand end event 3", () => {
+        const result = determineEvent(BeforeHandEnd3, AfterHandEnd3)
 
         expect(result).toBe(Event.HandEnd)
     })

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
     Grid,
     CardMedia,
@@ -17,9 +17,9 @@ import { Player, PlayerProfile } from "model/Player"
 import Leaderboard from "components/Leaderboard/Leaderboard"
 import { Suit } from "model/Suit"
 import { FormatName } from "utils/FormattingUtils"
-import { CardName } from "model/Cards"
 import { useAppSelector } from "caches/hooks"
-import { getIsRoundPlaying, getRound } from "caches/GameSlice"
+import { getGame, getIsRoundPlaying, getRound } from "caches/GameSlice"
+import { Event } from "model/Events"
 
 interface PlayerRowI {
     player: Player
@@ -153,7 +153,11 @@ const DealerChip: React.FC<{
 
 const PlayerCard: React.FC<PlayerRowI> = ({ player, profile, className }) => {
     const theme = useTheme()
-    const round = useAppSelector(getRound)
+    const game = useAppSelector(getGame)
+    const [revisionActioned, setRevisionActioned] = useState(-1)
+    const [playedCard, setPlayedCard] = useState<PlayedCard | undefined>(
+        undefined,
+    )
     const [modalLeaderboard, setModalLeaderboard] = useState(false)
 
     const toggleLeaderboardModal = useCallback(
@@ -162,22 +166,53 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, profile, className }) => {
     )
 
     const isGoer: boolean = useMemo(
-        () => !!round && round.goerId === player.id,
-        [round, player],
+        () => !!game.round && game.round.goerId === player.id,
+        [game.round, player],
     )
 
-    const playedCard = useMemo<PlayedCard | undefined>(() => {
-        if (round) {
-            return round.currentHand.playedCards?.find(
-                c => c.playerId === player.id,
-            )
+    const delayResetCard = useCallback(() => {
+        // The in 3 seconds set it back to undefined
+        setTimeout(() => {
+            setPlayedCard(undefined)
+        }, 3000)
+    }, [])
+
+    useEffect(() => {
+        if (game.round && game.revision > revisionActioned) {
+            if (game.event === Event.HandEnd) {
+                // Set card from the last hand
+                setPlayedCard(
+                    game.round.completedHands
+                        .toReversed()[0]
+                        ?.playedCards?.find(c => c.playerId === player.id),
+                )
+                delayResetCard()
+            } else if (game.event === Event.RoundEnd) {
+                // Set card from the previous round
+                if (game.previousRound) {
+                    setPlayedCard(
+                        game.previousRound.completedHands
+                            .toReversed()[0]
+                            ?.playedCards?.find(c => c.playerId === player.id),
+                    )
+                }
+                delayResetCard()
+            } else {
+                setPlayedCard(
+                    game.round.currentHand.playedCards?.find(
+                        c => c.playerId === player.id,
+                    ),
+                )
+            }
+            setRevisionActioned(game.revision)
         }
-        return { card: CardName.EMPTY, playerId: player.id }
-    }, [round, player])
+    }, [game, player, delayResetCard, revisionActioned])
 
     const isCurrentPlayer: boolean = useMemo(
-        () => !!round && round.currentHand.currentPlayerId === player.id,
-        [round, player],
+        () =>
+            !!game.round &&
+            game.round.currentHand.currentPlayerId === player.id,
+        [game.round, player],
     )
 
     const scoreClassName = useMemo(() => {
@@ -248,7 +283,7 @@ const PlayerCard: React.FC<PlayerRowI> = ({ player, profile, className }) => {
                             <BlankCard name={profile.name} />
                             <DealerChip
                                 player={player}
-                                dealerId={round?.dealerId}
+                                dealerId={game.round?.dealerId}
                             />
                             <CallChip call={player.call} isGoer={isGoer} />
                             <SuitChip isGoer={isGoer} />

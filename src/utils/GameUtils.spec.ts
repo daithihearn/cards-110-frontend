@@ -11,6 +11,7 @@ import {
     getTrumpCards,
     getWorstCard,
     padMyHand,
+    parseCards,
     pickBestCards,
     processOrderedCardsAfterGameUpdate,
     removeAllFromHand,
@@ -105,6 +106,14 @@ const ROUND_NOTHING_LEAD: Round = {
     ],
 }
 
+const CardNames1 = [
+    CardName.TWO_HEARTS,
+    CardName.THREE_HEARTS,
+    CardName.FOUR_HEARTS,
+    CardName.JACK_HEARTS,
+    CardName.SIX_HEARTS,
+]
+
 const HAND1: Card[] = [
     { ...CARDS.TWO_HEARTS, selected: true },
     CARDS.THREE_HEARTS,
@@ -122,6 +131,14 @@ const HAND2: Card[] = [
 ]
 
 const HAND3: Card[] = [CARDS.KING_SPADES, CARDS.THREE_DIAMONDS, CARDS.TWO_CLUBS]
+
+const CardNames4 = [
+    CardName.TWO_HEARTS,
+    CardName.JOKER,
+    CardName.THREE_CLUBS,
+    CardName.ACE_HEARTS,
+    CardName.TWO_DIAMONDS,
+]
 
 const HAND4: Card[] = [
     CARDS.TWO_HEARTS,
@@ -243,6 +260,22 @@ describe("GameUtils", () => {
                 EMPTY,
                 EMPTY,
             ])
+        })
+    })
+
+    describe("parseCards", () => {
+        it("empty hand", () => {
+            expect(parseCards([])).toStrictEqual([])
+        })
+
+        it("full hand", () => {
+            const result = parseCards(CardNames1)
+
+            expect(result.length).toBe(5)
+
+            result.forEach(c => {
+                expect(c).toStrictEqual(CARDS[c.name])
+            })
         })
     })
 
@@ -707,47 +740,47 @@ describe("GameUtils", () => {
             expect(pickBestCards([], Suit.CLUBS, 4)).toStrictEqual([])
         })
         it("all trumps", () => {
-            expect(pickBestCards([...HAND1], Suit.HEARTS, 3)).toStrictEqual(
-                HAND1,
+            expect(pickBestCards(CardNames1, Suit.HEARTS, 3)).toStrictEqual(
+                CardNames1,
             )
         })
         it("Must keep 2", () => {
-            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 6)).toStrictEqual([
-                CARDS.JACK_HEARTS,
-                CARDS.SIX_HEARTS,
+            expect(pickBestCards(CardNames1, Suit.DIAMONDS, 6)).toStrictEqual([
+                CardName.JACK_HEARTS,
+                CardName.SIX_HEARTS,
             ])
         })
         it("Must keep 1", () => {
-            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 5)).toStrictEqual([
-                CARDS.JACK_HEARTS,
+            expect(pickBestCards(CardNames1, Suit.DIAMONDS, 5)).toStrictEqual([
+                CardName.JACK_HEARTS,
             ])
         })
         it("Must keep 0", () => {
-            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 4)).toStrictEqual(
+            expect(pickBestCards(CardNames1, Suit.DIAMONDS, 4)).toStrictEqual(
                 [],
             )
         })
         it("Must keep 0", () => {
-            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 3)).toStrictEqual(
+            expect(pickBestCards(CardNames1, Suit.DIAMONDS, 3)).toStrictEqual(
                 [],
             )
         })
         it("Must keep 0", () => {
-            expect(pickBestCards([...HAND1], Suit.DIAMONDS, 2)).toStrictEqual(
+            expect(pickBestCards(CardNames1, Suit.DIAMONDS, 2)).toStrictEqual(
                 [],
             )
         })
         it("Wild cards one", () => {
-            expect(pickBestCards([...HAND4], Suit.HEARTS, 4)).toStrictEqual([
-                CARDS.TWO_HEARTS,
-                CARDS.JOKER,
-                CARDS.ACE_HEARTS,
+            expect(pickBestCards(CardNames4, Suit.HEARTS, 4)).toStrictEqual([
+                CardName.TWO_HEARTS,
+                CardName.JOKER,
+                CardName.ACE_HEARTS,
             ])
         })
         it("Wild cards 2", () => {
-            expect(pickBestCards([...HAND4], Suit.SPADES, 2)).toStrictEqual([
-                CARDS.JOKER,
-                CARDS.ACE_HEARTS,
+            expect(pickBestCards(CardNames4, Suit.SPADES, 2)).toStrictEqual([
+                CardName.JOKER,
+                CardName.ACE_HEARTS,
             ])
         })
     })

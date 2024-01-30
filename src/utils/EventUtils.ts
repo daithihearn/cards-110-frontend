@@ -62,7 +62,7 @@ const isHandEndEvent = (
     return (
         prevState.round?.status === RoundStatus.PLAYING &&
         currState.round?.status === RoundStatus.PLAYING &&
-        prevState.round === currState.round &&
+        prevState.round?.number === currState.round?.number &&
         prevState.round?.completedHands.length <
             currState.round?.completedHands.length
     )
