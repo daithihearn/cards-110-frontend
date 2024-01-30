@@ -32,6 +32,11 @@ export const compareCards = (hand1: Card[], hand2: Card[]) => {
     return true
 }
 
+export const parseCard = (cardName: CardName): Card => CARDS[cardName]
+
+export const parseCards = (cardNames: CardName[]): Card[] =>
+    cardNames.map(parseCard)
+
 export const padMyHand = (cards: Card[]): Card[] => {
     const paddedCards = [...cards]
 
@@ -301,10 +306,11 @@ export const calculateMinCardsToKeep = (numPlayers: number): number => {
 }
 
 export const pickBestCards = (
-    cards: Card[],
+    cardNames: CardName[],
     suit: Suit,
     numPlayers: number,
-): Card[] => {
+): CardName[] => {
+    const cards = parseCards(cardNames)
     const minCardsToKeep = calculateMinCardsToKeep(numPlayers)
     const bestCards = getTrumpCards(cards, suit)
 
@@ -318,5 +324,5 @@ export const pickBestCards = (
         bestCards.push(remainingCards[0])
     }
 
-    return bestCards
+    return bestCards.map(c => c.name)
 }

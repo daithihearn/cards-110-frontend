@@ -3,6 +3,8 @@ import { useCallback, useState } from "react"
 import { useAppSelector } from "caches/hooks"
 import {
     getGameId,
+    getIHavePlayed,
+    getIamGoer,
     getIsMyGo,
     getSelectedCards,
     getSuit,
@@ -10,13 +12,22 @@ import {
 import ThrowCardsWarningModal from "./ThrowCardsWarningModal"
 import { Button } from "@mui/material"
 import { useGameActions } from "components/Hooks/useGameActions"
+import { useSettings } from "components/Hooks/useSettings"
+
+const WaitingForRoundToStart = () => (
+    <Button variant="contained" disableRipple color="primary">
+        <b>Waiting for round to start...</b>
+    </Button>
+)
 
 const Buying = () => {
     const { buyCards } = useGameActions()
-
+    const { settings } = useSettings()
     const gameId = useAppSelector(getGameId)
     const suit = useAppSelector(getSuit)
     const isMyGo = useAppSelector(getIsMyGo)
+    const iHavePlayed = useAppSelector(getIHavePlayed)
+    const iamGoer = useAppSelector(getIamGoer)
 
     const [deleteCardsDialog, setDeleteCardsDialog] = useState(false)
 
@@ -34,6 +45,8 @@ const Buying = () => {
         setDeleteCardsDialog(false)
     }, [])
 
+    if (iHavePlayed || settings?.autoBuyCards || iamGoer)
+        return <WaitingForRoundToStart />
     return (
         <>
             <Button type="button" onClick={buyCardsWrapper} color="primary">
