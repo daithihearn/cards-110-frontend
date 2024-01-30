@@ -1,18 +1,18 @@
 import { useQuery } from "@tanstack/react-query"
 import useAccessToken from "auth/accessToken"
 import axios from "axios"
-import { getRevision, initialGameState, updateGame } from "caches/GameSlice"
-import { useAppDispatch, useAppSelector } from "caches/hooks"
+import { initialGameState, updateGame } from "caches/GameSlice"
+import { useAppDispatch } from "caches/hooks"
 import { GameStateResponse } from "model/Game"
+import { useState } from "react"
 import { getDefaultConfig } from "utils/AxiosUtils"
 
 export const useGameState = (gameId?: string) => {
     const dispatch = useAppDispatch()
     const { accessToken } = useAccessToken()
-    const revision = useAppSelector(getRevision)
+    const [revision, setRevision] = useState(-1)
 
     // Game state query
-
     useQuery({
         queryKey: ["gameState", accessToken, revision, gameId],
         queryFn: async () => {
@@ -28,6 +28,7 @@ export const useGameState = (gameId?: string) => {
 
             if (res.status === 200) {
                 dispatch(updateGame(res.data))
+                setRevision(res.data.revision)
             }
             return res.data
         },

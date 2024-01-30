@@ -4,7 +4,7 @@ import { GameState, GameStateResponse, GameStatus } from "model/Game"
 import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
 import { processOrderedCardsAfterGameUpdate } from "utils/GameUtils"
-import { Card, EMPTY } from "model/Cards"
+import { Card, CARDS, EMPTY } from "model/Cards"
 import { determineEvent } from "utils/EventUtils"
 import { Event } from "model/Events"
 
@@ -27,6 +27,13 @@ export const gameSlice = createSlice({
     initialState: initialGameState,
     reducers: {
         updateGame: (state, action: PayloadAction<GameStateResponse>) => {
+            if (action.payload.id !== state.id) {
+                return {
+                    ...action.payload,
+                    cardsFull: (action.payload.cards ?? []).map(c => CARDS[c]),
+                    event: Event.Unknown,
+                }
+            }
             const updatedGame: GameState = {
                 ...action.payload,
                 cardsFull: processOrderedCardsAfterGameUpdate(
