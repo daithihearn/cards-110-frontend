@@ -38,6 +38,7 @@ export interface GameStateResponse {
     cards: CardName[]
     status: GameStatus
     round?: Round
+    previousRound?: Round
     maxCall?: number
     me?: Player
     players: Player[]
