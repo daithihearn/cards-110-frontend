@@ -3,7 +3,11 @@ import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { GameState, GameStateResponse, GameStatus } from "model/Game"
 import { RoundStatus } from "model/Round"
 import { RootState } from "./caches"
-import { padMyHand, processOrderedCardsAfterGameUpdate } from "utils/GameUtils"
+import {
+    padMyHand,
+    parseCards,
+    processOrderedCardsAfterGameUpdate,
+} from "utils/GameUtils"
 import { Card, CARDS, EMPTY } from "model/Cards"
 import { determineEvent } from "utils/EventUtils"
 import { Event } from "model/Events"
@@ -31,7 +35,7 @@ export const gameSlice = createSlice({
                 return {
                     ...action.payload,
                     cardsFull: padMyHand(
-                        (action.payload.cards ?? []).map(c => CARDS[c]),
+                        parseCards(action.payload.cards ?? []),
                     ),
                     event: Event.Unknown,
                 }
