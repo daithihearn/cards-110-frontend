@@ -4,7 +4,7 @@ import { Player, PlayerProfile } from "model/Player"
 import PlayerCard from "./PlayerCard"
 import { useProfiles } from "components/Hooks/useProfiles"
 import { useAppSelector } from "caches/hooks"
-import { getGamePlayers } from "caches/GameSlice"
+import { getGameId, getGamePlayers } from "caches/GameSlice"
 
 const compareSeat = (a: Player, b: Player) => {
     if (a.seatNumber > b.seatNumber) return 1
@@ -18,6 +18,7 @@ interface PP {
 }
 
 const PlayersAndCards = () => {
+    const gameId = useAppSelector(getGameId)
     const players = useAppSelector(getGamePlayers)
     const { allProfiles } = useProfiles()
 
@@ -60,7 +61,10 @@ const PlayersAndCards = () => {
         <CardContent className="card-root">
             <Grid container justifyContent="space-between">
                 {playerProfiles.map((pp, index) => (
-                    <Grid item key={`playerCard_${pp.player.id}`} xs={xs}>
+                    <Grid
+                        item
+                        key={`playerCard_${gameId}_${pp.player.id}`}
+                        xs={xs}>
                         <PlayerCard
                             player={pp.player}
                             profile={pp.profile}
