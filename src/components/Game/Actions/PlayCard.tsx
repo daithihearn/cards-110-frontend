@@ -23,6 +23,10 @@ const PlayCard = () => {
     const theme = useTheme()
     const { playCard } = useGameActions()
     const game = useAppSelector(getGame)
+    const cardsWithoutEmpty = useMemo(
+        () => game.cardsFull.filter(c => c.name !== CardName.EMPTY),
+        [game],
+    )
 
     const [autoPlay, setAutoPlay] = useState<AutoPlayState>("off")
     const selectedCards = useAppSelector(getSelectedCards)
@@ -66,11 +70,9 @@ const PlayCard = () => {
         () =>
             game.isMyGo &&
             game.round?.status === RoundStatus.PLAYING &&
-            game.round.completedHands.length +
-                game.cardsFull.filter(c => c.name !== CardName.EMPTY).length ===
-                5,
+            game.round.completedHands.length + cardsWithoutEmpty.length === 5,
 
-        [game],
+        [game, cardsWithoutEmpty],
     )
 
     const PlayCardButton = () => (
@@ -90,20 +92,23 @@ const PlayCard = () => {
     }, [game.id, selectedCards])
 
     // Auto play logic
-    // 1. If best card lead or lead from bottom enabled, play worst card
-    // 2. If lead from the top enabled, play best card
+    // 1. If only one card in hand, play it
+    // 2. If best card lead or lead from bottom enabled, play worst card
+    // 3. If lead from the top enabled, play best card
     useEffect(() => {
         if (game.id && game.round?.suit && game.isMyGo) {
-            if (autoPlay === "worst" || bestCardLead(game.round)) {
-                const worstCard = getWorstCard(game.cardsFull, game.round)
+            if (cardsWithoutEmpty.length === 1) {
+                playCard({ gameId: game.id, card: cardsWithoutEmpty[0].name })
+            } else if (autoPlay === "worst" || bestCardLead(game.round)) {
+                const worstCard = getWorstCard(cardsWithoutEmpty, game.round)
                 if (worstCard)
                     playCard({ gameId: game.id, card: worstCard.name })
             } else if (autoPlay === "best") {
-                const bestCard = getBestCard(game.cardsFull, game.round)
+                const bestCard = getBestCard(cardsWithoutEmpty, game.round)
                 if (bestCard) playCard({ gameId: game.id, card: bestCard.name })
             }
         }
-    }, [playCard, autoPlay, game])
+    }, [playCard, autoPlay, game, cardsWithoutEmpty])
 
     return (
         <ButtonGroup disableElevation variant="contained" size="large">
