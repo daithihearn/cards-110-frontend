@@ -1,13 +1,7 @@
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { useAppSelector } from "caches/hooks"
-import {
-    getCardsWithoutBlanks,
-    getGameId,
-    getIsMyGo,
-    getRound,
-    getSelectedCards,
-} from "caches/GameSlice"
+import { getGame, getSelectedCards } from "caches/GameSlice"
 import { RoundStatus } from "model/Round"
 import {
     Button,
@@ -21,16 +15,18 @@ import {
 } from "@mui/material"
 import { CardName } from "model/Cards"
 import { useGameActions } from "components/Hooks/useGameActions"
+import { bestCardLead, getBestCard, getWorstCard } from "utils/GameUtils"
 
 type AutoPlayState = "off" | "best" | "worst"
 
 const PlayCard = () => {
     const theme = useTheme()
     const { playCard } = useGameActions()
-    const round = useAppSelector(getRound)
-    const gameId = useAppSelector(getGameId)
-    const myCards = useAppSelector(getCardsWithoutBlanks)
-    const isMyGo = useAppSelector(getIsMyGo)
+    const game = useAppSelector(getGame)
+    const cardsWithoutEmpty = useMemo(
+        () => game.cardsFull.filter(c => c.name !== CardName.EMPTY),
+        [game],
+    )
 
     const [autoPlay, setAutoPlay] = useState<AutoPlayState>("off")
     const selectedCards = useAppSelector(getSelectedCards)
@@ -72,14 +68,11 @@ const PlayCard = () => {
 
     const playButtonEnabled = useMemo(
         () =>
-            isMyGo &&
-            round &&
-            round.status === RoundStatus.PLAYING &&
-            round.completedHands.length +
-                myCards.filter(c => c.name !== CardName.EMPTY).length ===
-                5,
+            game.isMyGo &&
+            game.round?.status === RoundStatus.PLAYING &&
+            game.round.completedHands.length + cardsWithoutEmpty.length === 5,
 
-        [isMyGo, round, myCards],
+        [game, cardsWithoutEmpty],
     )
 
     const PlayCardButton = () => (
@@ -94,9 +87,28 @@ const PlayCard = () => {
     )
 
     const selectCardToPlay = useCallback(() => {
-        if (selectedCards.length === 1 && gameId)
-            playCard({ gameId, card: selectedCards[0].name })
-    }, [gameId, selectedCards])
+        if (selectedCards.length === 1 && game.id)
+            playCard({ gameId: game.id, card: selectedCards[0].name })
+    }, [game.id, selectedCards])
+
+    // Auto play logic
+    // 1. If only one card in hand, play it
+    // 2. If best card lead or lead from bottom enabled, play worst card
+    // 3. If lead from the top enabled, play best card
+    useEffect(() => {
+        if (game.id && game.round?.suit && game.isMyGo) {
+            if (cardsWithoutEmpty.length === 1) {
+                playCard({ gameId: game.id, card: cardsWithoutEmpty[0].name })
+            } else if (autoPlay === "worst" || bestCardLead(game.round)) {
+                const worstCard = getWorstCard(cardsWithoutEmpty, game.round)
+                if (worstCard)
+                    playCard({ gameId: game.id, card: worstCard.name })
+            } else if (autoPlay === "best") {
+                const bestCard = getBestCard(cardsWithoutEmpty, game.round)
+                if (bestCard) playCard({ gameId: game.id, card: bestCard.name })
+            }
+        }
+    }, [playCard, autoPlay, game, cardsWithoutEmpty])
 
     return (
         <ButtonGroup disableElevation variant="contained" size="large">
