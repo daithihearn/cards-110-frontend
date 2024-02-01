@@ -589,6 +589,11 @@ describe("GameUtils", () => {
         it("only one card left", () => {
             expect(getBestCard([CARDS.JOKER], ROUND)).toStrictEqual(CARDS.JOKER)
         })
+        it("Hand with EMPTY cards", () => {
+            expect(getBestCard([EMPTY, ...HAND3], ROUND)).toStrictEqual(
+                CARDS.TWO_CLUBS,
+            )
+        })
     })
 
     describe("canRenege", () => {

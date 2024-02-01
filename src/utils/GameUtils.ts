@@ -198,6 +198,9 @@ export const canRenege = (myCard: Card, cardLead: Card, suit: Suit) => {
 }
 
 export const getWorstCard = (cards: Card[], round: Round) => {
+    // Clear empty cards
+    cards = cards.filter(c => c.name !== CardName.EMPTY)
+
     if (cards.length === 0) throw new Error("No cards to choose from")
     if (cards.length === 1) return cards[0]
 
@@ -252,6 +255,9 @@ export const getWorstCard = (cards: Card[], round: Round) => {
 }
 
 export const getBestCard = (cards: Card[], round: Round) => {
+    // Clear empty cards
+    cards = cards.filter(c => c.name !== CardName.EMPTY)
+
     if (cards.length === 0) throw new Error("No cards to choose from")
     if (cards.length === 1) return cards[0]
 
