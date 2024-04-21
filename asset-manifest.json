@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.998849ca.css",
-    "main.js": "/static/js/main.1bc158b7.js",
+    "main.css": "/static/css/main.4a61946c.css",
+    "main.js": "/static/js/main.f9edbbea.js",
     "static/media/CoreUI-Icons-Brand.svg?64h6xh": "/static/media/CoreUI-Icons-Brand.7313d4f153eaebea18a5.svg",
     "static/media/cif-rs.svg": "/static/media/cif-rs.00887f6f998f774775ee.svg",
     "static/media/CoreUI-Icons-Free.svg?64h6xh": "/static/media/CoreUI-Icons-Free.195b3d0ec8487bccb9cf.svg",
@@ -225,11 +225,11 @@
     "static/media/cif-id.svg": "/static/media/cif-id.314053cb997753b81eb7.svg",
     "static/media/cif-mc.svg": "/static/media/cif-mc.c4b1dd0b5b403e02585c.svg",
     "static/media/cif-lv.svg": "/static/media/cif-lv.2170e5fd49e11caf179c.svg",
-    "main.998849ca.css.map": "/static/css/main.998849ca.css.map",
-    "main.1bc158b7.js.map": "/static/js/main.1bc158b7.js.map"
+    "main.4a61946c.css.map": "/static/css/main.4a61946c.css.map",
+    "main.f9edbbea.js.map": "/static/js/main.f9edbbea.js.map"
   },
   "entrypoints": [
-    "static/css/main.998849ca.css",
-    "static/js/main.1bc158b7.js"
+    "static/css/main.4a61946c.css",
+    "static/js/main.f9edbbea.js"
   ]
 }
