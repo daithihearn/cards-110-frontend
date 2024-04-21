@@ -6,11 +6,9 @@ import {
 } from "@reduxjs/toolkit"
 
 import { gameSlice } from "./GameSlice"
-import { playCardSlice } from "./PlayCardSlice"
 
 const combinedReducer = combineReducers({
     game: gameSlice.reducer,
-    playCard: playCardSlice.reducer,
 })
 
 export type RootState = ReturnType<typeof combinedReducer>

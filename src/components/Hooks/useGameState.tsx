@@ -32,7 +32,7 @@ export const useGameState = (gameId?: string) => {
             }
             return res.data
         },
-        // Refetch the data every 2 seconds
+        // Refetch the data every 5 seconds
         refetchInterval: 5_000,
         enabled: !!accessToken && !!gameId,
     })

@@ -34,11 +34,12 @@ export const useGameActions = () => {
             )
             return response.data
         },
-        onSuccess: data => {
+        onSuccess: (data: GameStateResponse) => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
         },
-        onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
+        onError: (e: any) =>
+            enqueueSnackbar(parseError(e), { variant: "error" }),
     })
 
     const buyCards = useMutation({
@@ -59,11 +60,12 @@ export const useGameActions = () => {
             )
             return response.data
         },
-        onSuccess: data => {
+        onSuccess: (data: GameStateResponse) => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
         },
-        onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
+        onError: (e: any) =>
+            enqueueSnackbar(parseError(e), { variant: "error" }),
     })
 
     const selectSuit = useMutation({
@@ -89,11 +91,12 @@ export const useGameActions = () => {
             )
             return response.data
         },
-        onSuccess: data => {
+        onSuccess: (data: GameStateResponse) => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
         },
-        onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
+        onError: (e: any) =>
+            enqueueSnackbar(parseError(e), { variant: "error" }),
     })
 
     const playCard = useMutation({
@@ -114,11 +117,12 @@ export const useGameActions = () => {
             )
             return response.data
         },
-        onSuccess: data => {
+        onSuccess: (data: GameStateResponse) => {
             queryClient.setQueryData(["gameState"], data)
             dispatch(updateGame(data))
         },
-        onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
+        onError: (e: any) =>
+            enqueueSnackbar(parseError(e), { variant: "error" }),
     })
 
     const deleteGame = useMutation({
@@ -134,7 +138,8 @@ export const useGameActions = () => {
             queryClient.invalidateQueries({
                 queryKey: ["myGames", "gameState"],
             }),
-        onError: e => enqueueSnackbar(parseError(e), { variant: "error" }),
+        onError: (e: any) =>
+            enqueueSnackbar(parseError(e), { variant: "error" }),
     })
 
     return {
