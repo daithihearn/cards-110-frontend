@@ -1,29 +1,27 @@
-import React, { useCallback, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
     DragDropContext,
     Draggable,
     Droppable,
     DropResult,
 } from "react-beautiful-dnd"
-import { EMPTY, Card } from "model/Cards"
+import { EMPTY, Card, CardName } from "model/Cards"
 import { RoundStatus } from "model/Round"
 import { useAppDispatch, useAppSelector } from "caches/hooks"
-import {
-    getCardToPlay,
-    togglePlayCard,
-    clearAutoPlay,
-} from "caches/PlayCardSlice"
 import { CardContent, CardMedia, useTheme } from "@mui/material"
 import {
     clearSelectedCards,
     getCardsFull,
+    getGameId,
     getIamGoer,
+    getIsMyGo,
     getIsRoundCalled,
     getRound,
     replaceMyCards,
     toggleSelect,
     toggleUniqueSelect,
 } from "caches/GameSlice"
+import { useGameActions } from "components/Hooks/useGameActions"
 
 const EMPTY_HAND = [
     { ...EMPTY, selected: false },
@@ -36,12 +34,15 @@ const EMPTY_HAND = [
 const MyCards = () => {
     const dispatch = useAppDispatch()
     const theme = useTheme()
+    const { playCard } = useGameActions()
 
+    const gameId = useAppSelector(getGameId)
     const round = useAppSelector(getRound)
     const isRoundCalled = useAppSelector(getIsRoundCalled)
     const myCards = useAppSelector(getCardsFull)
-    const autoPlayCard = useAppSelector(getCardToPlay)
+    const [autoPlayCard, setAutoPlayCard] = useState<CardName>(CardName.EMPTY)
     const iamGoer = useAppSelector(getIamGoer)
+    const isMyGo = useAppSelector(getIsMyGo)
 
     const cardsSelectable = useMemo(
         () =>
@@ -59,6 +60,18 @@ const MyCards = () => {
         [isRoundCalled, iamGoer],
     )
 
+    useEffect(() => {
+        if (
+            autoPlayCard !== CardName.EMPTY &&
+            round &&
+            round.status === RoundStatus.PLAYING &&
+            isMyGo
+        ) {
+            playCard({ gameId: gameId!, card: autoPlayCard })
+            setAutoPlayCard(CardName.EMPTY)
+        }
+    }, [autoPlayCard, round, gameId, isMyGo])
+
     const handleSelectCard = useCallback(
         (card: Card, event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
             if (!cardsSelectable || card.name === EMPTY.name) {
@@ -66,15 +79,15 @@ const MyCards = () => {
             }
 
             // If the round status is PLAYING then only allow one card to be selected
-            if (round && round.status === RoundStatus.PLAYING) {
+            if (gameId && round && round.status === RoundStatus.PLAYING) {
                 if (autoPlayCard === card.name) {
-                    dispatch(clearAutoPlay())
+                    setAutoPlayCard(CardName.EMPTY)
                     dispatch(clearSelectedCards())
                 } else if (event.detail === 2) {
-                    dispatch(togglePlayCard(card))
+                    setAutoPlayCard(card.name)
                 } else {
                     dispatch(toggleUniqueSelect(card))
-                    dispatch(clearAutoPlay())
+                    setAutoPlayCard(CardName.EMPTY)
                 }
             } else {
                 dispatch(toggleSelect(card))
