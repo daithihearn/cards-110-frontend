@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react"
 import { useEffect, useMemo, useState } from "react"
-import jwt_decode from "jwt-decode"
+import { jwtDecode } from "jwt-decode"
 
 const AUTH0_AUDIENCE = process.env.REACT_APP_AUTH0_AUDIENCE as string
 const AUTH0_SCOPE = process.env.REACT_APP_AUTH0_SCOPE as string
@@ -31,7 +31,7 @@ const useAccessToken = () => {
         if (!accessToken) {
             return false
         }
-        const decodedAccessToken = jwt_decode<JWTToken>(accessToken)
+        const decodedAccessToken = jwtDecode<JWTToken>(accessToken)
         return decodedAccessToken.permissions.indexOf("read:game") !== -1
     }, [accessToken])
 
@@ -39,7 +39,7 @@ const useAccessToken = () => {
         if (!accessToken) {
             return false
         }
-        const decodedAccessToken = jwt_decode<JWTToken>(accessToken)
+        const decodedAccessToken = jwtDecode<JWTToken>(accessToken)
         return decodedAccessToken.permissions.indexOf("write:admin") !== -1
     }, [accessToken])
 
